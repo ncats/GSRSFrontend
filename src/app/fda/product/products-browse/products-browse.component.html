@@ -6,15 +6,19 @@
     <!-- CROSS ENTITY SEARCH -->
     <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
 
-    <span *ngIf="isFacetsParamsInit === true">
-      <span *ngIf="showCrossEntitySearch == true">
-        <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [secondIdLists]="secondIdLists"
-          [searchTerm]="searchTerm" [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
-          [entityTotalRecords]="totalProducts" [editSubEntitySearchHash]="editSubEntitySearchHash"
-          (getSearchIdsOnly)="getSearchIdsOnly($event)">
-        </app-cross-entity-search>
+    @if (isFacetsParamsInit === true) {
+      <span>
+        @if (showCrossEntitySearch == true) {
+          <span>
+            <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [secondIdLists]="secondIdLists"
+              [searchTerm]="searchTerm" [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
+              [entityTotalRecords]="totalProducts" [editSubEntitySearchHash]="editSubEntitySearchHash"
+              (getSearchIdsOnly)="getSearchIdsOnly($event)">
+            </app-cross-entity-search>
+          </span>
+        }
       </span>
-    </span>
+    }
 
     <!-- DISPLAY FACETS -->
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
@@ -28,44 +32,50 @@
     <div class="side-nav-content">
 
       <!-- BULK SEARCH RESULTS BEGIN -->
-      <div class="marginbottom20px" *ngIf="bulkSearchQueryId && bulkSearchStatusKey">
-        <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true"
-          (closed)="bulkSearchPanelOpen = false"
-          style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
-
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <div *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0; else noCrossEntitySearch">
-                Cross Entity Bulk Search Summary&nbsp;(Full Results)
+      @if (bulkSearchQueryId && bulkSearchStatusKey) {
+        <div class="marginbottom20px">
+          <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true"
+            (closed)="bulkSearchPanelOpen = false"
+            style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                @if (subEntityDisplayFacets && subEntityDisplayFacets.length > 0) {
+                  <div>
+                    Cross Entity Bulk Search Summary&nbsp;(Full Results)
+                  </div>
+                } @else {
+                  <div>Bulk Search Summary (Full Results)</div>
+                }
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            @if (bulkSearchQueryId) {
+              <div style="margin-top: 10px; text-align: center">
+                <app-bulk-search-results-summary showTitle=false loadSummaries=true context="products"
+                  [key]="bulkSearchStatusKey" [isCollapsed]="isBulkSearchCollapsed" [searchStatusUrl]="searchStatusUrl">
+                </app-bulk-search-results-summary>
               </div>
-              <ng-template #noCrossEntitySearch>
-                <div>Bulk Search Summary (Full Results)</div>
-              </ng-template>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
-            <app-bulk-search-results-summary showTitle=false loadSummaries=true context="products"
-              [key]="bulkSearchStatusKey" [isCollapsed]="isBulkSearchCollapsed" [searchStatusUrl]="searchStatusUrl">
-            </app-bulk-search-results-summary>
-          </div>
-        </mat-expansion-panel>
-      </div>
+            }
+          </mat-expansion-panel>
+        </div>
+      }
       <!-- Bulk Search END -->
 
       <!-- Display this message if Bulk Search is not finished -->
-      <div class="marginbottom20px" *ngIf="((bulkSearchQueryId && iterations > 0) && !isSearchFinished)">
-        <div><b>Getting more Product records ... This page will refresh automatically once complete.</b>
+      @if (((bulkSearchQueryId && iterations > 0) && !isSearchFinished)) {
+        <div class="marginbottom20px">
+          <div><b>Getting more Product records ... This page will refresh automatically once complete.</b>
           &nbsp;&nbsp;
           <button class="sub-search-ref-btn" color="primary" (click)="refreshBulkSearch()">Refresh Search</button>
         </div>
       </div>
-      <!-- BULK SEARCH STATUS Message END -->
+    }
+    <!-- BULK SEARCH STATUS Message END -->
 
 
-      <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
+    <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
+    @if (matchTypes && matchTypes.length > 0) {
       <div class="narrow-search-suggestions-container"
-        *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
+        >
         <div class="flex-row">
           <div class="mat-elevation-z2 narrow-search-suggestions" style="margin:auto; background-color: white;">
             <div>
@@ -80,26 +90,34 @@
             <button mat-flat-button color="primary" (click)="clearFilters()">
               <span>RESET</span>
             </button>
-            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
+            @if (isSearchEditable) {
+              <button mat-icon-button color="primary" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+            }
             <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
-              <div class="narrow-search-dropdown" *ngFor="let matchType of matchTypes">
-                <div *ngIf="((matchType) && (matchType === 'WORD' || matchType === 'FULL'))">
-                  <div class="match-type">
-                    {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
-                  </div>
-                  <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
-                    (click)="restricSearh(suggestion.luceneQuery)">
-                    <div class="suggestion-display">
-                      {{suggestion.displayField}}
+              @for (matchType of matchTypes; track matchType) {
+                <div class="narrow-search-dropdown">
+                  @if (((matchType) && (matchType === 'WORD' || matchType === 'FULL'))) {
+                    <div>
+                      <div class="match-type">
+                        {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                      </div>
+                      @for (suggestion of narrowSearchSuggestions[matchType]; track suggestion) {
+                        <button mat-menu-item
+                          (click)="restricSearh(suggestion.luceneQuery)">
+                          <div class="suggestion-display">
+                            {{suggestion.displayField}}
+                          </div>
+                          <div class="suggestion-count">
+                            {{suggestion.count}}
+                          </div>
+                        </button>
+                      }
                     </div>
-                    <div class="suggestion-count">
-                      {{suggestion.count}}
-                    </div>
-                  </button>
+                  }
                 </div>
-              </div>
+              }
             </mat-menu>
           </div>
         </div>
@@ -110,30 +128,34 @@
           </div>
         </div>
       </div>
-      <!-- Narrow Search Suggestion End -->
-
-      <ng-template #filterParameters>
-        <div class="search-parameters">
-          <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+    } @else {
+      <div class="search-parameters">
+        @if (searchTerm) {
+          <div class="mat-elevation-z2 selected-parameter">
             <div>
               <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
               <span>{{searchTerm}}</span>
             </div>
             <div class="actions-container">
-              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
-                <mat-icon svgIcon="edit"></mat-icon>
-              </button>
+              @if (isSearchEditable) {
+                <button mat-icon-button color="primary" (click)="editAdvancedSearch()">
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </button>
+              }
               <button mat-icon-button color="primary" (click)="clearSearch()">
                 <mat-icon svgIcon="delete_forever"></mat-icon>
               </button>
             </div>
           </div>
-
-          <!-- Display Facets selection -->
-          <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+        }
+        <!-- Display Facets selection -->
+        @for (facet of displayFacets; track facet) {
+          <div class="mat-elevation-z2 selected-parameter">
             <div class='selected-container'>
               <span class="capitalized font-medium-bold selected-label">
-                <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                @if (!facet.bool) {
+                  <mat-icon class="not-icon" svgIcon="not_interested"></mat-icon>
+                }
                 {{facet.type}}:
               </span>
               <span class="no-break selected-value">
@@ -147,36 +169,39 @@
               </button>
             </div>
           </div>
-
+        }
+        @if ((displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)) {
           <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
             matTooltip="Clear All Search Criteria"
-            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
+            >
             <span>RESET</span>
           </button>
-        </div>
-
-        <!-- Cross Entity/Sub-Entity Search selected Facets BEGIN -->
-        <div class="margintop10px" *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0">
+        }
+      </div>
+      <!-- Cross Entity/Sub-Entity Search selected Facets BEGIN -->
+      @if (subEntityDisplayFacets && subEntityDisplayFacets.length > 0) {
+        <div class="margintop10px">
           <fieldset class="fieldset-crosssearch">
             <legend class="legend-crosssearch">Cross Entity Criteria : <b>{{subEntity}}</b></legend>
-
             <div class="search-parameters">
               <div class="marginleftneg10px">
-                <div class="mat-elevation-z2 selected-parameter marginright10px"
-                  *ngFor="let facet of subEntityDisplayFacets">
-                  <div class='selected-parameter-crosssearch'>
-                    <span class="selected-label">
-                      <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
-                      {{facet.type}}:
-                    </span>
-                    <span class="no-break selected-value">
-                      {{facet.val}}
-                    </span>
+                @for (facet of subEntityDisplayFacets; track facet) {
+                  <div class="mat-elevation-z2 selected-parameter marginright10px"
+                    >
+                    <div class='selected-parameter-crosssearch'>
+                      <span class="selected-label">
+                        @if (!facet.bool) {
+                          <mat-icon class="not-icon" svgIcon="not_interested"></mat-icon>
+                        }
+                        {{facet.type}}:
+                      </span>
+                      <span class="no-break selected-value">
+                        {{facet.val}}
+                      </span>
+                    </div>
                   </div>
-                </div>
-
+                }
                 <!-- Edit button -->
-
                 <button mat-icon-button color="primary" matTooltip="Edit Cross Entity Search"
                   (click)="editSubEntitySearch()">
                   <mat-icon svgIcon="edit"></mat-icon>
@@ -185,958 +210,1052 @@
             </div> <!-- class=search-parameters -->
           </fieldset>
         </div>
-        <!-- CROSS ENTITY SEARCH - FACET SELECTED DISPLAY END -->
+      }
+      <!-- CROSS ENTITY SEARCH - FACET SELECTED DISPLAY END -->
+    }
+    <!-- Narrow Search Suggestion End -->
 
-      </ng-template>
 
-      <!-- Title, Export, Pagination -->
-      <div class="controls-container">
+    <!-- Title, Export, Pagination -->
+    <div class="controls-container">
 
-        <div class="title-container">
-          <span class="main-title">Browse Products</span>
-        </div>
+      <div class="title-container">
+        <span class="main-title">Browse Products</span>
+      </div>
 
-        <!-- Table, Full, and Title Views -->
-        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <mat-button-toggle value="table" matTooltip="Table View">
-            <mat-icon svgIcon="list"></mat-icon>
-          </mat-button-toggle>
-          <mat-button-toggle value="cards" matTooltip="Full View">
-            <mat-icon svgIcon="view_stream"></mat-icon>
-          </mat-button-toggle>
-        </mat-button-toggle-group>
+      <!-- Table, Full, and Title Views -->
+      <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+        <mat-button-toggle value="table" matTooltip="Table View">
+          <mat-icon svgIcon="list"></mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="cards" matTooltip="Full View">
+          <mat-icon svgIcon="view_stream"></mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
 
-        <!-- Sort By -->
-        <mat-form-field class="sort">
-          <mat-label>Sort By</mat-label>
-          <mat-select (selectionChange)="searchProducts()" [(ngModel)]="order">
-            <mat-option *ngFor="let option of sortValues" [value]="option.value">
+      <!-- Sort By -->
+      <mat-form-field class="sort">
+        <mat-label>Sort By</mat-label>
+        <mat-select (selectionChange)="searchProducts()" [(ngModel)]="order">
+          @for (option of sortValues; track option) {
+            <mat-option [value]="option.value">
               {{option.display}}
             </mat-option>
-          </mat-select>
-        </mat-form-field>
+          }
+        </mat-select>
+      </mat-form-field>
 
-        <!-- Export Product Button -->
-        <div class="export" *ngIf="canExport">
+      <!-- Export Product Button -->
+      @if (canExport) {
+        <div class="export">
           <mat-menu #exportMenu="matMenu">
-            <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.extension)">
-              {{option.displayname}}
-            </a>
+            @for (option of exportOptions; track option) {
+              <a mat-menu-item (click)="export(option.extension)">
+                {{option.displayname}}
+              </a>
+            }
           </mat-menu>
-
           <div class="export ">
-            <button *ngIf="isLoggedIn && exportOptions && exportOptions.length > 0" matTooltip="Export Search Results"
-              mat-raised-button class="export-button" [matMenuTriggerFor]="exportMenu">
-              <mat-icon svgIcon="get_app"></mat-icon> Export
-              <mat-icon>arrow_drop_down</mat-icon>
-            </button>
+            @if (isLoggedIn && exportOptions && exportOptions.length > 0) {
+              <button matTooltip="Export Search Results"
+                mat-raised-button class="export-button" [matMenuTriggerFor]="exportMenu">
+                <mat-icon svgIcon="get_app"></mat-icon> Export
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+            }
           </div>
         </div>
+      }
 
-        <div class="break"></div>
-        <!-- Pagination -->
-        <div class="full-paginator">
-          <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
-          </mat-paginator>
+      <div class="break"></div>
+      <!-- Pagination -->
+      <div class="full-paginator">
+        <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+        </mat-paginator>
 
-          <div class="page-selector">
-            <span class="page-label">Page: </span>
-            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
-              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
-                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
-                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
-                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
-            </mat-form-field>
-            <span class="page-label"> of {{lastPage}}</span>
-          </div>
-        </div>
-
-      </div> <!-- class=controls-container -->
-
-      <div class="search-text">
-        <!-- *** Search Any Text (TYPE AHEAD) *** -->
-        <app-product-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
-          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="productSearch">
-        </app-product-text-search>
-
-        <div>
-          <button class="margintop10px marginleft80px" mat-raised-button color="primary" (click)="showAllSubstances()"
-            matTooltip="Show All Substances associated with these Product records">
-            <span>Show All Substances</span>
-          </button>
+        <div class="page-selector">
+          <span class="page-label">Page: </span>
+          <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+            <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+              [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+              (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+              (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+          </mat-form-field>
+          <span class="page-label"> of {{lastPage}}</span>
         </div>
       </div>
 
-      <!-- ******** Display Content Details ******** -->
-      <div [ngClass]="view">
+    </div> <!-- class=controls-container -->
 
-        <!-- **************************************************************** -->
-        <!-- **************************************************************** -->
-        <!-- TABLE VIEW BEGIN                                                 -->
-        <!-- **************************************************************** -->
+    <div class="search-text">
+      <!-- *** Search Any Text (TYPE AHEAD) *** -->
+      <app-product-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+        [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="productSearch">
+      </app-product-text-search>
 
-        <div class="table-view">
-          <div class="responsive">
+      <div>
+        <button class="margintop10px marginleft80px" mat-raised-button color="primary" (click)="showAllSubstances()"
+          matTooltip="Show All Substances associated with these Product records">
+          <span>Show All Substances</span>
+        </button>
+      </div>
+    </div>
 
-            <table mat-table [dataSource]="products" class="font12px" matSort (matSortChange)="sortData($event)"
-              matSortDisableClear>
+    <!-- ******** Display Content Details ******** -->
+    <div [ngClass]="view">
 
-              <ng-container matColumnDef="viewDetails">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Code</th>
-                <td class="width100px" mat-cell *matCellDef="let product">
+      <!-- **************************************************************** -->
+      <!-- **************************************************************** -->
+      <!-- TABLE VIEW BEGIN                                                 -->
+      <!-- **************************************************************** -->
 
-                  <!-- View GSRS record button -->
-                  <a [routerLink]="['/product', product.id]" target="_blank" *ngIf="canUpdate"
+      <div class="table-view">
+        <div class="responsive">
+
+          <table mat-table [dataSource]="products" class="font12px" matSort (matSortChange)="sortData($event)"
+            matSortDisableClear>
+
+            <ng-container matColumnDef="viewDetails">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Code</th>
+              <td class="width100px" mat-cell *matCellDef="let product">
+
+                <!-- View GSRS record button -->
+                @if (canUpdate) {
+                  <a [routerLink]="['/product', product.id]" target="_blank"
                     matTooltip='View GSRS Product Record'>
                     View
                   </a>
+                }
 
-                  <!-- Edit GSRS record button -->
-                  &nbsp;
-                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="canUpdate"
+                <!-- Edit GSRS record button -->
+                &nbsp;
+                @if (canUpdate) {
+                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank"
                     matTooltip='Edit GSRS Product Record'>
                     <mat-icon svgIcon="edit"></mat-icon>
                   </a>
+                }
 
-                </td>
-              </ng-container>
+              </td>
+            </ng-container>
 
-              <ng-container matColumnDef="productCode">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Code</th>
-                <td class="width120px" mat-cell *matCellDef="let product">
+            <ng-container matColumnDef="productCode">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Code</th>
+              <td class="width120px" mat-cell *matCellDef="let product">
 
-                  <span *ngFor="let prodProv of product.productProvenances; let i = index">
-
-                    <span *ngFor="let prodCode of prodProv.productCodes; let indexCode = index">
-
-                      <span *ngIf="i > 0"><br><br></span>
-                      <b>{{prodCode.productCodeType}}</b>: <br>{{prodCode.productCode}}
-
-                      <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
-                      <span *ngIf="prodCode._dailyMedUrl">
-                        <br>
-                        <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
-                          title="Go to DailyMed website">
-                          <img [src]="iconSrcPath">
-                        </a>
-                        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
-                        </mat-icon>
-                      </span>
-
-                    </span> <!-- loop productCode -->
-                  </span> <!-- loop productProvenance-->
-
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="productName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
-                <td mat-cell *matCellDef="let product">
-                  <ol class="olstyle">
-                    <div *ngFor="let prodProv of product.productProvenances; let i = index">
-                      <div *ngFor="let prodName of prodProv.productNames; let i = index">
-                        <li>
-                          {{prodName.productName}}
-                        </li>
-                      </div>
-                    </div>
-                  </ol>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="ingredientName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name (Active Ingredient) </th>
-                <td valign="top" mat-cell *matCellDef="let product">
-
-                  <ol class="olstyle">
-                    <div *ngFor="let prodManuItems of product.productManufactureItems">
-                      <div *ngFor="let prodLot of prodManuItems.productLots">
-                        <div *ngFor="let prodIngred of prodLot.productIngredients; let indexActiveIngred = index">
-                          <span *ngIf="prodIngred.ingredientType; else noIngredientType">
-                            <span
-                              *ngIf="prodIngred.ingredientType === 'Active Ingredient' || prodIngred.ingredientType === 'ACTIVE INGREDIENT'">
-                              <span *ngIf="prodIngred._ingredientName">
-                                <li>
-
-                                  <div *ngIf="prodIngred._substanceUuid; else noActiveSubUuid">
-                                    <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                      target="_blank">{{prodIngred._ingredientName}}
-                                    </a>
-                                    <button mat-button class="structure-parameters"
-                                      (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName)">
-                                      <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
-                                    </button>
-                                  </div>
-                                  <ng-template #noActiveSubUuid>
-                                    {{prodIngred._ingredientName}}
-                                  </ng-template>
-
-                                </li>
-                              </span>
-
-                            </span>
-                          </span>
-                          <!-- No Ingredient Type, Display Ingredient Name -->
-                          <ng-template #noIngredientType>
-                            <!-- if No Ingredient Type, but have Substance Name, display here. -->
-                            <div *ngIf="prodIngred._ingredientName">
-                              <li class="">
-                                <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                  target="_blank">{{prodIngred._ingredientName}}
-                                </a>
-                              </li>
-                            </div>
-                          </ng-template>
-
-
-                        </div> <!-- loop Ingredient -->
-                      </div> <!-- loop Lot -->
-                    </div> <!-- loop ManufactureItems -->
-                  </ol>
-
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="labelerName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Labeler Name </th>
-                <td mat-cell *matCellDef="let product"> {{product.labelerName}}
-                  <div *ngFor="let prodProv of product.productProvenances">
-                    <div *ngFor="let prodComp of prodProv.productCompanies">
-                      {{prodComp.companyName}}
-                      <div *ngFor="let prodCode of prodComp.productCompanyCodes">
-                        <span
-                          *ngIf="prodCode.companyCodeType && prodCode.companyCodeType.companyCodeType === 'DUNS NUMBER'">
-                          <span *ngIf="prodCode.companyCode">&nbsp;({{prodCode.companyCode}})</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="provenance">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Provenance </th>
-                <td mat-cell *matCellDef="let product">
-                  <ol class="olstyle">
-                    <div *ngFor="let prodProv of product.productProvenances; let i = index">
-                      <li>
-                        {{prodProv.provenance}}
-                      </li>
-                    </div>
-                  </ol>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="country">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
-                <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodProv of product.productProvenances">
-                    <div *ngFor="let prodComp of prodProv.productCompanies">
-                      {{prodComp.companyCity}}
-                      <span *ngIf="prodComp.companyState">,</span>
-                      {{prodComp.companyState}}
-                      <span *ngIf="prodComp.companyCountry">,</span>
-                      {{prodComp.companyCountry}}
-                    </div>
-                  </div>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Marketing Status </th>
-                <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodProv of product.productProvenances">
-                    {{prodProv.productStatus}}
-                  </div>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="productNameType">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Type </th>
-                <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodProv of product.productProvenances">
-                    {{prodProv.productType}}
-                  </div>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="applicationNumber">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
-                <td mat-cell *matCellDef="let product">
-                  <span *ngFor="let prodProv of product.productProvenances; let i = index">
-                    <span class="font14px" *ngIf="prodProv.applicationType">
-                      {{prodProv.applicationType}}
-                    </span>
-                    <span class="font14px" *ngIf="prodProv.applicationNumber">
-                      {{prodProv.applicationNumber}}
-                    </span>
-                    <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
-                    <a href="{{getAppTypeNumberUrl(prodProv.applicationType, prodProv.applicationNumber)}}"
-                      target="_blank">
-                      <span class="font14px" *ngIf="prodProv.applicationType">
-                        {{prodProv.applicationType}}
-                      </span>
-                      <span class="font14px" *ngIf="prodProv.applicationNumber">
-                        {{prodProv.applicationNumber}}
-                      </span>
-                    </a>
-                    -->
-                  </span>
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-
-          </div>
-        </div> <!-- class="table-view" -->
-        <!-- TABLE VIEW END -->
-
-
-        <!-- **************************************************************** -->
-        <!-- **************************************************************** -->
-        <!-- CARD VIEW BEGIN -->
-        <!-- **************************************************************** -->
-
-        <div class="cards-view" *ngIf="products && products.length; else noRecordProduct">
-
-          <!-- FIRST MAT-CARD  -->
-          <mat-card *ngFor="let product of products; let indexProd = index">
-            <mat-card-content class="margintopneg15">
-
-              <div class="divflex marginleftneg10px margintop10px">
-
-                <div>
-                  &nbsp;&nbsp;&nbsp;
-                  <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
-                    <span class="font18px"><b>View Details</b></span>
-                  </a>
-                </div>
-
-                <!-- ***** BUTTONS BEGIN ***** -->
-
-                <!-- Edit GSRS record button -->
-                <div class="" *ngIf="canUpdate">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank"
-                    matTooltip='Edit GSRS Product Record'>
-                    <mat-icon class="margintopneg10px" svgIcon="edit"></mat-icon>
-                  </a>
-                </div>
-
-                <div class="margintopneg10" *ngIf="canUpdate">
-                  <!-- Show Json -->
-                  <span *ngIf="product && product.id">
-                    <a button mat-icon-button color="primary" (click)="showJSON(indexProd)" matTooltip='Show JSON'>
-                      <mat-icon>article</mat-icon>
-                    </a>&nbsp;
-                  </span>
-                </div>
-
-                <!-- Download Json For this record -->
-                <div class="margintopneg10" *ngIf="canUpdate">
-                  <span *ngIf="product && product.id">
-                    <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON(indexProd)"
-                      download="{{jsonFileName}}.json" matTooltip='Download JSON'>
-                      <mat-icon class="" svgIcon="get_app"></mat-icon>
-                    </a>
-                  </span>
-                </div>
-
-                <div class="margintopneg10" *ngIf="canCreate">
-                  <!-- Copy Product to New Register -->
-                  <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
-                    matTooltip='copy this Product to new Product registration form' *ngIf="canCreate">
-                    <mat-icon class="margintopneg10px" svgIcon="file_copy"></mat-icon>
-                  </a>
-                </div>
-                <div>
+                @for (prodProv of product.productProvenances; track prodProv; let i = $index) {
                   <span>
-                    <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="canUpdate">
-                    </mat-icon>
-                  </span>
-                </div>
-                <!-- ***** BUTTONS END ***** -->
+                    @for (prodCode of prodProv.productCodes; track prodCode; let indexCode = $index) {
+                      <span>
+                        @if (i > 0) {
+                          <span><br><br></span>
+                        }
+                        <b>{{prodCode.productCodeType}}</b>: <br>{{prodCode.productCode}}
+                        <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
+                        @if (prodCode._dailyMedUrl) {
+                          <span>
+                            <br>
+                              <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
+                                title="Go to DailyMed website">
+                                <img [src]="iconSrcPath">
+                              </a>
+                              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                              </mat-icon>
+                            </span>
+                          }
+                        </span>
+                        } <!-- loop productCode -->
+                      </span>
+                      } <!-- loop productProvenance-->
 
-              </div> <!-- class=divflex-->
+                    </td>
+                  </ng-container>
 
-              <!-- GROUP BY PROVENANCE BEGIN -->
-              <mat-tab-group class="margintop15px" (selectedTabChange)="tabSelectedUpdated($event)">
-
-                <!-- ######################################################################## -->
-                <!-- MAT-TAB: PROVENANCE BEGIN - Display data in each tab for each Provenance -->
-                <!-- #########################################################################-->
-
-                <mat-tab class="margintopneg10"
-                  *ngFor="let prodProv of product.productProvenances; let indexProv = index">
-
-                  <ng-template mat-tab-label>
-                    <span class="font13px colorlightblue">Provenance:</span>&nbsp;
-                    <span class="colorred font16px">
-                      {{prodProv.provenance}}
-                    </span>
-                  </ng-template>
-
-                  <!-- Product Provenance TAB Begin -->
-                  <!-- INSIDE TAB MAT-CARD BEGIN -->
-
-                  <div class="row margintop10px">
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Product Names:
-                      </div>
-                      <div class="row-property-value">
-                        <!-- Product Names -->
-                        <div *ngIf="prodProv.productNames.length > 0; else noProductName">
-                          <div *ngFor="let prodName of prodProv.productNames; let i = index">
-                            <div class="divflex">
-                              <div class="colorlightblue font16px"><b>{{prodName.productName}}</b>
-
-                                <span *ngIf="prodName.productNameType">
-                                  <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
-                                </span>
-
+                  <ng-container matColumnDef="productName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
+                    <td mat-cell *matCellDef="let product">
+                      <ol class="olstyle">
+                        @for (prodProv of product.productProvenances; track prodProv; let i = $index) {
+                          <div>
+                            @for (prodName of prodProv.productNames; track prodName; let i = $index) {
+                              <div>
+                                <li>
+                                  {{prodName.productName}}
+                                </li>
                               </div>
-                              <div *ngIf="prodName.displayName && prodName.displayName == true">
-                                &nbsp;
-                                <mat-icon class="margintopneg5" matTooltip="Display Name">check</mat-icon>
+                            }
+                          </div>
+                        }
+                      </ol>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="ingredientName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name (Active Ingredient) </th>
+                    <td valign="top" mat-cell *matCellDef="let product">
+
+                      <ol class="olstyle">
+                        @for (prodManuItems of product.productManufactureItems; track prodManuItems) {
+                          <div>
+                            @for (prodLot of prodManuItems.productLots; track prodLot) {
+                              <div>
+                                @for (prodIngred of prodLot.productIngredients; track prodIngred; let indexActiveIngred = $index) {
+                                  <div>
+                                    @if (prodIngred.ingredientType) {
+                                      <span>
+                                        @if (prodIngred.ingredientType === 'Active Ingredient' || prodIngred.ingredientType === 'ACTIVE INGREDIENT') {
+                                          <span
+                                            >
+                                            @if (prodIngred._ingredientName) {
+                                              <span>
+                                                <li>
+                                                  @if (prodIngred._substanceUuid) {
+                                                    <div>
+                                                      <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                                        target="_blank">{{prodIngred._ingredientName}}
+                                                      </a>
+                                                      <button mat-button class="structure-parameters"
+                                                        (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName)">
+                                                        <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
+                                                      </button>
+                                                    </div>
+                                                  } @else {
+                                                    {{prodIngred._ingredientName}}
+                                                  }
+                                                </li>
+                                              </span>
+                                            }
+                                          </span>
+                                        }
+                                      </span>
+                                    } @else {
+                                      <!-- if No Ingredient Type, but have Substance Name, display here. -->
+                                      @if (prodIngred._ingredientName) {
+                                        <div>
+                                          <li class="">
+                                            <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                              target="_blank">{{prodIngred._ingredientName}}
+                                            </a>
+                                          </li>
+                                        </div>
+                                      }
+                                    }
+                                    <!-- No Ingredient Type, Display Ingredient Name -->
+                                  </div>
+                                  } <!-- loop Ingredient -->
+                                </div>
+                                } <!-- loop Lot -->
+                              </div>
+                              } <!-- loop ManufactureItems -->
+                            </ol>
+
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="labelerName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Labeler Name </th>
+                          <td mat-cell *matCellDef="let product"> {{product.labelerName}}
+                            @for (prodProv of product.productProvenances; track prodProv) {
+                              <div>
+                                @for (prodComp of prodProv.productCompanies; track prodComp) {
+                                  <div>
+                                    {{prodComp.companyName}}
+                                    @for (prodCode of prodComp.productCompanyCodes; track prodCode) {
+                                      <div>
+                                        @if (prodCode.companyCodeType && prodCode.companyCodeType.companyCodeType === 'DUNS NUMBER') {
+                                          <span
+                                            >
+                                            @if (prodCode.companyCode) {
+                                              <span>&nbsp;({{prodCode.companyCode}})</span>
+                                            }
+                                          </span>
+                                        }
+                                      </div>
+                                    }
+                                  </div>
+                                }
+                              </div>
+                            }
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="provenance">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Provenance </th>
+                          <td mat-cell *matCellDef="let product">
+                            <ol class="olstyle">
+                              @for (prodProv of product.productProvenances; track prodProv; let i = $index) {
+                                <div>
+                                  <li>
+                                    {{prodProv.provenance}}
+                                  </li>
+                                </div>
+                              }
+                            </ol>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="country">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
+                          <td mat-cell *matCellDef="let product">
+                            @for (prodProv of product.productProvenances; track prodProv) {
+                              <div>
+                                @for (prodComp of prodProv.productCompanies; track prodComp) {
+                                  <div>
+                                    {{prodComp.companyCity}}
+                                    @if (prodComp.companyState) {
+                                      <span>,</span>
+                                    }
+                                    {{prodComp.companyState}}
+                                    @if (prodComp.companyCountry) {
+                                      <span>,</span>
+                                    }
+                                    {{prodComp.companyCountry}}
+                                  </div>
+                                }
+                              </div>
+                            }
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="status">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Marketing Status </th>
+                          <td mat-cell *matCellDef="let product">
+                            @for (prodProv of product.productProvenances; track prodProv) {
+                              <div>
+                                {{prodProv.productStatus}}
+                              </div>
+                            }
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="productNameType">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Type </th>
+                          <td mat-cell *matCellDef="let product">
+                            @for (prodProv of product.productProvenances; track prodProv) {
+                              <div>
+                                {{prodProv.productType}}
+                              </div>
+                            }
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="applicationNumber">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
+                          <td mat-cell *matCellDef="let product">
+                            @for (prodProv of product.productProvenances; track prodProv; let i = $index) {
+                              <span>
+                                @if (prodProv.applicationType) {
+                                  <span class="font14px">
+                                    {{prodProv.applicationType}}
+                                  </span>
+                                }
+                                @if (prodProv.applicationNumber) {
+                                  <span class="font14px">
+                                    {{prodProv.applicationNumber}}
+                                  </span>
+                                }
+                                <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
+                                <a href="{{getAppTypeNumberUrl(prodProv.applicationType, prodProv.applicationNumber)}}"
+                                  target="_blank">
+                                  <span class="font14px" *ngIf="prodProv.applicationType">
+                                    {{prodProv.applicationType}}
+                                  </span>
+                                  <span class="font14px" *ngIf="prodProv.applicationNumber">
+                                    {{prodProv.applicationNumber}}
+                                  </span>
+                                </a>
+                                -->
+                              </span>
+                            }
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+
+                    </div>
+                  </div> <!-- class="table-view" -->
+                  <!-- TABLE VIEW END -->
+
+
+                  <!-- **************************************************************** -->
+                  <!-- **************************************************************** -->
+                  <!-- CARD VIEW BEGIN -->
+                  <!-- **************************************************************** -->
+
+                  @if (products && products.length) {
+                    <div class="cards-view">
+                      <!-- FIRST MAT-CARD  -->
+                      @for (product of products; track product; let indexProd = $index) {
+                        <mat-card>
+                          <mat-card-content class="margintopneg15">
+                            <div class="divflex marginleftneg10px margintop10px">
+                              <div>
+                                &nbsp;&nbsp;&nbsp;
+                                <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                                  <span class="font18px"><b>View Details</b></span>
+                                </a>
+                              </div>
+                              <!-- ***** BUTTONS BEGIN ***** -->
+                              <!-- Edit GSRS record button -->
+                              @if (canUpdate) {
+                                <div class="">
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank"
+                                    matTooltip='Edit GSRS Product Record'>
+                                    <mat-icon class="margintopneg10px" svgIcon="edit"></mat-icon>
+                                  </a>
+                                </div>
+                              }
+                              @if (canUpdate) {
+                                <div class="margintopneg10">
+                                  <!-- Show Json -->
+                                  @if (product && product.id) {
+                                    <span>
+                                      <a button mat-icon-button color="primary" (click)="showJSON(indexProd)" matTooltip='Show JSON'>
+                                        <mat-icon>article</mat-icon>
+                                      </a>&nbsp;
+                                    </span>
+                                  }
+                                </div>
+                              }
+                              <!-- Download Json For this record -->
+                              @if (canUpdate) {
+                                <div class="margintopneg10">
+                                  @if (product && product.id) {
+                                    <span>
+                                      <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON(indexProd)"
+                                        download="{{jsonFileName}}.json" matTooltip='Download JSON'>
+                                        <mat-icon class="" svgIcon="get_app"></mat-icon>
+                                      </a>
+                                    </span>
+                                  }
+                                </div>
+                              }
+                              @if (canCreate) {
+                                <div class="margintopneg10">
+                                  <!-- Copy Product to New Register -->
+                                  @if (canCreate) {
+                                    <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
+                                      matTooltip='copy this Product to new Product registration form'>
+                                      <mat-icon class="margintopneg10px" svgIcon="file_copy"></mat-icon>
+                                    </a>
+                                  }
+                                </div>
+                              }
+                              <div>
+                                <span>
+                                  @if (canUpdate) {
+                                    <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                                    </mat-icon>
+                                  }
+                                </span>
+                              </div>
+                              <!-- ***** BUTTONS END ***** -->
+                            </div> <!-- class=divflex-->
+                            <!-- GROUP BY PROVENANCE BEGIN -->
+                            <mat-tab-group class="margintop15px" (selectedTabChange)="tabSelectedUpdated($event)">
+                              <!-- ######################################################################## -->
+                              <!-- MAT-TAB: PROVENANCE BEGIN - Display data in each tab for each Provenance -->
+                              <!-- #########################################################################-->
+                              @for (prodProv of product.productProvenances; track prodProv; let indexProv = $index) {
+                                <mat-tab class="margintopneg10"
+                                  >
+                                  <ng-template mat-tab-label>
+                                    <span class="font13px colorlightblue">Provenance:</span>&nbsp;
+                                    <span class="colorred font16px">
+                                      {{prodProv.provenance}}
+                                    </span>
+                                  </ng-template>
+                                  <!-- Product Provenance TAB Begin -->
+                                  <!-- INSIDE TAB MAT-CARD BEGIN -->
+                                  <div class="row margintop10px">
+                                    <div class="row-property">
+                                      <div class="row-property-key">
+                                        Product Names:
+                                      </div>
+                                      <div class="row-property-value">
+                                        <!-- Product Names -->
+                                        @if (prodProv.productNames.length > 0) {
+                                          <div>
+                                            @for (prodName of prodProv.productNames; track prodName; let i = $index) {
+                                              <div>
+                                                <div class="divflex">
+                                                  <div class="colorlightblue font16px"><b>{{prodName.productName}}</b>
+                                                  @if (prodName.productNameType) {
+                                                    <span>
+                                                      <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
+                                                    </span>
+                                                  }
+                                                </div>
+                                                @if (prodName.displayName && prodName.displayName == true) {
+                                                  <div>
+                                                    &nbsp;
+                                                    <mat-icon class="margintopneg5" matTooltip="Display Name">check</mat-icon>
+                                                  </div>
+                                                }
+                                              </div>
+                                            </div>
+                                          }
+                                        </div>
+                                      } @else {
+                                        (No Product Name)
+                                      }
+                                    </div>
+                                  </div>
+                                  <div class="row-property">
+                                    <div class="row-property-key">
+                                      Product Status:
+                                    </div>
+                                    <div class="row-property-value">
+                                      {{prodProv.productStatus}}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="row-property">
+                                    <div class="row-property-key">
+                                      Product Codes:
+                                    </div>
+                                    <div class="row-property-value">
+                                      @for (prodCode of prodProv.productCodes; track prodCode; let i = $index) {
+                                        <span>
+                                          @if (i > 0) {
+                                            <span><br></span>
+                                          }
+                                          <b>{{prodCode.productCodeType}}</b>:
+                                          <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
+                                          @if (prodCode._dailyMedUrl) {
+                                            <span>
+                                              <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
+                                                title="Go to DailyMed website">
+                                                {{prodCode.productCode}}<img class="marginleft5px" [src]="iconSrcPath">
+                                              </a>
+                                              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                                              </mat-icon>
+                                            </span>
+                                          }
+                                          <!-- Display PhPID link, if Product Code Type is 'PhPID'-->
+                                          @if (prodCode._phpIdUrl) {
+                                            <span>
+                                              <a href="{{prodCode._phpIdUrl}}" target="_blank" alt="Go to PhPID Publish website"
+                                                title="Go to PhPID Publish website">
+                                                {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
+                                              </a>
+                                              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                                              </mat-icon>
+                                            </span>
+                                          }
+                                          <!-- Display RxNorm link, if Product Code Type is 'RxNorm'-->
+                                          @if (prodCode._rxNormUrl) {
+                                            <span>
+                                              <a href="{{prodCode._rxNormUrl}}" target="_blank" alt="Go to RxNorm website"
+                                                title="Go to RxNorm website">
+                                                {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
+                                              </a>
+                                              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                                              </mat-icon>
+                                            </span>
+                                          }
+                                          @if (!prodCode._dailyMedUrl && !prodCode._phpIdUrl && !prodCode._rxNormUrl) {
+                                            <span>
+                                              {{prodCode.productCode}}
+                                            </span>
+                                          }
+                                        </span>
+                                        } <!-- loop productCodes -->
+                                      </div>
+                                    </div>
+                                    <div class="row-property">
+                                      <div class="row-property-key">
+                                        Product Type:
+                                      </div>
+                                      <div class="row-property-value">
+                                        {{prodProv.productType}}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="row-property">
+                                      <div class="row-property-key">
+                                        Labeler Name:
+                                      </div>
+                                      <div class="row-property-value">
+                                        @for (prodComp of prodProv.productCompanies; track prodComp) {
+                                          <div>
+                                            {{prodComp.companyName}}
+                                          </div>
+                                        }
+                                      </div>
+                                    </div>
+                                    <div class="row-property">
+                                      <div class="row-property-key">
+                                        Application Type Number:
+                                      </div>
+                                      <div class="row-property-value">
+                                        <!-- Go to Browse Application page -->
+                                        @if (prodProv._applicationUrl) {
+                                          <div>
+                                            @if (isLoggedIn) {
+                                              <a [routerLink]="['/browse-applications']" [queryParams]="{search:prodProv._applicationUrl}"
+                                                target="_blank" matTooltip='Go to Application record'>
+                                                @if (prodProv.applicationType) {
+                                                  <span class="font14px">
+                                                    {{prodProv.applicationType}}
+                                                  </span>
+                                                }
+                                                @if (prodProv.applicationNumber) {
+                                                  <span class="font14px">
+                                                    {{prodProv.applicationNumber}}
+                                                  </span>
+                                                }
+                                              </a>
+                                            }
+                                          </div>
+                                        } @else {
+                                          @if (prodProv.applicationType) {
+                                            <span class="font14px">
+                                              {{prodProv.applicationType}}
+                                            </span>
+                                          }
+                                          @if (prodProv.applicationNumber) {
+                                            <span class="font14px">
+                                              {{prodProv.applicationNumber}}
+                                            </span>
+                                          }
+                                        }
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="row-property">
+                                      <div class="row-property-key">
+                                        City, State, Country:
+                                      </div>
+                                      <div class="row-property-value">
+                                        @for (prodComp of prodProv.productCompanies; track prodComp) {
+                                          <div>
+                                            {{prodComp.companyCity}}
+                                            @if (prodComp.companyState) {
+                                              <span>,</span>
+                                            }
+                                            {{prodComp.companyState}}
+                                            @if (prodComp.companyCountry) {
+                                              <span>,</span>
+                                            }
+                                            {{prodComp.companyCountry}}
+                                          </div>
+                                        }
+                                      </div>
+                                    </div>
+                                    <div class="row-property">
+                                      <div class="row-property-key">
+                                        Public Domain:
+                                      </div>
+                                      <div class="row-property-value">
+                                        {{prodProv.publicDomain}}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- INSIDE TAB MAT_CARD END -->
+                                </mat-tab>
+                              }
+                            </mat-tab-group>
+                            <!-- GROUP BY PROVENANCE END -->
+                            <div class="row">
+                              <div class="row-property">
+                                <div class="row-property-key">
+                                  Manufacturer Name:
+                                </div>
+                                <div class="row-property-value">
+                                  {{product.manufacturerName}}
+                                </div>
+                              </div>
+                              <div class="row-property">
+                                <div class="row-property-key">
+                                  Total Manufacture Items:
+                                </div>
+                                <div class="row-property-value">
+                                  {{product.productManufactureItems.length}}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                        <ng-template #noProductName>
-                          (No Product Name)
-                        </ng-template>
-                      </div>
-                    </div>
-
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Product Status:
-                      </div>
-                      <div class="row-property-value">
-                        {{prodProv.productStatus}}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Product Codes:
-                      </div>
-                      <div class="row-property-value">
-
-                        <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
-                          <span *ngIf="i > 0"><br></span>
-                          <b>{{prodCode.productCodeType}}</b>:
-
-                          <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
-                          <span *ngIf="prodCode._dailyMedUrl">
-                            <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
-                              title="Go to DailyMed website">
-                              {{prodCode.productCode}}<img class="marginleft5px" [src]="iconSrcPath">
-                            </a>
-                            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
-                            </mat-icon>
-                          </span>
-
-                          <!-- Display PhPID link, if Product Code Type is 'PhPID'-->
-                          <span *ngIf="prodCode._phpIdUrl">
-                            <a href="{{prodCode._phpIdUrl}}" target="_blank" alt="Go to PhPID Publish website"
-                              title="Go to PhPID Publish website">
-                              {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
-                            </a>
-                            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
-                            </mat-icon>
-                          </span>
-
-                          <!-- Display RxNorm link, if Product Code Type is 'RxNorm'-->
-                          <span *ngIf="prodCode._rxNormUrl">
-                            <a href="{{prodCode._rxNormUrl}}" target="_blank" alt="Go to RxNorm website"
-                              title="Go to RxNorm website">
-                              {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
-                            </a>
-                            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
-                            </mat-icon>
-                          </span>
-
-                          <span *ngIf="!prodCode._dailyMedUrl && !prodCode._phpIdUrl && !prodCode._rxNormUrl">
-                            {{prodCode.productCode}}
-                          </span>
-                        </span> <!-- loop productCodes -->
-
-                      </div>
-                    </div>
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Product Type:
-                      </div>
-                      <div class="row-property-value">
-                        {{prodProv.productType}}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Labeler Name:
-                      </div>
-                      <div class="row-property-value">
-                        <div *ngFor="let prodComp of prodProv.productCompanies">
-                          {{prodComp.companyName}}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Application Type Number:
-                      </div>
-                      <div class="row-property-value">
-                        <!-- Go to Browse Application page -->
-                        <div *ngIf="prodProv._applicationUrl; else noAppTypeOrNumber">
-                          <a [routerLink]="['/browse-applications']" [queryParams]="{search:prodProv._applicationUrl}"
-                            target="_blank" matTooltip='Go to Application record' *ngIf="isLoggedIn">
-                            <span class="font14px" *ngIf="prodProv.applicationType">
-                              {{prodProv.applicationType}}
-                            </span>
-                            <span class="font14px" *ngIf="prodProv.applicationNumber">
-                              {{prodProv.applicationNumber}}
-                            </span>
-                          </a>
-                        </div>
-                        <ng-template #noAppTypeOrNumber>
-                          <span class="font14px" *ngIf="prodProv.applicationType">
-                            {{prodProv.applicationType}}
-                          </span>
-                          <span class="font14px" *ngIf="prodProv.applicationNumber">
-                            {{prodProv.applicationNumber}}
-                          </span>
-                        </ng-template>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        City, State, Country:
-                      </div>
-                      <div class="row-property-value">
-
-                        <div *ngFor="let prodComp of prodProv.productCompanies">
-                          {{prodComp.companyCity}}
-                          <span *ngIf="prodComp.companyState">,</span>
-                          {{prodComp.companyState}}
-                          <span *ngIf="prodComp.companyCountry">,</span>
-                          {{prodComp.companyCountry}}
-                        </div>
-
-                      </div>
-                    </div>
-                    <div class="row-property">
-                      <div class="row-property-key">
-                        Public Domain:
-                      </div>
-                      <div class="row-property-value">
-                        {{prodProv.publicDomain}}
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- INSIDE TAB MAT_CARD END -->
-
-                </mat-tab>
-              </mat-tab-group>
-              <!-- GROUP BY PROVENANCE END -->
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Manufacturer Name:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.manufacturerName}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Total Manufacture Items:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.productManufactureItems.length}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Dosage Form:
-                  </div>
-                  <div class="row-property-value">
-                    <div *ngFor="let prodManuItem of product.productManufactureItems; let indexManuItem = index">
-                      <span *ngIf="indexManuItem > 0">
-                        <span *ngIf="prodManuItem.dosageForm">|</span>
-                      </span>
-                      {{prodManuItem.dosageForm}}
-                    </div>
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Route of Administration:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.routeAdmin}}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Display Ingredients BEGIN -->
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Substance Name
-                    <br>(Active):&nbsp;
-                    <span class="colormaroon font16px"><b>({{product._activeIngredients.length}})</b></span>
-                  </div>
-
-                  <div class="row-property-value">
-
-                    <!-- Display ACTIVE Substance -->
-                    <ol class="olstyle">
-
-                      <div *ngFor="let prodIngred of product._activeIngredients; let indexActiveIngred = index">
-                        <div *ngIf="prodIngred._ingredientName; else noActiveIngredientName">
-
-                          <!-- Show/Hide Link, if substance Name has more than 5 records -->
-                          <span *ngIf="indexActiveIngred == 5">
-                            <br>
-                            <a href="" (click)="toggleShowMoreLessActiveIngredArray(indexProd); false">
-                              <span *ngIf="showMoreLessActiveIngredArray[indexProd]"><b>Show More</b></span>
-                              <span *ngIf="!showMoreLessActiveIngredArray[indexProd]"><b>Show Less</b></span>
-                            </a>
-                            <br>
-                          </span>
-
-                          <div
-                            *ngIf="(!showMoreLessActiveIngredArray[indexProd] && indexActiveIngred >= 5) || indexActiveIngred < 5">
-                            <br>
-
-                            <li>
-                              <div class="divflex">
-
-                                <div *ngIf="prodIngred._substanceUuid; else noActiveSubUuid">
-                                  <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                    target="_blank">{{prodIngred._ingredientName}}
-                                  </a>
+                            <div class="row">
+                              <div class="row-property">
+                                <div class="row-property-key">
+                                  Dosage Form:
                                 </div>
-                                <ng-template #noActiveSubUuid>
-                                  {{prodIngred._ingredientName}}
-                                </ng-template>
-
-                                <!-- Show Substance Type -->
-                                <div *ngIf="prodIngred._substanceClass">
-                                  &nbsp;&nbsp;
-                                  <span class="colororange">
-                                    <span
-                                      [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
-                                    </span>
-                                  </span>
+                                <div class="row-property-value">
+                                  @for (prodManuItem of product.productManufactureItems; track prodManuItem; let indexManuItem = $index) {
+                                    <div>
+                                      @if (indexManuItem > 0) {
+                                        <span>
+                                          @if (prodManuItem.dosageForm) {
+                                            <span>|</span>
+                                          }
+                                        </span>
+                                      }
+                                      {{prodManuItem.dosageForm}}
+                                    </div>
+                                  }
                                 </div>
-
-                                <!-- Show Structures-->
-                                <div class="margintopneg15" *ngIf="prodIngred._substanceUuid">
-                                  <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
-                                    (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
-                                    <mat-icon matTooltip="Show Substance chemical structure">analytics
-                                    </mat-icon>
-                                  </button>
-                                </div>
-
-                              </div> <!-- class=divflex -->
-
-                              <!-- Show Average -->
-                              <div *ngIf="prodIngred.average">
-                                <span class="font11px">Average:
-                                  <b>{{prodIngred.average}}&nbsp;{{prodIngred.unit}}
-                                  </b>
-                                </span>
                               </div>
-
-                              <div class="divflex">
-                                <!-- Original Numerator and Denominator Strength -->
-                                <div>
-                                  <span *ngIf="prodIngred._ingredientStrengthDisplay">
-                                    <span class="font11px">
-                                      <b>
-                                        {{ prodIngred._ingredientStrengthDisplay }}
-
-                                        <!--
-                                        {{ prodIngred.originalNumeratorNumber }}&nbsp;{{
-                                        prodIngred.originalNumeratorUnit
-                                        }} per
-                                        {{ prodIngred.originalDenominatorNumber }}
-                                        {{ prodIngred.originalDenominatorUnit }}
-                                        -->
-                                      </b>
-                                    </span>
-                                  </span>
+                              <div class="row-property">
+                                <div class="row-property-key">
+                                  Route of Administration:
                                 </div>
-
-                                <!-- Original Denominator -->
-                                <!--
-                                <div class="marginleft5px">
-                                  <span *ngIf="prodIngred.originalDenominatorNumber">
-                                    <span class="font11px">&nbsp;&nbsp;Denominator:
-                                      <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
-                                        prodIngred.originalDenominatorUnit
-                                        }}
-                                      </b>
-                                    </span>
-                                  </span>
+                                <div class="row-property-value">
+                                  {{product.routeAdmin}}
                                 </div>
-                                -->
-                              </div> <!-- divflex -->
-
-                              <!-- Display Ingredient Type -->
-                              <div class="colorgreen" *ngIf="prodIngred.ingredientType">
-                                ({{ prodIngred.ingredientType }})
                               </div>
-                            </li>
+                            </div>
+                            <!-- Display Ingredients BEGIN -->
+                            <div class="row">
+                              <div class="row-property">
+                                <div class="row-property-key">
+                                  Substance Name
+                                  <br>(Active):&nbsp;
+                                    <span class="colormaroon font16px"><b>({{product._activeIngredients.length}})</b></span>
+                                  </div>
+                                  <div class="row-property-value">
+                                    <!-- Display ACTIVE Substance -->
+                                    <ol class="olstyle">
+                                      @for (prodIngred of product._activeIngredients; track prodIngred; let indexActiveIngred = $index) {
+                                        <div>
+                                          @if (prodIngred._ingredientName) {
+                                            <div>
+                                              <!-- Show/Hide Link, if substance Name has more than 5 records -->
+                                              @if (indexActiveIngred == 5) {
+                                                <span>
+                                                  <br>
+                                                    <a href="" (click)="toggleShowMoreLessActiveIngredArray(indexProd); false">
+                                                      @if (showMoreLessActiveIngredArray[indexProd]) {
+                                                        <span><b>Show More</b></span>
+                                                      }
+                                                      @if (!showMoreLessActiveIngredArray[indexProd]) {
+                                                        <span><b>Show Less</b></span>
+                                                      }
+                                                    </a>
+                                                    <br>
+                                                    </span>
+                                                  }
+                                                  @if ((!showMoreLessActiveIngredArray[indexProd] && indexActiveIngred >= 5) || indexActiveIngred < 5) {
+                                                    <div
+                                                      >
+                                                      <br>
+                                                        <li>
+                                                          <div class="divflex">
+                                                            @if (prodIngred._substanceUuid) {
+                                                              <div>
+                                                                <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                                                  target="_blank">{{prodIngred._ingredientName}}
+                                                                </a>
+                                                              </div>
+                                                            } @else {
+                                                              {{prodIngred._ingredientName}}
+                                                            }
+                                                            <!-- Show Substance Type -->
+                                                            @if (prodIngred._substanceClass) {
+                                                              <div>
+                                                                &nbsp;&nbsp;
+                                                                <span class="colororange">
+                                                                  <span
+                                                                    [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                                                                  </span>
+                                                                </span>
+                                                              </div>
+                                                            }
+                                                            <!-- Show Structures-->
+                                                            @if (prodIngred._substanceUuid) {
+                                                              <div class="margintopneg15">
+                                                                <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
+                                                                  (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
+                                                                  <mat-icon matTooltip="Show Substance chemical structure">analytics
+                                                                  </mat-icon>
+                                                                </button>
+                                                              </div>
+                                                            }
+                                                          </div> <!-- class=divflex -->
+                                                          <!-- Show Average -->
+                                                          @if (prodIngred.average) {
+                                                            <div>
+                                                              <span class="font11px">Average:
+                                                                <b>{{prodIngred.average}}&nbsp;{{prodIngred.unit}}
+                                                                </b>
+                                                              </span>
+                                                            </div>
+                                                          }
+                                                          <div class="divflex">
+                                                            <!-- Original Numerator and Denominator Strength -->
+                                                            <div>
+                                                              @if (prodIngred._ingredientStrengthDisplay) {
+                                                                <span>
+                                                                  <span class="font11px">
+                                                                    <b>
+                                                                      {{ prodIngred._ingredientStrengthDisplay }}
+                                                                      <!--
+                                                                      {{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                                                      prodIngred.originalNumeratorUnit
+                                                                      }} per
+                                                                      {{ prodIngred.originalDenominatorNumber }}
+                                                                      {{ prodIngred.originalDenominatorUnit }}
+                                                                      -->
+                                                                    </b>
+                                                                  </span>
+                                                                </span>
+                                                              }
+                                                            </div>
+                                                            <!-- Original Denominator -->
+                                                            <!--
+                                                            <div class="marginleft5px">
+                                                              <span *ngIf="prodIngred.originalDenominatorNumber">
+                                                                <span class="font11px">&nbsp;&nbsp;Denominator:
+                                                                  <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
+                                                                    prodIngred.originalDenominatorUnit
+                                                                    }}
+                                                                  </b>
+                                                                </span>
+                                                              </span>
+                                                            </div>
+                                                            -->
+                                                          </div> <!-- divflex -->
+                                                          <!-- Display Ingredient Type -->
+                                                          @if (prodIngred.ingredientType) {
+                                                            <div class="colorgreen">
+                                                              ({{ prodIngred.ingredientType }})
+                                                            </div>
+                                                          }
+                                                        </li>
+                                                      </div>
+                                                      } <!-- Hide/Show link -->
+                                                    </div>
+                                                  } @else {
+                                                    (No Substance Name)
+                                                    } <!-- if _ingredientName exists -->
+                                                  </div>
+                                                  } <!-- For Loop: activeIngredients List -->
+                                                </ol>
+                                              </div>
+                                            </div> <!-- Active Substance -->
+                                            <!-- Display Inactive Substance -->
+                                            <div class="row-property">
+                                              <div class="row-property-key">
+                                                Substance Name
+                                                <br>(Inactive/Other):&nbsp;
+                                                  <span class="colormaroon font16px"><b>({{product._otherIngredients.length}})</b></span>
+                                                </div>
+                                                <div class="row-property-value">
+                                                  <!-- Display Other Substance -->
+                                                  <ol class="olstyle">
+                                                    @for (prodIngred of product._otherIngredients; track prodIngred; let indexOtherIngred = $index) {
+                                                      <div>
+                                                        @if ( prodIngred._ingredientName) {
+                                                          <div>
+                                                            <!-- Show/Hide Link, if substance Name has more than 5 records -->
+                                                            @if (indexOtherIngred == 5) {
+                                                              <span>
+                                                                <br>
+                                                                  <a href="" (click)="toggleShowMoreLessOtherIngredArray(indexProd); false">
+                                                                    @if (showMoreLessOtherIngredArray[indexProd]) {
+                                                                      <span><b>Show More</b></span>
+                                                                    }
+                                                                    @if (!showMoreLessOtherIngredArray[indexProd]) {
+                                                                      <span><b>Show Less</b></span>
+                                                                    }
+                                                                  </a>
+                                                                  <br>
+                                                                  </span>
+                                                                }
+                                                                @if ((!showMoreLessOtherIngredArray[indexProd] && indexOtherIngred >= 5) || indexOtherIngred < 5) {
+                                                                  <div
+                                                                    >
+                                                                    <br>
+                                                                      <li>
+                                                                        <div class="divflex">
+                                                                          @if (prodIngred._substanceUuid) {
+                                                                            <div>
+                                                                              <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                                                                target="_blank">{{prodIngred._ingredientName}}
+                                                                              </a>
+                                                                            </div>
+                                                                          } @else {
+                                                                            {{prodIngred._ingredientName}}
+                                                                          }
+                                                                          <!-- Show Substance Class/Substance Type -->
+                                                                          @if (prodIngred._substanceClass) {
+                                                                            <div>
+                                                                              &nbsp;&nbsp;
+                                                                              <span class="colororange">
+                                                                                <span
+                                                                                  [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                                                                                </span>
+                                                                              </span>
+                                                                            </div>
+                                                                          }
+                                                                          <!-- Show Structures -->
+                                                                          @if (prodIngred._substanceUuid) {
+                                                                            <div class="margintopneg15 marginleft10px">
+                                                                              <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
+                                                                                (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
+                                                                                <mat-icon matTooltip="Click to view Substance chemical structure">analytics
+                                                                                </mat-icon>
+                                                                              </button>
+                                                                            </div>
+                                                                          }
+                                                                        </div> <!-- class=divflex -->
+                                                                        <!-- Show Average -->
+                                                                        @if (prodIngred.average) {
+                                                                          <div>
+                                                                            <span class="font11px">Average:
+                                                                              <b>{{prodIngred.average}}&nbsp;{{prodIngred.unit}}
+                                                                              </b>
+                                                                            </span>
+                                                                          </div>
+                                                                        }
+                                                                        <div class="divflex">
+                                                                          <!-- Original Numerator and Denominator Strength -->
+                                                                          <div>
+                                                                            @if (prodIngred._ingredientStrengthDisplay) {
+                                                                              <span>
+                                                                                <span class="font11px">
+                                                                                  <b>
+                                                                                    {{ prodIngred._ingredientStrengthDisplay }}
+                                                                                    <!--
+                                                                                    {{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                                                                    prodIngred.originalNumeratorUnit
+                                                                                    }} per
+                                                                                    {{ prodIngred.originalDenominatorNumber }}
+                                                                                    {{ prodIngred.originalDenominatorUnit }}
+                                                                                    -->
+                                                                                  </b>
+                                                                                </span>
+                                                                              </span>
+                                                                            }
+                                                                          </div>
+                                                                          <!--
+                                                                          <span *ngIf="prodIngred.originalNumeratorNumber">
+                                                                            <span class="font11px">Numerator:
+                                                                              <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                                                                prodIngred.originalNumeratorUnit
+                                                                                }}
+                                                                              </b>
+                                                                            </span>
+                                                                          </span>
+                                                                          -->
+                                                                          <!-- Original Denominator -->
+                                                                          <!--
+                                                                          <div class="marginleft5px">
+                                                                            <span *ngIf="prodIngred.originalDenominatorNumber">
+                                                                              <span class="font11px">&nbsp;&nbsp;Denominator:
+                                                                                <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
+                                                                                  prodIngred.originalDenominatorUnit
+                                                                                  }}
+                                                                                </b>
+                                                                              </span>
+                                                                            </span>
+                                                                          </div>
+                                                                          -->
+                                                                        </div> <!-- divflex -->
+                                                                        <!-- Display Ingredient Type -->
+                                                                        @if (prodIngred.ingredientType) {
+                                                                          <div class="colorgreen">
+                                                                            ({{ prodIngred.ingredientType }})
+                                                                          </div>
+                                                                        }
+                                                                      </li>
+                                                                    </div>
+                                                                    } <!-- Hide/Show link -->
+                                                                  </div>
+                                                                } @else {
+                                                                  (No Substance Name)
+                                                                  } <!-- if _ingredientName exists -->
+                                                                </div>
+                                                                } <!-- For Loop: otherIngredients List -->
+                                                              </ol>
+                                                            </div>
+                                                          </div> <!-- Inactive Substance -->
+                                                        </div> <!-- row Substance Name DISPLAY END -->
+                                                        <!-- Display Audit Details BEGIN -->
+                                                        @if (isLoggedIn) {
+                                                          <div class="row">
+                                                            <div class="row-property">
+                                                              <div class="row-property-key">
+                                                                Created Date:
+                                                              </div>
+                                                              <div class="row-property-value">
+                                                                {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                                                              </div>
+                                                            </div>
+                                                            <div class="row-property">
+                                                              <div class="row-property-key">
+                                                                Last Modified:
+                                                              </div>
+                                                              <div class="row-property-value">
+                                                                {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        }
+                                                        @if (isLoggedIn) {
+                                                          <div class="row">
+                                                            <div class="row-property">
+                                                              <div class="row-property-key">
+                                                                Created By:
+                                                              </div>
+                                                              <div class="row-property-value">
+                                                                {{product.createdBy}}
+                                                              </div>
+                                                            </div>
+                                                            <div class="row-property">
+                                                              <div class="row-property-key">
+                                                                Last Modified By:
+                                                              </div>
+                                                              <div class="row-property-value">
+                                                                {{product.modifiedBy}}
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        }
+                                                        <!-- Audit Details END -->
+                                                      </mat-card-content>
+                                                    </mat-card>
+                                                  }
+                                                  <!-- FIRST MAT-CARD END -->
+                                                </div>
+                                              } @else {
+                                                <!-- No Product Found. -->
+                                                <!--
+                                                <div class="padleft10px colorred">
+                                                  <br>
+                                                    No Product records found. Please Reindex to see the Product records here.
+                                                  </div>
+                                                  -->
+                                                  } <!-- class=cards -->
+                                                </div> <!-- [ngClass]=view -->
 
-                          </div> <!-- Hide/Show link -->
+                                                <!-- Pagination at the bottom of the page -->
+                                                <div class="controls-container">
+                                                  <div class="full-paginator">
+                                                    <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
+                                                      [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+                                                    </mat-paginator>
 
-                        </div> <!-- if _ingredientName exists -->
-                        <ng-template #noActiveIngredientName>
-                          (No Substance Name)
-                        </ng-template>
-                      </div> <!-- For Loop: activeIngredients List -->
-
-                    </ol>
-
-                  </div>
-                </div> <!-- Active Substance -->
-
-
-                <!-- Display Inactive Substance -->
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Substance Name
-                    <br>(Inactive/Other):&nbsp;
-                    <span class="colormaroon font16px"><b>({{product._otherIngredients.length}})</b></span>
-                  </div>
-
-                  <div class="row-property-value">
-                    <!-- Display Other Substance -->
-                    <ol class="olstyle">
-
-                      <div *ngFor="let prodIngred of product._otherIngredients; let indexOtherIngred = index">
-                        <div *ngIf=" prodIngred._ingredientName; else noOtherIngredientName">
-
-                          <!-- Show/Hide Link, if substance Name has more than 5 records -->
-                          <span *ngIf="indexOtherIngred == 5">
-                            <br>
-                            <a href="" (click)="toggleShowMoreLessOtherIngredArray(indexProd); false">
-                              <span *ngIf="showMoreLessOtherIngredArray[indexProd]"><b>Show More</b></span>
-                              <span *ngIf="!showMoreLessOtherIngredArray[indexProd]"><b>Show Less</b></span>
-                            </a>
-                            <br>
-                          </span>
-
-                          <div
-                            *ngIf="(!showMoreLessOtherIngredArray[indexProd] && indexOtherIngred >= 5) || indexOtherIngred < 5">
-                            <br>
-
-                            <li>
-                              <div class="divflex">
-
-                                <div *ngIf="prodIngred._substanceUuid; else noInactiveSubUuid">
-                                  <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                    target="_blank">{{prodIngred._ingredientName}}
-                                  </a>
-                                </div>
-                                <ng-template #noInactiveSubUuid>
-                                  {{prodIngred._ingredientName}}
-                                </ng-template>
-
-                                <!-- Show Substance Class/Substance Type -->
-                                <div *ngIf="prodIngred._substanceClass">
-                                  &nbsp;&nbsp;
-                                  <span class="colororange">
-                                    <span
-                                      [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
-                                    </span>
-                                  </span>
-                                </div>
-
-                                <!-- Show Structures -->
-                                <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
-                                  <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
-                                    (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
-                                    <mat-icon matTooltip="Click to view Substance chemical structure">analytics
-                                    </mat-icon>
-                                  </button>
-                                </div>
-
-                              </div> <!-- class=divflex -->
-
-                              <!-- Show Average -->
-                              <div *ngIf="prodIngred.average">
-                                <span class="font11px">Average:
-                                  <b>{{prodIngred.average}}&nbsp;{{prodIngred.unit}}
-                                  </b>
-                                </span>
-                              </div>
-
-                              <div class="divflex">
-                                <!-- Original Numerator and Denominator Strength -->
-                                <div>
-                                  <span *ngIf="prodIngred._ingredientStrengthDisplay">
-                                    <span class="font11px">
-                                      <b>
-                                        {{ prodIngred._ingredientStrengthDisplay }}
-
-                                        <!--
-                                      {{ prodIngred.originalNumeratorNumber }}&nbsp;{{
-                                      prodIngred.originalNumeratorUnit
-                                      }} per
-                                      {{ prodIngred.originalDenominatorNumber }}
-                                      {{ prodIngred.originalDenominatorUnit }}
-                                      -->
-                                      </b>
-                                    </span>
-                                  </span>
-                                </div>
-                                <!--
-                                  <span *ngIf="prodIngred.originalNumeratorNumber">
-                                    <span class="font11px">Numerator:
-                                      <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{
-                                        prodIngred.originalNumeratorUnit
-                                        }}
-                                      </b>
-                                    </span>
-                                  </span>
-                                  -->
-                                <!-- Original Denominator -->
-                                <!--
-                                <div class="marginleft5px">
-                                  <span *ngIf="prodIngred.originalDenominatorNumber">
-                                    <span class="font11px">&nbsp;&nbsp;Denominator:
-                                      <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
-                                        prodIngred.originalDenominatorUnit
-                                        }}
-                                      </b>
-                                    </span>
-                                  </span>
-                                </div>
-                                -->
-                              </div> <!-- divflex -->
-
-                              <!-- Display Ingredient Type -->
-                              <div class="colorgreen" *ngIf="prodIngred.ingredientType">
-                                ({{ prodIngred.ingredientType }})
-                              </div>
-
-                            </li>
-
-                          </div> <!-- Hide/Show link -->
-
-                        </div> <!-- if _ingredientName exists -->
-                        <ng-template #noOtherIngredientName>
-                          (No Substance Name)
-                        </ng-template>
-                      </div> <!-- For Loop: otherIngredients List -->
-
-                    </ol>
-
-                  </div>
-                </div> <!-- Inactive Substance -->
-
-              </div> <!-- row Substance Name DISPLAY END -->
-
-              <!-- Display Audit Details BEGIN -->
-              <div class="row" *ngIf="isLoggedIn">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Created Date:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Last Modified:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row" *ngIf="isLoggedIn">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Created By:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.createdBy}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Last Modified By:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.modifiedBy}}
-                  </div>
-                </div>
-              </div>
-              <!-- Audit Details END -->
-
-            </mat-card-content>
-          </mat-card>
-          <!-- FIRST MAT-CARD END -->
+                                                    <div class="page-selector">
+                                                      <span class="page-label">Page: </span>
+                                                      <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+                                                        <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                                                          [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                                                          (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                                                          (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+                                                      </mat-form-field>
+                                                      <span class="page-label"> of {{lastPage}}</span>
+                                                    </div>
+                                                  </div>
+                                                </div>
 
 
-        </div> <!-- class=cards -->
-      </div> <!-- [ngClass]=view -->
-
-      <!-- Pagination at the bottom of the page -->
-      <div class="controls-container">
-        <div class="full-paginator">
-          <mat-paginator #paginator [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
-          </mat-paginator>
-
-          <div class="page-selector">
-            <span class="page-label">Page: </span>
-            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
-              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
-                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
-                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
-                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
-            </mat-form-field>
-            <span class="page-label"> of {{lastPage}}</span>
-          </div>
-        </div>
-      </div>
-
-      <ng-template #noRecordProduct>
-        <!-- No Product Found. -->
-        <!--
-      <div class="padleft10px colorred">
-        <br>
-        No Product records found. Please Reindex to see the Product records here.
-      </div>
-      -->
-      </ng-template>
-
-    </div> <!-- class=side-nav-content -->
-  </mat-sidenav-content>
-</mat-sidenav-container>
+                                              </div> <!-- class=side-nav-content -->
+                                            </mat-sidenav-content>
+                                          </mat-sidenav-container>
