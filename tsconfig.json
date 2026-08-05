@@ -16,12 +16,6 @@
       "node_modules/@types"
     ],
     "paths": {
-      "jsdraw-wrapper": ["dist/jsdraw-wrapper"],
-      "jsdraw-wrapper/*": ["dist/jsdraw-wrapper/*"],
-      "ketcher-wrapper": ["dist/ketcher-wrapper"],
-      "ketcher-wrapper/*": ["dist/ketcher-wrapper/*"],
-      "file-select": ["dist/file-select"],
-      "file-select/*": ["dist/file-select/*"],
       "@gsrs-core/*": ["src/app/core/*"],
       "@environment/*": ["src/environments/*"]
     },
