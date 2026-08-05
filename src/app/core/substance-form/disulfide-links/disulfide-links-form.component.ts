@@ -25,8 +25,7 @@ import { SubunitSelectorDialogComponent } from "@gsrs-core/substance-form/subuni
   standalone: false,
 })
 export class DisulfideLinksFormComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   private privateLink: Link;
   public cysteine: Array<Site> = [];
   @Output() linkDeleted = new EventEmitter<Link>();

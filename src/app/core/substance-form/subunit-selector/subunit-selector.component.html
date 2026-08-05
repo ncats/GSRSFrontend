@@ -21,7 +21,7 @@
         }
       </div>
     }
-    @if (card == 'feature') {
+    @if (card === 'feature') {
       <div >
         <div class="form-row-feature">
           <mat-form-field class="name-type mat-form-field">
@@ -62,16 +62,16 @@
         </div>
         <div class="form-row-2">
           <div class = "feature-step">
-            @if (selectState == 'first') {
+            @if (selectState === 'first') {
               <span>Select Starting Site</span>
             }
-            @if (selectState == 'last') {
+            @if (selectState === 'last') {
               <span>Select Ending Site</span>
             }
-            @if (selectState == 'finished' && (featureName === '' || featureName === null)) {
+            @if (selectState === 'finished' && (featureName === '' || featureName === null)) {
               <span>Enter a Feature Name </span>
             }
-            @if (selectState == 'finished') {
+            @if (selectState === 'finished') {
               <span>Click a new site to add an additional range</span>
             }
           </div>

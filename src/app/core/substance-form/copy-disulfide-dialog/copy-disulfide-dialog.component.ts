@@ -19,7 +19,9 @@ export class CopyDisulfideDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<CopyDisulfideDialogComponent>,
     private subService: SubstanceFormService,
     @Inject(MAT_DIALOG_DATA) public data: any = {}
-  ) {dialogRef.disableClose = true; }
+  ) {
+dialogRef.disableClose = true; 
+}
 
   ngOnInit() {
     this.unit = this.data.unit;

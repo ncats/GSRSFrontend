@@ -204,7 +204,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.mol = this.structure.molfile ?? null;
       // Refresh imported structures after the editor finishes loading.
       if (this.activatedRoute?.snapshot?.queryParams?.['importStructure']) {
-        setTimeout(() => { this.updateStructureForm(this.structure.molfile!); }, 1000);
+        setTimeout(() => {
+ this.updateStructureForm(this.structure.molfile!); 
+}, 1000);
       }
       this.isInitializing = false;
     }
@@ -216,7 +218,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   updateStructureForm(molfile: string): void {
-    if (this.isInitializing) { return; }
+    if (this.isInitializing) {
+ return; 
+}
 
     // The editor wrapper has already handled Ketcher isotope corrections.
     this.structure.molfile = molfile;

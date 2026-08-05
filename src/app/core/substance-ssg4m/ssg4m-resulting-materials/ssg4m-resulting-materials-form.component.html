@@ -183,7 +183,7 @@
             <mat-icon>add_circle_outline</mat-icon>Add Acceptance Criteria
           </button>
           <!-- Acceptance Criteria Loop -->
-          @if (resultingMaterial.acceptanceCriterias != null) {
+          @if (resultingMaterial.acceptanceCriterias !== null) {
             <div>
               @for (
                 acceptanceCriteria of resultingMaterial.acceptanceCriterias; track

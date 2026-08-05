@@ -16,7 +16,7 @@
         }
       </span>
     }
-    @if (schema.type!='array') {
+    @if (schema.type!=='array') {
       <mat-select  multiple [formControl]="control" [attr.name]="name" [attr.id]="id"
         [disableControl]="schema.readOnly" class="form-control cv-select" >
         <ng-container>
@@ -59,7 +59,7 @@
         }
       </span>
     }
-    @if (schema.type!='array') {
+    @if (schema.type!=='array') {
       <mat-select [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control cv-select">
         @if (schema.oneOf) {
           @for (option of schema.oneOf; track option) {

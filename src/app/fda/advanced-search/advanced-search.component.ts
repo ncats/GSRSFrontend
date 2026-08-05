@@ -847,8 +847,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           //    }
         }
       });
-      }
-      else if (this.category === 'Application') {
+      } else if (this.category === 'Application') {
         this.router.navigate(['/browse-applications'], navigationExtras);
       } else if (this.category === 'Product') {
         this.router.navigate(['/browse-products'], navigationExtras);

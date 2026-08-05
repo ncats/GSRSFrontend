@@ -86,7 +86,9 @@ private overlayContainer: HTMLElement;
           this.CVService.addVocabTerm( this.vocabulary).subscribe (response => {
             if (response.terms && response.terms.length === this.vocabulary.terms.length) {
               this.message = 'Term ' + this.privateTerm.value + ' Added to ' + this.vocabulary.domain + '';
-              setTimeout(() => {this.dialogRef.close(this.privateTerm); }, 3000);
+              setTimeout(() => {
+this.dialogRef.close(this.privateTerm); 
+}, 3000);
             }
           }, error => {
             this.vocabulary.terms.pop();
@@ -94,8 +96,7 @@ private overlayContainer: HTMLElement;
           if (error.error && error.error.message) {
             str += ' - ' + error.error.message;
     
-          }
-         else if(error.message) {
+          } else if(error.message) {
             str += ' - ' + error.message;
           }
           this.message = str;
@@ -117,8 +118,7 @@ private overlayContainer: HTMLElement;
       if (error.error && error.error.message) {
         str += ' - ' + error.error.message;
 
-      }
-     else if(error.message) {
+      } else if(error.message) {
         str += ' - ' + error.message;
       }
       this.message = str;

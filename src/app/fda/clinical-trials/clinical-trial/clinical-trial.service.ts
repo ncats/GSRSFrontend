@@ -60,7 +60,9 @@ export class ClinicalTrialService extends BaseHttpService {
     let url = this.apiBaseUrl;
     // search
     url += 'clinicaltrialsus/search';
-    if (!searchTerm) { searchTerm = ''; }
+    if (!searchTerm) {
+ searchTerm = ''; 
+}
     if (searchTerm !== null && searchTerm !== '') {
       if (type !== null && type !== '') {
         if (type === 'trialNumber' ) {

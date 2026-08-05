@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { Location, LocationStrategy } from '@angular/common';
 import { Title, DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -39,7 +39,7 @@ import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-sear
   styleUrls: ['./invitro-pharmacology-browse.component.scss'],
   standalone: false
 })
-export class InvitroPharmacologyBrowseComponent implements OnInit {
+export class InvitroPharmacologyBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public sortValues = invitroPharmacologySearchSortValues;
   public assays: Array<InvitroAssayInformation>;

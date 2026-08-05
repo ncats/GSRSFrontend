@@ -75,7 +75,7 @@
   <div class="query-column">
     @for (commandInput of commandInputs; track commandInput; let index = $index) {
       <div class="query-input">
-        @if (commandInput.type == 'text' || commandInput.type == 'boolean' || commandInput.type == 'number') {
+        @if (commandInput.type === 'text' || commandInput.type === 'boolean' || commandInput.type === 'number') {
           <div>
             <mat-form-field floatLabel="never">
               <input
@@ -100,7 +100,7 @@
             </mat-form-field>
           </div>
         }
-        @if (commandInput.type == 'datetime') {
+        @if (commandInput.type === 'datetime') {
           <div>
             <mat-form-field floatLabel="never">
               <input
@@ -135,7 +135,7 @@
             </mat-form-field>
           </div>
         }
-        @if (commandInput.type == 'select') {
+        @if (commandInput.type === 'select') {
           <div>
             <mat-form-field floatLabel="never">
               <mat-select [(ngModel)]="commandInputValueDict[commandInput.type][index]"

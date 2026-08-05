@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from "@angular/common/http";
@@ -37,7 +37,7 @@ import { InvitroAssayInformation, InvitroAssaySet, InvitroAssayAnalyte, Validati
   styleUrls: ['./invitro-pharmacology-assay-data-import.component.scss'],
   standalone: false
 })
-export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
+export class InvitroPharmacologyAssayDataImportComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('saveTemplate') saveTemplate: TemplateRef<any>;
 
@@ -126,8 +126,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     if (target.files.length > 1) {
       alert('Multiple files are not allowed');
       return;
-    }
-    else {
+    } else {
       this.importSaveMessageArray = [];
       this.importValidateMessageArray = [];
       this.disableImportButton = 'true';
@@ -753,24 +752,21 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.TARGET_NAME + ' Approval ID "' + element["targetNameApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
-                      }
-                      else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
+                      } else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
                         element["humanHomologTargetSubstanceKey"] = substanceKey;
                         element["humanHomologTargetSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
                         if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.HUMAN_HOMOLOG_TARGET + ' Approval ID "' + element["humanHomologTargetApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
-                      }
-                      else if (fieldName == this.LIGAND_SUBSTRATE) {
+                      } else if (fieldName == this.LIGAND_SUBSTRATE) {
                         element["ligandSubstrateSubstanceKey"] = substanceKey;
                         element["ligandSubstrateSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
                         if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.LIGAND_SUBSTRATE + ' Approval ID "' + element["ligandSubstrateApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
-                      }
-                      else if (fieldName == this.ANALYTE) {
+                      } else if (fieldName == this.ANALYTE) {
                         element["analyteSubstanceKey"] = substanceKey;
                         element["analyteSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
                       }

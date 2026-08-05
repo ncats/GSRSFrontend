@@ -1,6 +1,6 @@
 import { SubstanceSuggestionsGroup } from '../app/utils/substance-suggestions-group.model';
 
-/* eslint-disable max-len, @typescript-eslint/quotes */
+/* eslint-disable max-len */
 export const SubstanceData: SubstanceSuggestionsGroup = {
   "Name": [{
     "key": "BUTYRIC ACID, 4-(P-ARSENOSOPHENYL)-",

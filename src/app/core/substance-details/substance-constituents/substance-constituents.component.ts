@@ -26,7 +26,9 @@ export class SubstanceConstituentsComponent extends SubstanceCardBaseFilteredLis
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
 
-  ) { super(gaService); }
+  ) {
+ super(gaService); 
+}
 
   ngOnInit() {
     this.substanceUpdated.subscribe(substance => {

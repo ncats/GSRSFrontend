@@ -14,7 +14,7 @@
   @if (constituents && constituents.length > 0 && formulation) {
     <div class = "component-count" >Constituents in Calculation: {{components}} / {{constituents.length}}</div>
   }
-  @if ((!constituents || constituents.length == 0) && formulation) {
+  @if ((!constituents || constituents.length === 0) && formulation) {
     <div class = "component-count" >Constituents in Calculation: 0</div>
   }
 

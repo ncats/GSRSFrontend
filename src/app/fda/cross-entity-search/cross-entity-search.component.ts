@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -30,7 +30,7 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
     styleUrls: ['./cross-entity-search.component.scss'],
     standalone: false
 })
-export class CrossEntitySearchComponent implements OnInit {
+export class CrossEntitySearchComponent implements OnInit, OnDestroy {
 
   @Output() crossEntityFacetsSelected = new EventEmitter<DisplayFacet[]>();
   @Output() getSearchIdsOnly = new EventEmitter<boolean>();

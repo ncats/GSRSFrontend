@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
@@ -12,7 +12,7 @@ import { concatMap } from "rxjs"
     styleUrls: ['./session-expiration-dialog.component.scss'],
     standalone: false
 })
-export class SessionExpirationDialogComponent implements OnInit {
+export class SessionExpirationDialogComponent implements OnInit, OnDestroy {
   sessionExpirationWarning: SessionExpirationWarning = null;
   sessionExpiringAt: number;
   timeRemainingSeconds: number;
@@ -36,7 +36,9 @@ export class SessionExpirationDialogComponent implements OnInit {
   ngOnInit() {
     // If SessionExpirationWarning is not found in configData, the intervals are never set
     // and this component is inert
-    this.updateDialogInterval = setInterval(() => { this.updateDialog(); });
+    this.updateDialogInterval = setInterval(() => {
+ this.updateDialog(); 
+});
   }
 
   ngOnDestroy() {
@@ -72,7 +74,9 @@ export class SessionExpirationDialogComponent implements OnInit {
       data => {
         this.dialogRef.close(true);
       },
-      err => { console.log("Error extending session: ", err) },
+      err => {
+ console.log("Error extending session: ", err) 
+},
       () => { }
     );
   }

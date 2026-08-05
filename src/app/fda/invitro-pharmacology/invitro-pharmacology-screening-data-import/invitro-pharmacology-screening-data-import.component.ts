@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -43,7 +43,7 @@ import {
   standalone: false
 })
 
-export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
+export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('progressDialogTemplate') progressDialogTemplateRef: TemplateRef<any>;
 
   private TEST_AGENT = "Test Agent";
@@ -136,8 +136,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     if (target.files.length > 1) {
       alert('Multiple files are not allowed');
       return;
-    }
-    else {
+    } else {
       // Empty the list
       this.importDataList.length = 0;
       //requiredFieldMissingArray = [{}];
@@ -212,8 +211,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheetRefLab[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -229,19 +227,16 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
               if (!this.invitroReference.sourceType) {
                 this.requiredFieldMissingArray[0].sourceType = true;
               }
-            }
-            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source/Citation *') {
+            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source/Citation *') {
               this.invitroReference.sourceCitation = this.getValue(worksheetRefLab[cellKeyValue]);
 
               // ** Validate Required field
               if (!this.invitroReference.sourceCitation) {
                 this.requiredFieldMissingArray[0].sourceCitation = true;
               }
-            }
-            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Id') {
+            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Id') {
               this.invitroReference.sourceId = this.getValue(worksheetRefLab[cellKeyValue]);
-            }
-            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Digital Object Identifier') {
+            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Digital Object Identifier') {
               this.invitroReference.digitalObjectIdentifier = this.getValue(worksheetRefLab[cellKeyValue]);
             }
 
@@ -280,8 +275,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheetRefLab[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -338,8 +332,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheetRefLab[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -395,8 +388,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheet[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           this.invitroSponsorSubmitter = this.invitroSponsorReport.invitroSponsorSubmitters[0];
           // Read the key value in the next column
@@ -453,8 +445,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheet[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -505,8 +496,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheet[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -562,8 +552,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheet[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });

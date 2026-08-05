@@ -51,7 +51,7 @@
   }
 
   <!-- Show Add Process button if there is zero Process -->
-  @if (process && process.length == 0) {
+  @if (process && process.length === 0) {
     <div class="divflexright bordergray">
       <button mat-stroked-button color="primary" class="" (click)="addProcess()">
         <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Process

@@ -1,12 +1,12 @@
 <h3 mat-dialog-title>Action Settings</h3>
-@if (setType != 'Create Name Action' && setType != 'Create Code Action' && setType != 'Create Property Action' && setType != 'Create Note Action' ) {
+@if (setType !== 'Create Name Action' && setType !== 'Create Code Action' && setType !== 'Create Property Action' && setType !== 'Create Note Action' ) {
   <h4 mat-dialog-title>{{settingsActive.label}}</h4>
 }
 
 
 <div mat-dialog-content style = "min-height: 320px;padding-left:40px">
 
-  @if (setType == 'Create Name Action' || setType == 'Create Code Action' || setType == 'Create Property Action' || setType == 'Create Note Action') {
+  @if (setType === 'Create Name Action' || setType === 'Create Code Action' || setType === 'Create Property Action' || setType === 'Create Note Action') {
     <mat-form-field style = "width:230px;font-weight:bold;margin-top: -15px;
       margin-bottom: 20px;margin-left:-20px;">
       <mat-select [(ngModel)]="settingsActive.label"
@@ -19,7 +19,7 @@
     </mat-form-field>
   }
 
-  @if (settingsActive.actionName == 'code_import') {
+  @if (settingsActive.actionName === 'code_import') {
     <div>
       <div class = "label-value"  style = "margin-bottom: 10px;">
         <div class = "label">Code System</div>
@@ -45,7 +45,7 @@
     </div>
   }
 
-  @if (settingsActive.actionName == 'common_name') {
+  @if (settingsActive.actionName === 'common_name') {
     <div>
       <div class = "label-value"  style = "margin-bottom: 10px;">
         <div class = "label">Name</div>
@@ -79,7 +79,7 @@
   </div>
 }
 
-@if (settingsActive.actionName == 'property_import') {
+@if (settingsActive.actionName === 'property_import') {
   <div>
     <div class = "label-value"  style = "margin-bottom: 10px;">
       <div class = "label">Name</div>
@@ -109,7 +109,7 @@
   </div>
 }
 
-@if (settingsActive.actionName == 'public_reference') {
+@if (settingsActive.actionName === 'public_reference') {
   <div>
     <div class = "label-value"  style = "margin-bottom: 10px;">
       <div class = "label">Document Type</div>
@@ -138,7 +138,7 @@
   </div>
 }
 
-@if (settingsActive.actionName == 'structure_and_moieties') {
+@if (settingsActive.actionName === 'structure_and_moieties') {
   <div>
     <div class = "label-value"  style = "margin-bottom: 10px;">
       <div class = "label">Molfile</div>
@@ -160,7 +160,7 @@
 </div>-->
 </div>
 }
-@if (settingsActive.actionName == 'structure_and_moieties_from_text') {
+@if (settingsActive.actionName === 'structure_and_moieties_from_text') {
   <div>
     <div class = "label-value"  style = "margin-bottom: 10px;">
       <div class = "label">SMILES</div>
@@ -172,7 +172,7 @@
     </div>
   </div>
 }
-@if (settingsActive.actionName == 'note_import') {
+@if (settingsActive.actionName === 'note_import') {
   <div>
     <div class = "label-value"  style = "margin-bottom: 10px;">
       <div class = "label">Note</div>

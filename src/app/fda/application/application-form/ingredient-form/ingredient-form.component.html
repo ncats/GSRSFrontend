@@ -3,11 +3,11 @@
   <button
     mat-icon-button
     [ngStyle]="{ color: 'orangered' }"
-    [disabled]="totalIngredient == 1"
+    [disabled]="totalIngredient === 1"
     (click)="confirmDeleteIngredient(prodIndex, ingredIndex)"
     matTooltip="Delete Ingredient Details {{ ingredIndex + 1 }}"
     >
-    <mat-icon [class.disabled]="totalIngredient == 1">delete_forever</mat-icon>
+    <mat-icon [class.disabled]="totalIngredient === 1">delete_forever</mat-icon>
   </button>
   &nbsp;&nbsp;
   <button

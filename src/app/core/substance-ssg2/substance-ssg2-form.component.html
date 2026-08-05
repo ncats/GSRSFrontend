@@ -36,7 +36,7 @@
             @for (message of validationMessages; track message; let i = $index) {
               <div class="validation-message" >
                 <span class = "validation-body" >
-                  <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+                  <div class="message-type" [ngClass]="message.messageType === 'ERROR' ? 'error-message' : 'warning-message'">
                   {{message.messageType}}</div>
                   <div class="message">{{message.message}}@for (link of message.links; track link) {
                     <span><br />
@@ -46,7 +46,7 @@
                   </div>
                 </span>
                 <span class = "validation-dismiss">
-                  @if (message.messageType != 'ERROR' && !approving) {
+                  @if (message.messageType !== 'ERROR' && !approving) {
                     <button mat-icon-button matTooltip="Dismiss"
                       (click)="dismissValidationMessage(i)">
                       <mat-icon svgIcon="cancel"></mat-icon>

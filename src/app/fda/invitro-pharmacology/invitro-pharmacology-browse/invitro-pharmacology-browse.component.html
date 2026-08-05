@@ -43,7 +43,7 @@
                     @if (((matchType) && (matchType === 'WORD' || matchType === 'FULL'))) {
                       <div>
                         <div class="match-type">
-                          {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                          {{matchType === 'WORD' ? 'Contains Match' : 'Exact Match'}}
                         </div>
                         @for (suggestion of narrowSearchSuggestions[matchType]; track suggestion) {
                           <button mat-menu-item
@@ -1092,7 +1092,7 @@
                                                                 <ng-container matColumnDef="isFromResult">
                                                                   <th mat-header-cell *matHeaderCellDef> From Result Data </th>
                                                                   <td class="width80px" mat-cell *matCellDef="let assaysum">
-                                                                    @if (assaysum.isFromResult && assaysum.isFromResult == true) {
+                                                                    @if (assaysum.isFromResult && assaysum.isFromResult === true) {
                                                                       <span>
                                                                         <mat-icon matTooltip="This Summary data is from Result data">check_circle_outline
                                                                         </mat-icon>

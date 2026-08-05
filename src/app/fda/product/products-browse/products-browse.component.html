@@ -8,7 +8,7 @@
 
     @if (isFacetsParamsInit === true) {
       <span>
-        @if (showCrossEntitySearch == true) {
+        @if (showCrossEntitySearch === true) {
           <span>
             <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [secondIdLists]="secondIdLists"
               [searchTerm]="searchTerm" [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
@@ -101,7 +101,7 @@
                   @if (((matchType) && (matchType === 'WORD' || matchType === 'FULL'))) {
                     <div>
                       <div class="match-type">
-                        {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                        {{matchType === 'WORD' ? 'Contains Match' : 'Exact Match'}}
                       </div>
                       @for (suggestion of narrowSearchSuggestions[matchType]; track suggestion) {
                         <button mat-menu-item
@@ -690,7 +690,7 @@
                                                     </span>
                                                   }
                                                 </div>
-                                                @if (prodName.displayName && prodName.displayName == true) {
+                                                @if (prodName.displayName && prodName.displayName === true) {
                                                   <div>
                                                     &nbsp;
                                                     <mat-icon class="margintopneg5" matTooltip="Display Name">check</mat-icon>
@@ -927,7 +927,7 @@
                                           @if (prodIngred._ingredientName) {
                                             <div>
                                               <!-- Show/Hide Link, if substance Name has more than 5 records -->
-                                              @if (indexActiveIngred == 5) {
+                                              @if (indexActiveIngred === 5) {
                                                 <span>
                                                   <br>
                                                     <a href="" (click)="toggleShowMoreLessActiveIngredArray(indexProd); false">
@@ -1054,7 +1054,7 @@
                                                         @if ( prodIngred._ingredientName) {
                                                           <div>
                                                             <!-- Show/Hide Link, if substance Name has more than 5 records -->
-                                                            @if (indexOtherIngred == 5) {
+                                                            @if (indexOtherIngred === 5) {
                                                               <span>
                                                                 <br>
                                                                   <a href="" (click)="toggleShowMoreLessOtherIngredArray(indexProd); false">

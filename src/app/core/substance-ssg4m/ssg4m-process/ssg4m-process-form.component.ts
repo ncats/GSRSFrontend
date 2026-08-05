@@ -24,7 +24,7 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
     styleUrls: ['./ssg4m-process-form.component.scss'],
     standalone: false
 })
-export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
+export class Ssg4mProcessFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();
 
   tabSelectedIndex: number;

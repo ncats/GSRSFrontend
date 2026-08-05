@@ -5,7 +5,7 @@
         {{ schema.title }}
       </label>
     }
-    @if (schema.type!='array') {
+    @if (schema.type!=='array') {
       <div class="checkbox">
         <label class="horizontal control-label">
           <input [formControl]="control" [attr.name]="name" [attr.id]="id" [indeterminate]="control.value !== false && control.value !== true ? true :null" type="checkbox" [disableControl]="schema.readOnly">
@@ -51,7 +51,7 @@
         }
       </label>
     }
-    @if (schema.type!='array') {
+    @if (schema.type!=='array') {
       <div class="checkbox">
         <label class="horizontal control-label">
           <input [formControl]="control" [attr.name]="name" [attr.id]="id" [indeterminate]="control.value !== false && control.value !== true ? true :null" type="checkbox" [disableControl]="schema.readOnly">
@@ -96,7 +96,7 @@
         }
       </label>
     }
-    @if (schema.type!='array') {
+    @if (schema.type!=='array') {
       <div class="checkbox">
         <label class="horizontal control-label">
           <input [formControl]="control" [attr.name]="name" [attr.id]="id" [indeterminate]="control.value !== false && control.value !== true ? true :null" type="checkbox" [disableControl]="schema.readOnly">

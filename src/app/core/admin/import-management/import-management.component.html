@@ -45,7 +45,7 @@
               />
           </div>
         </div>
-        @if (showingTextFile == true) {
+        @if (showingTextFile === true) {
           <div class="full-row">
             <label for="fileDelimiter">Delimiter (for text files)</label
               >&nbsp;&nbsp;
@@ -58,7 +58,7 @@
                 />
             </div>
           }
-          @if (showingTextFile == true) {
+          @if (showingTextFile === true) {
             <div class="full-row">
               <label for="removeQuotes">Remove quotes? (for text files)</label>
               &nbsp;&nbsp;
@@ -71,7 +71,7 @@
                 />
             </div>
           }
-          @if (showingTextFile == true) {
+          @if (showingTextFile === true) {
             <div class="full-row">
               <label for="previewLines">First few lines:</label>
               <pre id="previewLines">
@@ -100,7 +100,7 @@
                         >
                         <mat-radio-button
                           value="{{ adapter.adapterKey }}"
-                          [checked]="adapter.adapterKey == adapterKey"
+                          [checked]="adapter.adapterKey === adapterKey"
                           >
                           {{ adapter.adapterName }}
                         </mat-radio-button>
@@ -210,7 +210,7 @@
                     <div style="margin: auto">
                       <mat-checkbox
                         style="margin: auto"
-                        [checked]="action.actionName == 'no-op'"
+                        [checked]="action.actionName === 'no-op'"
                         (change)="toggleIgnore(action, $index)"
                       ></mat-checkbox>
                     </div>
@@ -304,7 +304,7 @@
                       : nameObject.name
                   "
                             ></span>
-                            @if (nameObject.displayName == true) {
+                            @if (nameObject.displayName === true) {
                               <span>
                                 <mat-icon
                                   class="icon-align blue-font"

@@ -2,7 +2,7 @@
   <button mat-mini-fab mat-dialog-close (click)="close()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
-  @if (view == 'all') {
+  @if (view === 'all') {
     <div class="header">
       <H3>Saved Lists {{ setUser ? " - " + setUser : "" }}</H3>
       <div class="form-row">
@@ -20,12 +20,12 @@
           </div>
         </div>
       }
-      @if (view == 'add') {
+      @if (view === 'add') {
         <div>
           <H3>Add List</H3>
         </div>
       }
-      @if (view == 'import') {
+      @if (view === 'import') {
         <div>
           <H3>Import List</H3>
           <a class="link" (click)="view = 'all'">Return to lists view</a>
@@ -33,12 +33,12 @@
         </div>
       }
 
-      @if (view == 'users') {
+      @if (view === 'users') {
         <div>
           <H3>Users</H3>
         </div>
       }
-      @if (view == 'single') {
+      @if (view === 'single') {
         <div class="single-header">
           <H3
           >Saved Lists:
@@ -205,9 +205,9 @@
           </div>
         }
 
-        @if (view == 'all') {
+        @if (view === 'all') {
           <div>
-            @if (lists.length == 0) {
+            @if (lists.length === 0) {
               <div>
                 <i>No lists were found</i>
               </div>
@@ -247,7 +247,7 @@
         </div>
       }
 
-      @if (view == 'single') {
+      @if (view === 'single') {
         <div>
           @if (filtered.length > 0) {
             <table

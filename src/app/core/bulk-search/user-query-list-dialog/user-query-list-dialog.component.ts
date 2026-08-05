@@ -146,7 +146,9 @@ export class UserQueryListDialogComponent implements OnInit {
 
   compareLists(list: any) {
     this.message ="";
-    this.uniqueRecords = this.etagIDs.filter(obj => { return list.indexOf(obj) == -1; });
+    this.uniqueRecords = this.etagIDs.filter(obj => {
+ return list.indexOf(obj) == -1; 
+});
     if (this.uniqueRecords.length == 0) {
       this.message = "NOTICE: All records already exist in selected list";
       this.disabled = true;

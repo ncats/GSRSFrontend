@@ -21,7 +21,7 @@
           >
           <div class="list-content">
             <span class="capitalized">{{ property.title }}</span>
-            @if (property.count != null) {
+            @if (property.count !== null) {
               <span class="chip">{{
                 property.count
               }}</span>
@@ -53,7 +53,7 @@
             "
               ></h1>
             }
-            @if (source == 'staging') {
+            @if (source === 'staging') {
               <span>
                 <h2 class="approvalIDColor">Staging Area Record</h2>
                 <h1

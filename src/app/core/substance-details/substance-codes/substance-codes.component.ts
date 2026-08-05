@@ -23,8 +23,7 @@ import { ConfigService } from "@gsrs-core/config";
 })
 export class SubstanceCodesComponent
   extends SubstanceCardBaseFilteredList<SubstanceCode>
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   type: string;
   codes: Array<SubstanceCode> = [];
   displayedColumns: string[];

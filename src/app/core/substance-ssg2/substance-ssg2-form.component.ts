@@ -949,7 +949,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
-        if (typeof or === 'object') { continue; }
+        if (typeof or === 'object') {
+ continue; 
+}
         refs[j] = _map[or];
       }
     }
@@ -1005,7 +1007,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       const refs = refHolders2[i].references;
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
-        if (typeof or === 'object') { continue; }
+        if (typeof or === 'object') {
+ continue; 
+}
         refSet[or] = true;
       }
     }
@@ -1147,11 +1151,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       } else {
         if (auto1.date < auto2.date && auto1.date < auto3.date) {
           file = 'gsrs-draft-auto1';
-        }
-        else if (auto2.date < auto1.date && auto2.date < auto3.date) {
+        } else if (auto2.date < auto1.date && auto2.date < auto3.date) {
           file = 'gsrs-draft-auto2';
-        }
-        else {
+        } else {
           file = 'gsrs-draft-auto3';
         }
       }

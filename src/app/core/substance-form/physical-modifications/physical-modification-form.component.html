@@ -43,15 +43,15 @@
                 <mat-icon svgIcon="delete_forever"></mat-icon>
               </button>
               <span>{{ parameter.parameterName }}</span>
-              @if (parameter.amount != null) {
+              @if (parameter.amount !== null) {
                 <span>
                   <span>
                     &nbsp;
                     {{ parameter.amount.type }}
                   </span>
                   @if (
-                    parameter.amount.average != null &&
-                    parameter.amount.average != ''
+                    parameter.amount.average !== null &&
+                    parameter.amount.average !== ''
                     ) {
                     <span
                       >
@@ -62,15 +62,15 @@
                     </span>
                   }
                   @if (
-                    (parameter.amount.low != null &&
-                    parameter.amount.low != '') ||
-                    (parameter.amount.high != null && parameter.amount.high != '')
+                    (parameter.amount.low !== null &&
+                    parameter.amount.low !== '') ||
+                    (parameter.amount.high !== null && parameter.amount.high !== '')
                     ) {
                     <span
                       >
                       @if (
                         parameter.amount.average == null ||
-                        parameter.amount.average == ''
+                        parameter.amount.average === ''
                         ) {
                         <span
                           >
@@ -79,7 +79,7 @@
                       }
                       &nbsp; [
                       @if (
-                        parameter.amount.high == null || parameter.amount.high == ''
+                        parameter.amount.high == null || parameter.amount.high === ''
                         ) {
                         <span
                           >
@@ -87,7 +87,7 @@
                         </span>
                       }
                       @if (
-                        parameter.amount.low == null || parameter.amount.low == ''
+                        parameter.amount.low == null || parameter.amount.low === ''
                         ) {
                         <span
                           >
@@ -95,7 +95,7 @@
                         </span>
                       }
                       @if (
-                        parameter.amount.low != null && parameter.amount.low != ''
+                        parameter.amount.low !== null && parameter.amount.low !== ''
                         ) {
                         <span
                           >
@@ -103,10 +103,10 @@
                         </span>
                       }
                       @if (
-                        parameter.amount.low != null &&
-                        parameter.amount.low != '' &&
-                        parameter.amount.high != null &&
-                        parameter.amount.high != ''
+                        parameter.amount.low !== null &&
+                        parameter.amount.low !== '' &&
+                        parameter.amount.high !== null &&
+                        parameter.amount.high !== ''
                         ) {
                         <span
                           >
@@ -114,7 +114,7 @@
                         </span>
                       }
                       @if (
-                        parameter.amount.high != null && parameter.amount.high != ''
+                        parameter.amount.high !== null && parameter.amount.high !== ''
                         ) {
                         <span
                           >
@@ -124,7 +124,7 @@
                       ]
                       @if (
                         parameter.amount.average == null ||
-                        parameter.amount.average == ''
+                        parameter.amount.average === ''
                         ) {
                         <span
                           >
@@ -136,8 +136,8 @@
                     </span>
                   }
                   @if (
-                    parameter.amount.average != null &&
-                    parameter.amount.average != ''
+                    parameter.amount.average !== null &&
+                    parameter.amount.average !== ''
                     ) {
                     <span
                       >
@@ -145,17 +145,17 @@
                     </span>
                   }
                   @if (
-                    (parameter.amount.lowLimit != null &&
-                    parameter.amount.lowLimit != '') ||
-                    (parameter.amount.highLimit != null &&
-                    parameter.amount.highLimit != '')
+                    (parameter.amount.lowLimit !== null &&
+                    parameter.amount.lowLimit !== '') ||
+                    (parameter.amount.highLimit !== null &&
+                    parameter.amount.highLimit !== '')
                     ) {
                     <span
                       >
                       &nbsp;- &nbsp; [
                       @if (
                         parameter.amount.highLimit == null ||
-                        parameter.amount.highLimit == ''
+                        parameter.amount.highLimit === ''
                         ) {
                         <span
                           >
@@ -164,7 +164,7 @@
                       }
                       @if (
                         parameter.amount.lowLimit == null ||
-                        parameter.amount.lowLimit == ''
+                        parameter.amount.lowLimit === ''
                         ) {
                         <span
                           >
@@ -172,8 +172,8 @@
                         </span>
                       }
                       @if (
-                        parameter.amount.lowLimit != null &&
-                        parameter.amount.lowLimit != ''
+                        parameter.amount.lowLimit !== null &&
+                        parameter.amount.lowLimit !== ''
                         ) {
                         <span
                           >
@@ -181,10 +181,10 @@
                         </span>
                       }
                       @if (
-                        parameter.amount.lowLimit != null &&
-                        parameter.amount.lowLimit != '' &&
-                        parameter.amount.highLimit != null &&
-                        parameter.amount.highLimit != ''
+                        parameter.amount.lowLimit !== null &&
+                        parameter.amount.lowLimit !== '' &&
+                        parameter.amount.highLimit !== null &&
+                        parameter.amount.highLimit !== ''
                         ) {
                         <span
                           >
@@ -192,8 +192,8 @@
                         </span>
                       }
                       @if (
-                        parameter.amount.highLimit != null &&
-                        parameter.amount.highLimit != ''
+                        parameter.amount.highLimit !== null &&
+                        parameter.amount.highLimit !== ''
                         ) {
                         <span
                           >

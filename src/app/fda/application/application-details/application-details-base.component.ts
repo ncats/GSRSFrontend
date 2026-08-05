@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,7 @@ import { GeneralService } from '../../service/general.service';
     styleUrls: ['./application-details-base.component.scss'],
     standalone: false
 })
-export class ApplicationDetailsBaseComponent implements OnInit {
+export class ApplicationDetailsBaseComponent implements OnInit, OnDestroy {
 
   id: number;
   src: string;

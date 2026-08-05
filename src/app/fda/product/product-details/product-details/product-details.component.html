@@ -110,7 +110,7 @@
                                       </span>
                                     }
                                   </div>
-                                  @if (prodName.displayName && prodName.displayName == true) {
+                                  @if (prodName.displayName && prodName.displayName === true) {
                                     <div>
                                       &nbsp;
                                       <mat-icon class="margintopneg5" matTooltip="Display Name">check</mat-icon>
@@ -329,7 +329,7 @@
                               @if (prodIngred._ingredientName) {
                                 <div>
                                   <!-- Show/Hide Link, if substance Name has more than 5 records -->
-                                  @if (indexActiveIngred == 5) {
+                                  @if (indexActiveIngred === 5) {
                                     <span>
                                       <br>
                                         <a href="" (click)="toggleShowMoreLessActiveIngred(); false">
@@ -445,7 +445,7 @@
                                             @if ( prodIngred._ingredientName) {
                                               <div>
                                                 <!-- Show/Hide Link, if substance Name has more than 5 records -->
-                                                @if (indexOtherIngred == 5) {
+                                                @if (indexOtherIngred === 5) {
                                                   <span>
                                                     <br>
                                                       <a href="" (click)="toggleShowMoreLessOtherIngred(); false">
@@ -1350,7 +1350,7 @@
                                                                                                       <div>
                                                                                                         <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
                                                                                                       </div>
-                                                                                                      @if (prodName.displayName && prodName.displayName == true) {
+                                                                                                      @if (prodName.displayName && prodName.displayName === true) {
                                                                                                         <div class="margintopneg5px"
                                                                                                           >
                                                                                                           &nbsp;

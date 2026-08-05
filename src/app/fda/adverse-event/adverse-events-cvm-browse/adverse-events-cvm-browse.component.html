@@ -39,7 +39,7 @@
                     @if (((matchType) && (matchType === 'WORD' || matchType === 'FULL'))) {
                       <div>
                         <div class="match-type">
-                          {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                          {{matchType === 'WORD' ? 'Contains Match' : 'Exact Match'}}
                         </div>
                         @for (suggestion of narrowSearchSuggestions[matchType]; track suggestion) {
                           <button mat-menu-item

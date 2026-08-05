@@ -167,8 +167,7 @@ export class ExportDialogComponent implements OnInit {
         if (a.exporterKey === 'PUBLIC_DATA_ONLY') {
           test = -1;
           
-        }
-          else if (b.exporterKey === 'PUBLIC_DATA_ONLY') {
+        } else if (b.exporterKey === 'PUBLIC_DATA_ONLY') {
             test = 1;
         }else {
           test = 1;

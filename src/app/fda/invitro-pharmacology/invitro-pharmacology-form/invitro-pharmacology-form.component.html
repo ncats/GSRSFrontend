@@ -72,13 +72,13 @@
             }
             @for (message of validationMessages; track message; let i = $index) {
               <div class="validation-message">
-                <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+                <div class="message-type" [ngClass]="message.messageType === 'ERROR' ? 'error-message' : 'warning-message'">
                 {{message.messageType}}</div>
                 <div class="message">{{message.message}}@for (link of message.links; track link) {
                   <span><br /><a [href]="link.href"
                   target="_blank">{{link.text}}</a></span>
                 }</div>
-                @if (message.messageType != 'ERROR' && !approving) {
+                @if (message.messageType !== 'ERROR' && !approving) {
                   <button mat-icon-button matTooltip="Dismiss"
                     (click)="dismissValidationMessage(i)">
                     <mat-icon svgIcon="cancel"></mat-icon>
@@ -192,7 +192,7 @@
                                 <span class="font11px fontbold">
                                   @for (reference of assayResultInfo.invitroReferences; track reference; let indexReference = $index) {
                                     <div>
-                                      @if (reference.primaryReference == true) {
+                                      @if (reference.primaryReference === true) {
                                         <div>
                                           @if (reference.sourceType) {
                                             <span>
@@ -257,7 +257,7 @@
                                   <div>
                                     @for (reference of assayResultInfo.invitroReferences; track reference; let indexReference = $index) {
                                       <div>
-                                        @if (reference.primaryReference == true) {
+                                        @if (reference.primaryReference === true) {
                                           <div>
                                             <div class="form-row margintop10px">
                                               <div class="fieldKey">
@@ -1087,7 +1087,7 @@
                                                             @for (screening of assay.invitroAssayScreenings; track screening; let indexScreening = $index) {
                                                               <div class="">
                                                                 <!-- IF SHOW IS TRUE -->
-                                                                @if (screening._show == true) {
+                                                                @if (screening._show === true) {
                                                                   <div>
                                                                     <!-- Result - FIRST ROW  -->
                                                                     <div class="divflex margintop10px width100percent">
@@ -1153,7 +1153,7 @@
                                                                         [model]="screening.invitroAssayResult.resultValueUnits"
                                                                         (valueChange)="screening.invitroAssayResult.resultValueUnits = $event">
                                                                       </app-cv-input>
-                                                                      @if (indexAssay == 0) {
+                                                                      @if (indexAssay === 0) {
                                                                         <span>
                                                                           <div class="width100px margintopneg10px alignright">
                                                                             <div class="font12px">

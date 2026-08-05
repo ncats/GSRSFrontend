@@ -24,8 +24,7 @@ export class CanActivateAdmin implements CanActivate {
             } else {
               return this.router.parseUrl('/home');
             }
-        }
-        else {
+        } else {
           const navigationExtras: NavigationExtras = {
                  queryParams: {
                      path: state.url

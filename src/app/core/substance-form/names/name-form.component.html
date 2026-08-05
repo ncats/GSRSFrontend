@@ -140,7 +140,7 @@
             ></app-domain-references>
           </div>
         </div>
-        @if (name.type == 'of') {
+        @if (name.type === 'of') {
           <div class="form-row">
             <div class="nameorgs-container">
               <app-name-orgs [nameOrgs]="getNameOrgs(name)" #nameOrgs></app-name-orgs>

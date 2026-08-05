@@ -164,7 +164,7 @@
                                   @for (ref of screening.invitroAssayResultInformation.invitroReferences; track ref; let indexReference = $index) {
                                     <div
                                       >
-                                      @if (ref.primaryReference == true) {
+                                      @if (ref.primaryReference === true) {
                                         <span>
                                           @if (ref.sourceType || ref.sourceId) {
                                             <span>
@@ -314,7 +314,7 @@
                                   <ng-container matColumnDef="isFromResult">
                                     <th mat-header-cell *matHeaderCellDef> From Result Data </th>
                                     <td class="width120px" mat-cell *matCellDef="let assaysum">
-                                      @if (assaysum.isFromResult && assaysum.isFromResult == true) {
+                                      @if (assaysum.isFromResult && assaysum.isFromResult === true) {
                                         <span>
                                           <mat-icon matTooltip="This Summary data is from Result data">check_circle_outline</mat-icon>
                                         </span>

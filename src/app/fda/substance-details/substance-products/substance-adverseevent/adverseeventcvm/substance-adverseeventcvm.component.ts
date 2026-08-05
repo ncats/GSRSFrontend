@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter } from "@angular/core";
+import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { Sort } from "@angular/material/sort";
@@ -22,7 +22,7 @@ import { adverseEventCvmSearchSortValues } from "../../../../adverse-event/adver
 })
 export class SubstanceAdverseEventCvmComponent
   extends SubstanceDetailsBaseTableDisplay
-  implements OnInit {
+  implements OnInit, OnDestroy {
   @Output() countAdvCvmOut: EventEmitter<number> = new EventEmitter<number>();
 
   localBdnum: string;

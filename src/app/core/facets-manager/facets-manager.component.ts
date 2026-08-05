@@ -802,8 +802,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       if (rawFacets) {
         if (this.facetSort[index] === 'count') {
           this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => b.count-a.count);
-        }
-        else if (this.facetSort[index] === 'inverse') {
+        } else if (this.facetSort[index] === 'inverse') {
           this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => a.count-b.count);
         } else if (this.facetSort[index] === 'AZ') {
           this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => a.label.localeCompare(b.label));  
@@ -813,8 +812,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       }
       if (this.facetSort[index] === 'count') {
         this.facets[index].values = this.facets[index].values.sort((a, b) => b.count-a.count);
-      }
-      else if (this.facetSort[index] === 'inverse') {
+      } else if (this.facetSort[index] === 'inverse') {
         this.facets[index].values = this.facets[index].values.sort((a, b) => a.count-b.count);
       } else if (this.facetSort[index] === 'AZ') {
         this.facets[index].values = this.facets[index].values.sort((a, b) => a.label.localeCompare(b.label));

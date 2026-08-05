@@ -18,8 +18,7 @@ import { OverlayContainer } from "@angular/cdk/overlay";
 })
 export class SubstanceNotesComponent
   extends SubstanceCardBase
-  implements OnInit
-{
+  implements OnInit {
   notes: Array<SubstanceNote> = [];
   displayedColumns: string[] = ["note", "references"];
   substanceUpdated = new Subject<SubstanceDetail>();

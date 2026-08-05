@@ -166,8 +166,7 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
       this.privateProcessingMaterial.substanceName = relatedSubstance;
       // Clear any draft-related fields when selecting from database
       delete (this.privateProcessingMaterial as any).$$tmpStructureId;
-    }
-    else {
+    } else {
       this.privateProcessingMaterial.substanceName = {};
     }
   }

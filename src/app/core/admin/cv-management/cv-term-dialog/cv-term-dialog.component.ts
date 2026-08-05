@@ -124,8 +124,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         if (error.error && error.error.message) {
           str += '\n\n' + error.error.message;
   
-        }
-       else if(error.message) {
+        } else if(error.message) {
           str += '\n\n' + error.message;
         }
       alert(str);
@@ -144,8 +143,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
       if (error.error && error.error.message) {
         str += '\n\n' + error.error.message;
 
-      }
-     else if(error.message) {
+      } else if(error.message) {
         str += '\n\n' + error.message;
       }
       alert(str);

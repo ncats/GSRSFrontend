@@ -1,7 +1,7 @@
 @if (
   showHeaderBar === 'true' &&
   !isPfdaVersion &&
-  (!customToolbarComponent || customToolbarComponent.length == 0)
+  (!customToolbarComponent || customToolbarComponent.length === 0)
   ) {
   <mat-toolbar
     class="mat-elevation-z3"
@@ -62,7 +62,7 @@
                   {{ navItem.display }}
                 </a>
               }
-              @if (navItem.children && (navItem.display.toUpperCase()!='REGISTER' || canRegister)) {
+              @if (navItem.children && (navItem.display.toUpperCase()!=='REGISTER' || canRegister)) {
                 <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
                   {{ navItem.display }}
                 </a>

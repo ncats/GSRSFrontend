@@ -104,7 +104,7 @@
                               >
                               @if (reference.primaryReference) {
                                 <span>
-                                  @if (reference.primaryReference == true) {
+                                  @if (reference.primaryReference === true) {
                                     <span>
                                       @if (reference.sourceType) {
                                         <span>
@@ -220,7 +220,7 @@
                         >
                         @if (screening.invitroSummary) {
                           <div>
-                            @if (screening.invitroSummary.isFromResult && screening.invitroSummary.isFromResult == true) {
+                            @if (screening.invitroSummary.isFromResult && screening.invitroSummary.isFromResult === true) {
                               <span>
                                 <mat-icon matTooltip="This Summary data is from Result data">
                                   check_circle_outline

@@ -87,7 +87,9 @@ export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBas
         }
       }
     }
-    if (disp === '') { return undefined; }
+    if (disp === '') {
+ return undefined; 
+}
     return disp;
   }
 
@@ -102,7 +104,9 @@ export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBas
     const map = {};
     for (let i = 0; i < connections.length; i++) {
       const con = connections[i].trim();
-      if (con === '') { continue; }
+      if (con === '') {
+ continue; 
+}
       regex.lastIndex = 0;
       const res = regex.exec(con);
       if (res == null) {

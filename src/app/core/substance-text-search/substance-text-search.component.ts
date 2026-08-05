@@ -32,8 +32,7 @@ import { ControlledVocabularyService } from "@gsrs-core/controlled-vocabulary";
   standalone: false,
 })
 export class SubstanceTextSearchComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   searchControl = new FormControl();
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
   suggestionsFields: Array<any>;

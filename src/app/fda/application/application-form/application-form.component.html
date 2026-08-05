@@ -73,13 +73,13 @@
               }
               @for (message of validationMessages; track message; let i = $index) {
                 <div class="validation-message">
-                  <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+                  <div class="message-type" [ngClass]="message.messageType === 'ERROR' ? 'error-message' : 'warning-message'">
                   {{message.messageType}}</div>
                   <div class="message">{{message.message}}@for (link of message.links; track link) {
                     <span><br /><a [href]="link.href"
                     target="_blank">{{link.text}}</a></span>
                   }</div>
-                  @if (message.messageType != 'ERROR' && !approving) {
+                  @if (message.messageType !== 'ERROR' && !approving) {
                     <button mat-icon-button matTooltip="Dismiss"
                       (click)="dismissValidationMessage(i)">
                       <mat-icon svgIcon="cancel"></mat-icon>
@@ -266,7 +266,7 @@
                           </mat-form-field>
                           <!-- INDICATION Button -->
                           <span class="width40px displayinlineblock">
-                            @if (indIndex == 0) {
+                            @if (indIndex === 0) {
                               <button mat-icon-button color="primary" (click)="addNewIndication()"
                                 matTooltip="Add New Indication">
                                 <mat-icon svgIcon="add_circle_outline"></mat-icon>
@@ -274,9 +274,9 @@
                             }
                           </span>
                           <!-- Delete Indication -->
-                          <button mat-icon-button color="primary" [disabled]="application.applicationIndicationList.length == 1"
+                          <button mat-icon-button color="primary" [disabled]="application.applicationIndicationList.length === 1"
                             (click)="confirmDeleteIndication(indIndex, ind.indication)" matTooltip="Delete Indication">
-                            <mat-icon [class.disabled]="application.applicationIndicationList.length == 1">delete_forever
+                            <mat-icon [class.disabled]="application.applicationIndicationList.length === 1">delete_forever
                             </mat-icon>
                           </button>
                           <br>

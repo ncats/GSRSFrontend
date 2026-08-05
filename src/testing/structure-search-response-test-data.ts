@@ -1,6 +1,6 @@
 import { StructureSearchResponse } from '../app/substance/structure-search-response.model';
 
-/* eslint-disable max-len, @typescript-eslint/quotes */
+/* eslint-disable max-len */
 export const StructureSearchResponseTestData: StructureSearchResponse = {
     "start": 1544373508714,
     "id": "bhdtblgdkn",

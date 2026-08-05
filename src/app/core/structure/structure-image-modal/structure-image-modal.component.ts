@@ -109,7 +109,8 @@ export class StructureImageModalComponent implements OnInit {
     if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
       url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid;
       
-    } else {const baseUrl = window.location.href.replace(this.router.url, '');
+    } else {
+const baseUrl = window.location.href.replace(this.router.url, '');
       url = baseUrl + this.router.serializeUrl(
         this.router.createUrlTree(['/substances/' + this.uuid])
       );

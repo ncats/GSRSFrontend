@@ -100,7 +100,9 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
   }
 
   untilNextRun() {
-    if (!this.job.nextRun) { return Number.MAX_SAFE_INTEGER; }
+    if (!this.job.nextRun) {
+ return Number.MAX_SAFE_INTEGER; 
+}
     return this.job.nextRun - new Date().getTime();
   }
 
@@ -136,11 +138,15 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
 
   cancel(serviceContext: string, job: any) {
     const url = job['@cancel'];
-    if (!url) { return; }
+    if (!url) {
+ return; 
+}
     const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
     this.adminService.runJob(url2).pipe(take(1)).subscribe({
       next: () => this.refresh(),
-      error: err => { console.error('Cancel failed', err); this.refresh(); }
+      error: err => {
+ console.error('Cancel failed', err); this.refresh(); 
+}
     });
   }
 

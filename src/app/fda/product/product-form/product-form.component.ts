@@ -1017,8 +1017,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           if (elementName != null) {
             if (prodNameIndex == index) {
               elementName.displayName = $event.checked;
-            }
-            else {
+            } else {
               elementName.displayName = false;
             }
           }

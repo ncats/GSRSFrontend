@@ -342,7 +342,9 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
         } else {
           this.render.addClass(event.target, 'invalid_blink');
           setTimeout(
-            function () { this.render.removeClass(event.target, 'invalid_blink'); }, 2000);
+            function () {
+ this.render.removeClass(event.target, 'invalid_blink'); 
+}, 2000);
         }
       }
     }

@@ -64,8 +64,7 @@ import jp from 'jsonpath';
   standalone: false
 })
 export class SubstanceSsg4ManufactureFormComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
   id?: string;
   formSections: Array<SubstanceFormSection> = [];

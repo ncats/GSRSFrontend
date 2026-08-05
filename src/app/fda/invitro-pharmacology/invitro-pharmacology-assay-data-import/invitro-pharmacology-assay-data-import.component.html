@@ -67,9 +67,9 @@
             @if (importValidateMessageArray.length > 0) {
               <div class="margintop30px">
                 <div class="font18px"><b>Validation Results</b></div>
-                @if (isAllRecordValidated && isAllRecordValidated == true) {
+                @if (isAllRecordValidated && isAllRecordValidated === true) {
                   <div class="margintop20px">
-                    @if (isAllRecordValid && isAllRecordValid == true) {
+                    @if (isAllRecordValid && isAllRecordValid === true) {
                       <span class="colorgreen">
                         <br>
                           <b>All Records are VALID. Please import the Assay records into the database.</b>
@@ -127,9 +127,9 @@
                                   </div>
                                 }
                               </td>
-                              <td [ngClass]="msg.validationMessages && msg.validationMessages.length == 0? 'backgroundcolorgreen' : 'backgroundcolorred'">
+                              <td [ngClass]="msg.validationMessages && msg.validationMessages.length === 0? 'backgroundcolorgreen' : 'backgroundcolorred'">
                                 <!-- if validation passed -->
-                                @if ((msg.validationMessages && msg.validationMessages.length == 0) || (valid === true)) {
+                                @if ((msg.validationMessages && msg.validationMessages.length === 0) || (valid === true)) {
                                   <div class="divflex">
                                     <div><mat-icon>check</mat-icon></div>
                                     <div><b>Passed</b></div>
@@ -205,11 +205,11 @@
                         }
                         <!-- DISPLAY JSON -->
                         <!-- Display this table if not imported yet -->
-                        @if (importSaveMessageArray.length == 0) {
+                        @if (importSaveMessageArray.length === 0) {
                           <div class="margintop20px">
                             @if (importDataList.length > 0) {
                               <div>
-                                @if (isAllRecordSaved == false) {
+                                @if (isAllRecordSaved === false) {
                                   <div class="divflex">
                                     <div class="colorblue"><b>Total Assay Records ready for import into the database from Excel
                                     file:</b>&nbsp;

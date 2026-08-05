@@ -1,12 +1,12 @@
 <div mat-dialog-header>
   <div class="form-row head">
-    @if (formState == FormState.DRAFT_LIST) {
+    @if (formState === FormState.DRAFT_LIST) {
       <div class="title">Saved Drafts</div>
     }
-    @if (formState == FormState.VALIDATION_RESULTS) {
+    @if (formState === FormState.VALIDATION_RESULTS) {
       <div class="title">Drafts Validation</div>
     }
-    @if (formState == FormState.SUBMISSION) {
+    @if (formState === FormState.SUBMISSION) {
       <div class="title">Submission Results</div>
     }
     <span class="middle-fill"></span>
@@ -28,7 +28,7 @@
     ></mat-progress-spinner>
   </div>
 }
-@if (formState == FormState.DRAFT_LIST) {
+@if (formState === FormState.DRAFT_LIST) {
   <div>
     <mat-dialog-content>
       @if (filtered.length > 0) {
@@ -96,7 +96,7 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
           }
-          @if (filtered.length == 0) {
+          @if (filtered.length === 0) {
             <div
               class="form-row"
               style="padding: 50px; font-size: 17px"
@@ -188,7 +188,7 @@
     }
 
 
-    @if (formState == FormState.VALIDATION_RESULTS) {
+    @if (formState === FormState.VALIDATION_RESULTS) {
       <div>
         <mat-dialog-content>
           @for (draft of validatedDrafts; track draft; let i = $index) {
@@ -201,7 +201,7 @@
               </div>
               @for (message of draft.validationMessages; track message; let i = $index) {
                 <div class="message-row">
-                  <span class="label" [ngClass]="{'label-error': message.messageType == 'ERROR' || message.messageType == 'SERVER ERROR', 'label-warning': message.messageType == 'WARNING', 'label-notice': message.messageType == 'NOTICE'}">
+                  <span class="label" [ngClass]="{'label-error': message.messageType === 'ERROR' || message.messageType === 'SERVER ERROR', 'label-warning': message.messageType === 'WARNING', 'label-notice': message.messageType === 'NOTICE'}">
                     {{ message.messageType }}
                   </span>
                   <span>
@@ -226,7 +226,7 @@
       </div>
     }
 
-    @if (formState == FormState.SUBMISSION) {
+    @if (formState === FormState.SUBMISSION) {
       <div>
         <mat-dialog-content>
           @for (draft of validatedDrafts; track draft; let i = $index) {
@@ -235,22 +235,22 @@
                 <strong>Type:</strong> {{draft.json.type}}, <strong>Name:</strong> {{ draft.json.name ? draft.json.name : '-' }}
               </div>
               <div class="message-row">
-                @if (draft.submitStatus == SubmissionStatus.CANNOT_BE_SUBMITTED || draft.submitStatus == SubmissionStatus.ERROR) {
+                @if (draft.submitStatus === SubmissionStatus.CANNOT_BE_SUBMITTED || draft.submitStatus === SubmissionStatus.ERROR) {
                   <span class="label label-error">ERROR</span>
                 }
-                @if (draft.submitStatus == SubmissionStatus.SUCCESS) {
+                @if (draft.submitStatus === SubmissionStatus.SUCCESS) {
                   <span class="label label-success">SUCCESS</span>
                 }
-                @if (draft.submitStatus == SubmissionStatus.CANNOT_BE_SUBMITTED) {
+                @if (draft.submitStatus === SubmissionStatus.CANNOT_BE_SUBMITTED) {
                   <span>Could not be submitted due to validation errors</span>
                 }
-                @if (draft.submitStatus == SubmissionStatus.IN_PROGRESS) {
+                @if (draft.submitStatus === SubmissionStatus.IN_PROGRESS) {
                   <em>Submission in progress</em>
                 }
-                @if (draft.submitStatus == SubmissionStatus.SUCCESS) {
+                @if (draft.submitStatus === SubmissionStatus.SUCCESS) {
                   <span><em><a href="{{draft.fileUrl}}" target="_blank">View Substance</a></em></span>
                 }
-                @if (draft.submitStatus == SubmissionStatus.ERROR) {
+                @if (draft.submitStatus === SubmissionStatus.ERROR) {
                   <span>Error during submission process</span>
                 }
               </div>

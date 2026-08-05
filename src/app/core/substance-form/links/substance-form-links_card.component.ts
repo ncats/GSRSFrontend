@@ -73,7 +73,8 @@ export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredLi
         linkArray = linkArray.concat(link.sites);
       });
     }
-    this.remainingSites = subunitArray.filter(item => {return !linkArray.some(function(obj2) {
+    this.remainingSites = subunitArray.filter(item => {
+return !linkArray.some(function(obj2) {
       return (item.subunitIndex === obj2.subunitIndex && item.residueIndex === obj2.residueIndex);
      });
     });

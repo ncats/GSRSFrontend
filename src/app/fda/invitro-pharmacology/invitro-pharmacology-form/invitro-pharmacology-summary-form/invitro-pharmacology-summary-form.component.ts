@@ -158,15 +158,13 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
             // Get Assays by Test Agent
             this.getTestAgentSummariesDetails();
           }
-        }
-        else if (this.activatedRoute.snapshot.queryParams['copyId']) {
+        } else if (this.activatedRoute.snapshot.queryParams['copyId']) {
           this.id = this.activatedRoute.snapshot.queryParams['copyId'];
           if (this.id) {  //copy from existing Product
             this.titleService.setTitle(`Register In Vitro Pharmacology from Copy ` + this.id);
             this.title = 'Register New Invitro-Pharmacology Summary from Copy Assay Id ' + this.id;
           }
-        }
-        else if (this.activatedRoute.snapshot.queryParams['action']) {
+        } else if (this.activatedRoute.snapshot.queryParams['action']) {
           let actionParam = this.activatedRoute.snapshot.queryParams['action'];
           if (actionParam && actionParam === 'import' && window.history.state) {
             this.titleService.setTitle(`Register New In Vitro Pharmacology from Import`);

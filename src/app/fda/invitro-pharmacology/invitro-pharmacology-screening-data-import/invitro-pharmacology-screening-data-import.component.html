@@ -94,7 +94,7 @@
               {{invitroReference.sourceType}}
 
               <!-- Required Field message -->
-              @if ((requiredFieldMissingArray[0].sourceType && requiredFieldMissingArray[0].sourceType == true)) {
+              @if ((requiredFieldMissingArray[0].sourceType && requiredFieldMissingArray[0].sourceType === true)) {
 <span class="colorred fontbold"
                >
                 Required Field
@@ -107,7 +107,7 @@
               {{invitroReference.sourceCitation}}
 
               <!-- Required Field message -->
-              @if ((requiredFieldMissingArray[0].sourceCitation && requiredFieldMissingArray[0].sourceCitation == true)) {
+              @if ((requiredFieldMissingArray[0].sourceCitation && requiredFieldMissingArray[0].sourceCitation === true)) {
 <span class="colorred fontbold"
                >
                 Required Field
@@ -135,7 +135,7 @@
             <span class="fieldvalue">{{invitroLaboratory.laboratoryName}}
 
               <!-- Required Field message -->
-              @if ((requiredFieldMissingArray[0].laboratoryName && requiredFieldMissingArray[0].laboratoryName == true)) {
+              @if ((requiredFieldMissingArray[0].laboratoryName && requiredFieldMissingArray[0].laboratoryName === true)) {
 <span class="colorred fontbold"
                >
                 Required Field
@@ -185,7 +185,7 @@
             <span class="fieldvalue">{{invitroSponsor.sponsorContactName}}
 
               <!-- Required Field message -->
-              @if ((requiredFieldMissingArray[0].sponsorContactName && requiredFieldMissingArray[0].sponsorContactName == true)) {
+              @if ((requiredFieldMissingArray[0].sponsorContactName && requiredFieldMissingArray[0].sponsorContactName === true)) {
 <span class="colorred fontbold"
                >
                 Required Field
@@ -227,7 +227,7 @@
               <span class="fieldvalue">{{submitter.sponsorReportSubmitterName}}
 
                 <!-- Required Field message -->
-                @if ((requiredFieldMissingArray[0].sponsorReportSubmitterName && requiredFieldMissingArray[0].sponsorReportSubmitterName == true)) {
+                @if ((requiredFieldMissingArray[0].sponsorReportSubmitterName && requiredFieldMissingArray[0].sponsorReportSubmitterName === true)) {
 <span class="colorred fontbold"
                  >
                   Required Field
@@ -265,7 +265,7 @@
             <span class="fieldvalue">{{invitroSponsorReport.reportNumber}}
 
               <!-- Required Field message -->
-              @if ((requiredFieldMissingArray[0].reportNumber && requiredFieldMissingArray[0].reportNumber == true)) {
+              @if ((requiredFieldMissingArray[0].reportNumber && requiredFieldMissingArray[0].reportNumber === true)) {
 <span class="colorred fontbold"
                >
                 Required Field
@@ -302,7 +302,7 @@
                   <span class="fieldKey">Test Agent Name (FDA) <span class="colorred">*</span>:</span>
                   <span class="fieldvalue">{{invitroTestAgent.testAgent}}
                     <!-- Required Field message -->
-                    @if ((requiredFieldMissingArray[0].testAgent && requiredFieldMissingArray[0].testAgent == true)) {
+                    @if ((requiredFieldMissingArray[0].testAgent && requiredFieldMissingArray[0].testAgent === true)) {
                       <span class="colorred fontbold"
                         >
                         Required Field
@@ -327,7 +327,7 @@
                   <span class="font14px"><b>7. Batch Information</b></span><br><br>
                   <span class="fieldKey">Batch Number <span class="colorred">*</span>:</span>
                   <span class="fieldvalue">{{invitroResultInfo.batchNumber}}
-                    @if ((requiredFieldMissingArray[0].batchNumber && requiredFieldMissingArray[0].batchNumber == true)) {
+                    @if ((requiredFieldMissingArray[0].batchNumber && requiredFieldMissingArray[0].batchNumber === true)) {
                       <span class="colorred fontbold"
                         >
                         Required Field
@@ -370,7 +370,7 @@
                         <td>{{(indexControl+1)}}</td>
                         <td>{{ctrl.externalAssaySource}}
                           <!-- Required Field message -->
-                          @if ((requiredFieldMissingArray[indexControl].controlExternalAssaySource && requiredFieldMissingArray[indexControl].controlExternalAssaySource == true)) {
+                          @if ((requiredFieldMissingArray[indexControl].controlExternalAssaySource && requiredFieldMissingArray[indexControl].controlExternalAssaySource === true)) {
                             <span class="colorred fontbold"
                               >
                               Required Field
@@ -379,7 +379,7 @@
                         </td>
                         <td>{{ctrl.externalAssayId}}
                           <!-- Required Field message -->
-                          @if ((requiredFieldMissingArray[indexControl].controlExternalAssayId && requiredFieldMissingArray[indexControl].controlExternalAssayId == true)) {
+                          @if ((requiredFieldMissingArray[indexControl].controlExternalAssayId && requiredFieldMissingArray[indexControl].controlExternalAssayId === true)) {
                             <span class="colorred fontbold"
                               >
                               Required Field
@@ -448,12 +448,12 @@
                   <tr valing="top" class="font11px">
                     <td>{{(indexResult+1)}}</td>
                     <td>
-                      @if (result.assayFoundInDb && result.assayFoundInDb == 'true') {
+                      @if (result.assayFoundInDb && result.assayFoundInDb === 'true') {
                         <span>
                           <div class="backgroundgreen"><span class="colorwhite">YES</span></div>
                         </span>
                       }
-                      @if (result.assayFoundInDb && result.assayFoundInDb == 'false') {
+                      @if (result.assayFoundInDb && result.assayFoundInDb === 'false') {
                         <span>
                           <div class="backgroundred"><span class="colorwhite">NO
                           </span>
@@ -467,7 +467,7 @@
                           }
                         </span>
                       }
-                      @if (result.assayFoundInDb && result.assayFoundInDb == 'Error getting Assay') {
+                      @if (result.assayFoundInDb && result.assayFoundInDb === 'Error getting Assay') {
                         <span>
                           <div class="backgroundred"><span class="colorwhite">ERROR</span></div>
                         </span>
@@ -475,7 +475,7 @@
                     </td>
                     <td>{{result.assaySet}}</td>
                     <td>
-                      @if (result.assayFoundInDb && result.assayFoundInDb == 'false') {
+                      @if (result.assayFoundInDb && result.assayFoundInDb === 'false') {
                         <div>
                           <span class="colorred"><b>{{result.externalAssaySource}}</b></span>
                         </div>
@@ -486,7 +486,7 @@
                         {{result.externalAssaySource}}
                       </ng-template>
                       <!-- Required Field message -->
-                      @if ((requiredFieldMissingArray[indexResult].resultExternalAssaySource && requiredFieldMissingArray[indexResult].resultExternalAssaySource == true)) {
+                      @if ((requiredFieldMissingArray[indexResult].resultExternalAssaySource && requiredFieldMissingArray[indexResult].resultExternalAssaySource === true)) {
                         <span class="colorred fontbold"
                           >
                           Required Field
@@ -494,7 +494,7 @@
                       }
                     </td>
                     <td>
-                      @if (result.assayFoundInDb && result.assayFoundInDb == 'false') {
+                      @if (result.assayFoundInDb && result.assayFoundInDb === 'false') {
                         <div>
                           <span class="colorred"><b>{{result.externalAssayId}}</b></span>
                         </div>
@@ -505,7 +505,7 @@
                         {{result.externalAssayId}}
                       </ng-template>
                       <!-- Required Field message -->
-                      @if ((requiredFieldMissingArray[indexResult].resultExternalAssayId && requiredFieldMissingArray[indexResult].resultExternalAssayId == true)) {
+                      @if ((requiredFieldMissingArray[indexResult].resultExternalAssayId && requiredFieldMissingArray[indexResult].resultExternalAssayId === true)) {
                         <span class="colorred fontbold"
                           >
                           Required Field

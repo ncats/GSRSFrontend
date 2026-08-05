@@ -50,7 +50,7 @@ import {
   styleUrls: ["./invitro-pharmacology-assayset-form.component.scss"],
   standalone: false,
 })
-export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
+export class InvitroPharmacologyAssaysetFormComponent implements OnInit, OnDestroy {
   @ViewChildren("checkBox") checkBox: QueryList<any>;
 
   // Form Control

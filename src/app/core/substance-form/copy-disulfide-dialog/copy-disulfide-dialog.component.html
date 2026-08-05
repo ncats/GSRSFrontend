@@ -9,7 +9,7 @@
     <span>
       @for (current of units; track current) {
         <div class = "form-column">
-          @if (current.sequence == sequence) {
+          @if (current.sequence === sequence) {
             <div class = "option">
               @if (current.subunitIndex !== unit) {
                 <button  mat-button (click) = "select(current.subunitIndex)">

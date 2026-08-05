@@ -262,7 +262,7 @@
                                       @for (reference of screening.invitroAssayResultInformation.invitroReferences; track reference; let indexReference = $index) {
                                         <span class=""
                                           >
-                                          @if (reference.primaryReference == true) {
+                                          @if (reference.primaryReference === true) {
                                             <span class="colormaroon">
                                               <b>{{reference.sourceType}}&nbsp;
                                                 {{reference.sourceId}}
@@ -884,7 +884,7 @@
                                                                                     <td>{{summary.resultType}}</td>
                                                                                     <td>{{summary.relationshipType}}</td>
                                                                                     <td>{{summary.interactionType}}</td>
-                                                                                    <td>@if (summary.isFromResult && summary.isFromResult == true) {
+                                                                                    <td>@if (summary.isFromResult && summary.isFromResult === true) {
                                                                                       <span>
                                                                                         <mat-icon matTooltip="This Summary data is from Result data">
                                                                                           check_circle_outline

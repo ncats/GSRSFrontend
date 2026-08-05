@@ -71,7 +71,6 @@ export class ConfigService {
                     const filteredNavItems = config.navItems.filter(navItem => {
                         if (navItem.children != null && navItem.children.length > 0) {
                             let isNotExisting = true;
-                            // eslint-disable-next-line prefer-for-of
                             for (let i = 0; i < navItemsCopy.length; i++) {
                                 if (navItemsCopy[i].display === navItem.display && navItemsCopy[i].children != null) {
                                     navItemsCopy[i].children = navItemsCopy[i].children.concat(navItem.children);

@@ -246,7 +246,7 @@
               <mat-icon>add_circle_outline</mat-icon>Add Acceptance Criteria
             </button>
             <!-- Acceptance Criteria Loop -->
-            @if (startingMaterial.acceptanceCriterias != null) {
+            @if (startingMaterial.acceptanceCriterias !== null) {
               <div>
                 @for (
                   acceptanceCriteria of startingMaterial.acceptanceCriterias; track
@@ -318,7 +318,7 @@
               <mat-icon>add_circle_outline</mat-icon>Add Manufacturer
             </button>
             <!-- Manufacturer Detail Loop -->
-            @if (startingMaterial.manufacturerDetails != null) {
+            @if (startingMaterial.manufacturerDetails !== null) {
               <div>
                 @for (
                   manufacturerDetails of startingMaterial.manufacturerDetails; track

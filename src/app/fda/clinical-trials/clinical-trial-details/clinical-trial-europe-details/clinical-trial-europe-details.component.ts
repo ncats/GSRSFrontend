@@ -30,7 +30,8 @@ export class ClinicalTrialEuropeDetailsComponent extends ClinicalTrialDetailsBas
     utilsService: UtilsService,
     private configService: ConfigService,
     authService: AuthService
-  ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
+  ) {
+ super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
     router, gaService, utilsService, authService);
     this.environment = configService.environment;
   }

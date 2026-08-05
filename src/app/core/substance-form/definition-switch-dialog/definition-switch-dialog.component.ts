@@ -464,10 +464,13 @@ export class DefinitionSwitchDialogComponent implements OnInit {
 
   _typeof2(obj) {
     if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      this. _typeof2 = function _typeof2(_obj) { return typeof _obj; };
+      this. _typeof2 = function _typeof2(_obj) {
+ return typeof _obj; 
+};
     } else {
       this._typeof2 = function _typeof2(_obj) {
-        return _obj && typeof Symbol === 'function' && _obj.constructor === Symbol && _obj !== Symbol.prototype ? 'symbol' : typeof _obj; };
+        return _obj && typeof Symbol === 'function' && _obj.constructor === Symbol && _obj !== Symbol.prototype ? 'symbol' : typeof _obj; 
+};
     }
     return this._typeof2(obj);
   }

@@ -23,7 +23,7 @@
       [attr.maxLength]="schema.maxLength || null"
       [attr.minLength]="schema.minLength || null"
       [attr.required]="schema.isRequired || null"
-      [attr.disabled]="(schema.widget.id=='color' && schema.readOnly)?true:null">
+      [attr.disabled]="(schema.widget.id==='color' && schema.readOnly)?true:null">
     @if ((schema.widget.id==='color' && schema.readOnly)) {
       <input [attr.name]="name" type="hidden" [formControl]="control">
     }

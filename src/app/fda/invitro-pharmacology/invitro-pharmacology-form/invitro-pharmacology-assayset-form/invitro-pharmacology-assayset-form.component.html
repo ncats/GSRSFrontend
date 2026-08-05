@@ -71,7 +71,7 @@
                 >
                 <div
                   class="message-type"
-            [ngClass]="
+            [ngClass]=="
               message.messageType == 'ERROR'
                 ? 'error-message'
                 : 'warning-message'
@@ -89,7 +89,7 @@
                   >
                 }
               </div>
-              @if (message.messageType != 'ERROR' && !approving) {
+              @if (message.messageType !== 'ERROR' && !approving) {
                 <button
                   mat-icon-button
                   matTooltip="Dismiss"
@@ -266,7 +266,7 @@
                         </div>
                       </ng-template>
                       <!-- Display Assays -->
-                      @if (isBuildFromExistingSet == true) {
+                      @if (isBuildFromExistingSet === true) {
                         <div class="font16px">
                           <br />
                           <b
@@ -370,7 +370,7 @@
                                       <div class="margintop3px marginleft80px">
                                         <mat-checkbox
                                           color="primary"
-                                          [disabled]="assay.invitroAssaySets.length == 1"
+                                          [disabled]="assay.invitroAssaySets.length === 1"
                                           [checked]="assay._assaySet"
                               (change)="
                                 updateCheckBoxAssaySet(
@@ -383,7 +383,7 @@
                                         </mat-checkbox>
                                       </div>
                                       <!-- Display message if there is only one Assay Set in the Assay -->
-                                      @if (assay.invitroAssaySets.length == 1) {
+                                      @if (assay.invitroAssaySets.length === 1) {
                                         <div
                                           class="marginleft30px"
                                           >

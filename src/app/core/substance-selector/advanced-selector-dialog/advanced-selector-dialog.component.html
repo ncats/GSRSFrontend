@@ -334,7 +334,7 @@
                 </mat-paginator>
               </div>
             }
-            @if (nameTotalSubstances == 0 && nameSearched && !loading) {
+            @if (nameTotalSubstances === 0 && nameSearched && !loading) {
               <div>
                 <i> No results found for '{{ searchValue }}' </i>
               </div>

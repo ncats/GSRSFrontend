@@ -31,7 +31,9 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog
-  ) { super(gaService); }
+  ) {
+ super(gaService); 
+}
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();

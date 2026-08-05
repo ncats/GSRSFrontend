@@ -87,7 +87,7 @@
           <div class="marginbottom10px colorred">
             <span [innerHTML]="statusMessage"></span>
           </div>
-          @if (isSearchRunning == false && facetsParamsUpdateCount == 0) {
+          @if (isSearchRunning === false && facetsParamsUpdateCount === 0) {
             <div class="margintop30px marginleft30px">
               <div>
                 <button mat-raised-button color="primary" (click)="showSubEntityFacets()">
@@ -96,7 +96,7 @@
               </div>
             </div>
           }
-          @if (isSearchRunning == true) {
+          @if (isSearchRunning === true) {
             <div class="margintop30px marginleft30px">
               <div>
                 <button mat-raised-button color="primary" (click)="cancelBulkSearch()">
@@ -112,7 +112,7 @@
 
 
         <!-- SHOW PROGRESS BAR -->
-        @if ((isSearchRunning == true && facetsParamsUpdateCount == 0) && bulkSearchTotal > 0) {
+        @if ((isSearchRunning === true && facetsParamsUpdateCount === 0) && bulkSearchTotal > 0) {
           <div class="progress-bar-container margintop20px">
             <div class="progress-bar" [style.width.%]="bulkSearchTotalPercent"></div>
             <div class="progress-text">
@@ -128,7 +128,7 @@
         <!-- ***** DISPLAY FACETS FOR SUB ENTITY  ***************** -->
 
         <!-- SHOW FACETS HERE -->
-        @if (((rawFacets && rawFacets.length > 0) && (showFacets == true))) {
+        @if (((rawFacets && rawFacets.length > 0) && (showFacets === true))) {
           <div class="margintop10px">
             <div class="divflex">
               <div>

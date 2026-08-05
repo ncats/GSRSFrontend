@@ -17,14 +17,14 @@
         }
         <span class ="middle-fill"></span>
         <span ><button class ="action-button" color = "primary"  mat-flat-button
-        (click) = "doAction('create')" [disabled] = "total && total == 0">Create</button></span>
+        (click) = "doAction('create')" [disabled] = "total && total === 0">Create</button></span>
         <!-- <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
         (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>-->
         <span><button class ="action-button" color = "primary"  mat-flat-button
-        (click) = "doAction('reject')" [disabled] = "total && total == 0">Reject</button></span>
+        (click) = "doAction('reject')" [disabled] = "total && total === 0">Reject</button></span>
       </div>
     }
-    @if (filtered.length == 0) {
+    @if (filtered.length === 0) {
       <div ><br/><br/>No Records Selected for bulk action. Click the checkbox next to a record in the results to select <br/><br/></div>
     }
     @if (filtered.length > 0 && !successful) {

@@ -29,7 +29,7 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
     styleUrls: ['./ssg4m-sites.component.scss'],
     standalone: false
 })
-export class Ssg4mSitesComponent implements OnInit {
+export class Ssg4mSitesComponent implements OnInit, OnDestroy {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();
 
   privateShowAdvancedSettings: boolean;

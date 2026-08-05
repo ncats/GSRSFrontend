@@ -38,7 +38,7 @@
         ) {
         <div
           >
-          @if (showCrossEntitySearch == true) {
+          @if (showCrossEntitySearch === true) {
             <div>
               <app-cross-entity-search
                 [entity]="entity"
@@ -147,7 +147,7 @@
                             matTooltip="Copy Smiles to clipboard"
                           ></mat-icon>
                         </button>
-                        @if (searchType && searchType == 'similarity') {
+                        @if (searchType && searchType === 'similarity') {
                           <span>
                             &nbsp;&ge; {{ searchCutoff }}
                           </span>
@@ -497,7 +497,7 @@
                                 &nbsp;
                                 <span class="no-break">
                                   <input readonly [value]="this.smiles" class="smiles-input" />
-                                  @if (searchType && searchType == 'similarity') {
+                                  @if (searchType && searchType === 'similarity') {
                                     <span>
                                       &nbsp;&ge; {{ searchCutoff }}
                                     </span>

@@ -540,7 +540,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
               if (!isLoadCanvas && this.editor) {
                 this.editor.getMolfile().pipe(take(1)).subscribe((result: string) => {
                   const jsdraw = this.getSketcher();
-                  if (jsdraw) { jsdraw.setFile(result, 'mol'); }
+                  if (jsdraw) {
+ jsdraw.setFile(result, 'mol'); 
+}
                 });
               }
             }
@@ -613,8 +615,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.loadingService.setLoading(false);
         });
 
-      }
-      else {
+      } else {
         this.jsdraw.setMolfile(mol);
         this.loadingService.setLoading(false);
         this.loadedMolfile.emit(mol);
@@ -754,7 +755,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.editor.setMolecule(response.structure.molfile);
         }
         this.loadingService.setLoading(false);
-      }, () => { this.loadingService.setLoading(false); });
+      }, () => {
+ this.loadingService.setLoading(false); 
+});
     });
   }
 

@@ -147,7 +147,7 @@
                               >
                               <div
                                 class="message-type"
-            [ngClass]="
+            [ngClass]=="
               message.messageType == 'ERROR'
                 ? 'error-message'
                 : 'warning-message'
@@ -165,7 +165,7 @@
                                 >
                               }
                             </div>
-                            @if (message.messageType != 'ERROR' && !approving) {
+                            @if (message.messageType !== 'ERROR' && !approving) {
                               <button
                                 mat-icon-button
                                 matTooltip="Dismiss"

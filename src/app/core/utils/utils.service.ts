@@ -162,7 +162,9 @@ export class UtilsService {
     const mapper = {$errors: []};
     for (let i = 0; i < connections.length; i++) {
       const con = connections[i].trim();
-      if (con === '') { continue; }
+      if (con === '') {
+ continue; 
+}
       regex.lastIndex = 0;
       const res = regex.exec(con);
       if (res == null) {
@@ -298,7 +300,9 @@ export class UtilsService {
       return true;
     }
     strings.forEach(function(value) {
-      if (searchTerm.indexOf(value.valueOf())>-1) { return true; };
+      if (searchTerm.indexOf(value.valueOf())>-1) {
+ return true; 
+};
     });
     return false;
   }

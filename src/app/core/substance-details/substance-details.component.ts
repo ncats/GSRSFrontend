@@ -79,7 +79,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.source = this.activatedRoute.snapshot.queryParams['source'] || 'substances';
     this.loadingService.setLoading(true);
     if(this.source !== 'staging'){
-      this.checkVersion().subscribe((result: number) => {this.latestVersion = result;
+      this.checkVersion().subscribe((result: number) => {
+this.latestVersion = result;
         this.activeRoute.params.subscribe(routeParams => {
           this.id = routeParams.id;
           this.version = routeParams.version;

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -45,7 +45,7 @@ import {
   styleUrls: ['./invitro-pharmacology-form.component.scss'],
   standalone: false
 })
-export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
+export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('saveTemplate', { static: false }) private saveTemplate;
 
@@ -250,7 +250,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     }, 600);
   }
 
-  ngAfterViewInit(changes: any) {
+  ngAfterViewInit() {
     //this.openModalSave(this.saveTemplate);
   }
 
@@ -919,7 +919,9 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     // Rest Api calls
     apiUrl = this.http.put<InvitroAssayInformation>(url, assay, options)
       .pipe(
-        shareReplay(1), catchError(error => { throw error; }));
+        shareReplay(1), catchError(error => {
+ throw error; 
+}));
 
     return apiUrl;
   }

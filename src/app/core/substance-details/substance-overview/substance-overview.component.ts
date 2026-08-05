@@ -51,7 +51,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   showlinks = false;
-  @Output("downloadPDF") downloadPDF: EventEmitter<any> = new EventEmitter();
+  @Output() downloadPDF: EventEmitter<any> = new EventEmitter();
   enablePDFDownloadOption = false;
   pdfDownloadBtnName = "Download PDF";
   downloadList: DownloadList;
@@ -141,38 +141,64 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
 
 getDownloadButtonName(type: string): string {    
-    if (type === undefined || type.trim() === "") { return ""; }
+    if (type === undefined || type.trim() === "") {
+ return ""; 
+}
     const _default: string = type;
     const root = this.downloadList;
-    if (root === undefined ) { return _default }
-    if (!root.downloads ) { return _default; }
+    if (root === undefined ) {
+ return _default 
+}
+    if (!root.downloads ) {
+ return _default; 
+}
     const d = root.downloads[type];
-    if (d && d.buttonName) { return d.buttonName; }
+    if (d && d.buttonName) {
+ return d.buttonName; 
+}
     return _default;   
 }
 
 getDownloadTitle(type: string): string {    
-    if (type === undefined || type.trim() === "") { return ""; }
+    if (type === undefined || type.trim() === "") {
+ return ""; 
+}
     const _default: string = type;
     const root = this.downloadList;
-    if (root === undefined ) { return _default }
-    if (!root.downloads ) { return _default; }
+    if (root === undefined ) {
+ return _default 
+}
+    if (!root.downloads ) {
+ return _default; 
+}
     const d = root.downloads[type];
-    if (d && d.title) { return d.title; }
+    if (d && d.title) {
+ return d.title; 
+}
     return _default;   
 }
 
 
 
   allowDownload(type: string): boolean {
-    if (type === undefined || type.trim() === "") { return false; }
+    if (type === undefined || type.trim() === "") {
+ return false; 
+}
     const root = this.downloadList;
-    if (root === undefined ) { return false; }
-    if (root.disableAll === true) { return false; }
-    if (!root.downloads ) { return false; }
+    if (root === undefined ) {
+ return false; 
+}
+    if (root.disableAll === true) {
+ return false; 
+}
+    if (!root.downloads ) {
+ return false; 
+}
     const d = root.downloads[type];
     // console.log("download object for type: " + type + " is: " + JSON.stringify(d));
-    if (d && d.enabled === true) { return true; }
+    if (d && d.enabled === true) {
+ return true; 
+}
     return false;   
   }
 

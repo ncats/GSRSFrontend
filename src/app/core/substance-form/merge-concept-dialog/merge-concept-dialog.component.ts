@@ -252,7 +252,9 @@ export class MergeConceptDialogComponent implements OnInit {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
-        if (typeof or === 'object') { continue; }
+        if (typeof or === 'object') {
+ continue; 
+}
         refs[j] = map[or];
       }
     }
@@ -301,7 +303,9 @@ export class MergeConceptDialogComponent implements OnInit {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
           const or = refs[j];
-          if (typeof or === 'object') { continue; }
+          if (typeof or === 'object') {
+ continue; 
+}
           refSet[or] = true;
         }
       }

@@ -18,7 +18,9 @@ export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<SubunitSelectorDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any = {}
-  ) {dialogRef.disableClose = true; }
+  ) {
+dialogRef.disableClose = true; 
+}
 
   ngOnInit() {
     this.dialogRef.backdropClick().subscribe(fun => {

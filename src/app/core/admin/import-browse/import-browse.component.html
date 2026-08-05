@@ -112,7 +112,7 @@
                   <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
                     <mat-icon svgIcon="outline-file_copy" matTooltip = "Copy Smiles to clipboard"></mat-icon>
                   </button>
-                  @if (searchType && searchType == 'similarity') {
+                  @if (searchType && searchType === 'similarity') {
                     <span>
                       &nbsp;&ge; {{searchCutoff}}
                     </span>

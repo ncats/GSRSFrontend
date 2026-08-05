@@ -30,12 +30,12 @@
         <button
           mat-icon-button
           [ngStyle]="{ color: 'green' }"
-          [disabled]="application.applicationProductList.length == 1"
+          [disabled]="application.applicationProductList.length === 1"
           (click)="confirmDeleteProduct(prodIndex)"
           matTooltip="Delete Product Details {{ prodIndex + 1 }}"
           >
           <mat-icon
-            [class.disabled]="application.applicationProductList.length == 1"
+            [class.disabled]="application.applicationProductList.length === 1"
             >delete_forever</mat-icon
             >
           </button>
@@ -100,7 +100,7 @@
                 </app-cv-input>
                 &nbsp;&nbsp;
                 <span class="width40px displayinlineblock">
-                  @if (prodNameIndex == 0) {
+                  @if (prodNameIndex === 0) {
                     <button
                       mat-icon-button
                       color="primary"
@@ -114,12 +114,12 @@
                 <button
                   mat-icon-button
                   color="primary"
-                  [disabled]="product.applicationProductNameList.length == 1"
+                  [disabled]="product.applicationProductNameList.length === 1"
                   (click)="confirmDeleteProductName(prodIndex, prodNameIndex)"
                   matTooltip="Delete Product Name"
                   >
                   <mat-icon
-                    [class.disabled]="product.applicationProductNameList.length == 1"
+                    [class.disabled]="product.applicationProductNameList.length === 1"
                     >delete_forever</mat-icon
                     >
                   </button>

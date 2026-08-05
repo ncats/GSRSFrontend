@@ -305,7 +305,7 @@
         <mat-icon svgIcon="open_in_new"></mat-icon>
       </a>
     }
-    @if (canEdit && !(substance.$$source && substance.$$source == 'staging') ) {
+    @if (canEdit && !(substance.$$source && substance.$$source === 'staging') ) {
       <span>
         <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
           name="edit_record" aria-label="edit record">
@@ -313,7 +313,7 @@
         </a>
       </span>
     }
-    @if (canEdit && (substance.$$source && substance.$$source == 'staging') ) {
+    @if (canEdit && (substance.$$source && substance.$$source === 'staging') ) {
       <span>
         <a mat-icon-button [routerLink]="['/substances/register']"
           [queryParams]="{stagingID : substance._metadata.recordId}"  matTooltip='edit record'
@@ -322,7 +322,7 @@
         </a>
       </span>
     }
-    @if (canEdit && !(substance.$$source && substance.$$source == 'staging') ) {
+    @if (canEdit && !(substance.$$source && substance.$$source === 'staging') ) {
       <span>
         @if (isEditable) {
           <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="copy to edit form options"

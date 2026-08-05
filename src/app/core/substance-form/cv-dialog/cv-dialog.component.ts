@@ -50,7 +50,9 @@ export class CvDialogComponent implements OnInit {
           this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
             if (response.terms && response.terms.length === this.vocabulary.terms.length) {
               this.message = 'Term ' + this.term.value + ' Added to ' + this.vocabulary.domain + '';
-              setTimeout(() => {this.dialogRef.close(this.term); }, 3000);
+              setTimeout(() => {
+this.dialogRef.close(this.term); 
+}, 3000);
             }
           }, error => {
             console.log(error);
@@ -59,8 +61,7 @@ export class CvDialogComponent implements OnInit {
           if (error.error && error.error.message) {
             str += ' - ' + error.error.message;
     
-          }
-         else if(error.message) {
+          } else if(error.message) {
             str += ' - ' + error.message;
           }
           this.message = str;
@@ -82,8 +83,7 @@ export class CvDialogComponent implements OnInit {
       if (error.error && error.error.message) {
         str += ' - ' + error.error.message;
 
-      }
-     else if(error.message) {
+      } else if(error.message) {
         str += ' - ' + error.message;
       }
       this.message = str;

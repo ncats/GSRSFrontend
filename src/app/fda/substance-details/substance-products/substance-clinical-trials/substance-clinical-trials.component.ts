@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
@@ -23,7 +23,7 @@ import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical
     standalone: false
 })
 
-export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
   private privateFacetParams: FacetParam;
   clinicalTrialCount = 0;

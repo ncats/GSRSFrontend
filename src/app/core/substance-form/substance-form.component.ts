@@ -1408,7 +1408,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       this.substanceFormService.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances', this.id, 'edit']);
-        setTimeout(()=>{window.location.reload();},50);
+        setTimeout(()=>{
+window.location.reload();
+},50);
       } else if (response === 'browse') {
         this.router.navigate(['/browse-substance']);
       } else if (response === 'staging') {

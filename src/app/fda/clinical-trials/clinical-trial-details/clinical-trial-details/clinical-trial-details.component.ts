@@ -31,7 +31,8 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     utilsService: UtilsService,
     public configService: ConfigService,
     authService: AuthService
-  ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
+  ) {
+ super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
     router, gaService, utilsService, authService);
   }
 

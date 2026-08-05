@@ -280,9 +280,9 @@
           <!-- Display Text Box if NOT Type Ahead/Suggestion -->
           @if (
             !selectedQueryableSuggest &&
-            (commandInput.type == 'text' ||
-            commandInput.type == 'boolean' ||
-            commandInput.type == 'number')
+            (commandInput.type === 'text' ||
+            commandInput.type === 'boolean' ||
+            commandInput.type === 'number')
             ) {
             <div
               >
@@ -322,7 +322,7 @@
                 </mat-form-field>
               </div>
             }
-            @if (commandInput.type == 'datetime') {
+            @if (commandInput.type === 'datetime') {
               <div>
                 <mat-form-field floatLabel="never">
                   <input
@@ -373,7 +373,7 @@
                   </mat-form-field>
                 </div>
               }
-              @if (commandInput.type == 'select') {
+              @if (commandInput.type === 'select') {
                 <div>
                   <mat-form-field floatLabel="never">
                     <mat-select

@@ -400,8 +400,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
               if (solTable.solutionFPercent) {
                 if (this.isNumber(solTable.solutionFPercent) === false) {
                   this.setValidationMessage('Solution F (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
-                }
-                else {
+                } else {
                   totalCount100percent = totalCount100percent + Number(solTable.solutionFPercent);
                 }
               }

@@ -1,4 +1,4 @@
-@if (showProcessIndex == -1) {
+@if (showProcessIndex === -1) {
   <div class="divflexright">
     @if (processList && processList.length > 0) {
       <div>
@@ -71,7 +71,7 @@
                                       >
                                       @if (startingMaterial.substanceName) {
                                         <div>
-                                          @if ((stage.startingMaterials.length > 1 && startingMaterialIndex != 0)) {
+                                          @if ((stage.startingMaterials.length > 1 && startingMaterialIndex !== 0)) {
                                             <div class="paddingtop15px font30px"
                                               >
                                               <b>+</b>
@@ -107,7 +107,7 @@
                                             } <!-- if substanceName object exists -->
                                             <!-- if AMOUNT exists, Display values-->
                                             <!-- ONLY DISPLAY if setting in the configuration is true -->
-                                            @if (showAmountValues && showAmountValues == 'true') {
+                                            @if (showAmountValues && showAmountValues === 'true') {
                                               <div>
                                                 @if (startingMaterial.amount) {
                                                   <div>
@@ -159,7 +159,7 @@
                                                         } <!-- if substanceName object exists -->
                                                         <!-- if AMOUNT exists, Display values-->
                                                         <!-- ONLY DISPLAY if setting in the configuration is true -->
-                                                        @if (showAmountValues && showAmountValues == 'true') {
+                                                        @if (showAmountValues && showAmountValues === 'true') {
                                                           <div>
                                                             @if (processingMaterial.amount) {
                                                               <div>
@@ -222,7 +222,7 @@
                                                                 } <!-- if substanceName object exists -->
                                                                 <!-- if AMOUNT exists, Display values-->
                                                                 <!-- ONLY DISPLAY if setting in the configuration is true -->
-                                                                @if (showAmountValues && showAmountValues == 'true') {
+                                                                @if (showAmountValues && showAmountValues === 'true') {
                                                                   <div>
                                                                     @if (processingMaterial.amount) {
                                                                       <div>
@@ -260,7 +260,7 @@
                                                               >
                                                               @if (resultingMaterial.substanceName) {
                                                                 <div>
-                                                                  @if ((stage.resultingMaterials.length > 1 && resultingMaterialIndex != 0)) {
+                                                                  @if ((stage.resultingMaterials.length > 1 && resultingMaterialIndex !== 0)) {
                                                                     <div class="paddingtop15px font25px"
                                                                       >
                                                                       <b>+</b>
@@ -301,7 +301,7 @@
                                                                     } <!-- if substanceName object exists -->
                                                                     <!-- if AMOUNT exists, Display values-->
                                                                     <!-- ONLY DISPLAY if setting in the configuration is true -->
-                                                                    @if (showAmountValues && showAmountValues == 'true') {
+                                                                    @if (showAmountValues && showAmountValues === 'true') {
                                                                       <div>
                                                                         @if (resultingMaterial.amount) {
                                                                           <div>

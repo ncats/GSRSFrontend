@@ -373,7 +373,7 @@
                         {{ columnName }}
                       </th>
                       <td class="padleft50px" mat-cell *matCellDef="let row; let indexRow = index">
-                        @if (columnName == 'Time (min)') {
+                        @if (columnName === 'Time (min)') {
                           <div>
                             <!-- Delete button -->
                             <button class="marginleftneg50px" mat-icon-button color="primary"
@@ -381,59 +381,59 @@
                               matTooltip="Delete Mobile Phase Row {{ indexRow + 1 }}">
                               <mat-icon>delete_forever</mat-icon>
                             </button>
-                            @if (columnName == 'Time (min)') {
+                            @if (columnName === 'Time (min)') {
                               <mat-form-field class="width60px">
                                 <input matInput placeholder="" [(ngModel)]="row.solutionTime" name="solutionTime" />
                               </mat-form-field>
                             }
                           </div>
                         }
-                        @if (columnName == 'Solution A (%)') {
+                        @if (columnName === 'Solution A (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionAPercent" name="solutionAPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution B (%)') {
+                        @if (columnName === 'Solution B (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionBPercent" name="solutionBPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution C (%)') {
+                        @if (columnName === 'Solution C (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionCPercent" name="solutionCPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution D (%)') {
+                        @if (columnName === 'Solution D (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionDPercent" name="solutionDPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution E (%)') {
+                        @if (columnName === 'Solution E (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionEPercent" name="solutionEPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution F (%)') {
+                        @if (columnName === 'Solution F (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionFPercent" name="solutionFPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution G (%)') {
+                        @if (columnName === 'Solution G (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionGPercent" name="solutionGPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution H (%)') {
+                        @if (columnName === 'Solution H (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionHPercent" name="solutionHPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution I (%)') {
+                        @if (columnName === 'Solution I (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionIPercent" name="solutionIPercent" />
                           </mat-form-field>
                         }
-                        @if (columnName == 'Solution J (%)') {
+                        @if (columnName === 'Solution J (%)') {
                           <mat-form-field class="width60px">
                             <input matInput placeholder="" [(ngModel)]="row.solutionJPercent" name="solutionJPercent" />
                           </mat-form-field>

@@ -4,7 +4,7 @@
   <mat-sidenav mode="side" opened>
 
     <!-- Cross Entity Search to search between Application and Substance -->
-    @if (showCrossEntitySearch == true) {
+    @if (showCrossEntitySearch === true) {
       <span>
         <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [secondIdLists]="secondIdLists"
           [searchTerm]="searchTerm" [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
@@ -84,7 +84,7 @@
                     @if (((matchType) && (matchType === 'WORD' || matchType === 'FULL'))) {
                       <div>
                         <div class="match-type">
-                          {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                          {{matchType === 'WORD' ? 'Contains Match' : 'Exact Match'}}
                         </div>
                         @for (suggestion of narrowSearchSuggestions[matchType]; track suggestion) {
                           <button mat-menu-item
@@ -348,7 +348,7 @@
                             <div>
                               @if (prodName.productName) {
                                 <div>
-                                  @if (prodName.deprecated && prodName.deprecated == 'Y') {
+                                  @if (prodName.deprecated && prodName.deprecated === 'Y') {
                                     <div>
                                       &#9642;
                                       <span class="colorgray">
@@ -511,7 +511,7 @@
                                                 <div>
                                                   @if (prodName.productName) {
                                                     <div>
-                                                      @if (prodName.deprecated && prodName.deprecated == 'Y') {
+                                                      @if (prodName.deprecated && prodName.deprecated === 'Y') {
                                                         <div>
                                                           &#9642;
                                                           <span class="colorgray">

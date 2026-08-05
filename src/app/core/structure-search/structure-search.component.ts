@@ -30,8 +30,7 @@ import { StructureEditorComponent } from "@gsrs-core/structure-editor";
   standalone: false,
 })
 export class StructureSearchComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   private editor: Editor;
   private searchType: string;
   _searchtype: string;

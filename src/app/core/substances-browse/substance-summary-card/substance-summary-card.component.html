@@ -379,7 +379,7 @@
                   nameObject._nameHTML ? nameObject._nameHTML : nameObject.name
                 "
                       ></span>
-                      @if (nameObject.displayName == true) {
+                      @if (nameObject.displayName === true) {
                         <span
                 matTooltip="{{
                   'displayNameTitle' | elementLabel: 'substance_names_name'
@@ -411,7 +411,7 @@
                   nameObject._nameHTML ? nameObject._nameHTML : nameObject.name
                 "
                       ></span>
-                      @if (nameObject.displayName == true) {
+                      @if (nameObject.displayName === true) {
                         <span
                 matTooltip="{{
                   'displayNameTitle' | elementLabel: 'substance_names_name'
@@ -423,7 +423,7 @@
                           ></mat-icon>
                         </span>
                       }
-                      @if (nameObject.preferred == true) {
+                      @if (nameObject.preferred === true) {
                         <span
                 matTooltip="{{
                   'preferredTitle' | elementLabel: 'substance_names_name'
@@ -643,7 +643,7 @@
                                 </div>
                               }
                               @if (
-                                substance._relationships && substance._relationships.count != null
+                                substance._relationships && substance._relationships.count !== null
                                 ) {
                                 <div
                                   class="substance-data substance-relationships"
