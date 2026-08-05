@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceImpuritiesComponent } from './substance-impurities.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceImpuritiesComponent', () => {
   let component: SubstanceImpuritiesComponent;
   let fixture: ComponentFixture<SubstanceImpuritiesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceImpuritiesComponent ]
     })

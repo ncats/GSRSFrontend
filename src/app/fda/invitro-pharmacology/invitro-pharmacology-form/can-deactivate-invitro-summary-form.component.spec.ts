@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CanDeactivateInvitroSummaryFormComponent } from './can-deactivate-invitro-summary-form.component';
 
@@ -6,7 +6,7 @@ describe('CanDeactivateInvitroSummaryFormComponent', () => {
   let component: CanDeactivateInvitroSummaryFormComponent;
   let fixture: ComponentFixture<CanDeactivateInvitroSummaryFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CanDeactivateInvitroSummaryFormComponent ]
     })

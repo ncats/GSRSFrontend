@@ -6,11 +6,11 @@
 </div>
 <div class="responsive">
   <!-- @if (type !== "Codes - Classifications") {
-    <span class="show-filter-span">
-      <button matButton color="primary" (click)="toggleFilter()">
-        {{ showHideFilterText }}
-      </button>
-    </span>
+  <span class="show-filter-span">
+    <button matButton color="primary" (click)="toggleFilter()">
+      {{ showHideFilterText }}
+    </button>
+  </span>
   } -->
   <span class="show-filter-span">
     <button matButton (click)="toggleFilter()">
@@ -23,25 +23,28 @@
     [dataSource]="paged"
     matSort
     (matSortChange)="sortData($event)"
-  >
+    >
     <ng-container matColumnDef="classificationTree">
       <th mat-header-cell *matHeaderCellDef>Classification Tree</th>
       <td mat-cell *matCellDef="let code">
-        <div
-          *ngFor="let node of getClassificationTree(code.comments); index as i"
-          [ngStyle]="{ 'padding-left.px': i * 10 }"
-        >
-          <mat-icon svgIcon="subdirectory_arrow_right" *ngIf="i > 0"></mat-icon>
-          <a
-            routerLink="/browse-substance"
+        @for (node of getClassificationTree(code.comments); track node; let i = $index) {
+          <div
+            [ngStyle]="{ 'padding-left.px': i * 10 }"
+            >
+            @if (i > 0) {
+              <mat-icon svgIcon="subdirectory_arrow_right"></mat-icon>
+            }
+            <a
+              routerLink="/browse-substance"
             [queryParams]="{
               search:
                 'root_codes_comments:&quot;' + (node | forwardSlash) + '&quot;',
             }"
-            [innerHTML]="node"
-          >
-          </a>
-        </div>
+              [innerHTML]="node"
+              >
+            </a>
+          </div>
+        }
       </td>
     </ng-container>
 
@@ -49,23 +52,30 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Code System</th>
       <td mat-cell *matCellDef="let code">
         {{ code.codeSystem | codeSystemDisplay | async }}
-        <span *ngIf="codeIsProtected(code.access)" matTooltip="Not Public">
-          <mat-icon
-            svgIcon="lock"
-            class="icon-align blue-font"
-            *ngIf="codeIsProtected(code.access)"
-          ></mat-icon>
-        </span>
+        @if (codeIsProtected(code.access)) {
+          <span matTooltip="Not Public">
+            @if (codeIsProtected(code.access)) {
+              <mat-icon
+                svgIcon="lock"
+                class="icon-align blue-font"
+              ></mat-icon>
+            }
+          </span>
+        }
       </td>
     </ng-container>
 
     <ng-container matColumnDef="code">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
       <td mat-cell *matCellDef="let code">
-        <a class="a-link" *ngIf="code.url" [href]="code.url" target="_blank">{{
-          code.code
-        }}</a>
-        <span *ngIf="!code.url"> {{ code.code }}</span>
+        @if (code.url) {
+          <a class="a-link" [href]="code.url" target="_blank">{{
+            code.code
+          }}</a>
+        }
+        @if (!code.url) {
+          <span> {{ code.code }}</span>
+        }
       </td>
     </ng-container>
 
@@ -83,153 +93,162 @@
               matInput
               class="form-field"
               [formControl]="codeSystemFilter"
-            />
-          </mat-form-field>
-        </div>
-      </th>
-      <td mat-cell *matCellDef="let code">
-        {{ code.codeSystem | codeSystemDisplay | async }}
-      </td>
-    </ng-container>
+              />
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let code">
+          {{ code.codeSystem | codeSystemDisplay | async }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="codeFilter">
-      <th mat-header-cell *matHeaderCellDef>
-        <div class="tableFilter">
-          <mat-form-field>
-            <mat-label>Code Filter</mat-label>
-            <input matInput class="form-field" [formControl]="codeFilter" />
-          </mat-form-field>
-        </div>
-      </th>
-      <td mat-cell *matCellDef="let code">
-        <a class="a-link" *ngIf="code.url" [href]="code.url" target="_blank">{{
-          code.code
-        }}</a>
-        <span *ngIf="!code.url"> {{ code.code }}</span>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="codeFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="tableFilter">
+            <mat-form-field>
+              <mat-label>Code Filter</mat-label>
+              <input matInput class="form-field" [formControl]="codeFilter" />
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let code">
+          @if (code.url) {
+            <a class="a-link" [href]="code.url" target="_blank">{{
+              code.code
+            }}</a>
+          }
+          @if (!code.url) {
+            <span> {{ code.code }}</span>
+          }
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="typeFilter">
-      <th mat-header-cell *matHeaderCellDef>
-        <div class="tableFilter">
-          <mat-form-field appearance="fill">
-            <mat-select [formControl]="typeFilter">
-              <mat-select-trigger>
-                {{ typeFilter.value ? typeFilter.value : "" }}
-              </mat-select-trigger>
-              <mat-option [value]="" selected>Select Type Filter</mat-option>
-              <mat-option
-                *ngFor="let type of typeFilterOptions"
-                [value]="type.display"
-                >{{ type.display }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </th>
-      <td mat-cell *matCellDef="let code">{{ code.type }}</td>
-    </ng-container>
+      <ng-container matColumnDef="typeFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="tableFilter">
+            <mat-form-field appearance="fill">
+              <mat-select [formControl]="typeFilter">
+                <mat-select-trigger>
+                  {{ typeFilter.value ? typeFilter.value : "" }}
+                </mat-select-trigger>
+                <mat-option [value]="" selected>Select Type Filter</mat-option>
+                @for (type of typeFilterOptions; track type) {
+                  <mat-option
+                    [value]="type.display"
+                    >{{ type.display }}</mat-option
+                    >
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let code">{{ code.type }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="comments">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Comments</th>
-      <td mat-cell *matCellDef="let code">
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="openModal(commentTemplate)"
+      <ng-container matColumnDef="comments">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Comments</th>
+        <td mat-cell *matCellDef="let code">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openModal(commentTemplate)"
           [ngClass]="
             !code.comments && !code.codeText ? 'mat-button-disabled' : ''
           "
-          [disabled]="!code.comments && !code.codeText"
-        >
-          {{ !code.comments && !code.codeText ? "None" : "View" }}
-        </button>
-        <ng-template #commentTemplate>
-          <h2 mat-dialog-title>Code Comments</h2>
-          <div mat-dialog-content>
-            <div class="form-row" *ngIf="code.codeText">
-              <div class="label">Comments:</div>
-              <div class="content">{{ code.codeText }}</div>
-            </div>
-            <div class="form-row" *ngIf="code.comments">
-              <div class="label">Code Text:</div>
-              <div class="content">{{ code.comments }}</div>
-            </div>
-          </div>
-          <div mat-dialog-actions>
-            <span class="middle-fill"></span>
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="close()"
-              mat-dialog-close
+            [disabled]="!code.comments && !code.codeText"
             >
-              Close
-            </button>
-          </div>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="references">
-      <th mat-header-cell *matHeaderCellDef>References</th>
-      <td mat-cell *matCellDef="let code">
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="openModal(refTemplate)"
-          [ngClass]="code.references.length <= 0 ? 'mat-button-disabled' : ''"
-          [disabled]="code.references.length <= 0"
-        >
-          {{ code.references.length <= 0 ? "None" : "View" }}
-        </button>
-
-        <ng-template #refTemplate>
-          <h2 mat-dialog-title>References</h2>
-          <div mat-dialog-content>
-            <app-references-manager
-              [substance]="substance"
-              [references]="code.references"
-            ></app-references-manager>
-          </div>
-          <div mat-dialog-actions>
-            <span class="middle-fill"></span>
-            <button mat-raised-button color="primary" (click)="close()">
-              Close
-            </button>
-          </div>
-        </ng-template>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="emptyFilter">
-      <th mat-header-cell *matHeaderCellDef></th>
-    </ng-container>
-
-    <ng-container matColumnDef="resetFilter">
-      <th mat-header-cell *matHeaderCellDef>
-        <div class="tableFilter">
-          <button matButton color="primary" (click)="resetFilters()">
-            Reset
+            {{ !code.comments && !code.codeText ? "None" : "View" }}
           </button>
-        </div>
-      </th>
-    </ng-container>
+          <ng-template #commentTemplate>
+            <h2 mat-dialog-title>Code Comments</h2>
+            <div mat-dialog-content>
+              @if (code.codeText) {
+                <div class="form-row">
+                  <div class="label">Comments:</div>
+                  <div class="content">{{ code.codeText }}</div>
+                </div>
+              }
+              @if (code.comments) {
+                <div class="form-row">
+                  <div class="label">Code Text:</div>
+                  <div class="content">{{ code.comments }}</div>
+                </div>
+              }
+            </div>
+            <div mat-dialog-actions>
+              <span class="middle-fill"></span>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="close()"
+                mat-dialog-close
+                >
+                Close
+              </button>
+            </div>
+          </ng-template>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      [hidden]="hideFilters"
-      mat-header-row
-      *matHeaderRowDef="displayedFilterColumns"
-    ></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-</div>
-<mat-paginator
-  [length]="(filtered && filtered.length) || 0"
-  [pageSize]="pageSize"
-  showFirstLastButtons="true"
-  (page)="pageChange($event, analyticsEventCategory)"
-  [pageSizeOptions]="pageSizeOptions"
->
-</mat-paginator>
+      <ng-container matColumnDef="references">
+        <th mat-header-cell *matHeaderCellDef>References</th>
+        <td mat-cell *matCellDef="let code">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openModal(refTemplate)"
+            [ngClass]="code.references.length <= 0 ? 'mat-button-disabled' : ''"
+            [disabled]="code.references.length <= 0"
+            >
+            {{ code.references.length <= 0 ? "None" : "View" }}
+          </button>
+
+          <ng-template #refTemplate>
+            <h2 mat-dialog-title>References</h2>
+            <div mat-dialog-content>
+              <app-references-manager
+                [substance]="substance"
+                [references]="code.references"
+              ></app-references-manager>
+            </div>
+            <div mat-dialog-actions>
+              <span class="middle-fill"></span>
+              <button mat-raised-button color="primary" (click)="close()">
+                Close
+              </button>
+            </div>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="emptyFilter">
+        <th mat-header-cell *matHeaderCellDef></th>
+      </ng-container>
+
+      <ng-container matColumnDef="resetFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="tableFilter">
+            <button matButton color="primary" (click)="resetFilters()">
+              Reset
+            </button>
+          </div>
+        </th>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        [hidden]="hideFilters"
+        mat-header-row
+        *matHeaderRowDef="displayedFilterColumns"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <mat-paginator
+    [length]="(filtered && filtered.length) || 0"
+    [pageSize]="pageSize"
+    showFirstLastButtons="true"
+    (page)="pageChange($event, analyticsEventCategory)"
+    [pageSizeOptions]="pageSizeOptions"
+    >
+  </mat-paginator>

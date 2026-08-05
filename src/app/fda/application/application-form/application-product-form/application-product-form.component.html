@@ -6,7 +6,7 @@
   <span
     matBadge="{{ application.applicationProductList.length }}"
     matBadgeOverlap="false"
-  >
+    >
     <span class="titlegreen">PRODUCT</span>
   </span>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -15,219 +15,208 @@
     color="primary"
     (click)="addNewProduct()"
     matTooltip="Add New Product"
-  >
+    >
     <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Product
   </button>
   <br /><br />
 
-  <div
-    *ngFor="
-      let product of application.applicationProductList;
-      let prodIndex = index
-    "
-  >
-    <!-- Buttons: delete, copy, review -->
-    <div class="marginbottomminus17px padleft250px">
-      <button
-        mat-icon-button
-        [ngStyle]="{ color: 'green' }"
-        [disabled]="application.applicationProductList.length == 1"
-        (click)="confirmDeleteProduct(prodIndex)"
-        matTooltip="Delete Product Details {{ prodIndex + 1 }}"
+  @for (
+    product of application.applicationProductList; track
+    product; let prodIndex = $index) {
+    <div
       >
-        <mat-icon
-          [class.disabled]="application.applicationProductList.length == 1"
-          >delete_forever</mat-icon
-        >
-      </button>
-      &nbsp;&nbsp;
-      <button
-        mat-icon-button
-        [ngStyle]="{ color: 'green' }"
-        (click)="copyProduct(product)"
-        matTooltip="Copy Product Details {{ prodIndex + 1 }} to a New Product"
-      >
-        <mat-icon>file_copy</mat-icon>
-      </button>
-      &nbsp;&nbsp;
-      <button
-        mat-icon-button
-        [ngStyle]="{ color: 'green' }"
-        (click)="confirmReviewProduct(prodIndex)"
+      <!-- Buttons: delete, copy, review -->
+      <div class="marginbottomminus17px padleft250px">
+        <button
+          mat-icon-button
+          [ngStyle]="{ color: 'green' }"
+          [disabled]="application.applicationProductList.length == 1"
+          (click)="confirmDeleteProduct(prodIndex)"
+          matTooltip="Delete Product Details {{ prodIndex + 1 }}"
+          >
+          <mat-icon
+            [class.disabled]="application.applicationProductList.length == 1"
+            >delete_forever</mat-icon
+            >
+          </button>
+          &nbsp;&nbsp;
+          <button
+            mat-icon-button
+            [ngStyle]="{ color: 'green' }"
+            (click)="copyProduct(product)"
+            matTooltip="Copy Product Details {{ prodIndex + 1 }} to a New Product"
+            >
+            <mat-icon>file_copy</mat-icon>
+          </button>
+          &nbsp;&nbsp;
+          <button
+            mat-icon-button
+            [ngStyle]="{ color: 'green' }"
+            (click)="confirmReviewProduct(prodIndex)"
         matTooltip="Click to Confirm Product Details {{
           prodIndex + 1
         }} has been Reviewed"
-      >
-        <mat-icon>check_circle</mat-icon>
-      </button>
-      <span *ngIf="product.reviewDate" class="colorgray font12px"
-        >Reviewed By:{{ product.reviewedBy }}&nbsp;{{
-          product.reviewDate | date: "MM/dd/yyyy hh:mm:ss a"
-        }}
-      </span>
-    </div>
-
-    <!-- Display Products -->
-    <fieldset class="border">
-      <legend class="border">
-        Product Details&nbsp;<b
-          ><span class="colorgreen font17px">{{ prodIndex + 1 }}</span></b
-        >
-      </legend>
-
-      <!-- PRODUCT NAME LIST -->
-
-      <div
-        *ngFor="
-          let prodName of product.applicationProductNameList;
-          let prodNameIndex = index
-        "
-      >
-        <div class="form-row-prodname">
-          <mat-form-field class="prodNameField">
-            <mat-label>Product Name</mat-label>
-            <input
-              matInput
-              [(ngModel)]="prodName.productName"
-              name="productName"
-            />
-          </mat-form-field>
-
-          <app-cv-input
-            class="col-1-nomargin"
-            domain="PROD_PRODUCT_NAME_TYPE"
-            title="Product Name Type"
-            name="productNameType"
-            [model]="prodName.productNameType"
-            (valueChange)="prodName.productNameType = $event"
-          >
-          </app-cv-input>
-
-          &nbsp;&nbsp;
-          <span class="width40px displayinlineblock">
-            <button
-              mat-icon-button
-              color="primary"
-              *ngIf="prodNameIndex == 0"
-              (click)="addNewProductName(prodIndex)"
-              matTooltip="Add New Product Name"
             >
-              <mat-icon>add_circle_outline</mat-icon>
-            </button>
-          </span>
-          <button
-            mat-icon-button
-            color="primary"
-            [disabled]="product.applicationProductNameList.length == 1"
-            (click)="confirmDeleteProductName(prodIndex, prodNameIndex)"
-            matTooltip="Delete Product Name"
-          >
-            <mat-icon
-              [class.disabled]="product.applicationProductNameList.length == 1"
-              >delete_forever</mat-icon
-            >
+            <mat-icon>check_circle</mat-icon>
           </button>
+          @if (product.reviewDate) {
+            <span class="colorgray font12px"
+              >Reviewed By:{{ product.reviewedBy }}&nbsp;{{
+              product.reviewDate | date: "MM/dd/yyyy hh:mm:ss a"
+              }}
+            </span>
+          }
         </div>
-      </div>
-      <!-- ngFor product Name List -->
-
-      <div class="form-row">
-        <app-cv-input
-          class="col-1"
-          domain="DOSAGE_FORM"
-          title="Dosage Form"
-          name="dosageForm"
-          [model]="product.dosageForm"
-          (valueChange)="product.dosageForm = $event"
-        >
-        </app-cv-input>
-
-        <!-- Multiple Selection from dropdown of Route of Administration -->
-        <div class="col-1 marginright30px">
-          <app-tag-selector
-            class="tags"
-            (tagsUpdate)="updateRouteAdmin($event, prodIndex)"
-            [tags]="product.routeAdmin ? product.routeAdmin.split('\,') : []"
-            cvDomain="PROD_ROUTE_OF_ADMIN"
-            placeholder="Route of Administration"
-          >
-          </app-tag-selector>
+        <!-- Display Products -->
+        <fieldset class="border">
+          <legend class="border">
+            Product Details&nbsp;<b
+            ><span class="colorgreen font17px">{{ prodIndex + 1 }}</span></b
+            >
+          </legend>
+          <!-- PRODUCT NAME LIST -->
+          @for (
+            prodName of product.applicationProductNameList; track
+            prodName; let prodNameIndex = $index) {
+            <div
+              >
+              <div class="form-row-prodname">
+                <mat-form-field class="prodNameField">
+                  <mat-label>Product Name</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="prodName.productName"
+                    name="productName"
+                    />
+                </mat-form-field>
+                <app-cv-input
+                  class="col-1-nomargin"
+                  domain="PROD_PRODUCT_NAME_TYPE"
+                  title="Product Name Type"
+                  name="productNameType"
+                  [model]="prodName.productNameType"
+                  (valueChange)="prodName.productNameType = $event"
+                  >
+                </app-cv-input>
+                &nbsp;&nbsp;
+                <span class="width40px displayinlineblock">
+                  @if (prodNameIndex == 0) {
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      (click)="addNewProductName(prodIndex)"
+                      matTooltip="Add New Product Name"
+                      >
+                      <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                  }
+                </span>
+                <button
+                  mat-icon-button
+                  color="primary"
+                  [disabled]="product.applicationProductNameList.length == 1"
+                  (click)="confirmDeleteProductName(prodIndex, prodNameIndex)"
+                  matTooltip="Delete Product Name"
+                  >
+                  <mat-icon
+                    [class.disabled]="product.applicationProductNameList.length == 1"
+                    >delete_forever</mat-icon
+                    >
+                  </button>
+                </div>
+              </div>
+            }
+            <!-- ngFor product Name List -->
+            <div class="form-row">
+              <app-cv-input
+                class="col-1"
+                domain="DOSAGE_FORM"
+                title="Dosage Form"
+                name="dosageForm"
+                [model]="product.dosageForm"
+                (valueChange)="product.dosageForm = $event"
+                >
+              </app-cv-input>
+              <!-- Multiple Selection from dropdown of Route of Administration -->
+              <div class="col-1 marginright30px">
+                <app-tag-selector
+                  class="tags"
+                  (tagsUpdate)="updateRouteAdmin($event, prodIndex)"
+                  [tags]="product.routeAdmin ? product.routeAdmin.split('\,') : []"
+                  cvDomain="PROD_ROUTE_OF_ADMIN"
+                  placeholder="Route of Administration"
+                  >
+                </app-tag-selector>
+              </div>
+              <!--
+              <app-cv-input class="col-1" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
+                name="routeAdmin" [model]="product.routeAdmin" (valueChange)="product.routeAdmin = $event">
+              </app-cv-input>
+              -->
+              <app-cv-input
+                class="col-1"
+                domain="PROD_UNIT_PRESENTATION"
+                title="Unit Of Presentation"
+                name="unitPresentation"
+                [model]="product.unitPresentation"
+                (valueChange)="product.unitPresentation = $event"
+                >
+              </app-cv-input>
+              <mat-form-field class="col-1">
+                <mat-label>Amount</mat-label>
+                <input matInput [(ngModel)]="product.amount" name="amount" />
+              </mat-form-field>
+              <app-cv-input
+                class="col-1"
+                domain="APPLICATION_UNIT"
+                title="Unit"
+                name="unit"
+                [model]="product.unit"
+                (valueChange)="product.unit = $event"
+                >
+              </app-cv-input>
+            </div>
+            <!-- INGREDIENT START -->
+            <br />
+            <hr />
+            <br />
+            <span
+              matBadge="{{ product.applicationIngredientList.length }}"
+              matBadgeColor="warn"
+              matBadgeOverlap="false"
+              >
+              <span class="titleorange">INGREDIENT</span>
+            </span>
+            <span class=""></span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="addNewIngredient(prodIndex)"
+              matTooltip="Add New Ingredient"
+              >
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Ingredient
+            </button>
+            @for (
+              ingredient of product.applicationIngredientList; track
+              ingredient; let ingredIndex = $index) {
+              <div
+                >
+                <app-ingredient-form
+                  [ingredient]="ingredient"
+                  [prodIndex]="prodIndex"
+                  [ingredIndex]="ingredIndex"
+                  [totalIngredient]="product.applicationIngredientList.length"
+                  (ingredientMessageOut)="ingredientMessageOutChange($event)"
+                  (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"
+                  >
+                </app-ingredient-form>
+              </div>
+            }
+            <!-- INGREDIENT END -->
+          </fieldset>
+          <br /><br /><br />
         </div>
-
-        <!--
-        <app-cv-input class="col-1" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
-          name="routeAdmin" [model]="product.routeAdmin" (valueChange)="product.routeAdmin = $event">
-        </app-cv-input>
-        -->
-
-        <app-cv-input
-          class="col-1"
-          domain="PROD_UNIT_PRESENTATION"
-          title="Unit Of Presentation"
-          name="unitPresentation"
-          [model]="product.unitPresentation"
-          (valueChange)="product.unitPresentation = $event"
-        >
-        </app-cv-input>
-
-        <mat-form-field class="col-1">
-          <mat-label>Amount</mat-label>
-          <input matInput [(ngModel)]="product.amount" name="amount" />
-        </mat-form-field>
-
-        <app-cv-input
-          class="col-1"
-          domain="APPLICATION_UNIT"
-          title="Unit"
-          name="unit"
-          [model]="product.unit"
-          (valueChange)="product.unit = $event"
-        >
-        </app-cv-input>
-      </div>
-
-      <!-- INGREDIENT START -->
-      <br />
-      <hr />
-      <br />
-      <span
-        matBadge="{{ product.applicationIngredientList.length }}"
-        matBadgeColor="warn"
-        matBadgeOverlap="false"
-      >
-        <span class="titleorange">INGREDIENT</span>
-      </span>
-
-      <span class=""></span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="addNewIngredient(prodIndex)"
-        matTooltip="Add New Ingredient"
-      >
-        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Ingredient
-      </button>
-
-      <div
-        *ngFor="
-          let ingredient of product.applicationIngredientList;
-          let ingredIndex = index
-        "
-      >
-        <app-ingredient-form
-          [ingredient]="ingredient"
-          [prodIndex]="prodIndex"
-          [ingredIndex]="ingredIndex"
-          [totalIngredient]="product.applicationIngredientList.length"
-          (ingredientMessageOut)="ingredientMessageOutChange($event)"
-          (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"
-        >
-        </app-ingredient-form>
-      </div>
-      <!-- INGREDIENT END -->
-    </fieldset>
-    <br /><br /><br />
-  </div>
-  <!-- Product repeat -->
-</div>
+      }
+      <!-- Product repeat -->
+    </div>

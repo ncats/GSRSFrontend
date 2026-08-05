@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceStructuralUnitsComponent } from './substance-structural-units.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceStructuralUnitsComponent', () => {
   let component: SubstanceStructuralUnitsComponent;
   let fixture: ComponentFixture<SubstanceStructuralUnitsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceStructuralUnitsComponent ]
     })

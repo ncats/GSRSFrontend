@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ShowMolfileDialogComponent } from './show-molfile-dialog.component';
 
@@ -6,7 +6,7 @@ describe('ShowMolfileDialogComponent', () => {
   let component: ShowMolfileDialogComponent;
   let fixture: ComponentFixture<ShowMolfileDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ShowMolfileDialogComponent ]
     })

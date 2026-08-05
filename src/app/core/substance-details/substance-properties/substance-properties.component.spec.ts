@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstancePropertiesComponent } from './substance-properties.component';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -13,7 +13,7 @@ describe('SubstancePropertiesComponent', () => {
   let fixture: ComponentFixture<SubstancePropertiesComponent>;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     utilsServiceStub = new UtilsServiceStub();
 

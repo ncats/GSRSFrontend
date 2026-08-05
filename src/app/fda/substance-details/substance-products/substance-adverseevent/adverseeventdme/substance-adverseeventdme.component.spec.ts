@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceAdverseeventdmeComponent } from './substance-adverseeventdme.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceAdverseeventdmeComponent', () => {
   let component: SubstanceAdverseeventdmeComponent;
   let fixture: ComponentFixture<SubstanceAdverseeventdmeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceAdverseeventdmeComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SsgParentSubstanceFormComponent } from './ssg-parent-substance-form.component';
 
@@ -6,7 +6,7 @@ describe('SsgParentSubstanceFormComponent', () => {
   let component: SsgParentSubstanceFormComponent;
   let fixture: ComponentFixture<SsgParentSubstanceFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SsgParentSubstanceFormComponent ]
     })

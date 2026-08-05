@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdvancedQueryStatementComponent } from './advanced-query-statement.component';
 
@@ -6,7 +6,7 @@ describe('AdvancedQueryStatementComponent', () => {
   let component: AdvancedQueryStatementComponent;
   let fixture: ComponentFixture<AdvancedQueryStatementComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AdvancedQueryStatementComponent ]
     })

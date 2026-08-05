@@ -2,20 +2,24 @@
   <b>Adverse Event DME</b>
   &nbsp;&nbsp;&nbsp;
   <!-- Export Button -->
-  <span class="export" *ngIf="canExport && adverseEventCount > 0">
-    <button matTooltip="Export Search Results" mat-button mat-raised-button (click)="export()"
-      class="export-button">
-      <mat-icon svgIcon="get_app"></mat-icon> Export
-    </button>
-  </span>
+  @if (canExport && adverseEventCount > 0) {
+    <span class="export">
+      <button matTooltip="Export Search Results" mat-button mat-raised-button (click)="export()"
+        class="export-button">
+        <mat-icon svgIcon="get_app"></mat-icon> Export
+      </button>
+    </span>
+  }
 </div>
 <div class="responsive mat-table-style">
 
   <!-- SPINNER -->
-  <div *ngIf="showSpinner" class="spinnerstyle">
-    <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
-    </mat-progress-spinner>
-  </div>
+  @if (showSpinner) {
+    <div class="spinnerstyle">
+      <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
+  }
 
   <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)" matSortActive="dmeCount"
     matSortDirection="desc" matSortDisableClear>

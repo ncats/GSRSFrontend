@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { JsonDialogComponent } from './json-dialog.component';
 
@@ -6,7 +6,7 @@ describe('JsonDialogComponent', () => {
   let component: JsonDialogComponent;
   let fixture: ComponentFixture<JsonDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ JsonDialogComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, NgZone } from '@angular/core';
 import { SubstanceTextSearchComponent } from './substance-text-search.component';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
@@ -28,7 +28,7 @@ describe('TopSearchComponent', () => {
   let routerStub: RouterStub;
   let activatedRouteStub: Partial<ActivatedRoute>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const utilsServiceSpy = jasmine.createSpyObj('UtilsService', ['getStructureSearchSuggestions']);
     getStructureSearchSuggestionsSpy = utilsServiceSpy.getStructureSearchSuggestions.and.returnValue(asyncData(SubstanceData));
     routerStub = new RouterStub();
@@ -104,7 +104,7 @@ describe('TopSearchComponent', () => {
 
     });
 
-    it('should get search suggestions on search value changes and show them', async(() => {
+    it('should get search suggestions on search value changes and show them', waitForAsync(() => {
       fixture.whenStable().then(() => {
         setTimeout(() => {
           expect(getStructureSearchSuggestionsSpy.calls.any()).toBeTruthy('should call API for search suggestions');
@@ -113,7 +113,7 @@ describe('TopSearchComponent', () => {
       });
     }));
 
-    it('when search suggestion is clicked/selected, should call function and route to browse page with value as parameter', async(() => {
+    it('when search suggestion is clicked/selected, should call function and route to browse page with value as parameter', waitForAsync(() => {
       fixture.whenStable().then(() => {
         setTimeout(() => {
           // zone.onStable.emit(null);
@@ -131,7 +131,7 @@ describe('TopSearchComponent', () => {
       });
     }));
 
-    it('when search button is clicked, should call function and route to browse page with value as parameter', async(() => {
+    it('when search button is clicked, should call function and route to browse page with value as parameter', waitForAsync(() => {
       fixture.whenStable().then(() => {
         const substanceSearchClickedSpy = spyOn<SubstanceTextSearchComponent>(component, 'processSubstanceSearch');
         const searchButtonElement: HTMLButtonElement = fixture.nativeElement.querySelector('.search-button');

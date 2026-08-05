@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceRelationshipsVisualizationComponent } from './substance-relationships-visualization.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceRelationshipsVisualizationComponent', () => {
   let component: SubstanceRelationshipsVisualizationComponent;
   let fixture: ComponentFixture<SubstanceRelationshipsVisualizationComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceRelationshipsVisualizationComponent ]
     })

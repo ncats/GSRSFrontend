@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreviousReferencesDialogComponent } from './previous-references-dialog.component';
 
@@ -6,7 +6,7 @@ describe('PreviousReferencesDialogComponent', () => {
   let component: PreviousReferencesDialogComponent;
   let fixture: ComponentFixture<PreviousReferencesDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PreviousReferencesDialogComponent ]
     })

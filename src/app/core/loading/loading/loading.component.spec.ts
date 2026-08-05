@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { LoadingService } from '../loading.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -9,7 +9,7 @@ describe('LoadingComponent', () => {
   let fixture: ComponentFixture<LoadingComponent>;
   let loadingServiceStub: Partial<LoadingService> | any;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     loadingServiceStub = {
       loadingEvent: new Subject(),
       fireLoadingEvent(event: boolean) {
@@ -41,7 +41,7 @@ describe('LoadingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle loading component when event is recevied from loading service', async(() => {
+  it('should toggle loading component when event is recevied from loading service', waitForAsync(() => {
     loadingServiceStub.fireLoadingEvent(true);
     fixture.detectChanges();
     let loadingElement: HTMLElement = fixture.nativeElement.querySelector('mat-progress-bar');

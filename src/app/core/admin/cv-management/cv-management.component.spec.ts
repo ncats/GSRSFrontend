@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CvManagementComponent } from './cv-management.component';
 
@@ -6,7 +6,7 @@ describe('CvManagementComponent', () => {
   let component: CvManagementComponent;
   let fixture: ComponentFixture<CvManagementComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CvManagementComponent ]
     })

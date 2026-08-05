@@ -149,7 +149,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.facetManagerService.unregisterFacetSearchHandler();
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     // Debounce resize handler to avoid measuring during animation
     clearTimeout(this.resizeTimeout);

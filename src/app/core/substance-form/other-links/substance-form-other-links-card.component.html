@@ -1,17 +1,21 @@
 <div class="flex-row">
   <span class="middle-fill"></span>
   <!-- <button mat-button (click)="addOtherLink()">
-    Add link <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button> -->
+  Add link <mat-icon svgIcon="add_circle_outline"></mat-icon>
+</button> -->
 </div>
-  <div class = "alternate-backgrounds" *ngFor = "let links of otherLinks; last as isLast; index as index"  appScrollToTarget [id]="'substance-other-links-' + index" >
+@for (links of otherLinks; track links; let isLast = $last; let index = $index) {
+  <div class = "alternate-backgrounds"  appScrollToTarget [id]="'substance-other-links-' + index" >
     <app-other-links-form [link]="links" (linkDeleted)="deleteLink($event)"></app-other-links-form>
-    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
+    @if (!isLast) {
+      <mat-divider class="form-divider" [inset]="true"></mat-divider>
+    }
   </div>
+}
 
-  <div class="flex-row">
-      <span class = "middle-fill"></span>
-        <button mat-button (click)="addOtherLink()">
+<div class="flex-row">
+  <span class = "middle-fill"></span>
+  <button mat-button (click)="addOtherLink()">
     Add link <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button> </div>
 

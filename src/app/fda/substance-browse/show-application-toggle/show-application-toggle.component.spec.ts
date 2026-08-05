@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ShowApplicationToggleComponent } from './show-application-toggle.component';
 
@@ -6,7 +6,7 @@ describe('ShowApplicationToggleComponent', () => {
   let component: ShowApplicationToggleComponent;
   let fixture: ComponentFixture<ShowApplicationToggleComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ShowApplicationToggleComponent ]
     })

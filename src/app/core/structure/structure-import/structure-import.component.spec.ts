@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StructureImportComponent } from './structure-import.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -19,7 +19,7 @@ describe('StructureImportComponent', () => {
   let matDialogRefStub: Partial<MatDialogRef<StructureImportComponent>>;
   let postSubstanceStructureSpy: jasmine.Spy;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['postSubstanceStructure']);
     postSubstanceStructureSpy = substanceServiceSpy.postSubstanceStructure.and.returnValue(asyncData(StructurePostResponseData));
     matDialogRefStub = new MatDialogRefStub();
@@ -65,7 +65,7 @@ describe('StructureImportComponent', () => {
       importButtonElement = fixture.nativeElement.querySelector('.import-button');
     });
 
-    it('on import click, if text area is empty, it should show message', async(() => {
+    it('on import click, if text area is empty, it should show message', waitForAsync(() => {
       textAreaElement.value = '';
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();
@@ -76,7 +76,7 @@ describe('StructureImportComponent', () => {
       expect(messageContainerElement.innerHTML).toBeTruthy('should show an error message');
     }));
 
-    it('on import click, a call to postSubstance should be made', async(() => {
+    it('on import click, a call to postSubstance should be made', waitForAsync(() => {
       textAreaElement.value = MolFile;
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();
@@ -84,7 +84,7 @@ describe('StructureImportComponent', () => {
       expect(postSubstanceStructureSpy.calls.count()).toBe(1, 'should have been called once');
     }));
 
-    it('after import call, if response is empty object, an error message should be displayed', async(() => {
+    it('after import call, if response is empty object, an error message should be displayed', waitForAsync(() => {
       postSubstanceStructureSpy.and.returnValue(asyncData({}));
       textAreaElement.value = 'test for error';
       textAreaElement.dispatchEvent(new Event('input'));
@@ -98,7 +98,7 @@ describe('StructureImportComponent', () => {
       });
     }));
 
-    it('after import call, if error, an error message should be displayed', async(() => {
+    it('after import call, if error, an error message should be displayed', waitForAsync(() => {
       postSubstanceStructureSpy.and.returnValue(asyncData(throwError('test error')));
       textAreaElement.value = 'test for error';
       textAreaElement.dispatchEvent(new Event('input'));
@@ -112,7 +112,7 @@ describe('StructureImportComponent', () => {
       });
     }));
 
-    it('when on file select called, file should be read and value added to textarea', async(() => {
+    it('when on file select called, file should be read and value added to textarea', waitForAsync(() => {
       const readAsTextSpy = jasmine.createSpy().and.callFake(() => {
         fileReaderObject['onload']();
       });

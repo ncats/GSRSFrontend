@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceFormPolymerClassificationComponent } from './substance-form-polymer-classification.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceFormPolymerClassificationComponent', () => {
   let component: SubstanceFormPolymerClassificationComponent;
   let fixture: ComponentFixture<SubstanceFormPolymerClassificationComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceFormPolymerClassificationComponent ]
     })

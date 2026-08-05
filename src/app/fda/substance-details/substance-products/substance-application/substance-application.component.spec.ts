@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceApplicationComponent } from './substance-application.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceApplicationComponent', () => {
   let component: SubstanceApplicationComponent;
   let fixture: ComponentFixture<SubstanceApplicationComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceApplicationComponent ]
     })

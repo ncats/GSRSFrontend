@@ -1,276 +1,372 @@
-<div *ngIf="substance">
-  
-  <div class="extra-area" *ngIf="substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
-    <span class="definition-level">
-      {{substance.definitionLevel}} DEFINITION
-    </span>
-  </div>
-  <div class = "full-col">
-  <div class = "left-col">
-    <div class="name-value">
-      <div class="name">Substance Class</div>
-      <div class="value blue-font">{{substance.substanceClass | classDisplay}}</div>
-    </div>
-    <div class="name-value" *ngIf = "!substance.$$source">
-      <div class="name">Record {{approvalCode? approvalCode : 'Approval ID'}}</div>
-      <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
-    </div>
-    <div class="name-value" *ngIf="defaultCodes">
-      <div class="name">{{defaultCodeSystem}}</div>
-      <div class="value blue-font">{{defaultCodes}}</div>
-    </div>
-    <div class="name-value">
-      <div class="name">Record Protection Status</div>
-      <div class="value blue-font">
-        <span *ngIf="(substance.access && substance.access.length > 0) else lockedIndicator">
-          <span>Not a public record</span>&nbsp;
-          <mat-icon svgIcon="lock"></mat-icon>
+@if (substance) {
+  <div>
+    @if (substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE') {
+      <div class="extra-area">
+        <span class="definition-level">
+          {{substance.definitionLevel}} DEFINITION
         </span>
-        <ng-template #lockedIndicator>
-          <span>Public record</span>&nbsp;
-          <mat-icon svgIcon="lock_open"></mat-icon>
-        </ng-template>
       </div>
-    </div>
-    <div class="name-value" *ngIf = "!substance.$$source">
-      <div class="name">Record Status</div>
-      <div class="value blue-font">{{substance.status === 'approved' ? primaryCode : substance.status}}
-        <span class = "deprecated" *ngIf ="substance.deprecated">RECORD IS DEPRECATED</span>
-      </div>
-    </div>
-    <div *ngIf="!canRestoreVersions && !substance.$$source" class="name-value">
-      <div class="name">Record Version</div>
-      <div class="value blue-font">{{substance.version}}</div>
-    </div>
-    <div *ngIf="canRestoreVersions && !substance.$$source" class="name-value">
-      <div class="name">Record Version</div>
-      <mat-form-field class="version-dropdown">
-        <mat-select [formControl]="versionControl" class="version-select">
-          <mat-option *ngFor="let version of versions" [value]="version" class="version-option">
-            {{version}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button *ngIf="versionControl.value && substance.version?.toString() !== versionControl.value"
-        mat-raised-button color="primary" class="view-version" (click)="changeVersion()">View</button>
-    </div>
-    <div *ngIf="substance.version && latestVersion && +substance.version < latestVersion && !substance.$$source" class="indent">
-      This is an older version of this substance - Ver. {{this.substance.version}}
-      <button *ngIf="canRestoreVersions"
-        mat-raised-button color="primary" class="view-version" (click)="restoreVersion()">Restore this version</button>
-    </div>
-    
-    <div class="name-value">
-        <div class="name">Definitional Access</div>
-        <div class="value blue-font">
-            <span *ngIf="(defAccess && defAccess.length > 0) else defIndicator">
-              <span>Not a public definition</span>&nbsp;
-              <mat-icon svgIcon="lock"></mat-icon>
-            </span>
-            <ng-template #defIndicator>
+    }
+    <div class = "full-col">
+      <div class = "left-col">
+        <div class="name-value">
+          <div class="name">Substance Class</div>
+          <div class="value blue-font">{{substance.substanceClass | classDisplay}}</div>
+        </div>
+        @if (!substance.$$source) {
+          <div class="name-value">
+            <div class="name">Record {{approvalCode? approvalCode : 'Approval ID'}}</div>
+            <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
+          </div>
+        }
+        @if (defaultCodes) {
+          <div class="name-value">
+            <div class="name">{{defaultCodeSystem}}</div>
+            <div class="value blue-font">{{defaultCodes}}</div>
+          </div>
+        }
+        <div class="name-value">
+          <div class="name">Record Protection Status</div>
+          <div class="value blue-font">
+            @if ((substance.access && substance.access.length > 0)) {
+              <span>
+                <span>Not a public record</span>&nbsp;
+                <mat-icon svgIcon="lock"></mat-icon>
+              </span>
+            } @else {
+              <span>Public record</span>&nbsp;
+              <mat-icon svgIcon="lock_open"></mat-icon>
+            }
+          </div>
+        </div>
+        @if (!substance.$$source) {
+          <div class="name-value">
+            <div class="name">Record Status</div>
+            <div class="value blue-font">{{substance.status === 'approved' ? primaryCode : substance.status}}
+              @if (substance.deprecated) {
+                <span class = "deprecated">RECORD IS DEPRECATED</span>
+              }
+            </div>
+          </div>
+        }
+        @if (!canRestoreVersions && !substance.$$source) {
+          <div class="name-value">
+            <div class="name">Record Version</div>
+            <div class="value blue-font">{{substance.version}}</div>
+          </div>
+        }
+        @if (canRestoreVersions && !substance.$$source) {
+          <div class="name-value">
+            <div class="name">Record Version</div>
+            <mat-form-field class="version-dropdown">
+              <mat-select [formControl]="versionControl" class="version-select">
+                @for (version of versions; track version) {
+                  <mat-option [value]="version" class="version-option">
+                    {{version}}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            @if (versionControl.value && substance.version?.toString() !== versionControl.value) {
+              <button
+              mat-raised-button color="primary" class="view-version" (click)="changeVersion()">View</button>
+            }
+          </div>
+        }
+        @if (substance.version && latestVersion && +substance.version < latestVersion && !substance.$$source) {
+          <div class="indent">
+            This is an older version of this substance - Ver. {{this.substance.version}}
+            @if (canRestoreVersions) {
+              <button
+              mat-raised-button color="primary" class="view-version" (click)="restoreVersion()">Restore this version</button>
+            }
+          </div>
+        }
+        <div class="name-value">
+          <div class="name">Definitional Access</div>
+          <div class="value blue-font">
+            @if ((defAccess && defAccess.length > 0)) {
+              <span>
+                <span>Not a public definition</span>&nbsp;
+                <mat-icon svgIcon="lock"></mat-icon>
+              </span>
+            } @else {
               <span>Public definition</span>&nbsp;
               <mat-icon svgIcon="lock_open"></mat-icon>
-            </ng-template>
+            }
           </div>
-      <!--  <div class="value">
+          <!--  <div class="value">
           <span *ngIf = "!defAccess || defAccess.length === 0">Public</span>
           <span *ngIf = "defAccess && defAccess.length > 0">
             <span class = "pre" *ngFor ="let access of defAccess;last as islast">
               {{access}}{{!islast? ', ':''}}
             </span>
           </span>
-
         </div>-->
       </div>
-  </div>
-  <div class = "right-col">
-    <div *ngIf="substance.protein" class="diverseWrapper">
-      <div class="name-value" *ngIf="substance.protein.proteinType">
-        <div class="name">Protein Type</div>
-        <div class="value blue-font">{{substance.protein.proteinType}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.protein.proteinSubType">
-        <div class="name">Protein Sub-type</div>
-        <div class="value blue-font">{{substance.protein.proteinSubType.replace('|', ', ')}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.protein.sequenceType">
-        <div class="name">Sequence Type</div>
-        <div class="value blue-font">{{substance.protein.sequenceType}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.protein.sequenceOrigin">
-        <div class="name">Sequence Origin</div>
-        <div class="value blue-font">{{substance.protein.sequenceOrigin}}</div>
-      </div>
     </div>
-    <div *ngIf="substance.nucleicAcid" class="diverseWrapper">
-      <div class="name-value" *ngIf="substance.nucleicAcid.nucleicAcidType">
-        <div class="name">Nucleic Acid Type</div>
-        <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidType}}</div>
-      </div>
-      <div class="name-value"
-        *ngIf="substance.nucleicAcid.nucleicAcidSubType && substance.nucleicAcid.nucleicAcidSubType.length > 0">
-        <div class="name">Nucleic Acid Sub-type</div>
-        <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.join(', ')}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.nucleicAcid.sequenceType">
-        <div class="name">Sequence Type</div>
-        <div class="value blue-font">{{substance.nucleicAcid.sequenceType}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.nucleicAcid.sequenceOrigin">
-        <div class="name">Sequence Origin</div>
-        <div class="value blue-font">{{substance.nucleicAcid.sequenceOrigin}}</div>
-      </div>
+    <div class = "right-col">
+      @if (substance.protein) {
+        <div class="diverseWrapper">
+          @if (substance.protein.proteinType) {
+            <div class="name-value">
+              <div class="name">Protein Type</div>
+              <div class="value blue-font">{{substance.protein.proteinType}}</div>
+            </div>
+          }
+          @if (substance.protein.proteinSubType) {
+            <div class="name-value">
+              <div class="name">Protein Sub-type</div>
+              <div class="value blue-font">{{substance.protein.proteinSubType.replace('|', ', ')}}</div>
+            </div>
+          }
+          @if (substance.protein.sequenceType) {
+            <div class="name-value">
+              <div class="name">Sequence Type</div>
+              <div class="value blue-font">{{substance.protein.sequenceType}}</div>
+            </div>
+          }
+          @if (substance.protein.sequenceOrigin) {
+            <div class="name-value">
+              <div class="name">Sequence Origin</div>
+              <div class="value blue-font">{{substance.protein.sequenceOrigin}}</div>
+            </div>
+          }
+        </div>
+      }
+      @if (substance.nucleicAcid) {
+        <div class="diverseWrapper">
+          @if (substance.nucleicAcid.nucleicAcidType) {
+            <div class="name-value">
+              <div class="name">Nucleic Acid Type</div>
+              <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidType}}</div>
+            </div>
+          }
+          @if (substance.nucleicAcid.nucleicAcidSubType && substance.nucleicAcid.nucleicAcidSubType.length > 0) {
+            <div class="name-value"
+              >
+              <div class="name">Nucleic Acid Sub-type</div>
+              <div class="value blue-font">{{substance.nucleicAcid.nucleicAcidSubType.join(', ')}}</div>
+            </div>
+          }
+          @if (substance.nucleicAcid.sequenceType) {
+            <div class="name-value">
+              <div class="name">Sequence Type</div>
+              <div class="value blue-font">{{substance.nucleicAcid.sequenceType}}</div>
+            </div>
+          }
+          @if (substance.nucleicAcid.sequenceOrigin) {
+            <div class="name-value">
+              <div class="name">Sequence Origin</div>
+              <div class="value blue-font">{{substance.nucleicAcid.sequenceOrigin}}</div>
+            </div>
+          }
+        </div>
+      }
+      @if (substance.structurallyDiverse) {
+        <div class="diverseWrapper">
+          @if (substance.structurallyDiverse.sourceMaterialClass) {
+            <div class="name-value">
+              <div class="name">Source Materials Class</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialClass}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.sourceMaterialType) {
+            <div class="name-value">
+              <div class="name">Source Materials Type</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialType}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.sourceMaterialState) {
+            <div class="name-value">
+              <div class="name">Source Materials State</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialState}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.parentSubstance) {
+            <div class="name-value">
+              <div class="name">Source Materials Parent</div>
+              <div class="thumb-col">
+                <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.parentSubstance.refuuid"
+                  size="400">
+                <div>
+                  <a class="substance-name"
+                    [routerLink]="['/substances', substance.structurallyDiverse.parentSubstance.refuuid]">
+                    {{substance.structurallyDiverse.parentSubstance.refPname}}
+                  </a>
+                </div>
+              </div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.organismFamily) {
+            <div class="name-value">
+              <div class="name">Organism Family</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.organismFamily}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.organismGenus) {
+            <div class="name-value">
+              <div class="name">Organism Genus</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.organismGenus}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.organismSpecies) {
+            <div class="name-value">
+              <div class="name">Organism Species</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.organismSpecies}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.infraSpecificType) {
+            <div class="name-value">
+              <div class="name">Organism Infraspecific Type</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificType}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.infraSpecificName) {
+            <div class="name-value">
+              <div class="name">Organism Intraspecific Name</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificName}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.organismAuthor) {
+            <div class="name-value">
+              <div class="name">Organism Author</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.organismAuthor}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.developmentalStage) {
+            <div class="name-value">
+              <div class="name">Developmental Stage</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.developmentalStage}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.part?.length > 0) {
+            <div class="name-value">
+              <div class="name">Part</div>
+              <div class="value blue-font">
+                @for (part of substance.structurallyDiverse.part; track part; let isLast = $last) {
+                  <span>
+                    {{part}}@if (!isLast) {
+                    <span>, </span>
+                  }
+                </span>
+              }</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.fractionMaterialType) {
+            <div class="name-value">
+              <div class="name">Fraction Materials Type</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.fractionMaterialType}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse.fractionName) {
+            <div class="name-value">
+              <div class="name">Fraction Name</div>
+              <div class="value blue-font">{{substance.structurallyDiverse.fractionName}}</div>
+            </div>
+          }
+          @if (substance.structurallyDiverse && substance.structurallyDiverse.hybridSpeciesPaternalOrganism) {
+            <div class="name-value">
+              <div class="name">Hybrid Paternal Organism</div>
+              <div class="thumb-col">
+                <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid"
+                  size="400">
+                <div>
+                  <a class="substance-name"
+                    [routerLink]="['/substances', substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid]">
+                    {{substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refPname}}
+                  </a>
+                </div>
+              </div>
+            </div>
+          }
+          @if (substance.structurallyDiverse && substance.structurallyDiverse.hybridSpeciesMaternalOrganism) {
+            <div class="name-value">
+              <div class="name">Hybrid Maternal Organism</div>
+              <div class="thumb-col">
+                <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid"
+                  size="400">
+                <div>
+                  <a class="substance-name"
+                    [routerLink]="['/substances', substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid]">
+                    {{substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refPname}}
+                  </a>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
     </div>
-    <div *ngIf="substance.structurallyDiverse" class="diverseWrapper">
-      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialClass">
-        <div class="name">Source Materials Class</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialClass}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialType">
-        <div class="name">Source Materials Type</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialType}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.sourceMaterialState">
-        <div class="name">Source Materials State</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.sourceMaterialState}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.parentSubstance">
-        <div class="name">Source Materials Parent</div>
-        <div class="thumb-col">
-          <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.parentSubstance.refuuid"
-            size="400">
-          <div>
-            <a class="substance-name"
-              [routerLink]="['/substances', substance.structurallyDiverse.parentSubstance.refuuid]">
-              {{substance.structurallyDiverse.parentSubstance.refPname}}
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.organismFamily">
-        <div class="name">Organism Family</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.organismFamily}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.organismGenus">
-        <div class="name">Organism Genus</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.organismGenus}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.organismSpecies">
-        <div class="name">Organism Species</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.organismSpecies}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.infraSpecificType">
-        <div class="name">Organism Infraspecific Type</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificType}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.infraSpecificName">
-        <div class="name">Organism Intraspecific Name</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.infraSpecificName}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.organismAuthor">
-        <div class="name">Organism Author</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.organismAuthor}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.developmentalStage">
-        <div class="name">Developmental Stage</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.developmentalStage}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.part?.length > 0">
-        <div class="name">Part</div>
-        <div class="value blue-font">
-          <span *ngFor="let part of substance.structurallyDiverse.part; last as isLast">
-            {{part}}<span *ngIf="!isLast">, </span>
-          </span></div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.fractionMaterialType">
-        <div class="name">Fraction Materials Type</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.fractionMaterialType}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse.fractionName">
-        <div class="name">Fraction Name</div>
-        <div class="value blue-font">{{substance.structurallyDiverse.fractionName}}</div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse && substance.structurallyDiverse.hybridSpeciesPaternalOrganism">
-        <div class="name">Hybrid Paternal Organism</div>
-        <div class="thumb-col">
-          <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid"
-            size="400">
-          <div>
-            <a class="substance-name"
-              [routerLink]="['/substances', substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refuuid]">
-              {{substance.structurallyDiverse.hybridSpeciesPaternalOrganism.refPname}}
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="name-value" *ngIf="substance.structurallyDiverse && substance.structurallyDiverse.hybridSpeciesMaternalOrganism">
-        <div class="name">Hybrid Maternal Organism</div>
-        <div class="thumb-col">
-          <img class="image-thumb" appSubstanceImage [entityId]="substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid"
-            size="400">
-          <div>
-            <a class="substance-name"
-              [routerLink]="['/substances', substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refuuid]">
-              {{substance.structurallyDiverse.hybridSpeciesMaternalOrganism.refPname}}
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class='options-area'>
-    <a mat-icon-button [href]="oldUrl" target="_blank" *ngIf = "showlinks" matTooltip="view in old application"><span hidden>open in old
+    <div class='options-area'>
+      @if (showlinks) {
+        <a mat-icon-button [href]="oldUrl" target="_blank" matTooltip="view in old application"><span hidden>open in old
         application in new tab</span>
-      <mat-icon svgIcon="open_in_new"></mat-icon>
-    </a>
-    <span *ngIf="canEdit && !(substance.$$source && substance.$$source == 'staging') ">
-        <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
-        name="edit_record" aria-label="edit record">
-        <mat-icon svgIcon="edit"></mat-icon>
+        <mat-icon svgIcon="open_in_new"></mat-icon>
       </a>
-</span>
-<span *ngIf="canEdit && (substance.$$source && substance.$$source == 'staging') ">
-    <a mat-icon-button [routerLink]="['/substances/register']"
-    [queryParams]="{stagingID : substance._metadata.recordId}"  matTooltip='edit record'
-    name="edit_record" aria-label="edit record">
-    <mat-icon svgIcon="edit"></mat-icon>
-  </a>
-</span>
-    <span *ngIf="canEdit && !(substance.$$source && substance.$$source == 'staging') ">
-      <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="copy to edit form options"
-        *ngIf="isEditable; else editClassic" aria-label="copy file">
-        <mat-icon svgIcon="file_copy"></mat-icon>
-      </button>
-      <ng-template #editClassic *ngIf = "showlinks && (!substance.$$source || substance.$$source !== 'staging') ">
-        <a mat-icon-button [href]="baseDomain + clasicBaseHref + 'substance/' + substance.uuid + '/edit'" name="edit"
-          target="_blank">
+    }
+    @if (canEdit && !(substance.$$source && substance.$$source == 'staging') ) {
+      <span>
+        <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
+          name="edit_record" aria-label="edit record">
           <mat-icon svgIcon="edit"></mat-icon>
         </a>
-      </ng-template>
-    </span>
+      </span>
+    }
+    @if (canEdit && (substance.$$source && substance.$$source == 'staging') ) {
+      <span>
+        <a mat-icon-button [routerLink]="['/substances/register']"
+          [queryParams]="{stagingID : substance._metadata.recordId}"  matTooltip='edit record'
+          name="edit_record" aria-label="edit record">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+      </span>
+    }
+    @if (canEdit && !(substance.$$source && substance.$$source == 'staging') ) {
+      <span>
+        @if (isEditable) {
+          <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="copy to edit form options"
+            aria-label="copy file">
+            <mat-icon svgIcon="file_copy"></mat-icon>
+          </button>
+        } @else {
+          <a mat-icon-button [href]="baseDomain + clasicBaseHref + 'substance/' + substance.uuid + '/edit'" name="edit"
+            target="_blank">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>
+        }
+        @if (showlinks && (!substance.$$source || substance.$$source !== 'staging') ) {
+        }
+      </span>
+    }
     <button mat-icon-button [matMenuTriggerFor]="downloadMenu" aria-label="download file" matTooltip="download options" name="download">
       <mat-icon svgIcon="get_app"></mat-icon>
     </button>
     <mat-menu #downloadMenu="matMenu" xPosition="before">
-      <a *ngIf="substance.uuid" name="download_json" mat-menu-item [href]="downloadJsonHref"
-        download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
-        <span>Download JSON</span>
-      </a>
-
-      <a *ngIf="substance.uuid && allowDownload('emaSmsSimpleRecord')" name="download_emaSmsSimpleRecord"
-        mat-menu-item (click)="downloadEmaSmsFhirRecordAction1('@emaSmsSimpleRecord', substance.uuid, substance.uuid+'.emaSmsSimpleRecord.json')" >
-        <span title="{{getDownloadTitle('emaSmsSimpleRecord')}}">{{getDownloadButtonName('emaSmsSimpleRecord')}}</span>
-      </a>
-
-      <a *ngIf="substance.uuid && allowDownload('emaSmsSubstanceDefinition')" name="download_emaSmsSubstanceDefinition"
-        mat-menu-item (click)="downloadEmaSmsFhirRecordAction1('@emaSmsSubstanceDefinition', substance.uuid, substance.uuid+'.emaSmsSubstanceDefinition.json')" >
-        <span title="{{getDownloadTitle('emaSmsSubstanceDefinition')}}">{{getDownloadButtonName('emaSmsSubstanceDefinition')}}</span>
-      </a>
-
+      @if (substance.uuid) {
+        <a name="download_json" mat-menu-item [href]="downloadJsonHref"
+          download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
+          <span>Download JSON</span>
+        </a>
+      }
+      @if (substance.uuid && allowDownload('emaSmsSimpleRecord')) {
+        <a name="download_emaSmsSimpleRecord"
+          mat-menu-item (click)="downloadEmaSmsFhirRecordAction1('@emaSmsSimpleRecord', substance.uuid, substance.uuid+'.emaSmsSimpleRecord.json')" >
+          <span title="{{getDownloadTitle('emaSmsSimpleRecord')}}">{{getDownloadButtonName('emaSmsSimpleRecord')}}</span>
+        </a>
+      }
+      @if (substance.uuid && allowDownload('emaSmsSubstanceDefinition')) {
+        <a name="download_emaSmsSubstanceDefinition"
+          mat-menu-item (click)="downloadEmaSmsFhirRecordAction1('@emaSmsSubstanceDefinition', substance.uuid, substance.uuid+'.emaSmsSubstanceDefinition.json')" >
+          <span title="{{getDownloadTitle('emaSmsSubstanceDefinition')}}">{{getDownloadButtonName('emaSmsSubstanceDefinition')}}</span>
+        </a>
+      }
       <!--If  enablePDFDownloadOption is true then display option to download pdf-->
-      <a *ngIf="substance.uuid && enablePDFDownloadOption" name="download_pdf" mat-menu-item (click)="downloadPDFSummary()">
-        <span>{{pdfDownloadBtnName}}</span>
-      </a>
+      @if (substance.uuid && enablePDFDownloadOption) {
+        <a name="download_pdf" mat-menu-item (click)="downloadPDFSummary()">
+          <span>{{pdfDownloadBtnName}}</span>
+        </a>
+      }
     </mat-menu>
     <mat-menu #editMenu="matMenu" xPosition="before" class="icon-row-menu">
       <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
@@ -289,26 +385,32 @@
   <div class="name">Tags</div>
   <div class="value">
     <mat-chip-list #tagList aria-label="Tags" selectable="false">
-      <mat-chip
-        *ngFor="let tag of substance.tags"
-        removable="false">
+      @for (tag of substance.tags; track tag) {
+        <mat-chip
+          removable="false">
           {{tag}}
-      </mat-chip>
+        </mat-chip>
+      }
     </mat-chip-list>
   </div>
-  <div *ngIf="substance.tags.length === 0">
-    <i>None</i>
-  </div>
+  @if (substance.tags.length === 0) {
+    <div>
+      <i>None</i>
+    </div>
+  }
 </div>
-<div class="name-value" *ngIf="references?.length > 0">
-  <div class="name">
-    <a tabindex="0" role="link" (click)="toggleReferences()" class='blue-font references-link'>
-      <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span>
-      <mat-icon svgIcon="{{defIcon}}"></mat-icon>
-    </a>
+@if (references?.length > 0) {
+  <div class="name-value">
+    <div class="name">
+      <a tabindex="0" role="link" (click)="toggleReferences()" class='blue-font references-link'>
+        <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span>
+        <mat-icon svgIcon="{{defIcon}}"></mat-icon>
+      </a>
+    </div>
   </div>
-</div>
+}
 <div [hidden]="!showDef">
   <app-references-manager [substance]="substance" [references]="references"></app-references-manager>
 </div>
 </div>
+}

@@ -1,18 +1,24 @@
 
-  <div *ngIf="definitions.length > 0">
+@if (definitions.length > 0) {
+  <div>
     This record is a subconcept of
     <div class ="thumb-row">
-      <div class="thumb-col" *ngFor="let definition of definitions">
-       <img class="image-thumb" appSubstanceImage [entityId]="definition.refuuid">
-        <div>
-          <a class="substance-name" [routerLink]="['/substances', definition.refuuid]" >
-            {{definition.refPname}}
-          </a>
+      @for (definition of definitions; track definition) {
+        <div class="thumb-col">
+          <img class="image-thumb" appSubstanceImage [entityId]="definition.refuuid">
+          <div>
+            <a class="substance-name" [routerLink]="['/substances', definition.refuuid]" >
+              {{definition.refPname}}
+            </a>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
-  <div *ngIf = "definitions.length == 0">
+}
+@if (definitions.length == 0) {
+  <div>
     <i>This is a non-substance concept</i>
   </div>
+}
 

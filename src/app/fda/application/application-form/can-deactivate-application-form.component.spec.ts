@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CanDeactivateApplicationFormComponent } from './can-deactivate-application-form.component';
 
@@ -6,7 +6,7 @@ describe('CanDeactivateApplicationFormComponent', () => {
   let component: CanDeactivateApplicationFormComponent;
   let fixture: ComponentFixture<CanDeactivateApplicationFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CanDeactivateApplicationFormComponent ]
     })

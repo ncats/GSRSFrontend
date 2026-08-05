@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreviousReferencesComponent } from './previous-references.component';
 
@@ -6,7 +6,7 @@ describe('PreviousReferencesComponent', () => {
   let component: PreviousReferencesComponent;
   let fixture: ComponentFixture<PreviousReferencesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PreviousReferencesComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CanDeactivateImpuritiesFormComponent } from './can-deactivate-impurities-form.component';
 
@@ -6,7 +6,7 @@ describe('CanDeactivateImpuritiesFormComponent', () => {
   let component: CanDeactivateImpuritiesFormComponent;
   let fixture: ComponentFixture<CanDeactivateImpuritiesFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CanDeactivateImpuritiesFormComponent ]
     })

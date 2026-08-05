@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CvTermDialogComponent } from './cv-term-dialog.component';
 
@@ -6,7 +6,7 @@ describe('CvTermDialogComponent', () => {
   let component: CvTermDialogComponent;
   let fixture: ComponentFixture<CvTermDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CvTermDialogComponent ]
     })

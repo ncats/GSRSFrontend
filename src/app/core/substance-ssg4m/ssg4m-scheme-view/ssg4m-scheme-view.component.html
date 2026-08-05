@@ -1,16 +1,22 @@
-<div class="divflexright" *ngIf="showProcessIndex == -1">
-  <div *ngIf="processList && processList.length > 0">
-    <mat-checkbox [checked]="showSubstanceRole" (change)="updateShowSubstanceRole($event)">
-      Show Substance Role
-    </mat-checkbox>
+@if (showProcessIndex == -1) {
+  <div class="divflexright">
+    @if (processList && processList.length > 0) {
+      <div>
+        <mat-checkbox [checked]="showSubstanceRole" (change)="updateShowSubstanceRole($event)">
+          Show Substance Role
+        </mat-checkbox>
+      </div>
+    }
+    &nbsp;&nbsp;&nbsp;
+    @if (processList && processList.length > 0) {
+      <div>
+        <mat-checkbox [checked]="showCriticalParameter" (change)="updateShowCriticalParameter($event)">
+          Show Critical Parameter
+        </mat-checkbox>
+      </div>
+    }
   </div>
-  &nbsp;&nbsp;&nbsp;
-  <div *ngIf="processList && processList.length > 0">
-    <mat-checkbox [checked]="showCriticalParameter" (change)="updateShowCriticalParameter($event)">
-      Show Critical Parameter
-    </mat-checkbox>
-  </div>
-</div>
+}
 
 <!--
 <br><br>
@@ -27,254 +33,308 @@
 <br>
 
 
-<div id="divStepView">
--->
+  <div id="divStepView">
+    -->
 
-  <div class="margintop10px" *ngFor="let process of processList; let processIndex = index">
-    <div *ngIf="((showProcessIndex === -1) || (showProcessIndex > -1 && showProcessIndex === processIndex))">
-      <fieldset class="border">
-        <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}} of
+    @for (process of processList; track process; let processIndex = $index) {
+      <div class="margintop10px">
+        @if (((showProcessIndex === -1) || (showProcessIndex > -1 && showProcessIndex === processIndex))) {
+          <div>
+            <fieldset class="border">
+              <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}} of
               {{processList.length}}</span></b>
-        </legend>
-        <!-- STEPS -->
-        <div *ngFor="let site of process.sites; let siteIndex = index">
-          <div *ngIf="((showSiteIndex === -1) || (showSiteIndex > -1 && showSiteIndex === siteIndex))">
-            <div class="marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
-
-              <div *ngIf="((showStageIndex === -1) || (showStageIndex > -1 && showStageIndex === stageIndex))">
-                <fieldset class="border-step">
-                  <legend class="border-step">Step &nbsp;<b>{{stageIndex + 1}}</b>
-                  </legend>
-
-                  <div class="divflexright">
-                    <button mat-stroked-button color="primary" class="button-add" (click)="editInForm()"
-                      matTooltip="Edit In Form">
-                      <mat-icon svgIcon="edit"></mat-icon>Edit in Form View
-                    </button>
-                  </div>
-
-                  <table class="width100percent margintopneg25px">
-                    <tr class="">
-                      <!-- Starting -->
-                      <td class="width33percent textaligncenter">
-                        <div class="paddingleft10px marginbottom10px"
-                          *ngFor="let startingMaterial of stage.startingMaterials; let startingMaterialIndex = index">
-                          <div *ngIf="startingMaterial.substanceName">
-                            <div class="paddingtop15px font30px"
-                              *ngIf="(stage.startingMaterials.length > 1 && startingMaterialIndex != 0)">
-                              <b>+</b>
+            </legend>
+            <!-- STEPS -->
+            @for (site of process.sites; track site; let siteIndex = $index) {
+              <div>
+                @if (((showSiteIndex === -1) || (showSiteIndex > -1 && showSiteIndex === siteIndex))) {
+                  <div>
+                    @for (stage of site.stages; track stage; let stageIndex = $index) {
+                      <div class="marginbottom30px">
+                        @if (((showStageIndex === -1) || (showStageIndex > -1 && showStageIndex === stageIndex))) {
+                          <div>
+                            <fieldset class="border-step">
+                              <legend class="border-step">Step &nbsp;<b>{{stageIndex + 1}}</b>
+                            </legend>
+                            <div class="divflexright">
+                              <button mat-stroked-button color="primary" class="button-add" (click)="editInForm()"
+                                matTooltip="Edit In Form">
+                                <mat-icon svgIcon="edit"></mat-icon>Edit in Form View
+                              </button>
                             </div>
-                            <a class="zoom"
-                              (click)="openImageModal(startingMaterial.$$tmpStructureId || startingMaterial.substanceName?.refuuid, startingMaterial.substanceName?.approvalID, startingMaterial.substanceName?.refPname || startingMaterial.verbatimName)">
-                              <img appSubstanceImage [entityId]="startingMaterial.$$tmpStructureId || startingMaterial.substanceName?.refuuid">
-                            </a>
-
-                            <div>
-                              <span *ngIf="startingMaterial.substanceName.refPname">
+                            <table class="width100percent margintopneg25px">
+                              <tr class="">
+                                <!-- Starting -->
+                                <td class="width33percent textaligncenter">
+                                  @for (startingMaterial of stage.startingMaterials; track startingMaterial; let startingMaterialIndex = $index) {
+                                    <div class="paddingleft10px marginbottom10px"
+                                      >
+                                      @if (startingMaterial.substanceName) {
+                                        <div>
+                                          @if ((stage.startingMaterials.length > 1 && startingMaterialIndex != 0)) {
+                                            <div class="paddingtop15px font30px"
+                                              >
+                                              <b>+</b>
+                                            </div>
+                                          }
+                                          <a class="zoom"
+                                            (click)="openImageModal(startingMaterial.$$tmpStructureId || startingMaterial.substanceName?.refuuid, startingMaterial.substanceName?.approvalID, startingMaterial.substanceName?.refPname || startingMaterial.verbatimName)">
+                                            <img appSubstanceImage [entityId]="startingMaterial.$$tmpStructureId || startingMaterial.substanceName?.refuuid">
+                                          </a>
+                                          <div>
+                                            @if (startingMaterial.substanceName.refPname) {
+                                              <span>
                                 <a href="" (click)="openImageModal(startingMaterial.$$tmpStructureId || startingMaterial.substanceName?.refuuid, startingMaterial.substanceName?.approvalID, startingMaterial.substanceName?.refPname || startingMaterial.verbatimName);
                                false">
-                                  {{startingMaterial.substanceName.refPname}}
-                                </a>
-                              </span>
-
-                              <span *ngIf="startingMaterial.verbatimName">
-                                <br>
-                                Material Display Name: {{startingMaterial.verbatimName}}
-                              </span>
-                              <span *ngIf="showSubstanceRole">
-                                <br>
-                                <b>({{startingMaterial.substanceRole}})</b>
-                              </span>
-                            </div>
-                          </div> <!-- if substanceName object exists -->
-
-                          <!-- if AMOUNT exists, Display values-->
-                          <!-- ONLY DISPLAY if setting in the configuration is true -->
-                          <div *ngIf="showAmountValues && showAmountValues == 'true'">
-                            <div *ngIf="startingMaterial.amount">
-                              {{displayAmount(startingMaterial.amount)}}
-                            </div>
-                          </div>
-
-                        </div> <!-- Starting Material Loop -->
-                      </td>
-
-                      <!-- Processing -->
-                      <td class="width33percent paddingleft10px">
-                        <!-- BEFORE ARROW  NON-SOLVENT RECORDS -->
-                        <div
-                          *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
-                          <div *ngIf="processingMaterial.substanceRole">
-                            <div *ngIf="processingMaterial.substanceRole !== 'Solvent'">
-
-                              <div *ngIf="processingMaterial.substanceName">
-
-                                <div class="divflex">
-                                  <div class="margintopneg5px">
-                                    <!-- Display Structure when rollover icon -->
-                                    <button mat-button
-                                      (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName)">
-                                      <mat-icon class="colorblue fontsize14px">info</mat-icon>
-                                    </button>
-                                  </div>
-                                  <div>
-                                    <span *ngIf="processingMaterial.substanceName.refPname">
+                                                  {{startingMaterial.substanceName.refPname}}
+                                                </a>
+                                              </span>
+                                            }
+                                            @if (startingMaterial.verbatimName) {
+                                              <span>
+                                                <br>
+                                                  Material Display Name: {{startingMaterial.verbatimName}}
+                                                </span>
+                                              }
+                                              @if (showSubstanceRole) {
+                                                <span>
+                                                  <br>
+                                                    <b>({{startingMaterial.substanceRole}})</b>
+                                                  </span>
+                                                }
+                                              </div>
+                                            </div>
+                                            } <!-- if substanceName object exists -->
+                                            <!-- if AMOUNT exists, Display values-->
+                                            <!-- ONLY DISPLAY if setting in the configuration is true -->
+                                            @if (showAmountValues && showAmountValues == 'true') {
+                                              <div>
+                                                @if (startingMaterial.amount) {
+                                                  <div>
+                                                    {{displayAmount(startingMaterial.amount)}}
+                                                  </div>
+                                                }
+                                              </div>
+                                            }
+                                          </div>
+                                          } <!-- Starting Material Loop -->
+                                        </td>
+                                        <!-- Processing -->
+                                        <td class="width33percent paddingleft10px">
+                                          <!-- BEFORE ARROW  NON-SOLVENT RECORDS -->
+                                          @for (processingMaterial of stage.processingMaterials; track processingMaterial; let processingMaterialIndex = $index) {
+                                            <div
+                                              >
+                                              @if (processingMaterial.substanceRole) {
+                                                <div>
+                                                  @if (processingMaterial.substanceRole !== 'Solvent') {
+                                                    <div>
+                                                      @if (processingMaterial.substanceName) {
+                                                        <div>
+                                                          <div class="divflex">
+                                                            <div class="margintopneg5px">
+                                                              <!-- Display Structure when rollover icon -->
+                                                              <button mat-button
+                                                                (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName)">
+                                                                <mat-icon class="colorblue fontsize14px">info</mat-icon>
+                                                              </button>
+                                                            </div>
+                                                            <div>
+                                                              @if (processingMaterial.substanceName.refPname) {
+                                                                <span>
                                       <a href="" (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName);
                                      false">
-                                        <b>{{processingMaterial.substanceName.refPname}}</b>
-                                      </a>
-                                    </span>
-
-                                    <span *ngIf="showSubstanceRole">
-                                      &nbsp;<b>({{processingMaterial.substanceRole}})</b>
-                                    </span>
-                                  </div>
-                                </div>
-                              </div> <!-- if substanceName object exists -->
-
-                              <!-- if AMOUNT exists, Display values-->
-                              <!-- ONLY DISPLAY if setting in the configuration is true -->
-                              <div *ngIf="showAmountValues && showAmountValues == 'true'">
-                                <div *ngIf="processingMaterial.amount">
-                                  {{displayAmount(processingMaterial.amount)}}
-                                </div>
-                              </div>
-
-                            </div> <!-- substanceRole !== 'Solvent' -->
-                          </div> <!-- substanceRole exists -->
-
-                        </div> <!-- Processing Material Loop -->
-
-                        <!-- ARROW -->
-                        <div class="paddingleft20px">
-                          <img src="{{imageLoc}}" />
-                        </div>
-
-                        <!-- AFTER ARROW SOLVENT RECORDS -->
-                        <div
-                          *ngFor="let processingMaterial of stage.processingMaterials; let processingMaterialIndex = index">
-                          <div *ngIf="processingMaterial.substanceRole">
-                            <div *ngIf="processingMaterial.substanceRole === 'Solvent'">
-
-                              <div *ngIf="processingMaterial.substanceName">
-
-                                <div class="divflex">
-                                  <div class="margintopneg5px">
-                                    <!-- Display Structure when rollover icon -->
-                                    <button mat-button
-                                      (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName)">
-                                      <mat-icon class="colorblue fontsize14px">info</mat-icon>
-                                    </button>
-                                  </div>
-                                  <div>
-                                    <!--
-                                  <a [routerLink]="['/substances', processingMaterial.substanceName.refuuid]"
-                                    target="_blank">
-                                    <b>{{processingMaterial.substanceName.refPname}}</b>
-                                  </a>
-                                  -->
-                                    <span *ngIf="processingMaterial.substanceName.refPname">
+                                                                    <b>{{processingMaterial.substanceName.refPname}}</b>
+                                                                  </a>
+                                                                </span>
+                                                              }
+                                                              @if (showSubstanceRole) {
+                                                                <span>
+                                                                  &nbsp;<b>({{processingMaterial.substanceRole}})</b>
+                                                                </span>
+                                                              }
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                        } <!-- if substanceName object exists -->
+                                                        <!-- if AMOUNT exists, Display values-->
+                                                        <!-- ONLY DISPLAY if setting in the configuration is true -->
+                                                        @if (showAmountValues && showAmountValues == 'true') {
+                                                          <div>
+                                                            @if (processingMaterial.amount) {
+                                                              <div>
+                                                                {{displayAmount(processingMaterial.amount)}}
+                                                              </div>
+                                                            }
+                                                          </div>
+                                                        }
+                                                      </div>
+                                                      } <!-- substanceRole !== 'Solvent' -->
+                                                    </div>
+                                                    } <!-- substanceRole exists -->
+                                                  </div>
+                                                  } <!-- Processing Material Loop -->
+                                                  <!-- ARROW -->
+                                                  <div class="paddingleft20px">
+                                                    <img src="{{imageLoc}}" />
+                                                  </div>
+                                                  <!-- AFTER ARROW SOLVENT RECORDS -->
+                                                  @for (processingMaterial of stage.processingMaterials; track processingMaterial; let processingMaterialIndex = $index) {
+                                                    <div
+                                                      >
+                                                      @if (processingMaterial.substanceRole) {
+                                                        <div>
+                                                          @if (processingMaterial.substanceRole === 'Solvent') {
+                                                            <div>
+                                                              @if (processingMaterial.substanceName) {
+                                                                <div>
+                                                                  <div class="divflex">
+                                                                    <div class="margintopneg5px">
+                                                                      <!-- Display Structure when rollover icon -->
+                                                                      <button mat-button
+                                                                        (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName)">
+                                                                        <mat-icon class="colorblue fontsize14px">info</mat-icon>
+                                                                      </button>
+                                                                    </div>
+                                                                    <div>
+                                                                      <!--
+                                                                      <a [routerLink]="['/substances', processingMaterial.substanceName.refuuid]"
+                                                                        target="_blank">
+                                                                        <b>{{processingMaterial.substanceName.refPname}}</b>
+                                                                      </a>
+                                                                      -->
+                                                                      @if (processingMaterial.substanceName.refPname) {
+                                                                        <span>
                                       <a href="" (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName);
                                      false">
-                                        <b>{{processingMaterial.substanceName.refPname}}</b>
-                                      </a>
-                                    </span>
-                                    <span *ngIf="showSubstanceRole">
-                                      &nbsp;<b>({{processingMaterial.substanceRole}})</b>
-                                    </span>
-                                  </div>
-                                </div>
-
-                              </div> <!-- if substanceName object exists -->
-
-                              <!-- if AMOUNT exists, Display values-->
-                              <!-- ONLY DISPLAY if setting in the configuration is true -->
-                              <div *ngIf="showAmountValues && showAmountValues == 'true'">
-                                <div *ngIf="processingMaterial.amount">
-                                  {{displayAmount(processingMaterial.amount)}}
-                                </div>
-                              </div>
-
-                            </div> <!-- substanceRole !== 'Solvent' -->
-                          </div> <!-- substanceRole exists -->
-
-                        </div> <!-- Processing Material Loop -->
-
-                        <!-- SHOW CRITICAL PARAMETER -->
-                        <div class="paddingleft25px paddingtop10px bo"
-                          *ngFor="let criticalParameter of stage.criticalParameters; let criticalParameterIndex = index">
-                          <span *ngIf="showCriticalParameter">
-                            <div *ngIf="criticalParameter.value">
-                              <b>{{displayAmount(criticalParameter.value, criticalParameter.name)}}</b>
-                            </div>
-                          </span>
-                        </div>
-                      </td>
-
-                      <!-- Resulting -->
-                      <td class="width33percent textaligncenter paddingleft10px">
-                        <div class="marginbottom10px"
-                          *ngFor="let resultingMaterial of stage.resultingMaterials; let resultingMaterialIndex = index">
-                          <div *ngIf="resultingMaterial.substanceName">
-                            <div class="paddingtop15px font25px"
-                              *ngIf="(stage.resultingMaterials.length > 1 && resultingMaterialIndex != 0)">
-                              <b>+</b>
-                            </div>
-                            <a class="zoom"
-                              (click)="openImageModal(resultingMaterial.$$tmpStructureId || resultingMaterial.substanceName?.refuuid, resultingMaterial.substanceName?.approvalID, resultingMaterial.substanceName?.refPname || resultingMaterial.verbatimName)">
-                              <img appSubstanceImage [entityId]="resultingMaterial.$$tmpStructureId || resultingMaterial.substanceName?.refuuid">
-                            </a>
-                            <div>
-                              <!--
-                            <a [routerLink]="['/substances', resultingMaterial.substanceName.refuuid]" target="_blank">
-                              {{resultingMaterial.substanceName.refPname}}
-                            </a>
-                            -->
-                              <span *ngIf="resultingMaterial.substanceName.refPname">
+                                                                            <b>{{processingMaterial.substanceName.refPname}}</b>
+                                                                          </a>
+                                                                        </span>
+                                                                      }
+                                                                      @if (showSubstanceRole) {
+                                                                        <span>
+                                                                          &nbsp;<b>({{processingMaterial.substanceRole}})</b>
+                                                                        </span>
+                                                                      }
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                                } <!-- if substanceName object exists -->
+                                                                <!-- if AMOUNT exists, Display values-->
+                                                                <!-- ONLY DISPLAY if setting in the configuration is true -->
+                                                                @if (showAmountValues && showAmountValues == 'true') {
+                                                                  <div>
+                                                                    @if (processingMaterial.amount) {
+                                                                      <div>
+                                                                        {{displayAmount(processingMaterial.amount)}}
+                                                                      </div>
+                                                                    }
+                                                                  </div>
+                                                                }
+                                                              </div>
+                                                              } <!-- substanceRole !== 'Solvent' -->
+                                                            </div>
+                                                            } <!-- substanceRole exists -->
+                                                          </div>
+                                                          } <!-- Processing Material Loop -->
+                                                          <!-- SHOW CRITICAL PARAMETER -->
+                                                          @for (criticalParameter of stage.criticalParameters; track criticalParameter; let criticalParameterIndex = $index) {
+                                                            <div class="paddingleft25px paddingtop10px bo"
+                                                              >
+                                                              @if (showCriticalParameter) {
+                                                                <span>
+                                                                  @if (criticalParameter.value) {
+                                                                    <div>
+                                                                      <b>{{displayAmount(criticalParameter.value, criticalParameter.name)}}</b>
+                                                                    </div>
+                                                                  }
+                                                                </span>
+                                                              }
+                                                            </div>
+                                                          }
+                                                        </td>
+                                                        <!-- Resulting -->
+                                                        <td class="width33percent textaligncenter paddingleft10px">
+                                                          @for (resultingMaterial of stage.resultingMaterials; track resultingMaterial; let resultingMaterialIndex = $index) {
+                                                            <div class="marginbottom10px"
+                                                              >
+                                                              @if (resultingMaterial.substanceName) {
+                                                                <div>
+                                                                  @if ((stage.resultingMaterials.length > 1 && resultingMaterialIndex != 0)) {
+                                                                    <div class="paddingtop15px font25px"
+                                                                      >
+                                                                      <b>+</b>
+                                                                    </div>
+                                                                  }
+                                                                  <a class="zoom"
+                                                                    (click)="openImageModal(resultingMaterial.$$tmpStructureId || resultingMaterial.substanceName?.refuuid, resultingMaterial.substanceName?.approvalID, resultingMaterial.substanceName?.refPname || resultingMaterial.verbatimName)">
+                                                                    <img appSubstanceImage [entityId]="resultingMaterial.$$tmpStructureId || resultingMaterial.substanceName?.refuuid">
+                                                                  </a>
+                                                                  <div>
+                                                                    <!--
+                                                                    <a [routerLink]="['/substances', resultingMaterial.substanceName.refuuid]" target="_blank">
+                                                                      {{resultingMaterial.substanceName.refPname}}
+                                                                    </a>
+                                                                    -->
+                                                                    @if (resultingMaterial.substanceName.refPname) {
+                                                                      <span>
                                 <a href="" (click)="openImageModal(resultingMaterial.$$tmpStructureId || resultingMaterial.substanceName?.refuuid, resultingMaterial.substanceName?.approvalID, resultingMaterial.substanceName?.refPname || resultingMaterial.verbatimName);
                                false">
-                                  {{resultingMaterial.substanceName.refPname}}
-                                </a>
-                              </span>
-                              <span *ngIf="resultingMaterial.verbatimName">
-                                <br>
-                                Material Display Name:{{resultingMaterial.verbatimName}}
-                              </span>
-                              <span *ngIf="showSubstanceRole">
-                                <br>
-                                <b>({{resultingMaterial.substanceRole}})</b>
-                              </span>
-                            </div>
-                          </div> <!-- if substanceName object exists -->
-
-                          <!-- if AMOUNT exists, Display values-->
-                          <!-- ONLY DISPLAY if setting in the configuration is true -->
-                          <div *ngIf="showAmountValues && showAmountValues == 'true'">
-                            <div *ngIf="resultingMaterial.amount">
-                              {{displayAmount(resultingMaterial.amount)}}
-                            </div>
-                          </div>
-
-                        </div> <!-- Resulting Material Loop -->
-                      </td>
-
-                    </tr>
-                  </table>
-                  <br>
-                </fieldset>
-              </div> <!-- stageIndex === showStageIndex -->
-            </div> <!-- Stage loop -->
-          </div> <!-- siteIndex === showSiteIndex -->
-        </div> <!-- Site loop -->
-
-      </fieldset>
-    </div> <!-- processIndex === showProcessIndex -->
-  </div> <!-- Process loop -->
-  <!--
-</div> --> <!-- id=divStepView -->
-<br>
-<!--
-<div appScrollToTarget
-    [id]="'stage_' + 0">TESING TESTING
-</div>
--->
+                                                                          {{resultingMaterial.substanceName.refPname}}
+                                                                        </a>
+                                                                      </span>
+                                                                    }
+                                                                    @if (resultingMaterial.verbatimName) {
+                                                                      <span>
+                                                                        <br>
+                                                                          Material Display Name:{{resultingMaterial.verbatimName}}
+                                                                        </span>
+                                                                      }
+                                                                      @if (showSubstanceRole) {
+                                                                        <span>
+                                                                          <br>
+                                                                            <b>({{resultingMaterial.substanceRole}})</b>
+                                                                          </span>
+                                                                        }
+                                                                      </div>
+                                                                    </div>
+                                                                    } <!-- if substanceName object exists -->
+                                                                    <!-- if AMOUNT exists, Display values-->
+                                                                    <!-- ONLY DISPLAY if setting in the configuration is true -->
+                                                                    @if (showAmountValues && showAmountValues == 'true') {
+                                                                      <div>
+                                                                        @if (resultingMaterial.amount) {
+                                                                          <div>
+                                                                            {{displayAmount(resultingMaterial.amount)}}
+                                                                          </div>
+                                                                        }
+                                                                      </div>
+                                                                    }
+                                                                  </div>
+                                                                  } <!-- Resulting Material Loop -->
+                                                                </td>
+                                                              </tr>
+                                                            </table>
+                                                            <br>
+                                                            </fieldset>
+                                                          </div>
+                                                          } <!-- stageIndex === showStageIndex -->
+                                                        </div>
+                                                        } <!-- Stage loop -->
+                                                      </div>
+                                                      } <!-- siteIndex === showSiteIndex -->
+                                                    </div>
+                                                    } <!-- Site loop -->
+                                                  </fieldset>
+                                                </div>
+                                                } <!-- processIndex === showProcessIndex -->
+                                              </div>
+                                              } <!-- Process loop -->
+                                              <!--
+                                            </div> --> <!-- id=divStepView -->
+                                            <br>
+                                              <!--
+                                              <div appScrollToTarget
+                                                [id]="'stage_' + 0">TESING TESTING
+                                              </div>
+                                              -->

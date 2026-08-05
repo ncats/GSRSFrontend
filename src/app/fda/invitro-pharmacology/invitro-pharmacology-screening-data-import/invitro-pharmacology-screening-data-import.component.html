@@ -8,33 +8,34 @@
     <span class="middle-fill"></span>
 
     <!-- Import Assay JSON into the Database -->
-    <div class="divflex marginleft50px" *ngIf="canUpdate">
-      <div class="marginright30px">
-        <button mat-flat-button color="primary" (click)="validate()" [disabled]="disableValidateButton">
+    @if (canUpdate) {
+      <div class="divflex marginleft50px">
+        <div class="marginright30px">
+          <button mat-flat-button color="primary" (click)="validate()" [disabled]="disableValidateButton">
           Validate Assays</button>
-      </div>
-
-      <div>
-        <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
-          [disabled]="disableImportButton">
-          Import Data into Database
-        </button>
-      </div>
-    </div> <!-- class=divflex -->
-
-  </div> <!-- div class=actions-container -->
-</div> <!-- div class=top-fixed -->
-
-<div class="form-content-container">
-  <div class="scrollable-container">
-
-    <div class="divcenter margintop20px marginleft30px">
-
-      <div class="headerstyle margintop20px bordergray">
-
-        <div class="padtop15px font20px fontbold">
-          <b>Import Assay Screening Data </b>
         </div>
+        <div>
+          <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
+            [disabled]="disableImportButton">
+            Import Data into Database
+          </button>
+        </div>
+      </div>
+      } <!-- class=divflex -->
+
+    </div> <!-- div class=actions-container -->
+  </div> <!-- div class=top-fixed -->
+
+  <div class="form-content-container">
+    <div class="scrollable-container">
+
+      <div class="divcenter margintop20px marginleft30px">
+
+        <div class="headerstyle margintop20px bordergray">
+
+          <div class="padtop15px font20px fontbold">
+            <b>Import Assay Screening Data </b>
+          </div>
 
       </div> <!-- class="headerstyle  -->
 
@@ -46,7 +47,9 @@
         <input type="file" (change)="onFileChange($event)" />
 
         <br><br>
-        <span *ngIf="submitMessage" class="colorgreen">{{submitMessage}}</span>
+        @if (submitMessage) {
+<span class="colorgreen">{{submitMessage}}</span>
+}
 
       </div> <!-- class divflex -->
 
@@ -60,10 +63,12 @@
           <p class="font14px textaligncenter margintop20px">{{ progressMessage }}</p>
 
           <!-- This section will only appear if an error occurs -->
-          <div *ngIf="isError" class="error-panel" style="margin-top: 15px; padding: 10px; background-color: #fdd;">
+          @if (isError) {
+<div class="error-panel" style="margin-top: 15px; padding: 10px; background-color: #fdd;">
             <h4>An error occurred:</h4>
             <p>{{ errorMessage }}</p>
           </div>
+}
         </div>
 
       </ng-template>
@@ -80,7 +85,8 @@
             <mat-icon>list_alt</mat-icon>&nbsp;Sheet 1.Reference, Laboratory
           </div><br><br>
 
-          <span *ngIf="invitroReference">
+          @if (invitroReference) {
+<span>
             <span class="font14px"><b>1. Reference Information</b></span><br><br>
 
             <span class="fieldKey">Reference Source Type <span class="colorred">*</span>:</span>
@@ -88,10 +94,12 @@
               {{invitroReference.sourceType}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
-                *ngIf="(requiredFieldMissingArray[0].sourceType && requiredFieldMissingArray[0].sourceType == true)">
+              @if ((requiredFieldMissingArray[0].sourceType && requiredFieldMissingArray[0].sourceType == true)) {
+<span class="colorred fontbold"
+               >
                 Required Field
               </span>
+}
             </span><br>
 
             <span class="fieldKey">Reference Source/Citation <span class="colorred">*</span>:</span>
@@ -99,10 +107,12 @@
               {{invitroReference.sourceCitation}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
-                *ngIf="(requiredFieldMissingArray[0].sourceCitation && requiredFieldMissingArray[0].sourceCitation == true)">
+              @if ((requiredFieldMissingArray[0].sourceCitation && requiredFieldMissingArray[0].sourceCitation == true)) {
+<span class="colorred fontbold"
+               >
                 Required Field
               </span>
+}
             </span><br>
 
             <span class="fieldKey">Reference Source Id:</span>
@@ -111,11 +121,13 @@
             <span class="fieldKey">Reference Digital Object Identifier:</span>
             <span class="fieldvalue">{{invitroReference.digitalObjectIdentifier}}</span>
           </span>
+}
 
 
           <br><br>
           <!-- Invitro Laboratory -->
-          <span *ngIf="invitroLaboratory">
+          @if (invitroLaboratory) {
+<span>
             <span class="font14px"><b>2. Laboratory Information</b></span>
             <br><br>
 
@@ -123,10 +135,12 @@
             <span class="fieldvalue">{{invitroLaboratory.laboratoryName}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
-                *ngIf="(requiredFieldMissingArray[0].laboratoryName && requiredFieldMissingArray[0].laboratoryName == true)">
+              @if ((requiredFieldMissingArray[0].laboratoryName && requiredFieldMissingArray[0].laboratoryName == true)) {
+<span class="colorred fontbold"
+               >
                 Required Field
               </span>
+}
             </span><br>
 
             <span class="fieldKey">Laboratory Affiliation:</span>
@@ -150,6 +164,7 @@
             <span class="fieldKey">Laboratory Country:</span>
             <span class="fieldvalue">{{invitroLaboratory.laboratoryCountry}}</span>
           </span>
+}
         </div>
 
 
@@ -162,17 +177,20 @@
           </div><br><br>
 
           <!-- Invitro Sponsor -->
-          <span *ngIf="invitroSponsor">
+          @if (invitroSponsor) {
+<span>
             <span class="font14px"><b>3. Sponsor Information</b></span><br><br>
 
             <span class="fieldKey">Sponsor Contact Name <span class="colorred">*</span>:</span>
             <span class="fieldvalue">{{invitroSponsor.sponsorContactName}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
-                *ngIf="(requiredFieldMissingArray[0].sponsorContactName && requiredFieldMissingArray[0].sponsorContactName == true)">
+              @if ((requiredFieldMissingArray[0].sponsorContactName && requiredFieldMissingArray[0].sponsorContactName == true)) {
+<span class="colorred fontbold"
+               >
                 Required Field
               </span>
+}
             </span><br>
 
             <span class="fieldKey">Sponsor Affiliation:</span>
@@ -193,23 +211,28 @@
             <span class="fieldKey">Sponsor Country:</span>
             <span class="fieldvalue">{{invitroSponsor.sponsorCountry}}</span>
           </span>
+}
 
           <br><br>
           <!-- Invitro Sponsor Submitters  -->
-          <span *ngIf="invitroSponsorReport">
+          @if (invitroSponsorReport) {
+<span>
 
             <span class="font14px"><b>4. Report Submitter Information</b></span><br><br>
 
-            <div *ngFor="let submitter of invitroSponsorReport.invitroSponsorSubmitters; let index = index">
+            @for (submitter of invitroSponsorReport.invitroSponsorSubmitters; track submitter; let index = $index) {
+<div>
 
               <span class="fieldKey">Sponsor Report Submitter Name <span class="colorred">*</span>:</span>
               <span class="fieldvalue">{{submitter.sponsorReportSubmitterName}}
 
                 <!-- Required Field message -->
-                <span class="colorred fontbold"
-                  *ngIf="(requiredFieldMissingArray[0].sponsorReportSubmitterName && requiredFieldMissingArray[0].sponsorReportSubmitterName == true)">
+                @if ((requiredFieldMissingArray[0].sponsorReportSubmitterName && requiredFieldMissingArray[0].sponsorReportSubmitterName == true)) {
+<span class="colorred fontbold"
+                 >
                   Required Field
                 </span>
+}
               </span><br>
 
               <span class="fieldKey">Sponsor Report Submitter Title:</span>
@@ -226,350 +249,376 @@
 
               <span class="fieldKey">Sponsor Report Submitter Assay Type:</span>
               <span class="fieldvalue">{{submitter.sponsorReportSubmitterAssayType}}</span><br>
-            </div> <!-- Loop Submitters -->
+            </div>
+} <!-- Loop Submitters -->
 
           </span>
+}
 
           <br><br>
           <!-- Invitro Sponsor Report -->
-          <span *ngIf="invitroSponsorReport">
+          @if (invitroSponsorReport) {
+<span>
             <span class="font14px"><b>5. Report Information</b></span><br><br>
 
             <span class="fieldKey">Report Number <span class="colorred">*</span>:</span>
             <span class="fieldvalue">{{invitroSponsorReport.reportNumber}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
-                *ngIf="(requiredFieldMissingArray[0].reportNumber && requiredFieldMissingArray[0].reportNumber == true)">
+              @if ((requiredFieldMissingArray[0].reportNumber && requiredFieldMissingArray[0].reportNumber == true)) {
+<span class="colorred fontbold"
+               >
                 Required Field
               </span>
+}
             </span><br>
 
             <span class="fieldKey">Report Date:</span>
             <span class="fieldvalue">
               <span
                 [ngClass]="invitroSponsorReport.reportDate && invitroSponsorReport.reportDate !== 'Invalid date'? '' : 'colorred'">
-                {{invitroSponsorReport.reportDate}}
-              </span>
-            </span><br>
-          </span>
-        </div>
+                      {{invitroSponsorReport.reportDate}}
+                    </span>
+                  </span><br>
+                </span>
+              }
+            </div>
 
 
-        <!-- 3rd Sheet -->
-        <div class="width32percent">
+            <!-- 3rd Sheet -->
+            <div class="width32percent">
 
-          <!-- Sheet -->
-          <div class="headerstyle2 font15px">
-            <mat-icon>list_alt</mat-icon>&nbsp;Sheet 3.Test Agent,Batch Number
-          </div><br><br>
+              <!-- Sheet -->
+              <div class="headerstyle2 font15px">
+                <mat-icon>list_alt</mat-icon>&nbsp;Sheet 3.Test Agent,Batch Number
+              </div><br><br>
 
-          <!-- Invitro Test Agent -->
-          <span *ngIf="invitroTestAgent">
-            <span class="font14px"><b>6. Test Agent Information</b></span><br><br>
-
-            <span class="fieldKey">Test Agent ID (Company Code):</span>
-            <span class="fieldvalue">{{invitroTestAgent.testAgentCompanyCode}}</span><br>
-
-            <span class="fieldKey">Test Agent Name (FDA) <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroTestAgent.testAgent}}
-
-              <!-- Required Field message -->
-              <span class="colorred fontbold"
-                *ngIf="(requiredFieldMissingArray[0].testAgent && requiredFieldMissingArray[0].testAgent == true)">
-                Required Field
-              </span>
-            </span><br>
-
-            <span class="fieldKey">Test Agent Approval ID/UNII:</span>
-            <span class="fieldvalue">{{invitroTestAgent.testAgentApprovalId}}</span><br>
-
-            <span class="fieldKey">Test Agent CAS Number:</span>
-            <span class="fieldvalue">{{invitroTestAgent.casRegistryNumber}}</span><br>
-
-            <span class="fieldKey">Active Moiety:</span>
-            <span class="fieldvalue">{{invitroTestAgent.activeMoiety}}</span><br>
-
-            <span class="fieldKey">Active Moiety Approval ID/UNII:</span>
-            <span class="fieldvalue">{{invitroTestAgent.activeMoiety}}</span><br>
-          </span>
-
-          <br><br>
-          <!-- Batch Number -->
-          <span *ngIf="invitroResultInfo">
-            <span class="font14px"><b>7. Batch Information</b></span><br><br>
-
-            <span class="fieldKey">Batch Number <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroResultInfo.batchNumber}}
-
-              <span class="colorred fontbold"
-                *ngIf="(requiredFieldMissingArray[0].batchNumber && requiredFieldMissingArray[0].batchNumber == true)">
-                Required Field
-              </span>
-            </span><br>
-          </span>
-        </div>
-
-      </div> <!-- divflex-->
-
-
-      <div class="divflex margintop30px font13px">
-
-        <!-- 4th Sheet -->
-        <div class="width95percent">
-
-          <!-- Sheet -->
-          <div class="headerstyle2 font15px">
-            <mat-icon>list_alt</mat-icon>&nbsp;Sheet 4.Assay Controls
-          </div><br><br>
-
-          <span *ngIf="invitroReference">
-            <table class="tableStyle">
-              <tr>
-                <td>Number</td>
-                <td>External Assay Source <span class="colorred">*</span></td>
-                <td>External Assay ID <span class="colorred">*</span></td>
-                <td>Assay ID</td>
-                <td>Control Substance</td>
-                <td>Type of Control</td>
-                <td>Control Result Type</td>
-                <td>Control Reference Value</td>
-                <td>Control Reference Value Units</td>
-              </tr>
-
-              <tr valing="top" class="font11px" *ngFor="let ctrl of invitroControlsTemp; let indexControl = index">
-                <td>{{(indexControl+1)}}</td>
-
-                <td>{{ctrl.externalAssaySource}}
-
-                  <!-- Required Field message -->
-                  <span class="colorred fontbold"
-                    *ngIf="(requiredFieldMissingArray[indexControl].controlExternalAssaySource && requiredFieldMissingArray[indexControl].controlExternalAssaySource == true)">
-                    Required Field
-                  </span>
-                </td>
-
-                <td>{{ctrl.externalAssayId}}
-
-                  <!-- Required Field message -->
-                  <span class="colorred fontbold"
-                    *ngIf="(requiredFieldMissingArray[indexControl].controlExternalAssayId && requiredFieldMissingArray[indexControl].controlExternalAssayId == true)">
-                    Required Field
-                  </span>
-                </td>
-
-                <td>{{ctrl.assayId}}</td>
-                <td>{{ctrl.control}}</td>
-                <td>{{ctrl.controlType}}</td>
-                <td>{{ctrl.controlResultType}}</td>
-                <td>{{ctrl.controlReferenceValue}}</td>
-                <td>{{ctrl.controlReferenceValueUnits}}</td>
-              </tr>
-            </table>
-          </span>
-
-        </div> <!-- class="width95percent" -->
-
-      </div> <!-- class=divflex -->
-
-
-      <!-- ************************************************************** -->
-      <!-- SHEET 5. Assay Results -->
-      <div class="margintop30px font13px">
-        <div class="width95percent">
-
-          <div class="headerstyle2 font15px">
-            <mat-icon>list_alt</mat-icon>&nbsp;Sheet 5.Assay Results
-          </div><br><br>
-
-          <span *ngIf="resultMessage" class="colorgreen"><b>{{resultMessage}}</b>
-            <br><br>
-          </span>
-
-          <span>
-            <table class="tableStyle">
-              <tr>
-                <td>Number</td>
-                <td>Assay Found In Database</td>
-                <td>Assay Set</td>
-                <td>External Assay Source <span class="colorred">*</span></td>
-                <td>External Assay ID <span class="colorred">*</span></td>
-                <td>Assay ID</td>
-                <td>Test Date (mm/dd/yyyy)</td>
-                <td>Test Agent Concentration</td>
-                <td>Test Agent Concentration Units</td>
-                <td>Result Value</td>
-                <td>Result Value Units</td>
-                <td>Ligand/Substrate Concentration</td>
-                <td>Ligand/Substrate Concentration Units</td>
-                <td>Plasma Protein Added?</td>
-                <td>Protein</td>
-                <td>Plasma Protein Concentration</td>
-                <td>Plasma Protein Concentration Units</td>
-                <td>Type of Data</td>
-                <td>Number of Tests</td>
-                <td>Comments</td>
-                <td>Measurements</td>
-              </tr>
-
-              <tr valing="top" class="font11px" *ngFor="let result of invitroResultsTemp; let indexResult = index">
-
-                <td>{{(indexResult+1)}}</td>
-
-                <td>
-                  <span *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'true'">
-                    <div class="backgroundgreen"><span class="colorwhite">YES</span></div>
-                  </span>
-                  <span *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'">
-                    <div class="backgroundred"><span class="colorwhite">NO
+              <!-- Invitro Test Agent -->
+              @if (invitroTestAgent) {
+                <span>
+                  <span class="font14px"><b>6. Test Agent Information</b></span><br><br>
+                  <span class="fieldKey">Test Agent ID (Company Code):</span>
+                  <span class="fieldvalue">{{invitroTestAgent.testAgentCompanyCode}}</span><br>
+                  <span class="fieldKey">Test Agent Name (FDA) <span class="colorred">*</span>:</span>
+                  <span class="fieldvalue">{{invitroTestAgent.testAgent}}
+                    <!-- Required Field message -->
+                    @if ((requiredFieldMissingArray[0].testAgent && requiredFieldMissingArray[0].testAgent == true)) {
+                      <span class="colorred fontbold"
+                        >
+                        Required Field
                       </span>
-                    </div>
-                    <br>
+                    }
+                  </span><br>
+                  <span class="fieldKey">Test Agent Approval ID/UNII:</span>
+                  <span class="fieldvalue">{{invitroTestAgent.testAgentApprovalId}}</span><br>
+                  <span class="fieldKey">Test Agent CAS Number:</span>
+                  <span class="fieldvalue">{{invitroTestAgent.casRegistryNumber}}</span><br>
+                  <span class="fieldKey">Active Moiety:</span>
+                  <span class="fieldvalue">{{invitroTestAgent.activeMoiety}}</span><br>
+                  <span class="fieldKey">Active Moiety Approval ID/UNII:</span>
+                  <span class="fieldvalue">{{invitroTestAgent.activeMoiety}}</span><br>
+                </span>
+              }
 
-                    <!-- Register Assay Link -->
-                    <a [routerLink]="['/invitro-pharm/assay/register']" target="_blank" *ngIf="canUpdate"
-                      matTooltip='Register In Vitro Pharmacology Assay'> Register Assay
-                    </a>
-                  </span>
-                  <span *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'Error getting Assay'">
-                    <div class="backgroundred"><span class="colorwhite">ERROR</span></div>
-                  </span>
-                </td>
+              <br><br>
+              <!-- Batch Number -->
+              @if (invitroResultInfo) {
+                <span>
+                  <span class="font14px"><b>7. Batch Information</b></span><br><br>
+                  <span class="fieldKey">Batch Number <span class="colorred">*</span>:</span>
+                  <span class="fieldvalue">{{invitroResultInfo.batchNumber}}
+                    @if ((requiredFieldMissingArray[0].batchNumber && requiredFieldMissingArray[0].batchNumber == true)) {
+                      <span class="colorred fontbold"
+                        >
+                        Required Field
+                      </span>
+                    }
+                  </span><br>
+                </span>
+              }
+            </div>
 
-                <td>{{result.assaySet}}</td>
-
-                <td>
-                  <div *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'; else foundAssaySource">
-                    <span class="colorred"><b>{{result.externalAssaySource}}</b></span>
-                  </div>
-                  <ng-template #foundAssaySource>
-                    {{result.externalAssaySource}}
-                  </ng-template>
-
-                  <!-- Required Field message -->
-                  <span class="colorred fontbold"
-                    *ngIf="(requiredFieldMissingArray[indexResult].resultExternalAssaySource && requiredFieldMissingArray[indexResult].resultExternalAssaySource == true)">
-                    Required Field
-                  </span>
-                </td>
-
-                <td>
-                  <div *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'; else foundExternalAssayId">
-                    <span class="colorred"><b>{{result.externalAssayId}}</b></span>
-                  </div>
-                  <ng-template #foundExternalAssayId>
-                    {{result.externalAssayId}}
-                  </ng-template>
-
-                  <!-- Required Field message -->
-                  <span class="colorred fontbold"
-                    *ngIf="(requiredFieldMissingArray[indexResult].resultExternalAssayId && requiredFieldMissingArray[indexResult].resultExternalAssayId == true)">
-                    Required Field
-                  </span>
-                </td>
-
-                <td>{{result.assayId}}</td>
-                <td>{{result.testDate}}</td>
-                <td>{{result.testAgentConcentration}}</td>
-                <td>{{result.testAgentConcentrationUnits}}</td>
-                <td>{{result.resultValue}}</td>
-                <td>{{result.resultValueUnits}}</td>
-                <td>{{result.ligandSubstrateConcentration}}</td>
-                <td>{{result.ligandSubstrateConcentrationUnits}}</td>
-                <td>{{result.plasmaProteinAdded}}</td>
-                <td>{{result.protein}}</td>
-                <td>{{result.plasmaProteinConcentration}}</td>
-                <td>{{result.plasmaProteinConcentrationUnits}}</td>
-                <td>{{result.dataType}}</td>
-                <td>{{result.numberOfTests}}</td>
-                <td>{{result.comments}}</td>
-                <td>{{result.assayMeasurement}}</td>
-              </tr>
-            </table>
-          </span>
-
-        </div> <!-- class="width95percent" -->
-      </div> <!--  SHEET 5 class=divflex-->
+          </div> <!-- divflex-->
 
 
-      <div *ngIf="importDataList.length > 0">
-        <b>Total Records ready for import into the database:&nbsp;
-          <span class="colorgreen font18px">{{importDataList.length}}</span></b>
+          <div class="divflex margintop30px font13px">
+
+            <!-- 4th Sheet -->
+            <div class="width95percent">
+
+              <!-- Sheet -->
+              <div class="headerstyle2 font15px">
+                <mat-icon>list_alt</mat-icon>&nbsp;Sheet 4.Assay Controls
+              </div><br><br>
+
+              @if (invitroReference) {
+                <span>
+                  <table class="tableStyle">
+                    <tr>
+                      <td>Number</td>
+                      <td>External Assay Source <span class="colorred">*</span></td>
+                      <td>External Assay ID <span class="colorred">*</span></td>
+                      <td>Assay ID</td>
+                      <td>Control Substance</td>
+                      <td>Type of Control</td>
+                      <td>Control Result Type</td>
+                      <td>Control Reference Value</td>
+                      <td>Control Reference Value Units</td>
+                    </tr>
+                    @for (ctrl of invitroControlsTemp; track ctrl; let indexControl = $index) {
+                      <tr valing="top" class="font11px">
+                        <td>{{(indexControl+1)}}</td>
+                        <td>{{ctrl.externalAssaySource}}
+                          <!-- Required Field message -->
+                          @if ((requiredFieldMissingArray[indexControl].controlExternalAssaySource && requiredFieldMissingArray[indexControl].controlExternalAssaySource == true)) {
+                            <span class="colorred fontbold"
+                              >
+                              Required Field
+                            </span>
+                          }
+                        </td>
+                        <td>{{ctrl.externalAssayId}}
+                          <!-- Required Field message -->
+                          @if ((requiredFieldMissingArray[indexControl].controlExternalAssayId && requiredFieldMissingArray[indexControl].controlExternalAssayId == true)) {
+                            <span class="colorred fontbold"
+                              >
+                              Required Field
+                            </span>
+                          }
+                        </td>
+                        <td>{{ctrl.assayId}}</td>
+                        <td>{{ctrl.control}}</td>
+                        <td>{{ctrl.controlType}}</td>
+                        <td>{{ctrl.controlResultType}}</td>
+                        <td>{{ctrl.controlReferenceValue}}</td>
+                        <td>{{ctrl.controlReferenceValueUnits}}</td>
+                      </tr>
+                    }
+                  </table>
+                </span>
+              }
+
+            </div> <!-- class="width95percent" -->
+
+          </div> <!-- class=divflex -->
+
+
+          <!-- ************************************************************** -->
+          <!-- SHEET 5. Assay Results -->
+          <div class="margintop30px font13px">
+            <div class="width95percent">
+
+              <div class="headerstyle2 font15px">
+                <mat-icon>list_alt</mat-icon>&nbsp;Sheet 5.Assay Results
+              </div><br><br>
+
+              @if (resultMessage) {
+                <span class="colorgreen"><b>{{resultMessage}}</b>
+                <br><br>
+              </span>
+            }
+
+            <span>
+              <table class="tableStyle">
+                <tr>
+                  <td>Number</td>
+                  <td>Assay Found In Database</td>
+                  <td>Assay Set</td>
+                  <td>External Assay Source <span class="colorred">*</span></td>
+                  <td>External Assay ID <span class="colorred">*</span></td>
+                  <td>Assay ID</td>
+                  <td>Test Date (mm/dd/yyyy)</td>
+                  <td>Test Agent Concentration</td>
+                  <td>Test Agent Concentration Units</td>
+                  <td>Result Value</td>
+                  <td>Result Value Units</td>
+                  <td>Ligand/Substrate Concentration</td>
+                  <td>Ligand/Substrate Concentration Units</td>
+                  <td>Plasma Protein Added?</td>
+                  <td>Protein</td>
+                  <td>Plasma Protein Concentration</td>
+                  <td>Plasma Protein Concentration Units</td>
+                  <td>Type of Data</td>
+                  <td>Number of Tests</td>
+                  <td>Comments</td>
+                  <td>Measurements</td>
+                </tr>
+
+                @for (result of invitroResultsTemp; track result; let indexResult = $index) {
+                  <tr valing="top" class="font11px">
+                    <td>{{(indexResult+1)}}</td>
+                    <td>
+                      @if (result.assayFoundInDb && result.assayFoundInDb == 'true') {
+                        <span>
+                          <div class="backgroundgreen"><span class="colorwhite">YES</span></div>
+                        </span>
+                      }
+                      @if (result.assayFoundInDb && result.assayFoundInDb == 'false') {
+                        <span>
+                          <div class="backgroundred"><span class="colorwhite">NO
+                          </span>
+                        </div>
+                        <br>
+                          <!-- Register Assay Link -->
+                          @if (canUpdate) {
+                            <a [routerLink]="['/invitro-pharm/assay/register']" target="_blank"
+                              matTooltip='Register In Vitro Pharmacology Assay'> Register Assay
+                            </a>
+                          }
+                        </span>
+                      }
+                      @if (result.assayFoundInDb && result.assayFoundInDb == 'Error getting Assay') {
+                        <span>
+                          <div class="backgroundred"><span class="colorwhite">ERROR</span></div>
+                        </span>
+                      }
+                    </td>
+                    <td>{{result.assaySet}}</td>
+                    <td>
+                      @if (result.assayFoundInDb && result.assayFoundInDb == 'false') {
+                        <div>
+                          <span class="colorred"><b>{{result.externalAssaySource}}</b></span>
+                        </div>
+                      } @else {
+                        {{result.externalAssaySource}}
+                      }
+                      <ng-template #foundAssaySource>
+                        {{result.externalAssaySource}}
+                      </ng-template>
+                      <!-- Required Field message -->
+                      @if ((requiredFieldMissingArray[indexResult].resultExternalAssaySource && requiredFieldMissingArray[indexResult].resultExternalAssaySource == true)) {
+                        <span class="colorred fontbold"
+                          >
+                          Required Field
+                        </span>
+                      }
+                    </td>
+                    <td>
+                      @if (result.assayFoundInDb && result.assayFoundInDb == 'false') {
+                        <div>
+                          <span class="colorred"><b>{{result.externalAssayId}}</b></span>
+                        </div>
+                      } @else {
+                        {{result.externalAssayId}}
+                      }
+                      <ng-template #foundExternalAssayId>
+                        {{result.externalAssayId}}
+                      </ng-template>
+                      <!-- Required Field message -->
+                      @if ((requiredFieldMissingArray[indexResult].resultExternalAssayId && requiredFieldMissingArray[indexResult].resultExternalAssayId == true)) {
+                        <span class="colorred fontbold"
+                          >
+                          Required Field
+                        </span>
+                      }
+                    </td>
+                    <td>{{result.assayId}}</td>
+                    <td>{{result.testDate}}</td>
+                    <td>{{result.testAgentConcentration}}</td>
+                    <td>{{result.testAgentConcentrationUnits}}</td>
+                    <td>{{result.resultValue}}</td>
+                    <td>{{result.resultValueUnits}}</td>
+                    <td>{{result.ligandSubstrateConcentration}}</td>
+                    <td>{{result.ligandSubstrateConcentrationUnits}}</td>
+                    <td>{{result.plasmaProteinAdded}}</td>
+                    <td>{{result.protein}}</td>
+                    <td>{{result.plasmaProteinConcentration}}</td>
+                    <td>{{result.plasmaProteinConcentrationUnits}}</td>
+                    <td>{{result.dataType}}</td>
+                    <td>{{result.numberOfTests}}</td>
+                    <td>{{result.comments}}</td>
+                    <td>{{result.assayMeasurement}}</td>
+                  </tr>
+                }
+              </table>
+            </span>
+
+          </div> <!-- class="width95percent" -->
+        </div> <!--  SHEET 5 class=divflex-->
+
+
+        @if (importDataList.length > 0) {
+          <div>
+            <b>Total Records ready for import into the database:&nbsp;
+              <span class="colorgreen font18px">{{importDataList.length}}</span></b>
+              <br><br>
+              <table class="tableStyle bordergray">
+                <tr class="font11px">
+                  <th>#</th>
+                  <th>Assay Set</th>
+                  <th>External Assay Source</th>
+                  <th>External Assay ID</th>
+                  <th>External Assay Reference URL</th>
+                  <th>Assay Title</th>
+                  <th>Assay Format</th>
+                  <th>Assay Mode</th>
+                  <th>Bioassay Type</th>
+                  <th>Bioassay Class</th>
+                  <th>Study Type</th>
+                  <th>Detection Method</th>
+                  <th>Presention Type</th>
+                  <th>Presentation</th>
+                  <th>Public Domain</th>
+                  <th>Assay Target Name</th>
+                  <th>Assay Target Name Approval ID</th>
+                  <th>Target Species</th>
+                  <th>Human Homolog Target Name</th>
+                  <th>Human homolog Target Name Approval ID</th>
+                  <th>Ligand/Substate</th>
+                  <th>Ligand/Substrate Approval ID</th>
+                  <th>Standard Ligand/Substrate Concentration</th>
+                  <th>Standard Ligand/Substrate Concentration Units</th>
+                </tr>
+                @for (assay of importDataList; track assay; let index = $index) {
+                  <tr valing="top" class="font11px">
+                    <td>{{(index+1)}}</td>
+                    <td></td>
+                    <td>{{assay.externalAssaySource}}</td>
+                    <td>{{assay.externalAssayId}}</td>
+                    <td>{{assay.externalAssayReferenceUrl}}</td>
+                    <td>{{assay.assayTitle}}</td>
+                    <td>{{assay.assayFormat}}</td>
+                    <td>{{assay.assayMode}}</td>
+                    <td>{{assay.bioassayType}}</td>
+                    <td>{{assay.bioassayClass}}</td>
+                    <td>{{assay.studyType}}</td>
+                    <td>{{assay.detectionMethod}}</td>
+                    <td>{{assay.presentationType}}</td>
+                    <td>{{assay.presentation}}</td>
+                    <td>{{assay.publicDomain}}</td>
+                    <td>{{assay.targetName}}</td>
+                    <td>{{assay.targetNameApprovalId}}</td>
+                    <td>{{assay.targetSpecies}}</td>
+                    <td>{{assay.humanHomologTarget}}</td>
+                    <td>{{assay.humanHomologTargetApprovalId}}</td>
+                    <td>{{assay.ligandSubstrate}}</td>
+                    <td>{{assay.ligandSubstrateApprovalId}}</td>
+                    <td>{{assay.standardLigandSubstrateConcentration}}</td>
+                    <td>{{assay.standardLigandSubstrateConcentrationUnits}}</td>
+                  </tr>
+                }
+              </table>
+            </div>
+          }
+          <br>
+
+          </div> <!-- divcenter marginto90px-->
+          <br>
+
+
+            @if (importDataList.length > 0) {
+              <div class="marginleft30px">
+                <!-- Import Assay JSON into the Database -->
+                <span>
+                  <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()" [disabled]="disabled">Import
+                    Data into Database
+                  </button>
+                </span>
+              </div>
+            }
+            <br><br>
+
+          </div> <!-- scrollable-container -->
+        </div> <!-- form-content-container -->
 
         <br><br>
-        <table class="tableStyle bordergray">
-          <tr class="font11px">
-            <th>#</th>
-            <th>Assay Set</th>
-            <th>External Assay Source</th>
-            <th>External Assay ID</th>
-            <th>External Assay Reference URL</th>
-            <th>Assay Title</th>
-            <th>Assay Format</th>
-            <th>Assay Mode</th>
-            <th>Bioassay Type</th>
-            <th>Bioassay Class</th>
-            <th>Study Type</th>
-            <th>Detection Method</th>
-            <th>Presention Type</th>
-            <th>Presentation</th>
-            <th>Public Domain</th>
-            <th>Assay Target Name</th>
-            <th>Assay Target Name Approval ID</th>
-            <th>Target Species</th>
-            <th>Human Homolog Target Name</th>
-            <th>Human homolog Target Name Approval ID</th>
-            <th>Ligand/Substate</th>
-            <th>Ligand/Substrate Approval ID</th>
-            <th>Standard Ligand/Substrate Concentration</th>
-            <th>Standard Ligand/Substrate Concentration Units</th>
-          </tr>
-
-          <tr valing="top" class="font11px" *ngFor="let assay of importDataList; let index = index">
-            <td>{{(index+1)}}</td>
-            <td></td>
-            <td>{{assay.externalAssaySource}}</td>
-            <td>{{assay.externalAssayId}}</td>
-            <td>{{assay.externalAssayReferenceUrl}}</td>
-            <td>{{assay.assayTitle}}</td>
-            <td>{{assay.assayFormat}}</td>
-            <td>{{assay.assayMode}}</td>
-            <td>{{assay.bioassayType}}</td>
-            <td>{{assay.bioassayClass}}</td>
-            <td>{{assay.studyType}}</td>
-            <td>{{assay.detectionMethod}}</td>
-            <td>{{assay.presentationType}}</td>
-            <td>{{assay.presentation}}</td>
-            <td>{{assay.publicDomain}}</td>
-            <td>{{assay.targetName}}</td>
-            <td>{{assay.targetNameApprovalId}}</td>
-            <td>{{assay.targetSpecies}}</td>
-            <td>{{assay.humanHomologTarget}}</td>
-            <td>{{assay.humanHomologTargetApprovalId}}</td>
-            <td>{{assay.ligandSubstrate}}</td>
-            <td>{{assay.ligandSubstrateApprovalId}}</td>
-            <td>{{assay.standardLigandSubstrateConcentration}}</td>
-            <td>{{assay.standardLigandSubstrateConcentrationUnits}}</td>
-          </tr>
-        </table>
-      </div>
-      <br>
-
-    </div> <!-- divcenter marginto90px-->
-    <br>
-
-
-    <div class="marginleft30px" *ngIf="importDataList.length > 0">
-      <!-- Import Assay JSON into the Database -->
-      <span>
-        <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()" [disabled]="disabled">Import
-          Data into Database
-        </button>
-      </span>
-    </div>
-    <br><br>
-
-  </div> <!-- scrollable-container -->
-</div> <!-- form-content-container -->
-
-<br><br>

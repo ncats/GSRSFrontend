@@ -5,291 +5,296 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-flat-button color="primary" (click)="showJSON()">Import JSON</button>
     -->
-    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0">
-      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
-      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
-    </button>
+    @if (validationMessages && validationMessages.length > 0) {
+      <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+        >
+        {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+        <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+      </button>
+    }
     <span class="middle-fill"></span>
     <!-- Register and View Application buttons -->
-    <span *ngIf="application">
-      <span *ngIf="application.id">
-        <button mat-flat-button color="primary" [routerLink]="['/browse-applications']" matTooltip='Browse Application'>
-          Browse Application
-        </button>&nbsp;&nbsp;&nbsp;
-        <button mat-flat-button color="primary" [routerLink]="['/application/register']"
-          matTooltip='Register a New Application'>
-          Register New Application
-        </button>&nbsp;&nbsp;&nbsp;
-        <!--
-        <button mat-flat-button color="primary" [routerLink]="['/application', application.id]"
-          matTooltip='View this Application Record'>View Application
-        -->
-        <a mat-flat-button color="primary" routerLink="/application/{{application.id}}" target="_blank" matTooltip='Opens in a new window'>
-          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-          View Application</a>
-        &nbsp;&nbsp;&nbsp;
-        <span *ngIf="canDelete">
-          <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
-            matTooltip='Delete this Application'>
-            Delete
-          </button>&nbsp;&nbsp;&nbsp;
-        </span>
-      </span>
-    </span>
-
-    <!-- Validate and Submit Button -->
-    &nbsp;
-    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
-  </div>
-
-  <!-- Validation Message Display -->
-  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
-    <div class="submission-message" *ngIf="submissionMessage">
-      {{submissionMessage}}
-    </div>
-
-    <!-- Validation Message Display and Submit Button -->
-    <div *ngIf="validationMessages">
-      <span *ngIf=" validationMessages.length > 0">
-        <div class="submission-message" *ngIf='!serverError && !approving'>
-          Please correct or dismiss the following errors and submit again:
-        </div>
-        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
-          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
-            {{message.messageType}}</div>
-          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
-                target="_blank">{{link.text}}</a></span></div>
-          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-            (click)="dismissValidationMessage(i)">
-            <mat-icon svgIcon="cancel"></mat-icon>
-          </button>
-        </div>
-      </span>
-
-      <div class="dismiss-container">
-        <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" (click)="submit()"
-          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
-          Submit</button>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-<!-- Display Form Fields -->
-
-<div class="form-content-container mat-form-field-style">
-  <div class="scrollable-container">
-    <div class="cards-container">
-
-      <div class="" *ngIf="application">
-        <div class="title_box">
-          <div class="title">
-            {{title}}
-          </div>
-
-          <div class="font11px" *ngIf="application.id">
-            <div class="textalignright">
-              <span *ngIf="isDisableData" class="font11px colorred">
-                Provenance: DARRTS (some fields are non-editable)
-              </span>
-            </div>
-            <br>
-            <div>
-              <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Create Date:</span> {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{application.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-            </div>
-          </div>
-        </div>
-
-        <mat-card class="bordergray" *ngIf="application">
-          <mat-card-content>
-
-            <div class="form-row">
-              <app-cv-input class="col-1" [disable]="isDisableData" required='true' domain="CENTER" title="Center"
-                name="center" [model]="application.center" (valueChange)="application.center = $event">
-              </app-cv-input>
-
-              <!--
-              <mat-form-field class="col-1">
-                <mat-label>Center</mat-label>
-                <mat-select matNativeControl [(ngModel)]="application.center" name="center" required>
-                  <mat-option *ngFor="let center of centerList" [value]="center.value">
-                    {{center.display}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            -->
-              <app-cv-input class="col-1" [disable]="isDisableData" required='true' domain="APPLICATION_TYPE"
-                title="appType" name="appType" [model]="application.appType"
-                (valueChange)="application.appType = $event">
-              </app-cv-input>
-
-              <mat-form-field class="col-1">
-                <mat-label>Application Number</mat-label>
-                <input matInput [disabled]="isDisableData"
-                  [(ngModel)]="application.appNumber" name="appNumber" required />
-              </mat-form-field>
-
-              <app-cv-input class="col-1" [disable]="isDisableData" domain="APPLICATION_STATUS"
-                title="Application Status" name="status" [model]="application.status"
-                (valueChange)="application.status = $event">
-              </app-cv-input>
-
-              <mat-form-field class="col-1">
-                <mat-label>Submit Date</mat-label>
-                <input matInput [disabled]="isDisableData" placeholder="(mm/dd/yyyy)"
-                  [(ngModel)]="application.submitDate" name="submitDate" (change)="validateSubmitDate()" />
-                <mat-hint *ngIf="submitDateMessage"><span class="colorred">{{submitDateMessage}}</span></mat-hint>
-              </mat-form-field>
-
-              <!--
-              <mat-form-field class="col-1">
-                <input matInput name="submitDateName" [matDatepicker]="pickerSubmit" [disabled]="isDisableData"
-                   placeholder="Submit Date (mm/dd/yyyy)" format="MM/dd/yyyy"
-                  [(ngModel)]="application.submitDate" (dateChange)="dateChangeEventSubmitDate($event)"
-                  (dateInput)="dateInputEventSubmitDate($event)">
-                <mat-datepicker-toggle matSuffix [for]="pickerSubmit"></mat-datepicker-toggle>
-                <mat-datepicker #pickerSubmit></mat-datepicker>
-
-                <mat-error *ngIf="appForm.get('submitDateControl').hasError('minlength')">Min 8 characters
-                </mat-error>
-
-              <mat-hint *ngIf="submitDateMessage">{{submitDateMessage}}</mat-hint>
-              </mat-form-field>
-            -->
-
-              <!--
-              <mat-form-field class="col-1">
-                <input matInput [matDatepicker]="pickerStatus" placeholder="Status Date (mm/dd/yyyy)"
-                  [(ngModel)]="application.statusDate">
-                <mat-datepicker-toggle matSuffix [for]="pickerStatus"></mat-datepicker-toggle>
-                <mat-datepicker #pickerStatus></mat-datepicker>
-              </mat-form-field>
-            -->
-
-              <mat-form-field class="col-1">
-                <mat-label>Status Date</mat-label>
-                <input matInput [disabled]="isDisableData" placeholder="(mm/dd/yyyy)"
-                  [(ngModel)]="application.statusDate" name="statusDate" (change)="validateStatusDate()" />
-                <mat-hint *ngIf="statusDateMessage"><span class="colorred">{{statusDateMessage}}</span></mat-hint>
-              </mat-form-field>
-            </div>
-
-
-            <div class="form-row">
-
-              <app-cv-input class="col-1" [disable]="isDisableData" domain="APPLICATION_SUB_TYPE"
-                title="Application Sub Type" name="appSubType" [model]="application.appSubType"
-                (valueChange)="application.appSubType = $event">
-              </app-cv-input>
-
-              <!--
-              <mat-form-field class="col-1">
-                <mat-label>Application Sub Type</mat-label>
-                <mat-select matNativeControl [disabled]="isDisableData" [(ngModel)]="application.appSubType"
-                  name="appSubType">
-                  <mat-option *ngFor="let appSubType of appSubTypeList" [value]="appSubType.value">
-                    {{appSubType.display}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            -->
-              <mat-form-field class="col-3">
-                <mat-label>Division Class Desc</mat-label>
-                <input matInput [disabled]="isDisableData"
-                  [(ngModel)]="application.divisionClassDesc" name="divisionClassDesc" />
-              </mat-form-field>
-
-              <app-cv-input class="col-1" domain="PUBLIC_DOMAIN" title="Public Domain" name="publicDomain"
-                [model]="application.publicDomain" (valueChange)="application.publicDomain = $event">
-              </app-cv-input>
-
-              <mat-form-field class="col-1">
-                <mat-label>Non Proprietary Name</mat-label>
-                <input matInput [(ngModel)]="application.nonProprietaryName"
-                  name="nonProprietaryName" />
-              </mat-form-field>
-
-            </div>
-
-
-            <div class="row">
-              <mat-form-field class="col-6">
-                <mat-label>Sponsor Name</mat-label>
-                <input matInput [disabled]="isDisableData"
-                  [(ngModel)]="application.sponsorName" name="sponsorName" />
-              </mat-form-field>
-            </div>
-
-
+    @if (application) {
+      <span>
+        @if (application.id) {
+          <span>
+            <button mat-flat-button color="primary" [routerLink]="['/browse-applications']" matTooltip='Browse Application'>
+              Browse Application
+            </button>&nbsp;&nbsp;&nbsp;
+            <button mat-flat-button color="primary" [routerLink]="['/application/register']"
+              matTooltip='Register a New Application'>
+              Register New Application
+            </button>&nbsp;&nbsp;&nbsp;
             <!--
-          <div class="row">
-            <div class="textarea-label">Title</div>
-            <textarea placeholder="Title" [(ngModel)]="application.title" name="title"></textarea>
-          </div>
-          -->
-
-            <div class="row">
-              <mat-form-field class="col-6">
-                <mat-label>External Title</mat-label>
-                <input matInput [disabled]="isDisableData"
-                  [(ngModel)]="application.externalTitle" name="externalTitle" />
-              </mat-form-field>
-            </div>
-
-
-            <div class="row">
-              <mat-form-field class="col-6">
-                <mat-label>Title</mat-label>
-                <input matInput [(ngModel)]="application.title" name="title" />
-              </mat-form-field>
-            </div>
-
-            <!-- INDICATION Loop -->
-            <div *ngFor="let ind of application.applicationIndicationList; let indIndex = index">
-              <div class="row">
-                <mat-form-field class="col-5-more">
-                  <mat-label>Indication</mat-label>
-                  <input matInput [(ngModel)]="ind.indication" name="indication" />
-                </mat-form-field>
-
-                <!-- INDICATION Button -->
-                <span class="width40px displayinlineblock">
-                  <button mat-icon-button color="primary" *ngIf="indIndex == 0" (click)="addNewIndication()"
-                    matTooltip="Add New Indication">
-                    <mat-icon svgIcon="add_circle_outline"></mat-icon>
-                  </button>
+            <button mat-flat-button color="primary" [routerLink]="['/application', application.id]"
+              matTooltip='View this Application Record'>View Application
+              -->
+              <a mat-flat-button color="primary" routerLink="/application/{{application.id}}" target="_blank" matTooltip='Opens in a new window'>
+                <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+              View Application</a>
+              &nbsp;&nbsp;&nbsp;
+              @if (canDelete) {
+                <span>
+                  <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
+                    matTooltip='Delete this Application'>
+                    Delete
+                  </button>&nbsp;&nbsp;&nbsp;
                 </span>
-                <!-- Delete Indication -->
-                <button mat-icon-button color="primary" [disabled]="application.applicationIndicationList.length == 1"
-                  (click)="confirmDeleteIndication(indIndex, ind.indication)" matTooltip="Delete Indication">
-                  <mat-icon [class.disabled]="application.applicationIndicationList.length == 1">delete_forever
-                  </mat-icon>
-                </button>
-                <br>
-              </div>
-            </div> <!-- Indication Loop-->
+              }
+            </span>
+          }
+        </span>
+      }
 
-            <!-- Product Form -->
-            <app-application-product-form [application]="application" (ingredientMessageOut)="ingredientMessageOutChange($event)"
-            (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"></app-application-product-form>
+      <!-- Validate and Submit Button -->
+      &nbsp;
+      <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+    </div>
 
-          </mat-card-content>
+    <!-- Validation Message Display -->
+    <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+      @if (submissionMessage) {
+        <div class="submission-message">
+          {{submissionMessage}}
+        </div>
+      }
 
-        </mat-card>
-        <br>
-        <br>
-      </div>
+      <!-- Validation Message Display and Submit Button -->
+      @if (validationMessages) {
+        <div>
+          @if ( validationMessages.length > 0) {
+            <span>
+              @if (!serverError && !approving) {
+                <div class="submission-message">
+                  Please correct or dismiss the following errors and submit again:
+                </div>
+              }
+              @for (message of validationMessages; track message; let i = $index) {
+                <div class="validation-message">
+                  <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+                  {{message.messageType}}</div>
+                  <div class="message">{{message.message}}@for (link of message.links; track link) {
+                    <span><br /><a [href]="link.href"
+                    target="_blank">{{link.text}}</a></span>
+                  }</div>
+                  @if (message.messageType != 'ERROR' && !approving) {
+                    <button mat-icon-button matTooltip="Dismiss"
+                      (click)="dismissValidationMessage(i)">
+                      <mat-icon svgIcon="cancel"></mat-icon>
+                    </button>
+                  }
+                </div>
+              }
+            </span>
+          }
+          <div class="dismiss-container">
+            <span class="middle-fill"></span>
+            <button mat-flat-button color="primary" (click)="submit()"
+              [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
+            Submit</button>
+          </div>
+        </div>
+      }
+
     </div>
   </div>
 
-  <br>
-</div>
+  <!-- Display Form Fields -->
+
+  <div class="form-content-container mat-form-field-style">
+    <div class="scrollable-container">
+      <div class="cards-container">
+
+        @if (application) {
+          <div class="">
+            <div class="title_box">
+              <div class="title">
+                {{title}}
+              </div>
+              @if (application.id) {
+                <div class="font11px">
+                  <div class="textalignright">
+                    @if (isDisableData) {
+                      <span class="font11px colorred">
+                        Provenance: DARRTS (some fields are non-editable)
+                      </span>
+                    }
+                  </div>
+                  <br>
+                    <div>
+                      <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
+                      <span class="colorgray">Create Date:</span> {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+                      <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
+                      <span class="colorgray">Modify Date:</span> {{application.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                    </div>
+                  </div>
+                }
+              </div>
+              @if (application) {
+                <mat-card class="bordergray">
+                  <mat-card-content>
+                    <div class="form-row">
+                      <app-cv-input class="col-1" [disable]="isDisableData" required='true' domain="CENTER" title="Center"
+                        name="center" [model]="application.center" (valueChange)="application.center = $event">
+                      </app-cv-input>
+                      <!--
+                      <mat-form-field class="col-1">
+                        <mat-label>Center</mat-label>
+                        <mat-select matNativeControl [(ngModel)]="application.center" name="center" required>
+                          <mat-option *ngFor="let center of centerList" [value]="center.value">
+                            {{center.display}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      -->
+                      <app-cv-input class="col-1" [disable]="isDisableData" required='true' domain="APPLICATION_TYPE"
+                        title="appType" name="appType" [model]="application.appType"
+                        (valueChange)="application.appType = $event">
+                      </app-cv-input>
+                      <mat-form-field class="col-1">
+                        <mat-label>Application Number</mat-label>
+                        <input matInput [disabled]="isDisableData"
+                          [(ngModel)]="application.appNumber" name="appNumber" required />
+                      </mat-form-field>
+                      <app-cv-input class="col-1" [disable]="isDisableData" domain="APPLICATION_STATUS"
+                        title="Application Status" name="status" [model]="application.status"
+                        (valueChange)="application.status = $event">
+                      </app-cv-input>
+                      <mat-form-field class="col-1">
+                        <mat-label>Submit Date</mat-label>
+                        <input matInput [disabled]="isDisableData" placeholder="(mm/dd/yyyy)"
+                          [(ngModel)]="application.submitDate" name="submitDate" (change)="validateSubmitDate()" />
+                        @if (submitDateMessage) {
+                          <mat-hint><span class="colorred">{{submitDateMessage}}</span></mat-hint>
+                        }
+                      </mat-form-field>
+                      <!--
+                      <mat-form-field class="col-1">
+                        <input matInput name="submitDateName" [matDatepicker]="pickerSubmit" [disabled]="isDisableData"
+                          placeholder="Submit Date (mm/dd/yyyy)" format="MM/dd/yyyy"
+                          [(ngModel)]="application.submitDate" (dateChange)="dateChangeEventSubmitDate($event)"
+                          (dateInput)="dateInputEventSubmitDate($event)">
+                        <mat-datepicker-toggle matSuffix [for]="pickerSubmit"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerSubmit></mat-datepicker>
+                        <mat-error *ngIf="appForm.get('submitDateControl').hasError('minlength')">Min 8 characters
+                        </mat-error>
+                        <mat-hint *ngIf="submitDateMessage">{{submitDateMessage}}</mat-hint>
+                      </mat-form-field>
+                      -->
+                      <!--
+                      <mat-form-field class="col-1">
+                        <input matInput [matDatepicker]="pickerStatus" placeholder="Status Date (mm/dd/yyyy)"
+                          [(ngModel)]="application.statusDate">
+                        <mat-datepicker-toggle matSuffix [for]="pickerStatus"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStatus></mat-datepicker>
+                      </mat-form-field>
+                      -->
+                      <mat-form-field class="col-1">
+                        <mat-label>Status Date</mat-label>
+                        <input matInput [disabled]="isDisableData" placeholder="(mm/dd/yyyy)"
+                          [(ngModel)]="application.statusDate" name="statusDate" (change)="validateStatusDate()" />
+                        @if (statusDateMessage) {
+                          <mat-hint><span class="colorred">{{statusDateMessage}}</span></mat-hint>
+                        }
+                      </mat-form-field>
+                    </div>
+                    <div class="form-row">
+                      <app-cv-input class="col-1" [disable]="isDisableData" domain="APPLICATION_SUB_TYPE"
+                        title="Application Sub Type" name="appSubType" [model]="application.appSubType"
+                        (valueChange)="application.appSubType = $event">
+                      </app-cv-input>
+                      <!--
+                      <mat-form-field class="col-1">
+                        <mat-label>Application Sub Type</mat-label>
+                        <mat-select matNativeControl [disabled]="isDisableData" [(ngModel)]="application.appSubType"
+                          name="appSubType">
+                          <mat-option *ngFor="let appSubType of appSubTypeList" [value]="appSubType.value">
+                            {{appSubType.display}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      -->
+                      <mat-form-field class="col-3">
+                        <mat-label>Division Class Desc</mat-label>
+                        <input matInput [disabled]="isDisableData"
+                          [(ngModel)]="application.divisionClassDesc" name="divisionClassDesc" />
+                      </mat-form-field>
+                      <app-cv-input class="col-1" domain="PUBLIC_DOMAIN" title="Public Domain" name="publicDomain"
+                        [model]="application.publicDomain" (valueChange)="application.publicDomain = $event">
+                      </app-cv-input>
+                      <mat-form-field class="col-1">
+                        <mat-label>Non Proprietary Name</mat-label>
+                        <input matInput [(ngModel)]="application.nonProprietaryName"
+                          name="nonProprietaryName" />
+                      </mat-form-field>
+                    </div>
+                    <div class="row">
+                      <mat-form-field class="col-6">
+                        <mat-label>Sponsor Name</mat-label>
+                        <input matInput [disabled]="isDisableData"
+                          [(ngModel)]="application.sponsorName" name="sponsorName" />
+                      </mat-form-field>
+                    </div>
+                    <!--
+                    <div class="row">
+                      <div class="textarea-label">Title</div>
+                      <textarea placeholder="Title" [(ngModel)]="application.title" name="title"></textarea>
+                    </div>
+                    -->
+                    <div class="row">
+                      <mat-form-field class="col-6">
+                        <mat-label>External Title</mat-label>
+                        <input matInput [disabled]="isDisableData"
+                          [(ngModel)]="application.externalTitle" name="externalTitle" />
+                      </mat-form-field>
+                    </div>
+                    <div class="row">
+                      <mat-form-field class="col-6">
+                        <mat-label>Title</mat-label>
+                        <input matInput [(ngModel)]="application.title" name="title" />
+                      </mat-form-field>
+                    </div>
+                    <!-- INDICATION Loop -->
+                    @for (ind of application.applicationIndicationList; track ind; let indIndex = $index) {
+                      <div>
+                        <div class="row">
+                          <mat-form-field class="col-5-more">
+                            <mat-label>Indication</mat-label>
+                            <input matInput [(ngModel)]="ind.indication" name="indication" />
+                          </mat-form-field>
+                          <!-- INDICATION Button -->
+                          <span class="width40px displayinlineblock">
+                            @if (indIndex == 0) {
+                              <button mat-icon-button color="primary" (click)="addNewIndication()"
+                                matTooltip="Add New Indication">
+                                <mat-icon svgIcon="add_circle_outline"></mat-icon>
+                              </button>
+                            }
+                          </span>
+                          <!-- Delete Indication -->
+                          <button mat-icon-button color="primary" [disabled]="application.applicationIndicationList.length == 1"
+                            (click)="confirmDeleteIndication(indIndex, ind.indication)" matTooltip="Delete Indication">
+                            <mat-icon [class.disabled]="application.applicationIndicationList.length == 1">delete_forever
+                            </mat-icon>
+                          </button>
+                          <br>
+                          </div>
+                        </div>
+                        } <!-- Indication Loop-->
+                        <!-- Product Form -->
+                        <app-application-product-form [application]="application" (ingredientMessageOut)="ingredientMessageOutChange($event)"
+                        (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"></app-application-product-form>
+                      </mat-card-content>
+                    </mat-card>
+                  }
+                  <br>
+                    <br>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <br>
+              </div>

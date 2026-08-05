@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { KetcherWrapperComponent } from './ketcher-wrapper.component';
 
@@ -6,7 +6,7 @@ describe('KetcherWrapperComponent', () => {
   let component: KetcherWrapperComponent;
   let fixture: ComponentFixture<KetcherWrapperComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ KetcherWrapperComponent ]
     })

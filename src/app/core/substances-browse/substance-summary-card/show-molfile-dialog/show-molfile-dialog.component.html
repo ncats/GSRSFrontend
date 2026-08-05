@@ -2,11 +2,13 @@
 
 <div mat-dialog-content style = "height: 100%;overflow: unset;">
 
-        <textarea *ngIf = "molfile" [ngModel] = "molfile" style = "height: 100%"></textarea>
+  @if (molfile) {
+    <textarea [ngModel] = "molfile" style = "height: 100%"></textarea>
+  }
 
 
 </div>
 <div mat-dialog-actions >
-        <span class="middle-fill"></span>
-        <button mat-button mat-dialog-close>Cancel</button>
-    </div>
+  <span class="middle-fill"></span>
+  <button mat-button mat-dialog-close>Cancel</button>
+</div>

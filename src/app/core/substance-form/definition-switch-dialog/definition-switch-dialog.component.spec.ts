@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DefinitionSwitchDialogComponent } from './definition-switch-dialog.component';
 
@@ -6,7 +6,7 @@ describe('DefinitionSwitchDialogComponent', () => {
   let component: DefinitionSwitchDialogComponent;
   let fixture: ComponentFixture<DefinitionSwitchDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DefinitionSwitchDialogComponent ]
     })

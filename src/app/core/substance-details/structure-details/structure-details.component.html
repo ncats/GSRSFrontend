@@ -1,207 +1,228 @@
-<div *ngIf="structure">
-  <div class="structure-card-content">
-    <div>
-      <div class="name-value">
-        <div class="name">Stereochemistry</div>
-        <div class="value black-pill">{{ structure.stereochemistry }}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">Molecular Formula</div>
-        <div class="value blue-font" [innerHTML]="structure.formula"></div>
-      </div>
-      <div class="name-value">
-        <div class="name">Molecular Weight</div>
-        <div class="value blue-font">
-          {{ structure.mwt | number: rounding }}
+@if (structure) {
+  <div>
+    <div class="structure-card-content">
+      <div>
+        <div class="name-value">
+          <div class="name">Stereochemistry</div>
+          <div class="value black-pill">{{ structure.stereochemistry }}</div>
         </div>
-      </div>
-      <div class="name-value">
-        <div class="name">Optical Activity</div>
-        <div class="value gray-pill">{{ structure.opticalActivity }}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">Defined Stereocenters</div>
-        <div class="value gray-pill">
-          {{ structure.definedStereo }} / {{ structure.stereoCenters }}
+        <div class="name-value">
+          <div class="name">Molecular Formula</div>
+          <div class="value blue-font" [innerHTML]="structure.formula"></div>
         </div>
-      </div>
-      <div class="name-value">
-        <div class="name">E/Z Centers</div>
-        <div class="value gray-pill">{{ structure.ezCenters }}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">Charge</div>
-        <div class="value gray-pill">{{ structure.charge }}</div>
-      </div>
-      <div class="name-value" *ngIf="structure.atropisomerism">
-        <div class="name">Additional stereochemistry</div>
-        <div class="value gray-pill">{{ structure.atropisomerism }}</div>
-      </div>
-      <div class="name-value" *ngIf="structure.stereoComments">
-        <div class="name">Stereo Comments</div>
-        <div class="value stereo-comments">{{ structure.stereoComments }}</div>
-      </div>
-      <div class="name-value" *ngIf="structure.references?.length > 0">
-        <div class="name">
-          <a
-            tabindex="0"
-            role="link"
-            (click)="toggleReferences()"
-            class="blue-font references-link"
-          >
-            <span>{{ showDef === false ? "Show" : "Hide" }} References</span
-            ><mat-icon svgIcon="{{ defIcon }}"></mat-icon>
-          </a>
+        <div class="name-value">
+          <div class="name">Molecular Weight</div>
+          <div class="value blue-font">
+            {{ structure.mwt | number: rounding }}
+          </div>
         </div>
-      </div>
-      <div class="name-value" *ngIf="structure.smiles">
-        <div class="name">
-          <a
-            tabindex="0"
-            role="link"
-            (click)="toggleSmiles()"
-            class="blue-font references-link"
-          >
-            <span
-              >{{ showSmiles === false ? "Show" : "Hide" }} SMILES / InChi</span
-            ><mat-icon svgIcon="{{ smilesIcon }}"></mat-icon>
-          </a>
+        <div class="name-value">
+          <div class="name">Optical Activity</div>
+          <div class="value gray-pill">{{ structure.opticalActivity }}</div>
         </div>
-      </div>
-      <div class="name-value" *ngIf="systematic">
-        <div class="name">
-          <a
-            (click)="toggleNames()"
-            class="blue-font references-link"
-            *ngIf="systematic.length > 0"
-          >
-            <span
-              >{{ showNames === false ? "Show" : "Hide" }} Systematic
-              Names</span
-            ><mat-icon svgIcon="{{ nameIcon }}"></mat-icon>
-          </a>
-          <span *ngIf="systematic.length < 1" class="disabled"
-            >No Systematic Names</span
-          >
+        <div class="name-value">
+          <div class="name">Defined Stereocenters</div>
+          <div class="value gray-pill">
+            {{ structure.definedStereo }} / {{ structure.stereoCenters }}
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="structure-image-container text-center">
-      <div class="float-right">
-        <a
-          mat-icon-button
-          title="Download molfile"
-          aria-label="Download molfile"
-          [href]="molfileHref"
+        <div class="name-value">
+          <div class="name">E/Z Centers</div>
+          <div class="value gray-pill">{{ structure.ezCenters }}</div>
+        </div>
+        <div class="name-value">
+          <div class="name">Charge</div>
+          <div class="value gray-pill">{{ structure.charge }}</div>
+        </div>
+        @if (structure.atropisomerism) {
+          <div class="name-value">
+            <div class="name">Additional stereochemistry</div>
+            <div class="value gray-pill">{{ structure.atropisomerism }}</div>
+          </div>
+        }
+        @if (structure.stereoComments) {
+          <div class="name-value">
+            <div class="name">Stereo Comments</div>
+            <div class="value stereo-comments">{{ structure.stereoComments }}</div>
+          </div>
+        }
+        @if (structure.references?.length > 0) {
+          <div class="name-value">
+            <div class="name">
+              <a
+                tabindex="0"
+                role="link"
+                (click)="toggleReferences()"
+                class="blue-font references-link"
+                >
+                <span>{{ showDef === false ? "Show" : "Hide" }} References</span
+                  ><mat-icon svgIcon="{{ defIcon }}"></mat-icon>
+                </a>
+              </div>
+            </div>
+          }
+          @if (structure.smiles) {
+            <div class="name-value">
+              <div class="name">
+                <a
+                  tabindex="0"
+                  role="link"
+                  (click)="toggleSmiles()"
+                  class="blue-font references-link"
+                  >
+                  <span
+                    >{{ showSmiles === false ? "Show" : "Hide" }} SMILES / InChi</span
+                    ><mat-icon svgIcon="{{ smilesIcon }}"></mat-icon>
+                  </a>
+                </div>
+              </div>
+            }
+            @if (systematic) {
+              <div class="name-value">
+                <div class="name">
+                  @if (systematic.length > 0) {
+                    <a
+                      (click)="toggleNames()"
+                      class="blue-font references-link"
+                      >
+                      <span
+                        >{{ showNames === false ? "Show" : "Hide" }} Systematic
+                        Names</span
+                        ><mat-icon svgIcon="{{ nameIcon }}"></mat-icon>
+                      </a>
+                    }
+                    @if (systematic.length < 1) {
+                      <span class="disabled"
+                        >No Systematic Names</span
+                        >
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+              <div class="structure-image-container text-center">
+                <div class="float-right">
+                  <a
+                    mat-icon-button
+                    title="Download molfile"
+                    aria-label="Download molfile"
+                    [href]="molfileHref"
           download="{{
             substance.approvalID
               ? substance.approvalID.toString()
               : substance.uuid.toString()
           }}.mol"
-        >
-          <mat-icon svgIcon="get_app"></mat-icon>
-        </a>
-        <a
-          mat-icon-button
-          title="Structure Search"
-          aria-label="Structure search"
-          *ngIf="!substance.$$source || substance.$$source !== 'staging'"
-          [href]="searchHref"
-        >
-          <mat-icon svgIcon="search"></mat-icon>
-        </a>
-      </div>
-      <img
-        class="structure-img"
-        (click)="openModal(structureTemplate)"
-        *ngIf="!substance.$$source || substance.$$source !== 'staging'"
-        appSubstanceImage
-        size="250"
-        [entityId]="structure.id"
-        [stereo]="showStereo"
-        [version]="substance.version"
-      />
-      <img
-        class="structure-img"
-        (click)="openModal(structureTemplate)"
-        *ngIf="substance.$$source && substance.$$source == 'staging'"
-        appSubstanceImage
-        size="250"
-        [entityId]="substance.uuid"
-        [stereo]="showStereo"
-      />
+                    >
+                    <mat-icon svgIcon="get_app"></mat-icon>
+                  </a>
+                  @if (!substance.$$source || substance.$$source !== 'staging') {
+                    <a
+                      mat-icon-button
+                      title="Structure Search"
+                      aria-label="Structure search"
+                      [href]="searchHref"
+                      >
+                      <mat-icon svgIcon="search"></mat-icon>
+                    </a>
+                  }
+                </div>
+                @if (!substance.$$source || substance.$$source !== 'staging') {
+                  <img
+                    class="structure-img"
+                    (click)="openModal(structureTemplate)"
+                    appSubstanceImage
+                    size="250"
+                    [entityId]="structure.id"
+                    [stereo]="showStereo"
+                    [version]="substance.version"
+                    />
+                }
+                @if (substance.$$source && substance.$$source == 'staging') {
+                  <img
+                    class="structure-img"
+                    (click)="openModal(structureTemplate)"
+                    appSubstanceImage
+                    size="250"
+                    [entityId]="substance.uuid"
+                    [stereo]="showStereo"
+                    />
+                }
+                <br />
+                <button
+                  mat-raised-button
+                  color="primary"
+                  [disabled]="structure.definedStereo == 0"
+                  (click)="toggleStereo()"
+                  >
+                  {{ showStereo === false ? "Show" : "Hide" }} Stereo
+                </button>
+              </div>
+            </div>
+          </div>
+        }
 
-      <br />
-      <button
-        mat-raised-button
-        color="primary"
-        [disabled]="structure.definedStereo == 0"
-        (click)="toggleStereo()"
-      >
-        {{ showStereo === false ? "Show" : "Hide" }} Stereo
-      </button>
-    </div>
-  </div>
-</div>
+        <div style="width: 100%">
+          <div [hidden]="!showDef" style="min-width: 50%">
+            <h3>References</h3>
+            <app-references-manager
+              [substance]="substance"
+              [references]="structure.references"
+            ></app-references-manager>
+          </div>
 
-<div style="width: 100%">
-  <div [hidden]="!showDef" style="min-width: 50%">
-    <h3>References</h3>
-    <app-references-manager
-      [substance]="substance"
-      [references]="structure.references"
-    ></app-references-manager>
-  </div>
-
-  <div [hidden]="!showSmiles" style="width: 100%">
-    <h3>SMILES:</h3>
-    <p class="indent">{{ structure.smiles }}</p>
-    <h3>InChiKey:</h3>
-    <p class="indent" [innerHTML]="inchiKey"></p>
-    <h3>
-      InChi:
-      <sup
-        class="hover-note"
-        *ngIf="inchiNote"
+          <div [hidden]="!showSmiles" style="width: 100%">
+            <h3>SMILES:</h3>
+            <p class="indent">{{ structure.smiles }}</p>
+            <h3>InChiKey:</h3>
+            <p class="indent" [innerHTML]="inchiKey"></p>
+            <h3>
+              InChi:
+              @if (inchiNote) {
+                <sup
+                  class="hover-note"
         [matTooltip]="
           inchiNote ? 'This molecule requires more than one Inchi' : null
         "
-      >
-        ?</sup
-      >
-    </h3>
-    <p class="indent" [innerHTML]="inchi"></p>
-  </div>
+                  >
+                  ?</sup
+                  >
+                }
+              </h3>
+              <p class="indent" [innerHTML]="inchi"></p>
+            </div>
 
-  <div [hidden]="!showNames" style="width: 100%">
-    <h3>Systematic Names:</h3>
-    <mat-list>
-      <mat-list-item *ngFor="let name of systematic">
-        <span [innerHTML]="name"></span>
-      </mat-list-item>
-    </mat-list>
-  </div>
+            <div [hidden]="!showNames" style="width: 100%">
+              <h3>Systematic Names:</h3>
+              <mat-list>
+                @for (name of systematic; track name) {
+                  <mat-list-item>
+                    <span [innerHTML]="name"></span>
+                  </mat-list-item>
+                }
+              </mat-list>
+            </div>
 
-  <ng-template #structureTemplate>
-    <div mat-dialog-content>
-      <img
-        class="structure-img-big"
-        *ngIf="!substance.$$source || substance.$$source !== 'staging'"
-        appSubstanceImage
-        size="850"
-        [entityId]="structure.id"
-        [stereo]="showStereo"
-        [version]="substance.version"
-      />
-      <img
-        class="structure-img-big"
-        *ngIf="substance.$$source && substance.$$source == 'staging'"
-        appSubstanceImage
-        size="850"
-        [entityId]="substance.uuid"
-        [stereo]="showStereo"
-      />
-    </div>
-  </ng-template>
-</div>
+            <ng-template #structureTemplate>
+              <div mat-dialog-content>
+                @if (!substance.$$source || substance.$$source !== 'staging') {
+                  <img
+                    class="structure-img-big"
+                    appSubstanceImage
+                    size="850"
+                    [entityId]="structure.id"
+                    [stereo]="showStereo"
+                    [version]="substance.version"
+                    />
+                }
+                @if (substance.$$source && substance.$$source == 'staging') {
+                  <img
+                    class="structure-img-big"
+                    appSubstanceImage
+                    size="850"
+                    [entityId]="substance.uuid"
+                    [stereo]="showStereo"
+                    />
+                }
+              </div>
+            </ng-template>
+          </div>

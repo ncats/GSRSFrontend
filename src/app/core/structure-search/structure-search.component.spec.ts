@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { StructureEditorModule } from '../structure-editor/structure-editor.module';
 import { StructureSearchComponent } from './structure-search.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -38,7 +38,7 @@ describe('StructureSearchComponent', () => {
   let gestureConfig: TestGestureConfig;
   let activatedRouteStub: Partial<ActivatedRoute>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     routerStub = new RouterStub();
     const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);
     setLoadingSpy = loadingServiceSpy.setLoading.and.returnValue(null);
@@ -117,7 +117,7 @@ describe('StructureSearchComponent', () => {
       expect(component._editor).toBe(editorStub);
     });
 
-    it('on search button clicked, getMolFile, postSubtance, and navigate should be called', async(() => {
+    it('on search button clicked, getMolFile, postSubtance, and navigate should be called', waitForAsync(() => {
       const searchButtonElement: HTMLButtonElement = fixture.nativeElement.querySelector('.search-button');
       searchButtonElement.click();
       fixture.detectChanges();
@@ -189,7 +189,7 @@ describe('StructureSearchComponent', () => {
       expect(component.similarityCutoff).toEqual(0.7);
     });
 
-    it('on import button click, dialop.open should be called, and editor.setMolecule should be called after close', async(() => {
+    it('on import button click, dialop.open should be called, and editor.setMolecule should be called after close', waitForAsync(() => {
       spyOn(matDialog, 'open').and.callThrough();
       const importButtonElement: HTMLButtonElement = fixture.nativeElement.querySelector('.import-button');
       importButtonElement.click();

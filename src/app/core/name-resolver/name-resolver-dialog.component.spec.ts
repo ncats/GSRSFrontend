@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NameResolverDialogComponent } from './name-resolver-dialog.component';
 
@@ -6,7 +6,7 @@ describe('NameResolverDialogComponent', () => {
   let component: NameResolverDialogComponent;
   let fixture: ComponentFixture<NameResolverDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NameResolverDialogComponent ]
     })

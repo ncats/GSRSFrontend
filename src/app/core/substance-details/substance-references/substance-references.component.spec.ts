@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceReferencesComponent } from './substance-references.component';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -11,7 +11,7 @@ describe('SubstanceReferencesComponent', () => {
   let component: SubstanceReferencesComponent;
   let fixture: ComponentFixture<SubstanceReferencesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatTableModule,

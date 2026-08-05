@@ -12,7 +12,7 @@
             mat-stroked-button
             class="button-select-file"
             (click)="openInput()"
-          >
+            >
             Select File to Import
           </button>
         </div>
@@ -26,7 +26,7 @@
           (change)="uploadFile($event)"
           name="file1"
           accept=".json"
-        />
+          />
       </div>
     </mat-tab>
     <mat-tab label="JSON">
@@ -41,24 +41,28 @@
         ></textarea>
       </div>
     </mat-tab>
-    <mat-tab label="URL" *ngIf="urlImportEnabled">
-      <div class="full-row-col" style="margin-top: 10px">
-        <div style="width: 100%" class="padbottom20px">URL:</div>
-        <input
-          style="width: calc(100% - 10px)"
-          placeholder="E.g. https://domain.com/substance.json"
-          [(ngModel)]="pastedUrl"
-          (ngModelChange)="checkUrl()"
-        />
-        <div style="width: 100%; margin-top: 5px; font-style: italic; font-size: 80%">
-          Note: The URL needs to be publicly accessible
+    @if (urlImportEnabled) {
+      <mat-tab label="URL">
+        <div class="full-row-col" style="margin-top: 10px">
+          <div style="width: 100%" class="padbottom20px">URL:</div>
+          <input
+            style="width: calc(100% - 10px)"
+            placeholder="E.g. https://domain.com/substance.json"
+            [(ngModel)]="pastedUrl"
+            (ngModelChange)="checkUrl()"
+            />
+          <div style="width: 100%; margin-top: 5px; font-style: italic; font-size: 80%">
+            Note: The URL needs to be publicly accessible
+          </div>
         </div>
-      </div>
-    </mat-tab>
+      </mat-tab>
+    }
   </mat-tab-group>
-  <div class="message" *ngIf="message">
-    {{ message }}
-  </div>
+  @if (message) {
+    <div class="message">
+      {{ message }}
+    </div>
+  }
 </mat-dialog-content>
 
 <mat-divider></mat-divider>
@@ -73,7 +77,7 @@
     color="primary"
     [disabled]="!loaded"
     (click)="importSubstance()"
-  >
+    >
     Import
   </button>
 </mat-dialog-actions>

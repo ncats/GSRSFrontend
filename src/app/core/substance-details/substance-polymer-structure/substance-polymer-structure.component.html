@@ -1,54 +1,66 @@
 
-<div class = 'float-right' *ngIf="structure">
+@if (structure) {
+  <div class = 'float-right'>
     <a class="mat-icon-button" title="Download molfile" [href]="molfileHref" matTooltip = "Download Molfile" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.mol">
       <mat-icon svgIcon="get_app"></mat-icon>
     </a>
   </div>
-<div class="flex-row center-content" *ngIf="structure">
-  
-  <div class="structure-image-container">
-     <img class="structure-img" appSubstanceImage [entityId]="substance.uuid" size="400" [version]="substance.version">
-  </div>
-  
-</div>
-
-
-
-
-<div class = flex-row *ngIf ="classification">
-  <div class = "classification">
-
-    <div class="name-value" *ngIf = "classification.polymerClass" >
-      <div class="name">Polymer Class:</div>
-      <div class="value">{{classification.polymerClass}}</div>
-    </div>
-
-    <div class="name-value" *ngIf = "classification.sourceType" >
-      <div class="name">Source Type:</div>
-      <div class="value">{{classification.sourceType}}</div>
-    </div>
-
-    <div class="name-value" *ngIf = "classification.polymerSubclass" >
-      <div class="name">Polymer SubClass:</div>
-      <div class="value">{{classification.polymerSubclass}}</div>
+}
+@if (structure) {
+  <div class="flex-row center-content">
+    <div class="structure-image-container">
+      <img class="structure-img" appSubstanceImage [entityId]="substance.uuid" size="400" [version]="substance.version">
     </div>
   </div>
-  <div>
-    <div class = "selected-substance" *ngIf="classification.parentSubstance" >
-      <div class="name">Parent Substance</div>
-      <div *ngIf="classification.parentSubstance && classification.parentSubstance.linkingID" class="code">
-        {{classification.parentSubstance.linkingID}}</div>
-      <img class="image-icon"  *ngIf = "relatedSubstanceUuid && relatedSubstanceUuid !== '' "
-        appSubstanceImage [entityId]="relatedSubstanceUuid" size="400">
-      <div>
-        <a class="substance-name" [routerLink]="['/substances', relatedSubstanceUuid || '']">
-          {{classification.parentSubstance.name}}
-        </a>
-      </div>
+}
+
+
+
+
+@if (classification) {
+  <div class = flex-row>
+    <div class = "classification">
+      @if (classification.polymerClass) {
+        <div class="name-value" >
+          <div class="name">Polymer Class:</div>
+          <div class="value">{{classification.polymerClass}}</div>
+        </div>
+      }
+      @if (classification.sourceType) {
+        <div class="name-value" >
+          <div class="name">Source Type:</div>
+          <div class="value">{{classification.sourceType}}</div>
+        </div>
+      }
+      @if (classification.polymerSubclass) {
+        <div class="name-value" >
+          <div class="name">Polymer SubClass:</div>
+          <div class="value">{{classification.polymerSubclass}}</div>
+        </div>
+      }
+    </div>
+    <div>
+      @if (classification.parentSubstance) {
+        <div class = "selected-substance" >
+          <div class="name">Parent Substance</div>
+          @if (classification.parentSubstance && classification.parentSubstance.linkingID) {
+            <div class="code">
+            {{classification.parentSubstance.linkingID}}</div>
+          }
+          @if (relatedSubstanceUuid && relatedSubstanceUuid !== '' ) {
+            <img class="image-icon"
+              appSubstanceImage [entityId]="relatedSubstanceUuid" size="400">
+          }
+          <div>
+            <a class="substance-name" [routerLink]="['/substances', relatedSubstanceUuid || '']">
+              {{classification.parentSubstance.name}}
+            </a>
+          </div>
+        </div>
+      }
     </div>
   </div>
-
-</div>
+}
 
 
 

@@ -1,130 +1,157 @@
-<div
-  class="panel panel-default sub-list"
-  class="form-row job-container"
-  *ngIf="job"
->
-  <div class="side-bar text-center">
-    <div class="job-settings">
-      <div *ngIf="job.running || quickLoad">
-        <mat-progress-spinner
-          class="spinner"
-          color="primary"
-          mode="indeterminate"
-        >
-        </mat-progress-spinner>
-        <div>Running task ...</div>
-      </div>
-      <div *ngIf="!job.running && !quickLoad">
-        <div *ngIf="job.enabled">
-          <mat-icon svgIcon="alarm-on" class="spinner"> </mat-icon>
+@if (job) {
+  <div
+    class="panel panel-default sub-list"
+    class="form-row job-container"
+    >
+    <div class="side-bar text-center">
+      <div class="job-settings">
+        @if (job.running || quickLoad) {
           <div>
-            <div class="label">Next Run Time</div>
-            <i>{{ momentTime(job.nextRun) }}</i>
+            <mat-progress-spinner
+              class="spinner"
+              color="primary"
+              mode="indeterminate"
+              >
+            </mat-progress-spinner>
+            <div>Running task ...</div>
           </div>
+        }
+        @if (!job.running && !quickLoad) {
+          <div>
+            @if (job.enabled) {
+              <div>
+                <mat-icon svgIcon="alarm-on" class="spinner"> </mat-icon>
+                <div>
+                  <div class="label">Next Run Time</div>
+                  <i>{{ momentTime(job.nextRun) }}</i>
+                </div>
+              </div>
+            }
+            @if (!job.enabled) {
+              <div>
+                <mat-icon svgIcon="cancel" class="spinner"> </mat-icon>
+                <div>
+                  <div class="label"><i>Schedule Disabled</i></div>
+                  <i
+                    ><s>{{ job.nextRun | amTimeAgo }}</s></i
+                    >
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
-        <div *ngIf="!job.enabled">
-          <mat-icon svgIcon="cancel" class="spinner"> </mat-icon>
-          <div>
-            <div class="label"><i>Schedule Disabled</i></div>
-            <i
-              ><s>{{ job.nextRun | amTimeAgo }}</s></i
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="bottom-button">
-      <button
-        mat-flat-button
-        *ngIf="!job.running && !quickLoad"
-        color="primary"
-        (click)="execute(currentService, job)"
-      >
-        (execute now)
-      </button>
-      <button
-        *ngIf="job.running || quickLoad"
-        mat-flat-button
-        color="primary"
-        (click)="cancel(currentService, job)"
-      >
-        (click to cancel)
-      </button>
-    </div>
-  </div>
-  <div class="main-bar">
-    <div class="main-container">
-      <div class="table-row" *ngIf="job.description">
-        <div class="label table-label">Description:</div>
-        <div class="table-value">{{ job.description }}</div>
-      </div>
-      <div class="table-row">
-        <div class="label table-label">Enabled:</div>
-        <div class="table-value">{{ job.enabled }}</div>
-      </div>
-
-      <div class="table-row" *ngIf="job.cronSchedule">
-        <div class="label table-label">Cron Schedule:</div>
-        <div class="table-value">
-          <div>
-            <code>{{ job.cronSchedule }}</code>
-          </div>
-          <div>
-            <i> ({{ cronTime(job.cronSchedule) }}) </i>
-          </div>
+        <div class="bottom-button">
+          @if (!job.running && !quickLoad) {
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="execute(currentService, job)"
+              >
+              (execute now)
+            </button>
+          }
+          @if (job.running || quickLoad) {
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="cancel(currentService, job)"
+              >
+              (click to cancel)
+            </button>
+          }
         </div>
       </div>
-      <div class="table-row" *ngIf="job.numberOfRuns">
-        <div class="label table-label">Number of times run:</div>
-        <div class="table-value">{{ job.numberOfRuns }}</div>
+      <div class="main-bar">
+        <div class="main-container">
+          @if (job.description) {
+            <div class="table-row">
+              <div class="label table-label">Description:</div>
+              <div class="table-value">{{ job.description }}</div>
+            </div>
+          }
+          <div class="table-row">
+            <div class="label table-label">Enabled:</div>
+            <div class="table-value">{{ job.enabled }}</div>
+          </div>
+          @if (job.cronSchedule) {
+            <div class="table-row">
+              <div class="label table-label">Cron Schedule:</div>
+              <div class="table-value">
+                <div>
+                  <code>{{ job.cronSchedule }}</code>
+                </div>
+                <div>
+                  <i> ({{ cronTime(job.cronSchedule) }}) </i>
+                </div>
+              </div>
+            </div>
+          }
+          @if (job.numberOfRuns) {
+            <div class="table-row">
+              <div class="label table-label">Number of times run:</div>
+              <div class="table-value">{{ job.numberOfRuns }}</div>
+            </div>
+          }
+          @if (job.lastDurationHuman) {
+            <div class="table-row">
+              <div class="label table-label">Last Execution Duration:</div>
+              <div class="table-value">{{ job.lastDurationHuman }}</div>
+            </div>
+          }
+          @if (job.taskDetails) {
+            <div class="table-row">
+              <div class="label table-label">Message:</div>
+              <div class="table-value">{{ job.taskDetails.message }}</div>
+            </div>
+          }
+        </div>
       </div>
-
-      <div class="table-row" *ngIf="job.lastDurationHuman">
-        <div class="label table-label">Last Execution Duration:</div>
-        <div class="table-value">{{ job.lastDurationHuman }}</div>
-      </div>
-      <div class="table-row" *ngIf="job.taskDetails">
-        <div class="label table-label">Message:</div>
-        <div class="table-value">{{ job.taskDetails.message }}</div>
-      </div>
-    </div>
-  </div>
-  <div class="end-bar">
-    <div class="job-dates">
-      <div *ngIf="job.lastStarted" class="table-row time-row">
-        <span class="time-label">Last started: </span>
-        <span
-          class="time-field"
-          matTooltip="{{ formatDate(job.lastStarted) }}"
-          >{{ job.lastStarted | amTimeAgo }}</span
-        >
-      </div>
-      <div *ngIf="job.lastFinished" class="table-row time-row">
-        <span class="time-label">Last ended: </span>
-        <span
-          class="time-field"
-          matTooltip="{{ formatDate(job.lastFinished) }}"
-          >{{ job.lastFinished | amTimeAgo }}</span
-        >
-      </div>
-    </div>
-    <div *ngIf="!job.enabled" class="bottom-button">
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="enable(currentService, job)"
-      >
-        (click to enable task)
-      </button>
-    </div>
-    <div *ngIf="job.enabled" class="bottom-button">
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="disable(currentService, job)"
-      >
-        (click to disable task)
-      </button>
-    </div>
-  </div>
-</div>
+      <div class="end-bar">
+        <div class="job-dates">
+          @if (job.lastStarted) {
+            <div class="table-row time-row">
+              <span class="time-label">Last started: </span>
+              <span
+                class="time-field"
+                matTooltip="{{ formatDate(job.lastStarted) }}"
+                >{{ job.lastStarted | amTimeAgo }}</span
+                >
+              </div>
+            }
+            @if (job.lastFinished) {
+              <div class="table-row time-row">
+                <span class="time-label">Last ended: </span>
+                <span
+                  class="time-field"
+                  matTooltip="{{ formatDate(job.lastFinished) }}"
+                  >{{ job.lastFinished | amTimeAgo }}</span
+                  >
+                </div>
+              }
+            </div>
+            @if (!job.enabled) {
+              <div class="bottom-button">
+                <button
+                  mat-flat-button
+                  color="primary"
+                  (click)="enable(currentService, job)"
+                  >
+                  (click to enable task)
+                </button>
+              </div>
+            }
+            @if (job.enabled) {
+              <div class="bottom-button">
+                <button
+                  mat-flat-button
+                  color="primary"
+                  (click)="disable(currentService, job)"
+                  >
+                  (click to disable task)
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }

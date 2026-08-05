@@ -152,7 +152,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     clearTimeout(this.resizeTimeout);
   }
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener("window:resize")
   onResize() {
     // Debounce resize handler to avoid measuring during animation
     clearTimeout(this.resizeTimeout);

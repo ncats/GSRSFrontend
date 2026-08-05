@@ -1,5 +1,5 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../config/config.service';
 import { SubstanceService } from './substance.service';
@@ -159,7 +159,7 @@ describe('SubstanceService', () => {
 
       it('first structure search should to go url to get url with results, ' +
         'then immediately make a call to get results. ' +
-        'Another call to search the same structure should go straight to get results', async(() => {
+        'Another call to search the same structure should go straight to get results', waitForAsync(() => {
 
           const responseComplete = new Observable(observer => {
             setTimeout(() => {

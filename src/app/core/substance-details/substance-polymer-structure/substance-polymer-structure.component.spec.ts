@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstancePolymerStructureComponent } from './substance-polymer-structure.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
@@ -10,7 +10,7 @@ describe('SubstancePolymerStructureComponent', () => {
   let fixture: ComponentFixture<SubstancePolymerStructureComponent>;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     utilsServiceStub = new UtilsServiceStub();
 

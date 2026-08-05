@@ -2,724 +2,720 @@
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">
       Show JSON</button
-    >&nbsp;&nbsp;&nbsp;
+      >&nbsp;&nbsp;&nbsp;
 
-    <a
-      mat-flat-button
-      color="primary"
-      [href]="downloadJsonHref"
-      (click)="saveJSON()"
-      download="{{ jsonFileName }}.json"
-    >
-      <span>Export JSON</span> </a
-    >&nbsp;&nbsp;&nbsp;
+      <a
+        mat-flat-button
+        color="primary"
+        [href]="downloadJsonHref"
+        (click)="saveJSON()"
+        download="{{ jsonFileName }}.json"
+        >
+        <span>Export JSON</span> </a
+        >&nbsp;&nbsp;&nbsp;
 
-    <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
-    <span *ngIf="assay && !assay.id">
-      <button mat-flat-button color="primary" (click)="importJSON()">
-        Import JSON
-      </button>
-    </span>
+        <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
+        @if (assay && !assay.id) {
+          <span>
+            <button mat-flat-button color="primary" (click)="importJSON()">
+              Import JSON
+            </button>
+          </span>
+        }
 
-    <button
-      mat-flat-button
-      class="hide-show-messages"
-      (click)="toggleValidation()"
-      [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0"
-    >
-      {{ showSubmissionMessages ? "Hide" : "Show" }} messages
-      <mat-icon
-        [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"
-      ></mat-icon>
-    </button>
-    <span class="middle-fill"></span>
+        @if (validationMessages && validationMessages.length > 0) {
+          <button
+            mat-flat-button
+            class="hide-show-messages"
+            (click)="toggleValidation()"
+            [disabled]="isLoading"
+            >
+            {{ showSubmissionMessages ? "Hide" : "Show" }} messages
+            <mat-icon
+              [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"
+            ></mat-icon>
+          </button>
+        }
+        <span class="middle-fill"></span>
 
-    <!-- Assay Details Link -->
-    <a
-      mat-flat-button
-      color="primary"
-      routerLink="/invitro-pharm/{{ assay.id }}"
-      target="_blank"
-      matTooltip="Opens in a new window"
-      *ngIf="assay && assay.id"
-    >
-      View Assay Details
-      <mat-icon
-        class="small-icon"
-        svgIcon="open_in_new"
-        matTooltip="opens in new window"
-      ></mat-icon> </a
-    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <!-- Assay Details Link -->
+        @if (assay && assay.id) {
+          <a
+            mat-flat-button
+            color="primary"
+            routerLink="/invitro-pharm/{{ assay.id }}"
+            target="_blank"
+            matTooltip="Opens in a new window"
+            >
+            View Assay Details
+            <mat-icon
+              class="small-icon"
+              svgIcon="open_in_new"
+              matTooltip="opens in new window"
+            ></mat-icon> </a
+            >
+            }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-    <!-- Validate and Submit Button -->
-    &nbsp;
-    <button mat-flat-button color="warn" (click)="validate()">
-      Validate and Submit
-    </button>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button
-      mat-flat-button
-      color="primary"
-      [routerLink]="['/home']"
-      matTooltip="Close this window"
-    >
-      Close
-    </button>
-  </div>
-  <!-- div class=actions-container-->
+            <!-- Validate and Submit Button -->
+            &nbsp;
+            <button mat-flat-button color="warn" (click)="validate()">
+              Validate and Submit
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button
+              mat-flat-button
+              color="primary"
+              [routerLink]="['/home']"
+              matTooltip="Close this window"
+              >
+              Close
+            </button>
+          </div>
+          <!-- div class=actions-container-->
 
-  <!-- Validation Message Display -->
-  <div
+          <!-- Validation Message Display -->
+          <div
     [ngClass]="{
       'submission-messages': true,
       collapsed: !showSubmissionMessages,
       expanded: showSubmissionMessages,
     }"
-  >
-    <div class="submission-message" *ngIf="submissionMessage">
-      {{ submissionMessage }}
-    </div>
+            >
+            @if (submissionMessage) {
+              <div class="submission-message">
+                {{ submissionMessage }}
+              </div>
+            }
 
-    <!-- Validation Message Display and Submit Button -->
-    <div *ngIf="validationMessages">
-      <span *ngIf="validationMessages.length > 0">
-        <div class="submission-message" *ngIf="!serverError && !approving">
-          Please correct or dismiss the following errors and submit again:
-        </div>
-        <div
-          class="validation-message"
-          *ngFor="let message of validationMessages; index as i"
-        >
-          <div
-            class="message-type"
+            <!-- Validation Message Display and Submit Button -->
+            @if (validationMessages) {
+              <div>
+                @if (validationMessages.length > 0) {
+                  <span>
+                    @if (!serverError && !approving) {
+                      <div class="submission-message">
+                        Please correct or dismiss the following errors and submit again:
+                      </div>
+                    }
+                    @for (message of validationMessages; track message; let i = $index) {
+                      <div
+                        class="validation-message"
+                        >
+                        <div
+                          class="message-type"
             [ngClass]="
               message.messageType == 'ERROR'
                 ? 'error-message'
                 : 'warning-message'
             "
-          >
-            {{ message.messageType }}
-          </div>
-          <div class="message">
-            {{ message.message
-            }}<span *ngFor="let link of message.links"
-              ><br /><a [href]="link.href" target="_blank">{{
-                link.text
-              }}</a></span
-            >
-          </div>
-          <button
-            mat-icon-button
-            matTooltip="Dismiss"
-            *ngIf="message.messageType != 'ERROR' && !approving"
-            (click)="dismissValidationMessage(i)"
-          >
-            <mat-icon svgIcon="cancel"></mat-icon>
-          </button>
-        </div>
-      </span>
-
-      <div class="dismiss-container">
-        <span class="middle-fill"></span>
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="submit()"
-          [disabled]="isLoading || this.validationResult === false"
-        >
-          {{
-            validationMessages && validationMessages.length > 0
-              ? "Dismiss All and "
-              : ""
-          }}
-          Submit
-        </button>
-      </div>
-    </div>
-    <!-- Validation Message and Submit Button -->
-  </div>
-  <!-- div class=actions-container -->
-</div>
-<!-- div class=top-fixed -->
-
-<div class="form-content-container mat-form-field-style" *ngIf="assay">
-  <div class="scrollable-container">
-    <div class="divcenter headerstyle margintop20px bordergray">
-      <!-- Display Message-->
-      <div class="message-style bordergray" *ngIf="message">
-        {{ message }}
-      </div>
-
-      <div class="divflex margintop10px">
-        <div class="width620px font24px">
-          <b>{{ title }}</b>
-          &nbsp;&nbsp;
-
-          <a
-            [href]="downloadJsonHref"
-            (click)="saveJSON()"
-            download="{{ jsonFileName }}.json"
-            matTooltip="Export Json"
-          >
-            <mat-icon
-              svgIcon="get_app"
-              [ngStyle]="{ color: 'white' }"
-            ></mat-icon> </a
-          >&nbsp;&nbsp;&nbsp;
-        </div>
-
-        <div
-          class="width40percent marginleft30px font11px colorwhite"
-          *ngIf="assay && assay.id"
-        >
-          <span>Created By:</span> {{ assay.createdBy }}&nbsp;&nbsp;&nbsp;
-          <span>Create Date:</span
-          >{{
-            assay.createdDate
-              | date
-                : "MM/dd/yyyy hh:mm:ss
-          a"
-          }}<br />
-          <span class="colorwhite">Modified By:</span>
-          {{ assay.modifiedBy }}&nbsp;&nbsp;&nbsp;
-          <span class="colorwhite">Modify Date:</span>
-          {{ assay.modifiedDate | date: "MM/dd/yyyy hh:mm:ss a" }}
-        </div>
-      </div>
-      <!-- class=divflex -->
-    </div>
-    <!-- class=divcenter -->
-
-    <!-- ############################################################ -->
-    <!-- ASSAY DETAILS FORM BEGIN                                     -->
-    <!-- ************************************************************ -->
-    <div class="details-container">
-      <div class="width100percent">
-        <mat-card class="bordergray">
-          <!--
-          <mat-card-title>
-            <span class="colorblue font20px"><b>Assay Information</b></span>
-          </mat-card-title>
-          -->
-          <mat-card-content class="marginright10px">
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label
-                  >Assay Set:&nbsp;<span class="colorred">*</span></mat-label
-                >
-              </div>
-
-              <div class="divflex width95percent borderlightgray divradius">
-                <!-- Assay Set Checkboxes -->
-                <div class="padtop5px height100px fieldValueCheckboxes">
-                  <span
-                    *ngFor="
-                      let data of checkBoxAssaySetList;
-                      let indexCheckbox = index
-                    "
+                          >
+                          {{ message.messageType }}
+                        </div>
+                        <div class="message">
+                          {{ message.message
+                          }}@for (link of message.links; track link) {
+                          <span
+                            ><br /><a [href]="link.href" target="_blank">{{
+                            link.text
+                          }}</a></span
+                          >
+                        }
+                      </div>
+                      @if (message.messageType != 'ERROR' && !approving) {
+                        <button
+                          mat-icon-button
+                          matTooltip="Dismiss"
+                          (click)="dismissValidationMessage(i)"
+                          >
+                          <mat-icon svgIcon="cancel"></mat-icon>
+                        </button>
+                      }
+                    </div>
+                  }
+                </span>
+              }
+              <div class="dismiss-container">
+                <span class="middle-fill"></span>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  (click)="submit()"
+                  [disabled]="isLoading || this.validationResult === false"
                   >
-                    <mat-checkbox
-                      class="marginright15px font13px"
-                      #checkBox
-                      [value]="data.value"
-                      name="data.value"
-                      [checked]="data.checked"
+                  {{
+                  validationMessages && validationMessages.length > 0
+                  ? "Dismiss All and "
+                  : ""
+                  }}
+                  Submit
+                </button>
+              </div>
+            </div>
+          }
+          <!-- Validation Message and Submit Button -->
+        </div>
+        <!-- div class=actions-container -->
+      </div>
+      <!-- div class=top-fixed -->
+
+      @if (assay) {
+        <div class="form-content-container mat-form-field-style">
+          <div class="scrollable-container">
+            <div class="divcenter headerstyle margintop20px bordergray">
+              <!-- Display Message-->
+              @if (message) {
+                <div class="message-style bordergray">
+                  {{ message }}
+                </div>
+              }
+              <div class="divflex margintop10px">
+                <div class="width620px font24px">
+                  <b>{{ title }}</b>
+                  &nbsp;&nbsp;
+                  <a
+                    [href]="downloadJsonHref"
+                    (click)="saveJSON()"
+                    download="{{ jsonFileName }}.json"
+                    matTooltip="Export Json"
+                    >
+                    <mat-icon
+                      svgIcon="get_app"
+                      [ngStyle]="{ color: 'white' }"
+                    ></mat-icon> </a
+                    >&nbsp;&nbsp;&nbsp;
+                  </div>
+                  @if (assay && assay.id) {
+                    <div
+                      class="width40percent marginleft30px font11px colorwhite"
+                      >
+                      <span>Created By:</span> {{ assay.createdBy }}&nbsp;&nbsp;&nbsp;
+                      <span>Create Date:</span
+                        >{{
+                        assay.createdDate
+                        | date
+                        : "MM/dd/yyyy hh:mm:ss
+                        a"
+                        }}<br />
+                        <span class="colorwhite">Modified By:</span>
+                        {{ assay.modifiedBy }}&nbsp;&nbsp;&nbsp;
+                        <span class="colorwhite">Modify Date:</span>
+                        {{ assay.modifiedDate | date: "MM/dd/yyyy hh:mm:ss a" }}
+                      </div>
+                    }
+                  </div>
+                  <!-- class=divflex -->
+                </div>
+                <!-- class=divcenter -->
+                <!-- ############################################################ -->
+                <!-- ASSAY DETAILS FORM BEGIN                                     -->
+                <!-- ************************************************************ -->
+                <div class="details-container">
+                  <div class="width100percent">
+                    <mat-card class="bordergray">
+                      <!--
+                      <mat-card-title>
+                        <span class="colorblue font20px"><b>Assay Information</b></span>
+                      </mat-card-title>
+                      -->
+                      <mat-card-content class="marginright10px">
+                        <div class="form-row">
+                          <div class="fieldKey">
+                            <mat-label
+                              >Assay Set:&nbsp;<span class="colorred">*</span></mat-label
+                              >
+                            </div>
+                            <div class="divflex width95percent borderlightgray divradius">
+                              <!-- Assay Set Checkboxes -->
+                              <div class="padtop5px height100px fieldValueCheckboxes">
+                                @for (
+                                  data of checkBoxAssaySetList; track
+                                  data; let indexCheckbox = $index) {
+                                  <span
+                                    >
+                                    <mat-checkbox
+                                      class="marginright15px font13px"
+                                      #checkBox
+                                      [value]="data.value"
+                                      name="data.value"
+                                      [checked]="data.checked"
                       (change)="
                         setSelectedAssaySet($event, data, indexCheckbox)
                       "
-                    >
-                      {{ data.value }}
-                    </mat-checkbox>
-                  </span>
-                </div>
-
-                <!-- Add New Assay Set -->
-                <div class="marginright10px marginbottom10px padtop10px">
-                  <mat-form-field class="marginleft15px width160px">
-                    <mat-label>Enter New Assay Set</mat-label>
-                    <input
-                      matInput
-                      [(ngModel)]="newAssaySet"
-                      name="newAssaySet"
-                    />
-                  </mat-form-field>
-                  <br />
-                  <span class="marginleft15px">
-                    <button
-                      mat-flat-button
-                      color="primary"
-                      (click)="addNewAssaySet()"
-                    >
-                      Add New Assay Set
-                    </button>
-                  </span>
-                </div>
-              </div>
-              <!-- divflex -->
-            </div>
-            <!-- form-row -->
-
-            <div class="form-row" *ngIf="assay && assay.id">
-              <div class="fieldKey">
-                <mat-label>Assay ID:</mat-label>
-              </div>
-              <div class="width95percent padtop18px">
-                <span *ngIf="assay.assayId">
-                  <b>{{ assay.assayId }}</b>
-                </span>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label
-                  >External Assay Source:&nbsp;<span class="colorred"
-                    >*</span
-                  ></mat-label
-                >
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input
-                  matInput
-                  placeholder=""
-                  [(ngModel)]="assay.externalAssaySource"
-                  name="externalAssaySource"
-                />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label
-                  >External Assay ID:&nbsp;<span class="colorred"
-                    >*</span
-                  ></mat-label
-                >
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input
-                  matInput
-                  placeholder=""
-                  [(ngModel)]="assay.externalAssayId"
-                  name="externalAssayId"
-                />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>External Assay Reference URL:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input
-                  matInput
-                  placeholder=""
-                  [(ngModel)]="assay.externalAssayReferenceUrl"
-                  name="externalAssayReferenceUrl"
-                />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Assay Title:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input
-                  matInput
-                  placeholder=""
-                  [(ngModel)]="assay.assayTitle"
-                  name="assayTitle"
-                />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Assay Format:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="INVITRO_ASSAY_FORMAT"
-                title=""
-                name="assayFormat"
-                [model]="assay.assayFormat"
-                (valueChange)="assay.assayFormat = $event"
-              >
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Assay Mode:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="INVITRO_ASSAY_MODE"
-                title=""
-                name="assayMode"
-                [model]="assay.assayMode"
-                (valueChange)="assay.assayMode = $event"
-              >
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Bioassay Type:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="INVITRO_BIOASSAY_TYPE"
-                title=""
-                name="bioassayType"
-                [model]="assay.bioassayType"
-                (valueChange)="assay.bioassayType = $event"
-              >
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Bioassay Class:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="INVITRO_BIOASSAY_CLASS"
-                title=""
-                name="bioassayClass"
-                [model]="assay.bioassayClass"
-                (valueChange)="assay.bioassayClass = $event"
-              >
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Study Type:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="INVITRO_STUDY_TYPE"
-                title=""
-                name="studyType"
-                [model]="assay.studyType"
-                (valueChange)="assay.studyType = $event"
-              >
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Detection Method:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="INVITRO_DETECTION_METHOD"
-                title=""
-                name="detectionMethod"
-                [model]="assay.detectionMethod"
-                (valueChange)="assay.detectionMethod = $event"
-              >
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Presentation Type:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="INVITRO_PRESENTATION_TYPE"
-                title=""
-                name="presentationType"
-                [model]="assay.presentationType"
-                (valueChange)="assay.presentationType = $event"
-              >
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Presentation:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input
-                  matInput
-                  placeholder=""
-                  [(ngModel)]="assay.presentation"
-                  name="presentation"
-                />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Public Domain:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="PUBLIC_DOMAIN"
-                title=""
-                name="publicDomain"
-                [model]="assay.publicDomain"
-                (valueChange)="assay.publicDomain = $event"
-              >
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Target Species:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input
-                  matInput
-                  placeholder=""
-                  [(ngModel)]="assay.targetSpecies"
-                  name="targetSpecies"
-                />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label
-                  >Target Name:&nbsp;<span class="colorred">*</span></mat-label
-                >
-              </div>
-
-              <div class="divflex width95percent">
-                <!-- Substance Text Search Suggestions/TypeAhead -->
-                <app-substance-text-search
-                  class="fieldValueSubstance"
-                  [searchValue]="assay.targetName"
-                  placeholder="Search Substances"
-                  (searchValueOut)="searchValueOutChange($event, TARGET_NAME)"
-                  (searchPerformed)="nameSearch($event, TARGET_NAME)"
-                  eventCategory="selectorSearch"
-                >
-                </app-substance-text-search>
-
-                <div class="marginleft20px margintop10px">
-                  <span *ngIf="assay.targetNameSubstanceKey">
-                    <a
+                                      >
+                                      {{ data.value }}
+                                    </mat-checkbox>
+                                  </span>
+                                }
+                              </div>
+                              <!-- Add New Assay Set -->
+                              <div class="marginright10px marginbottom10px padtop10px">
+                                <mat-form-field class="marginleft15px width160px">
+                                  <mat-label>Enter New Assay Set</mat-label>
+                                  <input
+                                    matInput
+                                    [(ngModel)]="newAssaySet"
+                                    name="newAssaySet"
+                                    />
+                                </mat-form-field>
+                                <br />
+                                <span class="marginleft15px">
+                                  <button
+                                    mat-flat-button
+                                    color="primary"
+                                    (click)="addNewAssaySet()"
+                                    >
+                                    Add New Assay Set
+                                  </button>
+                                </span>
+                              </div>
+                            </div>
+                            <!-- divflex -->
+                          </div>
+                          <!-- form-row -->
+                          @if (assay && assay.id) {
+                            <div class="form-row">
+                              <div class="fieldKey">
+                                <mat-label>Assay ID:</mat-label>
+                              </div>
+                              <div class="width95percent padtop18px">
+                                @if (assay.assayId) {
+                                  <span>
+                                    <b>{{ assay.assayId }}</b>
+                                  </span>
+                                }
+                              </div>
+                            </div>
+                          }
+                          <div class="form-row">
+                            <div class="fieldKey">
+                              <mat-label
+                                >External Assay Source:&nbsp;<span class="colorred"
+                                >*</span
+                                ></mat-label
+                                >
+                              </div>
+                              <mat-form-field class="fieldvalue">
+                                <input
+                                  matInput
+                                  placeholder=""
+                                  [(ngModel)]="assay.externalAssaySource"
+                                  name="externalAssaySource"
+                                  />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-row">
+                              <div class="fieldKey">
+                                <mat-label
+                                  >External Assay ID:&nbsp;<span class="colorred"
+                                  >*</span
+                                  ></mat-label
+                                  >
+                                </div>
+                                <mat-form-field class="fieldvalue">
+                                  <input
+                                    matInput
+                                    placeholder=""
+                                    [(ngModel)]="assay.externalAssayId"
+                                    name="externalAssayId"
+                                    />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>External Assay Reference URL:</mat-label>
+                                </div>
+                                <mat-form-field class="fieldvalue">
+                                  <input
+                                    matInput
+                                    placeholder=""
+                                    [(ngModel)]="assay.externalAssayReferenceUrl"
+                                    name="externalAssayReferenceUrl"
+                                    />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Assay Title:</mat-label>
+                                </div>
+                                <mat-form-field class="fieldvalue">
+                                  <input
+                                    matInput
+                                    placeholder=""
+                                    [(ngModel)]="assay.assayTitle"
+                                    name="assayTitle"
+                                    />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Assay Format:</mat-label>
+                                </div>
+                                <app-cv-input
+                                  class="fieldvalue"
+                                  domain="INVITRO_ASSAY_FORMAT"
+                                  title=""
+                                  name="assayFormat"
+                                  [model]="assay.assayFormat"
+                                  (valueChange)="assay.assayFormat = $event"
+                                  >
+                                </app-cv-input>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Assay Mode:</mat-label>
+                                </div>
+                                <app-cv-input
+                                  class="fieldvalue"
+                                  domain="INVITRO_ASSAY_MODE"
+                                  title=""
+                                  name="assayMode"
+                                  [model]="assay.assayMode"
+                                  (valueChange)="assay.assayMode = $event"
+                                  >
+                                </app-cv-input>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Bioassay Type:</mat-label>
+                                </div>
+                                <app-cv-input
+                                  class="fieldvalue"
+                                  domain="INVITRO_BIOASSAY_TYPE"
+                                  title=""
+                                  name="bioassayType"
+                                  [model]="assay.bioassayType"
+                                  (valueChange)="assay.bioassayType = $event"
+                                  >
+                                </app-cv-input>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Bioassay Class:</mat-label>
+                                </div>
+                                <app-cv-input
+                                  class="fieldvalue"
+                                  domain="INVITRO_BIOASSAY_CLASS"
+                                  title=""
+                                  name="bioassayClass"
+                                  [model]="assay.bioassayClass"
+                                  (valueChange)="assay.bioassayClass = $event"
+                                  >
+                                </app-cv-input>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Study Type:</mat-label>
+                                </div>
+                                <app-cv-input
+                                  class="fieldvalue"
+                                  domain="INVITRO_STUDY_TYPE"
+                                  title=""
+                                  name="studyType"
+                                  [model]="assay.studyType"
+                                  (valueChange)="assay.studyType = $event"
+                                  >
+                                </app-cv-input>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Detection Method:</mat-label>
+                                </div>
+                                <app-cv-input
+                                  class="fieldvalue"
+                                  domain="INVITRO_DETECTION_METHOD"
+                                  title=""
+                                  name="detectionMethod"
+                                  [model]="assay.detectionMethod"
+                                  (valueChange)="assay.detectionMethod = $event"
+                                  >
+                                </app-cv-input>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Presentation Type:</mat-label>
+                                </div>
+                                <app-cv-input
+                                  class="fieldvalue"
+                                  domain="INVITRO_PRESENTATION_TYPE"
+                                  title=""
+                                  name="presentationType"
+                                  [model]="assay.presentationType"
+                                  (valueChange)="assay.presentationType = $event"
+                                  >
+                                </app-cv-input>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Presentation:</mat-label>
+                                </div>
+                                <mat-form-field class="fieldvalue">
+                                  <input
+                                    matInput
+                                    placeholder=""
+                                    [(ngModel)]="assay.presentation"
+                                    name="presentation"
+                                    />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Public Domain:</mat-label>
+                                </div>
+                                <app-cv-input
+                                  class="fieldvalue"
+                                  domain="PUBLIC_DOMAIN"
+                                  title=""
+                                  name="publicDomain"
+                                  [model]="assay.publicDomain"
+                                  (valueChange)="assay.publicDomain = $event"
+                                  >
+                                </app-cv-input>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label>Target Species:</mat-label>
+                                </div>
+                                <mat-form-field class="fieldvalue">
+                                  <input
+                                    matInput
+                                    placeholder=""
+                                    [(ngModel)]="assay.targetSpecies"
+                                    name="targetSpecies"
+                                    />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-row">
+                                <div class="fieldKey">
+                                  <mat-label
+                                    >Target Name:&nbsp;<span class="colorred">*</span></mat-label
+                                    >
+                                  </div>
+                                  <div class="divflex width95percent">
+                                    <!-- Substance Text Search Suggestions/TypeAhead -->
+                                    <app-substance-text-search
+                                      class="fieldValueSubstance"
+                                      [searchValue]="assay.targetName"
+                                      placeholder="Search Substances"
+                                      (searchValueOut)="searchValueOutChange($event, TARGET_NAME)"
+                                      (searchPerformed)="nameSearch($event, TARGET_NAME)"
+                                      eventCategory="selectorSearch"
+                                      >
+                                    </app-substance-text-search>
+                                    <div class="marginleft20px margintop10px">
+                                      @if (assay.targetNameSubstanceKey) {
+                                        <span>
+                                          <a
                       [routerLink]="[
                         '/substances',
                         assay.targetNameSubstanceKey,
                       ]"
-                      target="_blank"
-                    >
-                      <span class="font12px">Substance Details</span>
-                    </a>
-                  </span>
-                </div>
-              </div>
-              <!-- divflex -->
-            </div>
-            <!-- form-row -->
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Human Homolog Target:</mat-label>
-              </div>
-
-              <div class="divflex width95percent">
-                <!-- Substance Text Search Suggestions/TypeAhead -->
-                <app-substance-text-search
-                  class="fieldValueSubstance"
-                  [searchValue]="assay.humanHomologTarget"
-                  placeholder="Search Substances"
+                                            target="_blank"
+                                            >
+                                            <span class="font12px">Substance Details</span>
+                                          </a>
+                                        </span>
+                                      }
+                                    </div>
+                                  </div>
+                                  <!-- divflex -->
+                                </div>
+                                <!-- form-row -->
+                                <div class="form-row">
+                                  <div class="fieldKey">
+                                    <mat-label>Human Homolog Target:</mat-label>
+                                  </div>
+                                  <div class="divflex width95percent">
+                                    <!-- Substance Text Search Suggestions/TypeAhead -->
+                                    <app-substance-text-search
+                                      class="fieldValueSubstance"
+                                      [searchValue]="assay.humanHomologTarget"
+                                      placeholder="Search Substances"
                   (searchValueOut)="
                     searchValueOutChange($event, HUMAN_HOMOLOG_TARGET)
                   "
-                  (searchPerformed)="nameSearch($event, HUMAN_HOMOLOG_TARGET)"
-                  eventCategory="selectorSearch"
-                >
-                </app-substance-text-search>
-
-                <div class="marginleft20px margintop10px">
-                  <span *ngIf="assay.humanHomologTargetSubstanceKey">
-                    <a
+                                      (searchPerformed)="nameSearch($event, HUMAN_HOMOLOG_TARGET)"
+                                      eventCategory="selectorSearch"
+                                      >
+                                    </app-substance-text-search>
+                                    <div class="marginleft20px margintop10px">
+                                      @if (assay.humanHomologTargetSubstanceKey) {
+                                        <span>
+                                          <a
                       [routerLink]="[
                         '/substances',
                         assay.humanHomologTargetSubstanceKey,
                       ]"
-                      target="_blank"
-                    >
-                      <span class="font12px">Substance Details</span>
-                    </a>
-                  </span>
-                </div>
-              </div>
-              <!-- divflex -->
-            </div>
-            <!-- form-row -->
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Ligand/Substrate:</mat-label>
-              </div>
-
-              <div class="divflex width95percent">
-                <!-- Substance Text Search Suggestions/TypeAhead -->
-                <app-substance-text-search
-                  class="fieldValueSubstance"
-                  [searchValue]="assay.ligandSubstrate"
-                  placeholder="Search Substances"
-                  (searchPerformed)="nameSearch($event, LIGAND_SUBSTRATE)"
+                                            target="_blank"
+                                            >
+                                            <span class="font12px">Substance Details</span>
+                                          </a>
+                                        </span>
+                                      }
+                                    </div>
+                                  </div>
+                                  <!-- divflex -->
+                                </div>
+                                <!-- form-row -->
+                                <div class="form-row">
+                                  <div class="fieldKey">
+                                    <mat-label>Ligand/Substrate:</mat-label>
+                                  </div>
+                                  <div class="divflex width95percent">
+                                    <!-- Substance Text Search Suggestions/TypeAhead -->
+                                    <app-substance-text-search
+                                      class="fieldValueSubstance"
+                                      [searchValue]="assay.ligandSubstrate"
+                                      placeholder="Search Substances"
+                                      (searchPerformed)="nameSearch($event, LIGAND_SUBSTRATE)"
                   (searchValueOut)="
                     searchValueOutChange($event, LIGAND_SUBSTRATE)
                   "
-                  eventCategory="selectorSearch"
-                >
-                </app-substance-text-search>
-
-                <div class="marginleft20px margintop10px">
-                  <span *ngIf="assay.ligandSubstrateSubstanceKey">
-                    <a
+                                      eventCategory="selectorSearch"
+                                      >
+                                    </app-substance-text-search>
+                                    <div class="marginleft20px margintop10px">
+                                      @if (assay.ligandSubstrateSubstanceKey) {
+                                        <span>
+                                          <a
                       [routerLink]="[
                         '/substances',
                         assay.ligandSubstrateSubstanceKey,
                       ]"
-                      target="_blank"
-                    >
-                      <span class="font12px">Substance Details</span>
-                    </a>
-                  </span>
-                </div>
-              </div>
-              <!-- divflex -->
-            </div>
-            <!-- form-row -->
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Standard Ligand/Sub Concentration:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input
-                  matInput
-                  placeholder=""
-                  [(ngModel)]="assay.standardLigandSubstrateConcentration"
-                  name="standardLigandSubstrateConcentration"
-                />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Standard Ligand/Sub Concent Units:</mat-label>
-              </div>
-              <app-cv-input
-                class="fieldvalue"
-                domain="AMOUNT_UNIT"
-                title=""
-                name="standardLigandSubstrateConcentrationUnits"
-                [model]="assay.standardLigandSubstrateConcentrationUnits"
+                                            target="_blank"
+                                            >
+                                            <span class="font12px">Substance Details</span>
+                                          </a>
+                                        </span>
+                                      }
+                                    </div>
+                                  </div>
+                                  <!-- divflex -->
+                                </div>
+                                <!-- form-row -->
+                                <div class="form-row">
+                                  <div class="fieldKey">
+                                    <mat-label>Standard Ligand/Sub Concentration:</mat-label>
+                                  </div>
+                                  <mat-form-field class="fieldvalue">
+                                    <input
+                                      matInput
+                                      placeholder=""
+                                      [(ngModel)]="assay.standardLigandSubstrateConcentration"
+                                      name="standardLigandSubstrateConcentration"
+                                      />
+                                  </mat-form-field>
+                                </div>
+                                <div class="form-row">
+                                  <div class="fieldKey">
+                                    <mat-label>Standard Ligand/Sub Concent Units:</mat-label>
+                                  </div>
+                                  <app-cv-input
+                                    class="fieldvalue"
+                                    domain="AMOUNT_UNIT"
+                                    title=""
+                                    name="standardLigandSubstrateConcentrationUnits"
+                                    [model]="assay.standardLigandSubstrateConcentrationUnits"
                 (valueChange)="
                   assay.standardLigandSubstrateConcentrationUnits = $event
                 "
-              >
-              </app-cv-input>
-            </div>
-
-            <div *ngIf="assay.invitroAssayAnalytes">
-              <!-- Add Analyte Button -->
-              <div class="form-row">
-                <div class="fieldKey">
-                  <span class="font16px colorblue"
-                    ><b
-                      >Analytes ({{ assay.invitroAssayAnalytes.length }})</b
-                    > </span
-                  >&nbsp;&nbsp;&nbsp;
-                </div>
-                <button
-                  class="margintop15px marginleftneg70px"
-                  mat-flat-button
-                  color="primary"
-                  (click)="addNewAssayAnalyte()"
-                >
-                  Add Analyte
-                </button>
-              </div>
-
-              <!-- FOR LOOP Invitro Analytes -->
-              <div
-                *ngFor="
-                  let analy of assay.invitroAssayAnalytes;
-                  let indexAnalyte = index
-                "
-              >
-                <div class="form-row">
-                  <div class="fieldKey">
-                    <mat-label>Analyte:</mat-label>
-                  </div>
-
-                  <div class="divflex width95percent">
-                    <!-- Substance Text Search Suggestions/TypeAhead -->
-                    <app-substance-text-search
-                      class="fieldValueSubstance"
-                      [searchValue]="analy.analyte"
-                      placeholder="Search Substances"
+                                    >
+                                  </app-cv-input>
+                                </div>
+                                @if (assay.invitroAssayAnalytes) {
+                                  <div>
+                                    <!-- Add Analyte Button -->
+                                    <div class="form-row">
+                                      <div class="fieldKey">
+                                        <span class="font16px colorblue"
+                                          ><b
+                                          >Analytes ({{ assay.invitroAssayAnalytes.length }})</b
+                                          > </span
+                                          >&nbsp;&nbsp;&nbsp;
+                                        </div>
+                                        <button
+                                          class="margintop15px marginleftneg70px"
+                                          mat-flat-button
+                                          color="primary"
+                                          (click)="addNewAssayAnalyte()"
+                                          >
+                                          Add Analyte
+                                        </button>
+                                      </div>
+                                      <!-- FOR LOOP Invitro Analytes -->
+                                      @for (
+                                        analy of assay.invitroAssayAnalytes; track
+                                        analy; let indexAnalyte = $index) {
+                                        <div
+                                          >
+                                          <div class="form-row">
+                                            <div class="fieldKey">
+                                              <mat-label>Analyte:</mat-label>
+                                            </div>
+                                            <div class="divflex width95percent">
+                                              <!-- Substance Text Search Suggestions/TypeAhead -->
+                                              <app-substance-text-search
+                                                class="fieldValueSubstance"
+                                                [searchValue]="analy.analyte"
+                                                placeholder="Search Substances"
                       (searchValueOut)="
                         searchValueOutChange($event, ANALYTE, indexAnalyte)
                       "
                       (searchPerformed)="
                         nameSearch($event, ANALYTE, indexAnalyte)
                       "
-                      eventCategory="selectorSearch"
-                    >
-                    </app-substance-text-search>
-
-                    <!-- DELETE ANALYTE BUTTON -->
-                    <button
-                      mat-icon-button
-                      color="primary"
-                      (click)="confirmDeleteAnalyte(indexAnalyte)"
-                      matTooltip="Delete Analyte {{ indexAnalyte + 1 }}"
-                    >
-                      <mat-icon>delete_forever</mat-icon>
-                    </button>
-
-                    <div class="marginleft7px margintop10px">
-                      <span *ngIf="analy.analyteSubstanceKey">
-                        <a
+                                                eventCategory="selectorSearch"
+                                                >
+                                              </app-substance-text-search>
+                                              <!-- DELETE ANALYTE BUTTON -->
+                                              <button
+                                                mat-icon-button
+                                                color="primary"
+                                                (click)="confirmDeleteAnalyte(indexAnalyte)"
+                                                matTooltip="Delete Analyte {{ indexAnalyte + 1 }}"
+                                                >
+                                                <mat-icon>delete_forever</mat-icon>
+                                              </button>
+                                              <div class="marginleft7px margintop10px">
+                                                @if (analy.analyteSubstanceKey) {
+                                                  <span>
+                                                    <a
                           [routerLink]="[
                             '/substances',
                             analy.analyteSubstanceKey,
                           ]"
-                          target="_blank"
-                        >
-                          <span class="font12px">Substance Details</span>
-                        </a>
-                      </span>
-                    </div>
-                  </div>
-                  <!-- divflex -->
-                </div>
-                <!-- form-row -->
-              </div>
-              <!-- LOOP: invitroAssayAnalytes -->
-            </div>
-            <!-- if invitroAssayAnalytes exists -->
+                                                      target="_blank"
+                                                      >
+                                                      <span class="font12px">Substance Details</span>
+                                                    </a>
+                                                  </span>
+                                                }
+                                              </div>
+                                            </div>
+                                            <!-- divflex -->
+                                          </div>
+                                          <!-- form-row -->
+                                        </div>
+                                      }
+                                      <!-- LOOP: invitroAssayAnalytes -->
+                                    </div>
+                                  }
+                                  <!-- if invitroAssayAnalytes exists -->
+                                  <br /><br /><br />
+                                </mat-card-content>
+                              </mat-card>
+                            </div>
+                            <!-- *ngIf=assay -->
+                          </div>
+                          <!-- class=details-container -->
+                          <br /><br /><br />
+                        </div>
+                      </div>
+                    }
+                    <!-- class=form-content-container -->
 
-            <br /><br /><br />
-          </mat-card-content>
-        </mat-card>
-      </div>
-      <!-- *ngIf=assay -->
-    </div>
-    <!-- class=details-container -->
-    <br /><br /><br />
-  </div>
-</div>
-<!-- class=form-content-container -->
-
-<ng-template #noRecord>
-  <br /><br /><br /><br />
-  <div class="colororange padtop50px padleft50px">
-    There is no Assay Screening Data found.
-  </div>
-</ng-template>
+                    <ng-template #noRecord>
+                      <br /><br /><br /><br />
+                      <div class="colororange padtop50px padleft50px">
+                        There is no Assay Screening Data found.
+                      </div>
+                    </ng-template>

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SessionExpirationDialogComponent } from './session-expiration-dialog.component';
 
@@ -6,7 +6,7 @@ describe('SessionExpirationDialogComponent', () => {
   let component: SessionExpirationDialogComponent;
   let fixture: ComponentFixture<SessionExpirationDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SessionExpirationDialogComponent ]
     })

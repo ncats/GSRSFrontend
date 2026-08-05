@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PropertyParameterDialogComponent } from './property-parameter-dialog.component';
 
@@ -6,7 +6,7 @@ describe('PropertyParameterDialogComponent', () => {
   let component: PropertyParameterDialogComponent;
   let fixture: ComponentFixture<PropertyParameterDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PropertyParameterDialogComponent ]
     })

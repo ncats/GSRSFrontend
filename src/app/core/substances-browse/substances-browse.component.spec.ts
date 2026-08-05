@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -41,7 +41,7 @@ describe('SubstancesBrowseComponent', () => {
   let matDialog: MatDialogStub;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     activatedRouteStub = new ActivatedRouteStub(
       {
         'search': 'test_search_term',
@@ -153,7 +153,7 @@ describe('SubstancesBrowseComponent', () => {
       fixture.detectChanges(); // ngOnInit()
     });
 
-    it('should initialize substances and facets after getSubstanceDetails (async)', async(() => {
+    it('should initialize substances and facets after getSubstanceDetails (async)', waitForAsync(() => {
       fixture.whenStable().then(() => { // wait for async getSubstanceDetails
         fixture.detectChanges();
         expect(component.substances).toBeDefined('substances should be initialized');
@@ -161,7 +161,7 @@ describe('SubstancesBrowseComponent', () => {
       });
     }));
 
-    it('if facets returned from API, only the top 10 should be displayed ordered by total count in a descending order', async(() => {
+    it('if facets returned from API, only the top 10 should be displayed ordered by total count in a descending order', waitForAsync(() => {
       fixture.whenStable().then(() => { // wait for async getSubstanceDetails
         fixture.detectChanges();
         const facetElements: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('mat-expansion-panel');
@@ -187,7 +187,7 @@ describe('SubstancesBrowseComponent', () => {
       });
     }));
 
-    it('when facet value selected, a new API call for substances should be made passing value as query parameter', async(() => {
+    it('when facet value selected, a new API call for substances should be made passing value as query parameter', waitForAsync(() => {
       fixture.whenStable().then(() => { // wait for async getSubstanceDetails
         fixture.detectChanges();
         const facetElements: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('mat-expansion-panel');
@@ -224,7 +224,7 @@ describe('SubstancesBrowseComponent', () => {
       });
     }));
 
-    it('if substances returned from API, they should be displayed along with properties in the main section of page', async(() => {
+    it('if substances returned from API, they should be displayed along with properties in the main section of page', waitForAsync(() => {
       fixture.whenStable().then(() => { // wait for async getSubstanceDetails
         fixture.detectChanges();
 
@@ -320,7 +320,7 @@ describe('SubstancesBrowseComponent', () => {
       });
     }));
 
-    it('paginator should show the right information and change pages and page sizes', async(() => {
+    it('paginator should show the right information and change pages and page sizes', waitForAsync(() => {
       fixture.whenStable().then(() => { // wait for async getSubstanceDetails
 
         fixture.detectChanges();
@@ -363,7 +363,7 @@ describe('SubstancesBrowseComponent', () => {
       });
     }));
 
-    it('should make the setNotification call when SubstanceService fails', async(() => {
+    it('should make the setNotification call when SubstanceService fails', waitForAsync(() => {
       getSubtanceDetailsSpy.and
         .returnValue(throwError('SubstanceService test failure'));
       component.searchSubstances();

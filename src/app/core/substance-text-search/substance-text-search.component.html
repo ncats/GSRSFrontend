@@ -4,8 +4,10 @@
       [floatLabel]="label ? 'auto' : 'never'"
       class="search-form-field space-right-small"
       [ngClass]="formFieldClasses"
-    >
-      <mat-label *ngIf="label">{{ label }}</mat-label>
+      >
+      @if (label) {
+        <mat-label>{{ label }}</mat-label>
+      }
       <input
         class="search"
         type="text"
@@ -15,60 +17,67 @@
         [formControl]="searchControl"
         [matAutocomplete]="substanceSearchAuto"
         (focus)="focused()"
-      />
-      <mat-hint *ngIf="hintMessage">{{ hintMessage }}</mat-hint>
-      <mat-error *ngIf="searchControl.invalid">{{ errorMessage }}</mat-error>
-      <mat-autocomplete
-        class="substance-select"
-        panelWidth="auto"
-        #substanceSearchAuto="matAutocomplete"
-        (optionSelected)="substanceSearchOptionSelected($event)"
-        (closed)="autoCompleteClosed()"
-      >
-        <div *ngFor="let field of suggestionsFields">
-          <div class="substance-suggestion-field">
-            <span class="field-styling"
-              ><b>{{ field["display"] }}</b></span
-            >
-          </div>
-          <mat-option
-            *ngFor="let suggestion of substanceSuggestionsGroup[field['value']]"
-            [value]="suggestion.key"
-            title="{{ suggestion.key }}"
+        />
+        @if (hintMessage) {
+          <mat-hint>{{ hintMessage }}</mat-hint>
+        }
+        @if (searchControl.invalid) {
+          <mat-error>{{ errorMessage }}</mat-error>
+        }
+        <mat-autocomplete
+          class="substance-select"
+          panelWidth="auto"
+          #substanceSearchAuto="matAutocomplete"
+          (optionSelected)="substanceSearchOptionSelected($event)"
+          (closed)="autoCompleteClosed()"
           >
-            <div
-              [innerHTML]="highlight(suggestion.key)"
-              class="suggestion-styling"
-            >
-              {{ suggestion.key }}
-            </div>
-          </mat-option>
-        </div>
-        <pre
-          aria-hidden="true"
-          class="mat-option overflow-comp"
-          id="overflow"
-        ></pre>
-      </mat-autocomplete>
-    </mat-form-field>
-    <button
-      aria-label="Search Button"
-      class="search-button"
-      mat-icon-button
-      (click)="processSubstanceSearch()"
-      [disabled]="searchControl.invalid"
-    >
-      <mat-icon svgIcon="search"></mat-icon>
-    </button>
-    <button class="close-button" mat-icon-button (click)="deactivateSearch()">
-      <mat-icon svgIcon="close"></mat-icon>
-    </button>
-    <button
-      class="activate-search-button"
-      mat-icon-button
-      (click)="activateSearch()"
-    >
-      <mat-icon svgIcon="search"></mat-icon>
-    </button>
-  </form>
-</div>
+          @for (field of suggestionsFields; track field) {
+            <div>
+              <div class="substance-suggestion-field">
+                <span class="field-styling"
+                  ><b>{{ field["display"] }}</b></span
+                  >
+                </div>
+                @for (suggestion of substanceSuggestionsGroup[field['value']]; track suggestion) {
+                  <mat-option
+                    [value]="suggestion.key"
+                    title="{{ suggestion.key }}"
+                    >
+                    <div
+                      [innerHTML]="highlight(suggestion.key)"
+                      class="suggestion-styling"
+                      >
+                      {{ suggestion.key }}
+                    </div>
+                  </mat-option>
+                }
+              </div>
+            }
+            <pre
+              aria-hidden="true"
+              class="mat-option overflow-comp"
+              id="overflow"
+            ></pre>
+          </mat-autocomplete>
+        </mat-form-field>
+        <button
+          aria-label="Search Button"
+          class="search-button"
+          mat-icon-button
+          (click)="processSubstanceSearch()"
+          [disabled]="searchControl.invalid"
+          >
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+        <button class="close-button" mat-icon-button (click)="deactivateSearch()">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+        <button
+          class="activate-search-button"
+          mat-icon-button
+          (click)="activateSearch()"
+          >
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </form>
+    </div>

@@ -1,17 +1,25 @@
 <div class="flex-row">
   <span class="middle-fill"></span>
   <!-- <button mat-button (click)="addStructuralModification()">
-    Add Modification <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button> -->
+  Add Modification <mat-icon svgIcon="add_circle_outline"></mat-icon>
+</button> -->
 </div>
-  <div  class = "alternate-backgrounds" *ngFor="let mod of modifications; last as isLast; index as index"  appScrollToTarget [id]="'substance-physical-modification-' + index" >
+@for (mod of modifications; track mod; let isLast = $last; let index = $index) {
+  <div  class = "alternate-backgrounds"  appScrollToTarget [id]="'substance-physical-modification-' + index" >
     <app-physical-modification-form [mod]="mod" (modDeleted)="deletePhysicalModification($event)" ></app-physical-modification-form>
-    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
+    @if (!isLast) {
+      <mat-divider class="form-divider" [inset]="true"></mat-divider>
+    }
   </div>
+}
 
-  <div class="flex-row" *ngIf = "modifications && modifications.length > 0">
-      <span class = "middle-fill"></span>
-         <button mat-button (click)="addStructuralModification()" *ngIf = "modifications && modifications.length > 0">
-          Add Modification <mat-icon svgIcon="add_circle_outline"></mat-icon>
-        </button>
-</div>
+@if (modifications && modifications.length > 0) {
+  <div class="flex-row">
+    <span class = "middle-fill"></span>
+    @if (modifications && modifications.length > 0) {
+      <button mat-button (click)="addStructuralModification()">
+        Add Modification <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+    }
+  </div>
+}

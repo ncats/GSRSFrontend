@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceVariantConceptsComponent } from './substance-variant-concepts.component';
 import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -11,7 +11,7 @@ describe('SubstanceVariantConceptsComponent', () => {
   let fixture: ComponentFixture<SubstanceVariantConceptsComponent>;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     utilsServiceStub = new UtilsServiceStub();
 

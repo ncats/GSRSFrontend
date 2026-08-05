@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StructureImageModalComponent } from './structure-image-modal.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -14,7 +14,7 @@ describe('StructureImageModalComponent', () => {
   let matDialogRefStub: Partial<MatDialogRef<StructureImageModalComponent>>;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     matDialogRefStub = new MatDialogRefStub();
     utilsServiceStub = new UtilsServiceStub();

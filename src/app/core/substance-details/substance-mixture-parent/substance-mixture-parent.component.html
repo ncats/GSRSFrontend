@@ -1,12 +1,18 @@
 <h4 class="panel-title">This substance is a component of the following mixture(s):</h4>
-    <div class="flex-row wrap">
-      <div *ngFor="let component of mixtures" class="thumb-col">
-        <div *ngIf="component.approvalID" class="code">{{component.approvalID}}</div>
-        <div *ngIf="!component.approvalID" class="code">{{component.uuid}}</div>
-        <img class="image-icon" appSubstanceImage [entityId]="component.uuid">
-        <div>
-          <a class="substance-name" [routerLink]="['/substances', component.uuid]" [innerHTML]="component._name">
-          </a>
-        </div>
+<div class="flex-row wrap">
+  @for (component of mixtures; track component) {
+    <div class="thumb-col">
+      @if (component.approvalID) {
+        <div class="code">{{component.approvalID}}</div>
+      }
+      @if (!component.approvalID) {
+        <div class="code">{{component.uuid}}</div>
+      }
+      <img class="image-icon" appSubstanceImage [entityId]="component.uuid">
+      <div>
+        <a class="substance-name" [routerLink]="['/substances', component.uuid]" [innerHTML]="component._name">
+        </a>
       </div>
     </div>
+  }
+</div>

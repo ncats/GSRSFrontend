@@ -1,10 +1,12 @@
 <div class="code-form-container">
-  <div *ngIf="code.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
+  @if (code.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+  }
 
   <div class="form-row">
     <div class="delete-container">
@@ -21,7 +23,7 @@
       name="code"
       [model]="code.codeSystem"
       (valueChange)="setCodeSystemType($event)"
-    >
+      >
     </app-cv-input>
 
     <mat-form-field class="code">
@@ -33,7 +35,7 @@
       <app-access-manager
         (accessOut)="updateAccess($event)"
         [access]="code.access"
-      >
+        >
       </app-access-manager>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdverseEventsPtBrowseComponent } from './adverse-events-pt-browse.component';
 
@@ -6,7 +6,7 @@ describe('AdverseEventsBrowseComponent', () => {
   let component: AdverseEventsPtBrowseComponent;
   let fixture: ComponentFixture<AdverseEventsPtBrowseComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AdverseEventsPtBrowseComponent ]
     })

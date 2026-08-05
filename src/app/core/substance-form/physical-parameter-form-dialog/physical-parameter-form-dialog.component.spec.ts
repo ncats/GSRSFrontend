@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PhysicalParameterFormDialogComponent } from './physical-parameter-form-dialog.component';
 
@@ -6,7 +6,7 @@ describe('PhysicalParameterFormDialogComponent', () => {
   let component: PhysicalParameterFormDialogComponent;
   let fixture: ComponentFixture<PhysicalParameterFormDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PhysicalParameterFormDialogComponent ]
     })

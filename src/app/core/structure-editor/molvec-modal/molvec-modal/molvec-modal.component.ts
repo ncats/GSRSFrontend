@@ -25,7 +25,7 @@ export class MolvecModalComponent implements OnInit {
      window.addEventListener('paste', this.checkPaste);
   }
 
-  @HostListener('paste', ['$event']) private paster(event: any) {
+  @HostListener('paste', ['$event']) paster(event: any) {
     // console.log('host paste');
      event.preventDefault();
      event.stopPropagation();
@@ -33,7 +33,7 @@ export class MolvecModalComponent implements OnInit {
      this.catchPaste(event);
    }
  
-   @HostListener('drop', ['$event']) private dropper(event: any) {
+   @HostListener('drop', ['$event']) dropper(event: any) {
      console.log('drop');
      console.log(event);
     // this.onDropHandler(event);
@@ -43,7 +43,7 @@ export class MolvecModalComponent implements OnInit {
      this.handleInputChange(event);
    }
  
-   @HostListener('dragover', ['$event']) private dragger(event: DragEvent) {
+   @HostListener('dragover', ['$event']) dragger(event: DragEvent) {
      console.log('drag');
      event.preventDefault();
      event.stopPropagation();

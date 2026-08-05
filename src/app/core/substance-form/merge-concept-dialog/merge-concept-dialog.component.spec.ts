@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MergeConceptDialogComponent } from './merge-concept-dialog.component';
 
@@ -6,7 +6,7 @@ describe('MergeConceptDialogComponent', () => {
   let component: MergeConceptDialogComponent;
   let fixture: ComponentFixture<MergeConceptDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MergeConceptDialogComponent ]
     })

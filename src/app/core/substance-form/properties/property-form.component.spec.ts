@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PropertyFormComponent } from './property-form.component';
 
@@ -6,7 +6,7 @@ describe('PropertyFormComponent', () => {
   let component: PropertyFormComponent;
   let fixture: ComponentFixture<PropertyFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PropertyFormComponent ]
     })

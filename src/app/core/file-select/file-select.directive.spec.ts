@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileSelectDirective } from './file-select.directive';
 
@@ -6,7 +6,7 @@ describe('FileSelectComponent', () => {
   let component: FileSelectDirective;
   let fixture: ComponentFixture<FileSelectDirective>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FileSelectDirective ]
     })

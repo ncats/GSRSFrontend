@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceSsgGradeComponent } from './substance-ssg-grade.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceSsgGradeComponent', () => {
   let component: SubstanceSsgGradeComponent;
   let fixture: ComponentFixture<SubstanceSsgGradeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceSsgGradeComponent ]
     })

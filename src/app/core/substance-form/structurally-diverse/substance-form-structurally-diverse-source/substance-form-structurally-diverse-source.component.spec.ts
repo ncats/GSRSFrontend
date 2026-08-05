@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceFormStructurallyDiverseSourceComponent } from './substance-form-structurally-diverse-source.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceFormStructurallyDiverseSourceComponent', () => {
   let component: SubstanceFormStructurallyDiverseSourceComponent;
   let fixture: ComponentFixture<SubstanceFormStructurallyDiverseSourceComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceFormStructurallyDiverseSourceComponent ]
     })

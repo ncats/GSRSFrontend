@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MainNotificationComponent } from './main-notification.component';
 import { MainNotificationService } from '../main-notification.service';
@@ -15,7 +15,7 @@ describe('MainNotificationComponent', () => {
     milisecondsToShow: 4000
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     notificationServiceStub = {
       notificationEvent: new Subject(),
       fireNotificationEvent(): void {
@@ -42,7 +42,7 @@ describe('MainNotificationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show notification on notification event and should hide it after set time', async(() => {
+  it('should show notification on notification event and should hide it after set time', waitForAsync(() => {
     notificationServiceStub.fireNotificationEvent();
     fixture.detectChanges();
     let notificationElement: HTMLElement = fixture.nativeElement.querySelector('.main-notification');

@@ -1,17 +1,19 @@
 <div class="property-form-container">
-  <div *ngIf="property.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
+  @if (property.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+  }
   <div class="flex-column">
     <div class="delete-container">
       <button
         mat-icon-button
         matTooltip="Delete property"
         (click)="deleteProperty()"
-      >
+        >
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
@@ -26,7 +28,7 @@
         title="Name"
         [model]="property.name"
         (valueChange)="property.name = $event"
-      >
+        >
       </app-cv-input>
 
       <app-cv-input
@@ -37,7 +39,7 @@
         [model]="property.propertyType"
         (valueChange)="property.propertyType = $event"
         name="type"
-      >
+        >
       </app-cv-input>
 
       <div class="checkbox-container column-checkbox">
@@ -45,250 +47,279 @@
           Defining
         </mat-checkbox>
       </div>
-      <div
-        *ngIf="
-          property.propertyType === 'PROTEIN FEATURE' ||
-          property.propertyType === 'NUCLEIC ACID FEATURE'
-        "
-      >
-        <div class="amount-title">Site Range</div>
-        <input [(ngModel)]="_nonNumeric" (focusout)="validateRange()" />
-        <button
-          mat-icon-button
-          (click)="openFeatureDialog()"
-          matTooltip="Edit Feature Sites"
-        >
-          <mat-icon svgIcon="edit"></mat-icon>
-        </button>
-      </div>
-      <div
-        class="flex-column referenced-substance"
-        *ngIf="
-          property.propertyType !== 'PROTEIN FEATURE' &&
-          property.propertyType !== 'NUCLEIC ACID FEATURE'
-        "
-      >
-        <app-substance-selector
-          (selectionUpdated)="referencedSubstanceUpdated($event)"
-          eventCategory="substancePropertyReferencedSub"
-          placeholder="Referenced Substance"
-          header="Referenced Substance"
-          [subuuid]="referencedSubstanceUuid"
-        >
-        </app-substance-selector>
-      </div>
+      @if (
+        property.propertyType === 'PROTEIN FEATURE' ||
+        property.propertyType === 'NUCLEIC ACID FEATURE'
+        ) {
+        <div
+          >
+          <div class="amount-title">Site Range</div>
+          <input [(ngModel)]="_nonNumeric" (focusout)="validateRange()" />
+          <button
+            mat-icon-button
+            (click)="openFeatureDialog()"
+            matTooltip="Edit Feature Sites"
+            >
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+        </div>
+      }
+      @if (
+        property.propertyType !== 'PROTEIN FEATURE' &&
+        property.propertyType !== 'NUCLEIC ACID FEATURE'
+        ) {
+        <div
+          class="flex-column referenced-substance"
+          >
+          <app-substance-selector
+            (selectionUpdated)="referencedSubstanceUpdated($event)"
+            eventCategory="substancePropertyReferencedSub"
+            placeholder="Referenced Substance"
+            header="Referenced Substance"
+            [subuuid]="referencedSubstanceUuid"
+            >
+          </app-substance-selector>
+        </div>
+      }
       <div>
         <app-access-manager
           (accessOut)="updateAccess($event)"
           [access]="property.access"
-        >
+          >
         </app-access-manager>
       </div>
     </div>
-    <div class="form-row" class="parameters" *ngIf="!property.$$deletedCode">
-      <div>
-        <h4 class="parameters-title">
-          Parameters
-          <button
-            mat-icon-button
-            (click)="openPropertyParameter()"
-            matTooltip="Add parameter"
-          >
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>
-          </button>
-        </h4>
-        <mat-list *ngIf="property.parameters">
-          <div
-            mat-list-item
-            *ngFor="let parameter of property.parameters; index as index"
-          >
+    @if (!property.$$deletedCode) {
+      <div class="form-row" class="parameters">
+        <div>
+          <h4 class="parameters-title">
+            Parameters
             <button
               mat-icon-button
-              (click)="deleteParameter(index)"
-              class="parameter-delete-icon"
-            >
-              <mat-icon svgIcon="delete_forever"></mat-icon>
+              (click)="openPropertyParameter()"
+              matTooltip="Add parameter"
+              >
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>
             </button>
-
-            <span>{{ parameter.name }}</span>
-            <span *ngIf="parameter.value != null">
-              <span>
-                &nbsp;
-                {{ parameter.value.type }}
-              </span>
-              <span
-                *ngIf="
-                  parameter.value.average != null &&
-                  parameter.value.average != ''
-                "
-              >
-                &nbsp;- &nbsp;
-                {{ parameter.value.average }}
-                &nbsp;
-                {{ parameter.value.units }}
-              </span>
-              <span
-                *ngIf="
-                  (parameter.value.low != null && parameter.value.low != '') ||
-                  (parameter.value.high != null && parameter.value.high != '')
-                "
-              >
-                <span
-                  *ngIf="
-                    parameter.value.average == null ||
-                    parameter.value.average == ''
-                  "
-                >
-                  &nbsp; -
-                </span>
-                &nbsp; [
-                <span
-                  *ngIf="
-                    parameter.value.high == null || parameter.value.high == ''
-                  "
-                >
+          </h4>
+          @if (property.parameters) {
+            <mat-list>
+              @for (parameter of property.parameters; track parameter; let index = $index) {
+                <div
+                  mat-list-item
                   >
-                </span>
-                <span
-                  *ngIf="
-                    parameter.value.low == null || parameter.value.low == ''
-                  "
-                >
-                  <
-                </span>
-                <span
-                  *ngIf="
-                    parameter.value.low != null && parameter.value.low != ''
-                  "
-                >
-                  {{ parameter.value.low }}
-                </span>
-                <span
-                  *ngIf="
-                    parameter.value.low != null &&
-                    parameter.value.low != '' &&
-                    parameter.value.high != null &&
-                    parameter.value.high != ''
-                  "
-                >
-                  &nbsp;to&nbsp;
-                </span>
-                <span
-                  *ngIf="
-                    parameter.value.high != null && parameter.value.high != ''
-                  "
-                >
-                  {{ parameter.value.high }}
-                </span>
-                ]
-                <span
-                  *ngIf="
-                    parameter.value.average == null ||
-                    parameter.value.average == ''
-                  "
-                >
-                  &nbsp;
-                  {{ parameter.value.units }}
-                  &nbsp; (average)
-                </span>
-              </span>
-              <span
-                *ngIf="
-                  parameter.value.average != null &&
-                  parameter.value.average != ''
-                "
-              >
-                &nbsp; (average)
-              </span>
-              <span
-                *ngIf="
-                  (parameter.value.lowLimit != null &&
-                    parameter.value.lowLimit != '') ||
-                  (parameter.value.highLimit != null &&
-                    parameter.value.highLimit != '')
-                "
-              >
-                &nbsp;- &nbsp; [
-                <span
-                  *ngIf="
-                    parameter.value.highLimit == null ||
-                    parameter.value.highLimit == ''
-                  "
-                >
-                  >
-                </span>
-                <span
-                  *ngIf="
-                    parameter.value.lowLimit == null ||
-                    parameter.value.lowLimit == ''
-                  "
-                >
-                  <
-                </span>
-                <span
-                  *ngIf="
-                    parameter.value.lowLimit != null &&
-                    parameter.value.lowLimit != ''
-                  "
-                >
-                  {{ parameter.value.lowLimit }}
-                </span>
-                <span
-                  *ngIf="
-                    parameter.value.lowLimit != null &&
-                    parameter.value.lowLimit != '' &&
-                    parameter.value.highLimit != null &&
-                    parameter.value.highLimit != ''
-                  "
-                >
-                  &nbsp;to&nbsp;
-                </span>
-                <span
-                  *ngIf="
-                    parameter.value.highLimit != null &&
-                    parameter.value.highLimit != ''
-                  "
-                >
-                  {{ parameter.value.highLimit }}
-                </span>
-                ] &nbsp;(limits)
-              </span>
-              <span *ngIf="parameter.value.nonNumericValue">
-                &nbsp;-&nbsp;
-                {{ parameter.value.nonNumericValue }}
-              </span>
-            </span>
-            <button
-              mat-icon-button
-              (click)="openPropertyParameter(parameter)"
-              class="parameter-icon"
-            >
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-          </div>
-        </mat-list>
+                  <button
+                    mat-icon-button
+                    (click)="deleteParameter(index)"
+                    class="parameter-delete-icon"
+                    >
+                    <mat-icon svgIcon="delete_forever"></mat-icon>
+                  </button>
+                  <span>{{ parameter.name }}</span>
+                  @if (parameter.value != null) {
+                    <span>
+                      <span>
+                        &nbsp;
+                        {{ parameter.value.type }}
+                      </span>
+                      @if (
+                        parameter.value.average != null &&
+                        parameter.value.average != ''
+                        ) {
+                        <span
+                          >
+                          &nbsp;- &nbsp;
+                          {{ parameter.value.average }}
+                          &nbsp;
+                          {{ parameter.value.units }}
+                        </span>
+                      }
+                      @if (
+                        (parameter.value.low != null && parameter.value.low != '') ||
+                        (parameter.value.high != null && parameter.value.high != '')
+                        ) {
+                        <span
+                          >
+                          @if (
+                            parameter.value.average == null ||
+                            parameter.value.average == ''
+                            ) {
+                            <span
+                              >
+                              &nbsp; -
+                            </span>
+                          }
+                          &nbsp; [
+                          @if (
+                            parameter.value.high == null || parameter.value.high == ''
+                            ) {
+                            <span
+                              >
+                              >
+                            </span>
+                          }
+                          @if (
+                            parameter.value.low == null || parameter.value.low == ''
+                            ) {
+                            <span
+                              >
+                              <
+                            </span>
+                          }
+                          @if (
+                            parameter.value.low != null && parameter.value.low != ''
+                            ) {
+                            <span
+                              >
+                              {{ parameter.value.low }}
+                            </span>
+                          }
+                          @if (
+                            parameter.value.low != null &&
+                            parameter.value.low != '' &&
+                            parameter.value.high != null &&
+                            parameter.value.high != ''
+                            ) {
+                            <span
+                              >
+                              &nbsp;to&nbsp;
+                            </span>
+                          }
+                          @if (
+                            parameter.value.high != null && parameter.value.high != ''
+                            ) {
+                            <span
+                              >
+                              {{ parameter.value.high }}
+                            </span>
+                          }
+                          ]
+                          @if (
+                            parameter.value.average == null ||
+                            parameter.value.average == ''
+                            ) {
+                            <span
+                              >
+                              &nbsp;
+                              {{ parameter.value.units }}
+                              &nbsp; (average)
+                            </span>
+                          }
+                        </span>
+                      }
+                      @if (
+                        parameter.value.average != null &&
+                        parameter.value.average != ''
+                        ) {
+                        <span
+                          >
+                          &nbsp; (average)
+                        </span>
+                      }
+                      @if (
+                        (parameter.value.lowLimit != null &&
+                        parameter.value.lowLimit != '') ||
+                        (parameter.value.highLimit != null &&
+                        parameter.value.highLimit != '')
+                        ) {
+                        <span
+                          >
+                          &nbsp;- &nbsp; [
+                          @if (
+                            parameter.value.highLimit == null ||
+                            parameter.value.highLimit == ''
+                            ) {
+                            <span
+                              >
+                              >
+                            </span>
+                          }
+                          @if (
+                            parameter.value.lowLimit == null ||
+                            parameter.value.lowLimit == ''
+                            ) {
+                            <span
+                              >
+                              <
+                            </span>
+                          }
+                          @if (
+                            parameter.value.lowLimit != null &&
+                            parameter.value.lowLimit != ''
+                            ) {
+                            <span
+                              >
+                              {{ parameter.value.lowLimit }}
+                            </span>
+                          }
+                          @if (
+                            parameter.value.lowLimit != null &&
+                            parameter.value.lowLimit != '' &&
+                            parameter.value.highLimit != null &&
+                            parameter.value.highLimit != ''
+                            ) {
+                            <span
+                              >
+                              &nbsp;to&nbsp;
+                            </span>
+                          }
+                          @if (
+                            parameter.value.highLimit != null &&
+                            parameter.value.highLimit != ''
+                            ) {
+                            <span
+                              >
+                              {{ parameter.value.highLimit }}
+                            </span>
+                          }
+                          ] &nbsp;(limits)
+                        </span>
+                      }
+                      @if (parameter.value.nonNumericValue) {
+                        <span>
+                          &nbsp;-&nbsp;
+                          {{ parameter.value.nonNumericValue }}
+                        </span>
+                      }
+                    </span>
+                  }
+                  <button
+                    mat-icon-button
+                    (click)="openPropertyParameter(parameter)"
+                    class="parameter-icon"
+                    >
+                    <mat-icon svgIcon="edit"></mat-icon>
+                  </button>
+                </div>
+              }
+            </mat-list>
+          }
+        </div>
       </div>
-    </div>
+    }
   </div>
 </div>
-<div *ngIf="!property.$$deletedCode">
-  <div
-    class="amount-form-container"
-    *ngIf="
+@if (!property.$$deletedCode) {
+  <div>
+    @if (
       property.propertyType !== 'PROTEIN FEATURE' &&
       property.propertyType !== 'NUCLEIC ACID FEATURE'
-    "
-  >
-    <div class="amount-title">Amount</div>
-    <app-amount-form [substanceAmount]="property.value"></app-amount-form>
-  </div>
-  <div class="form-row">
-    <div class="references-container">
-      <app-domain-references
-        [referencesUuids]="property.references"
-        #references
-      ></app-domain-references>
+      ) {
+      <div
+        class="amount-form-container"
+        >
+        <div class="amount-title">Amount</div>
+        <app-amount-form [substanceAmount]="property.value"></app-amount-form>
+      </div>
+    }
+    <div class="form-row">
+      <div class="references-container">
+        <app-domain-references
+          [referencesUuids]="property.references"
+          #references
+        ></app-domain-references>
+      </div>
     </div>
+    <app-audit-info [source]="property"></app-audit-info>
   </div>
-  <app-audit-info [source]="property"></app-audit-info>
-</div>
+}

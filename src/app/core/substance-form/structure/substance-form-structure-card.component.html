@@ -1,123 +1,143 @@
 <div>
   <div>
-    <div *ngIf = "featuresOnly">
-      <h4>Draw or import a structure using Ketcher. Then, if any features are detected a table will be automatically displayed under the editor.</h4>
-      <button mat-button class = "registration-button" color="primary" (click) = "loadForm()">Load Structure in Registration Form</button>
-    </div>
-        <div>
-      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)" (editorSwitched) = "changeEditor($event)" 
-      [calledFrom]="calledFrom" [disclaimer]="disclaimer" style="z-index: 9999">
+    @if (featuresOnly) {
+      <div>
+        <h4>Draw or import a structure using Ketcher. Then, if any features are detected a table will be automatically displayed under the editor.</h4>
+        <button mat-button class = "registration-button" color="primary" (click) = "loadForm()">Load Structure in Registration Form</button>
+      </div>
+    }
+    <div>
+      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)" (editorSwitched) = "changeEditor($event)"
+        [calledFrom]="calledFrom" [disclaimer]="disclaimer" style="z-index: 9999">
       </app-structure-editor>
     </div>
     <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">
       {{userMessage}}
     </div>
   </div>
-  <div class="button-row feature-table" *ngIf = "enableStructureFeatures && !hideFeaturesTable" >
-   <div class = "feature-expansion" *ngFor = "let feats of features">
-    <mat-expansion-panel expanded="true" >
-      <mat-expansion-panel-header>
-        <mat-panel-title> {{feats.label}} </mat-panel-title>
-      </mat-expansion-panel-header>
-      <table class = "full-width" mat-table [dataSource] = "feats.features">
-        <ng-container matColumnDef="key">
-          <th mat-header-cell  *matHeaderCellDef>Feature</th>
-          <td mat-cell *matCellDef="let element" >{{element.key}}</td>
-        </ng-container>
-        <ng-container matColumnDef="value">
-          <th mat-header-cell *matHeaderCellDef>Value</th>
-          <td mat-cell *matCellDef="let element">{{element.value}}</td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </mat-expansion-panel>
+  @if (enableStructureFeatures && !hideFeaturesTable) {
+    <div class="button-row feature-table" >
+      @for (feats of features; track feats) {
+        <div class = "feature-expansion">
+          <mat-expansion-panel expanded="true" >
+            <mat-expansion-panel-header>
+              <mat-panel-title> {{feats.label}} </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class = "full-width" mat-table [dataSource] = "feats.features">
+              <ng-container matColumnDef="key">
+                <th mat-header-cell  *matHeaderCellDef>Feature</th>
+                <td mat-cell *matCellDef="let element" >{{element.key}}</td>
+              </ng-container>
+              <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef>Value</th>
+                <td mat-cell *matCellDef="let element">{{element.value}}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </mat-expansion-panel>
+        </div>
+      }
     </div>
-   </div> 
-  <div class="button-row" *ngIf="structure && substanceType === 'polymer'">
-    <span class="middle-fill"></span>
-    <span class="right-buttons">
-      <button mat-button color="primary" matTooltip="Import options" (click)="openStructureImportDialog()">
-        <mat-icon svgIcon="cloud_upload"></mat-icon>
-        Import
-      </button>
-      <button (click)="openStructureExportDialog()" mat-button color="primary" matTooltip="export structure">
-        <mat-icon svgIcon="get_app"></mat-icon>
-        Export
-      </button>
-      <button mat-button color="primary" matTooltip="preview structure stereochemistry"
-        (click)="openStructureImageModal()">
-        <mat-icon svgIcon="zoom_in"></mat-icon> View stereochemistry
-      </button>
-    </span>
-  </div>
-  <div class="button-row" *ngIf="structure && substanceType === 'structure'">
-    <span class="left-buttons">
-      <button (click)="duplicateCheck()" matTooltip="check the database for duplicate structures" mat-button
-        color="primary" class="dupe-check">
-        <mat-icon svgIcon="search"></mat-icon>
-        Check for duplicates
-      </button>
-      <button (click)="structureSearch()" matTooltip="open structure search in new tab" mat-button *ngIf = "structureEditSearch"
-        color="primary" class="dupe-check">
-        <mat-icon svgIcon="search"></mat-icon>
-        Structure Search
-        <mat-icon svgIcon="open_in_new" class = "superscript-icon"></mat-icon>
-      </button>
-    </span>
-    
-    <span class="middle-fill"></span>
-    <span class="right-buttons">
-      <button mat-button color="primary" matTooltip="Import options" [matMenuTriggerFor]="importMenu">
-        <mat-icon svgIcon="cloud_upload"></mat-icon>
-        Import  &#9660; 
-      </button>
-      <button (click)="openStructureExportDialog()" mat-button color="primary" matTooltip="export structure">
-        <mat-icon svgIcon="get_app"></mat-icon>
-        Export
-      </button>
-      <button mat-button color="primary" matTooltip="preview structure stereochemistry"
-        (click)="openStructureImageModal()">
-        <mat-icon svgIcon="zoom_in"></mat-icon> View stereochemistry
-      </button>
-    </span>
-
-    <mat-menu #importMenu="matMenu">
-      <button mat-menu-item (click)="openStructureImportDialog()">
-        Import Structure
-      </button>
-      <button mat-menu-item (click)="openNameResolverDialog()">
-        Resolve name
-      </button>
-    </mat-menu>
-  </div>
-  <div class="submission-messages" *ngIf="structureErrorsArray && structureErrorsArray.length > 0">
-    <div class="validation-message" *ngFor="let err of structureErrorsArray; index as i">
-      <div class="message-type" [ngClass]="err.messageType">{{err.messageType}}</div>
-      <div class="message">{{err.message}}<span *ngFor="let link of err.links"><br />
-          <a [href]="fixLink(link.href)" class="internal-link" target="_blank">
-            {{link.text}}
-          </a></span></div>
-      <button mat-icon-button matTooltip="Dismiss" (click)="dismissErrorMessage(i)">
-        <mat-icon svgIcon="close"></mat-icon>
-      </button>
+  }
+  @if (structure && substanceType === 'polymer') {
+    <div class="button-row">
+      <span class="middle-fill"></span>
+      <span class="right-buttons">
+        <button mat-button color="primary" matTooltip="Import options" (click)="openStructureImportDialog()">
+          <mat-icon svgIcon="cloud_upload"></mat-icon>
+          Import
+        </button>
+        <button (click)="openStructureExportDialog()" mat-button color="primary" matTooltip="export structure">
+          <mat-icon svgIcon="get_app"></mat-icon>
+          Export
+        </button>
+        <button mat-button color="primary" matTooltip="preview structure stereochemistry"
+          (click)="openStructureImageModal()">
+          <mat-icon svgIcon="zoom_in"></mat-icon> View stereochemistry
+        </button>
+      </span>
     </div>
-  </div>
-  <div class="button-row" *ngIf = "showNitrosamineButton">
-    <span class = "middle-fill"></span>
-    <button mat-button color="primary" matTooltip="CPCA Calculator"
-    (click)="openNitrosamineModal()">
-   <!--<mat-icon svgIcon="zoom_in"></mat-icon> --> 
-    View CPCA Calculator
-  </button>
-  </div>
-  
+  }
+  @if (structure && substanceType === 'structure') {
+    <div class="button-row">
+      <span class="left-buttons">
+        <button (click)="duplicateCheck()" matTooltip="check the database for duplicate structures" mat-button
+          color="primary" class="dupe-check">
+          <mat-icon svgIcon="search"></mat-icon>
+          Check for duplicates
+        </button>
+        @if (structureEditSearch) {
+          <button (click)="structureSearch()" matTooltip="open structure search in new tab" mat-button
+            color="primary" class="dupe-check">
+            <mat-icon svgIcon="search"></mat-icon>
+            Structure Search
+            <mat-icon svgIcon="open_in_new" class = "superscript-icon"></mat-icon>
+          </button>
+        }
+      </span>
+      <span class="middle-fill"></span>
+      <span class="right-buttons">
+        <button mat-button color="primary" matTooltip="Import options" [matMenuTriggerFor]="importMenu">
+          <mat-icon svgIcon="cloud_upload"></mat-icon>
+          Import  &#9660;
+        </button>
+        <button (click)="openStructureExportDialog()" mat-button color="primary" matTooltip="export structure">
+          <mat-icon svgIcon="get_app"></mat-icon>
+          Export
+        </button>
+        <button mat-button color="primary" matTooltip="preview structure stereochemistry"
+          (click)="openStructureImageModal()">
+          <mat-icon svgIcon="zoom_in"></mat-icon> View stereochemistry
+        </button>
+      </span>
+      <mat-menu #importMenu="matMenu">
+        <button mat-menu-item (click)="openStructureImportDialog()">
+          Import Structure
+        </button>
+        <button mat-menu-item (click)="openNameResolverDialog()">
+          Resolve name
+        </button>
+      </mat-menu>
+    </div>
+  }
+  @if (structureErrorsArray && structureErrorsArray.length > 0) {
+    <div class="submission-messages">
+      @for (err of structureErrorsArray; track err; let i = $index) {
+        <div class="validation-message">
+          <div class="message-type" [ngClass]="err.messageType">{{err.messageType}}</div>
+          <div class="message">{{err.message}}@for (link of err.links; track link) {
+            <span><br />
+              <a [href]="fixLink(link.href)" class="internal-link" target="_blank">
+                {{link.text}}
+              </a></span>
+            }</div>
+            <button mat-icon-button matTooltip="Dismiss" (click)="dismissErrorMessage(i)">
+              <mat-icon svgIcon="close"></mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    }
+    @if (showNitrosamineButton) {
+      <div class="button-row">
+        <span class = "middle-fill"></span>
+        <button mat-button color="primary" matTooltip="CPCA Calculator"
+          (click)="openNitrosamineModal()">
+          <!--<mat-icon svgIcon="zoom_in"></mat-icon> -->
+          View CPCA Calculator
+        </button>
+      </div>
+    }
 
 
-  <app-structure-form [structure]="structure" showSettings="true" [type]="substanceType">
-  </app-structure-form>
-  <div class="button-container" *ngIf="substanceType === 'polymer'">
-    <button mat-flat-button color="primary" (click)="generateSRU()"
-      matTooltip="generate structural units for this structure">Generate SRUs</button>
+
+    <app-structure-form [structure]="structure" showSettings="true" [type]="substanceType">
+    </app-structure-form>
+    @if (substanceType === 'polymer') {
+      <div class="button-container">
+        <button mat-flat-button color="primary" (click)="generateSRU()"
+        matTooltip="generate structural units for this structure">Generate SRUs</button>
+      </div>
+    }
   </div>
-</div>

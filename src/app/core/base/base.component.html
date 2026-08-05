@@ -1,397 +1,442 @@
-<mat-toolbar
-  class="mat-elevation-z3"
-  color="primary"
-  *ngIf="
-    showHeaderBar === 'true' &&
-    !isPfdaVersion &&
-    (!customToolbarComponent || customToolbarComponent.length == 0)
-  "
->
-  <div class="logo-container">
-    <span class="logo">
-      <a routerLink="/home" aria-label="home">
-        <img [src]="logoSrcPath" alt="gsrs-logo" />
-      </a>
-    </span>
-    <span
-      class="version"
-      *ngIf="version && version !== ''"
-      [matTooltip]="versionTooltipMessage"
-      matTooltipPosition="below"
-      >Ver. {{ version }}</span
+@if (
+  showHeaderBar === 'true' &&
+  !isPfdaVersion &&
+  (!customToolbarComponent || customToolbarComponent.length == 0)
+  ) {
+  <mat-toolbar
+    class="mat-elevation-z3"
+    color="primary"
     >
-  </div>
-
-  <span class="nav-small">
-    <button
-      class="top-button"
-      mat-button
-      mat-primary-button
-      style="color: white; padding-top: 10px; padding-bottom: 10px"
-      [matMenuTriggerFor]="nav"
-      (click)="increaseMenuZindex()"
-      aria-label="main menu"
-    >
-      <span style="font-size: 16px">Menu &nbsp;</span
-      ><mat-icon svgIcon="menu"></mat-icon>
-    </button>
-    <mat-menu #nav="matMenu" (closed)="removeZindex()" class="reg-a">
-      <ng-container *ngFor="let navItem of navItems">
-        <a
-          mat-menu-item
-          [routerLink]="['/' + navItem.path]"
-          *ngIf="navItem.path && !navItem.children"
-        >
-          {{ navItem.display }}
+    <div class="logo-container">
+      <span class="logo">
+        <a routerLink="/home" aria-label="home">
+          <img [src]="logoSrcPath" alt="gsrs-logo" />
         </a>
-        <a
-          mat-menu-item
-          [href]="navItem.externalPath"
-          target="_blank"
-          *ngIf="navItem.externalPath && !navItem.children"
-        >
-          {{ navItem.display }}
-        </a>
-        <a
-          mat-menu-item
-          [href]="transformMailToPath(navItem)"
-          *ngIf="navItem.mailToPath && !navItem.children"
-        >
-          {{ navItem.display }}
-        </a>
-
-        <ng-container *ngIf="navItem.children && (navItem.display.toUpperCase()!='REGISTER' || canRegister)">
-          <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
-            {{ navItem.display }}
-          </a>
-          <mat-menu
-            #childrenMenu="matMenu"
-            [overlapTrigger]="false"
-            xPosition="after"
+      </span>
+      @if (version && version !== '') {
+        <span
+          class="version"
+          [matTooltip]="versionTooltipMessage"
+          matTooltipPosition="below"
+          >Ver. {{ version }}</span
           >
-            <ng-container *ngFor="let childNavItem of navItem.children">
-              <a
-                mat-menu-item
-                [routerLink]="['/' + childNavItem.path]"
-                [queryParams]="childNavItem.params || {}"
-                *ngIf="childNavItem.path"
-              >
-                {{ childNavItem.display }}
-              </a>
-              <a
-                mat-menu-item
-                [href]="[childNavItem.href]"
-                *ngIf="childNavItem.href"
-              >
-                {{ childNavItem.display }}
-              </a>
-              <a
-                mat-menu-item
-                [href]="transformMailToPath(childNavItem)"
-                *ngIf="childNavItem.mailToPath"
-              >
-                {{ childNavItem.display }}
-              </a>
-            </ng-container>
-            <a
-              mat-menu-item
-              *ngIf="navItem.display === 'Register'"
-              (click)="importDialog()"
-            >
-              Import Substance
-            </a>
-          </mat-menu>
-        </ng-container>
-      </ng-container>
-      <a mat-menu-item *ngIf="canConfigureSystem" routerLink="/admin">
-        Admin Panel
-      </a>
-    </mat-menu>
-  </span>
-  <div>
-    <button
-      class="top-button menu-button extra-item"
-      mat-button
-      [routerLink]="['/browse-substance']"
-      aria-label="browse substances"
-    >
-      Browse Substances
-    </button>
-  </div>
-  <div *ngIf="this.loadedComponents && showBrowseOther">
-    <button
-      class="top-button extra-browse"
-      mat-button
-      mat-primary-button
-      style="
-        color: white;
-        font-size: 16px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      "
-      [matMenuTriggerFor]="browse"
-      (click)="increaseMenuZindex()"
-      aria-label="main menu"
-      *ngIf="loadedComponents"
-    >
-      <span style="font-size: 16px">Browse Other</span>
-      <mat-icon svgIcon="chevron_down"></mat-icon>
-    </button>
-    <mat-menu #browse="matMenu" (closed)="removeZindex()">
-      <a
-        mat-menu-item
-        routerLink="/browse-applications"
-        *ngIf="loadedComponents.applications"
-      >
-        Browse Applications
-      </a>
-      <mat-divider *ngIf="loadedComponents.applications"></mat-divider>
-      <a
-        mat-menu-item
-        routerLink="/browse-products"
-        *ngIf="loadedComponents.products"
-      >
-        Browse Products
-      </a>
-      <mat-divider *ngIf="loadedComponents.products"></mat-divider>
-      <a
-        mat-menu-item
-        routerLink="/browse-clinical-trials"
-        *ngIf="loadedComponents.clinicaltrials"
-      >
-        Browse Clinical Trials
-      </a>
-      <mat-divider *ngIf="loadedComponents.clinicaltrials"></mat-divider>
-      <a
-        mat-menu-item
-        routerLink="/browse-adverse-events"
-        *ngIf="loadedComponents.adverseevents"
-      >
-        Browse Adverse Events
-      </a>
-      <mat-divider *ngIf="loadedComponents.adverseevents"></mat-divider>
-      <mat-divider
-        *ngIf="
-          loadedComponents.adverseevents &&
-          adverseEventShinyHomepageDisplay === true
-        "
-      ></mat-divider>
-      <a
-        mat-menu-item
-        [href]="adverseEventShinyHomepageURL"
-        target="_blank"
-        *ngIf="
-          loadedComponents.adverseevents &&
-          adverseEventShinyHomepageDisplay === true
-        "
-      >
-        Browse Adverse Events
-      </a>
-      <a
-        mat-menu-item
-        routerLink="/browse-invitro-pharm"
-        *ngIf="loadedComponents.invitropharmacology"
-      >
-        Browse In Vitro Pharmacology
-      </a>
-    </mat-menu>
-  </div>
-
-  <div>
-    <button
-      class="top-button extra-item"
-      mat-button
-      mat-primary-button
-      style="
-        color: white;
-        font-size: 16px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      "
-      [matMenuTriggerFor]="reg"
-      (click)="increaseMenuZindex()"
-      aria-label="main menu"
-      *ngIf="canRegister"
-    >
-      <span style="font-size: 16px">Register</span>
-      <mat-icon svgIcon="chevron_down"></mat-icon>
-    </button>
-
-    <button
-      class="top-button extra-item"
-      mat-button
-      mat-primary-button
-      style="
-        color: white;
-        font-size: 16px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      "
-      [matMenuTriggerFor]="search"
-      (click)="increaseMenuZindex()"
-      aria-label="search menu"
-    >
-      <span style="font-size: 16px">Search</span>
-      <mat-icon svgIcon="chevron_down"></mat-icon>
-    </button>
-  </div>
-
-  <div>
-    <mat-menu #reg="matMenu" (closed)="removeZindex()">
-      <ng-container *ngFor="let navItem of registerNav">
-        <a
-          mat-menu-item
-          [routerLink]="['/' + navItem.path]"
-          *ngIf="navItem.path"
-        >
-          {{ navItem.display }}
-        </a>
-        <a
-          mat-menu-item
-          [href]="navItem.externalPath"
-          target="_blank"
-          *ngIf="navItem.externalPath"
-        >
-          {{ navItem.display }}
-        </a>
-      </ng-container>
-      <a mat-menu-item (click)="importDialog()"> Import Substance </a>
-    </mat-menu>
-  </div>
-
-  <div>
-    <mat-menu #search="matMenu" (closed)="removeZindex()">
-      <ng-container *ngFor="let navItem of searchNav">
-        <a
-          mat-menu-item
-          [routerLink]="['/' + navItem.path]"
-          *ngIf="navItem.path"
-        >
-          {{ navItem.display }}
-        </a>
-        <a
-          mat-menu-item
-          [href]="navItem.externalPath"
-          target="_blank"
-          *ngIf="navItem.externalPath"
-        >
-          {{ navItem.display }}
-        </a>
-      </ng-container>
-    </mat-menu>
-  </div>
-
-  <span class="middle-fill"></span>
-  <app-substance-text-search
-    styling="header"
-    class="top-search"
-    [searchValue]="searchValue"
-    placeholder="Search Substances"
-    (searchPerformed)="processSubstanceSearch($event)"
-    eventCategory="topSearch"
-    (opened)="increaseMenuZindex()"
-    (closed)="removeZindex()"
-  >
-  </app-substance-text-search>
-  <div class="user-section">
-    <button
-      mat-button
-      class="login-link"
-      (click)="routeToLogin()"
-      *ngIf="!auth && mainPathSegment !== 'login'"
-    >
-      Login
-    </button>
-    <div class="logged-in" *ngIf="auth">
-      <div class="user-actions">
-        <button
-          aria-label="User Account"
-          class="user-button main-button"
-          mat-icon-button
-          [matMenuTriggerFor]="accountMenu"
-          (click)="increaseMenuZindex()"
-        >
-          <mat-icon class="user-icon" svgIcon="account_circle"></mat-icon>
-        </button>
-        <button
-          aria-label="User Account dropdown"
-          class="user-button arrow-button test-class"
-          mat-icon-button
-          [matMenuTriggerFor]="accountMenu"
-          (click)="increaseMenuZindex()"
-        >
-          <mat-icon
-            class="user-icon icon-two"
-            svgIcon="chevron_down"
-          ></mat-icon>
-        </button>
+        }
       </div>
-      <span
-        class="user"
-        *ngIf="auth && auth.identifier"
-        matTooltip="{{ auth.identifier }}"
-        >{{ auth.identifier.length > 9 ? (auth.identifier | slice:0:9) + '…' : auth.identifier }}</span
-      >
-    </div>
-    <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item (click)="openProfile()">
-        <span>Profile</span>
-      </a>
-      <a mat-menu-item routerLink="/user-downloads">
-        <span>User Downloads</span>
-      </a>
-      <a mat-menu-item (click)="viewLists()">
-        <span>User Saved Lists</span>
-      </a>
-      <a mat-menu-item (click)="viewDrafts()">
-        <span>Saved Edit Drafts</span>
-      </a>
-      <a routerLink="/admin/import" mat-menu-item *ngIf="canUserImportData && !canConfigureSystem">
-        <span>Import Data</span>
-      </a>
-      <a routerLink="/admin/data" mat-menu-item *ngIf="canUserImportData && !canConfigureSystem">
-        <span>Legacy Data Import</span>
-      </a>
-      <a routerLink="/admin/cv" mat-menu-item *ngIf="canManageCVs && !canConfigureSystem">
-        <span>CV Management</span>
-      </a>
-      <a routerLink="/admin" mat-menu-item *ngIf="canConfigureSystem">
-        <span>Admin Panel</span>
-      </a>
-      <a
-        [routerLink]="['/registrars']"
-        class="add-at-low-res"
-        *ngIf="canRegister && !showRegistrars"
-        mat-menu-item
-      >
-        <span>Registrar Dashboard</span>
-      </a>
-      <button mat-menu-item (click)="logout()">
-        <span>Logout</span>
-      </button>
-    </mat-menu>
-  </div>
-  <div class="classic-view-container" *ngIf="auth && auth.identifier && showRegistrars">
-    <a
-      class="top-button hide-at-low-res"
-      mat-button
-      mat-primary-button
+      <span class="nav-small">
+        <button
+          class="top-button"
+          mat-button
+          mat-primary-button
+          style="color: white; padding-top: 10px; padding-bottom: 10px"
+          [matMenuTriggerFor]="nav"
+          (click)="increaseMenuZindex()"
+          aria-label="main menu"
+          >
+          <span style="font-size: 16px">Menu &nbsp;</span
+            ><mat-icon svgIcon="menu"></mat-icon>
+          </button>
+          <mat-menu #nav="matMenu" (closed)="removeZindex()" class="reg-a">
+            @for (navItem of navItems; track navItem) {
+              @if (navItem.path && !navItem.children) {
+                <a
+                  mat-menu-item
+                  [routerLink]="['/' + navItem.path]"
+                  >
+                  {{ navItem.display }}
+                </a>
+              }
+              @if (navItem.externalPath && !navItem.children) {
+                <a
+                  mat-menu-item
+                  [href]="navItem.externalPath"
+                  target="_blank"
+                  >
+                  {{ navItem.display }}
+                </a>
+              }
+              @if (navItem.mailToPath && !navItem.children) {
+                <a
+                  mat-menu-item
+                  [href]="transformMailToPath(navItem)"
+                  >
+                  {{ navItem.display }}
+                </a>
+              }
+              @if (navItem.children && (navItem.display.toUpperCase()!='REGISTER' || canRegister)) {
+                <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
+                  {{ navItem.display }}
+                </a>
+                <mat-menu
+                  #childrenMenu="matMenu"
+                  [overlapTrigger]="false"
+                  xPosition="after"
+                  >
+                  @for (childNavItem of navItem.children; track childNavItem) {
+                    @if (childNavItem.path) {
+                      <a
+                        mat-menu-item
+                        [routerLink]="['/' + childNavItem.path]"
+                        [queryParams]="childNavItem.params || {}"
+                        >
+                        {{ childNavItem.display }}
+                      </a>
+                    }
+                    @if (childNavItem.href) {
+                      <a
+                        mat-menu-item
+                        [href]="[childNavItem.href]"
+                        >
+                        {{ childNavItem.display }}
+                      </a>
+                    }
+                    @if (childNavItem.mailToPath) {
+                      <a
+                        mat-menu-item
+                        [href]="transformMailToPath(childNavItem)"
+                        >
+                        {{ childNavItem.display }}
+                      </a>
+                    }
+                  }
+                  @if (navItem.display === 'Register') {
+                    <a
+                      mat-menu-item
+                      (click)="importDialog()"
+                      >
+                      Import Substance
+                    </a>
+                  }
+                </mat-menu>
+              }
+            }
+            @if (canConfigureSystem) {
+              <a mat-menu-item routerLink="/admin">
+                Admin Panel
+              </a>
+            }
+          </mat-menu>
+        </span>
+        <div>
+          <button
+            class="top-button menu-button extra-item"
+            mat-button
+            [routerLink]="['/browse-substance']"
+            aria-label="browse substances"
+            >
+            Browse Substances
+          </button>
+        </div>
+        @if (this.loadedComponents && showBrowseOther) {
+          <div>
+            @if (loadedComponents) {
+              <button
+                class="top-button extra-browse"
+                mat-button
+                mat-primary-button
       style="
         color: white;
         font-size: 16px;
         padding-top: 10px;
         padding-bottom: 10px;
       "
-      [routerLink]="['/registrars']"
-      *ngIf="canRegister"
-    >
-      <span class="registrar-dashboard-label">Registrar<br>Dashboard</span>
-    </a>
-  </div>
-</mat-toolbar>
-<div *ngIf="isPfdaVersion">
-  <app-pfda-toolbar></app-pfda-toolbar>
-</div>
-<app-session-expiration></app-session-expiration>
-<app-loading></app-loading>
-<router-outlet></router-outlet>
+                [matMenuTriggerFor]="browse"
+                (click)="increaseMenuZindex()"
+                aria-label="main menu"
+                >
+                <span style="font-size: 16px">Browse Other</span>
+                <mat-icon svgIcon="chevron_down"></mat-icon>
+              </button>
+            }
+            <mat-menu #browse="matMenu" (closed)="removeZindex()">
+              @if (loadedComponents.applications) {
+                <a
+                  mat-menu-item
+                  routerLink="/browse-applications"
+                  >
+                  Browse Applications
+                </a>
+              }
+              @if (loadedComponents.applications) {
+                <mat-divider></mat-divider>
+              }
+              @if (loadedComponents.products) {
+                <a
+                  mat-menu-item
+                  routerLink="/browse-products"
+                  >
+                  Browse Products
+                </a>
+              }
+              @if (loadedComponents.products) {
+                <mat-divider></mat-divider>
+              }
+              @if (loadedComponents.clinicaltrials) {
+                <a
+                  mat-menu-item
+                  routerLink="/browse-clinical-trials"
+                  >
+                  Browse Clinical Trials
+                </a>
+              }
+              @if (loadedComponents.clinicaltrials) {
+                <mat-divider></mat-divider>
+              }
+              @if (loadedComponents.adverseevents) {
+                <a
+                  mat-menu-item
+                  routerLink="/browse-adverse-events"
+                  >
+                  Browse Adverse Events
+                </a>
+              }
+              @if (loadedComponents.adverseevents) {
+                <mat-divider></mat-divider>
+              }
+              @if (
+                loadedComponents.adverseevents &&
+                adverseEventShinyHomepageDisplay === true
+                ) {
+                <mat-divider
+                ></mat-divider>
+              }
+              @if (
+                loadedComponents.adverseevents &&
+                adverseEventShinyHomepageDisplay === true
+                ) {
+                <a
+                  mat-menu-item
+                  [href]="adverseEventShinyHomepageURL"
+                  target="_blank"
+                  >
+                  Browse Adverse Events
+                </a>
+              }
+              @if (loadedComponents.invitropharmacology) {
+                <a
+                  mat-menu-item
+                  routerLink="/browse-invitro-pharm"
+                  >
+                  Browse In Vitro Pharmacology
+                </a>
+              }
+            </mat-menu>
+          </div>
+        }
+        <div>
+          @if (canRegister) {
+            <button
+              class="top-button extra-item"
+              mat-button
+              mat-primary-button
+      style="
+        color: white;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      "
+              [matMenuTriggerFor]="reg"
+              (click)="increaseMenuZindex()"
+              aria-label="main menu"
+              >
+              <span style="font-size: 16px">Register</span>
+              <mat-icon svgIcon="chevron_down"></mat-icon>
+            </button>
+          }
+          <button
+            class="top-button extra-item"
+            mat-button
+            mat-primary-button
+      style="
+        color: white;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      "
+            [matMenuTriggerFor]="search"
+            (click)="increaseMenuZindex()"
+            aria-label="search menu"
+            >
+            <span style="font-size: 16px">Search</span>
+            <mat-icon svgIcon="chevron_down"></mat-icon>
+          </button>
+        </div>
+        <div>
+          <mat-menu #reg="matMenu" (closed)="removeZindex()">
+            @for (navItem of registerNav; track navItem) {
+              @if (navItem.path) {
+                <a
+                  mat-menu-item
+                  [routerLink]="['/' + navItem.path]"
+                  >
+                  {{ navItem.display }}
+                </a>
+              }
+              @if (navItem.externalPath) {
+                <a
+                  mat-menu-item
+                  [href]="navItem.externalPath"
+                  target="_blank"
+                  >
+                  {{ navItem.display }}
+                </a>
+              }
+            }
+            <a mat-menu-item (click)="importDialog()"> Import Substance </a>
+          </mat-menu>
+        </div>
+        <div>
+          <mat-menu #search="matMenu" (closed)="removeZindex()">
+            @for (navItem of searchNav; track navItem) {
+              @if (navItem.path) {
+                <a
+                  mat-menu-item
+                  [routerLink]="['/' + navItem.path]"
+                  >
+                  {{ navItem.display }}
+                </a>
+              }
+              @if (navItem.externalPath) {
+                <a
+                  mat-menu-item
+                  [href]="navItem.externalPath"
+                  target="_blank"
+                  >
+                  {{ navItem.display }}
+                </a>
+              }
+            }
+          </mat-menu>
+        </div>
+        <span class="middle-fill"></span>
+        <app-substance-text-search
+          styling="header"
+          class="top-search"
+          [searchValue]="searchValue"
+          placeholder="Search Substances"
+          (searchPerformed)="processSubstanceSearch($event)"
+          eventCategory="topSearch"
+          (opened)="increaseMenuZindex()"
+          (closed)="removeZindex()"
+          >
+        </app-substance-text-search>
+        <div class="user-section">
+          @if (!auth && mainPathSegment !== 'login') {
+            <button
+              mat-button
+              class="login-link"
+              (click)="routeToLogin()"
+              >
+              Login
+            </button>
+          }
+          @if (auth) {
+            <div class="logged-in">
+              <div class="user-actions">
+                <button
+                  aria-label="User Account"
+                  class="user-button main-button"
+                  mat-icon-button
+                  [matMenuTriggerFor]="accountMenu"
+                  (click)="increaseMenuZindex()"
+                  >
+                  <mat-icon class="user-icon" svgIcon="account_circle"></mat-icon>
+                </button>
+                <button
+                  aria-label="User Account dropdown"
+                  class="user-button arrow-button test-class"
+                  mat-icon-button
+                  [matMenuTriggerFor]="accountMenu"
+                  (click)="increaseMenuZindex()"
+                  >
+                  <mat-icon
+                    class="user-icon icon-two"
+                    svgIcon="chevron_down"
+                  ></mat-icon>
+                </button>
+              </div>
+              @if (auth && auth.identifier) {
+                <span
+                  class="user"
+                  matTooltip="{{ auth.identifier }}"
+                  >{{ auth.identifier.length > 9 ? (auth.identifier | slice:0:9) + '…' : auth.identifier }}</span
+                  >
+                }
+              </div>
+            }
+            <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
+              <a mat-menu-item (click)="openProfile()">
+                <span>Profile</span>
+              </a>
+              <a mat-menu-item routerLink="/user-downloads">
+                <span>User Downloads</span>
+              </a>
+              <a mat-menu-item (click)="viewLists()">
+                <span>User Saved Lists</span>
+              </a>
+              <a mat-menu-item (click)="viewDrafts()">
+                <span>Saved Edit Drafts</span>
+              </a>
+              @if (canUserImportData && !canConfigureSystem) {
+                <a routerLink="/admin/import" mat-menu-item>
+                  <span>Import Data</span>
+                </a>
+              }
+              @if (canUserImportData && !canConfigureSystem) {
+                <a routerLink="/admin/data" mat-menu-item>
+                  <span>Legacy Data Import</span>
+                </a>
+              }
+              @if (canManageCVs && !canConfigureSystem) {
+                <a routerLink="/admin/cv" mat-menu-item>
+                  <span>CV Management</span>
+                </a>
+              }
+              @if (canConfigureSystem) {
+                <a routerLink="/admin" mat-menu-item>
+                  <span>Admin Panel</span>
+                </a>
+              }
+              @if (canRegister && !showRegistrars) {
+                <a
+                  [routerLink]="['/registrars']"
+                  class="add-at-low-res"
+                  mat-menu-item
+                  >
+                  <span>Registrar Dashboard</span>
+                </a>
+              }
+              <button mat-menu-item (click)="logout()">
+                <span>Logout</span>
+              </button>
+            </mat-menu>
+          </div>
+          @if (auth && auth.identifier && showRegistrars) {
+            <div class="classic-view-container">
+              @if (canRegister) {
+                <a
+                  class="top-button hide-at-low-res"
+                  mat-button
+                  mat-primary-button
+      style="
+        color: white;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      "
+                  [routerLink]="['/registrars']"
+                  >
+                  <span class="registrar-dashboard-label">Registrar<br>Dashboard</span>
+                </a>
+              }
+            </div>
+          }
+        </mat-toolbar>
+      }
+      @if (isPfdaVersion) {
+        <div>
+          <app-pfda-toolbar></app-pfda-toolbar>
+        </div>
+      }
+      <app-session-expiration></app-session-expiration>
+      <app-loading></app-loading>
+      <router-outlet></router-outlet>

@@ -8,18 +8,22 @@
       <h3>Substance Ingredient Names:</h3>
 
       <ol>
-        <div *ngFor="let names of substanceNames; let namesIndex = index">
-          <li>{{names.name}}
-            <span *ngIf="names.displayName === true">
-              &nbsp;<b>(Preferred Term)</b>
-            </span>
-          </li>
-        </div>
+        @for (names of substanceNames; track names; let namesIndex = $index) {
+          <div>
+            <li>{{names.name}}
+              @if (names.displayName === true) {
+                <span>
+                  &nbsp;<b>(Preferred Term)</b>
+                </span>
+              }
+            </li>
+          </div>
+        }
       </ol>
 
       <br><br>
       <div class="colorgreen font18px"><b>Applications Lists that contain Substance Ingredient Names in Product Names or
-          Reference IND:</b></div>
+      Reference IND:</b></div>
 
       <br><br>
       <span class="font16px"><b>Total Applications Found: </b><span class="font18px colorred"><b>{{total}}</b></span></span>
@@ -82,18 +86,22 @@
         <ng-container matColumnDef="Application Substance Key">
           <th mat-header-cell *matHeaderCellDef class="headerstyle"> Application Bdnum </th>
           <td mat-cell *matCellDef="let element" class="cellstyle backgroundyellow">
-            <span *ngIf="element.bdnum !== '(No Bdnum)'" class="colorpurple">
-              <b>{{element.bdnum}}</b>
-            </span>
-            <span *ngIf="element.bdnum === '(No Bdnum)'">
-              {{element.bdnum}}
-            </span>
+            @if (element.bdnum !== '(No Bdnum)') {
+              <span class="colorpurple">
+                <b>{{element.bdnum}}</b>
+              </span>
+            }
+            @if (element.bdnum === '(No Bdnum)') {
+              <span>
+                {{element.bdnum}}
+              </span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="Exact Match">
           <th mat-header-cell *matHeaderCellDef class="headerstyle"> Substance Ingredient Names and Product Name - Exact
-            Match </th>
+          Match </th>
           <td mat-cell *matCellDef="let element" class="cellstyle"> {{element.exactMatchName}} </td>
         </ng-container>
 

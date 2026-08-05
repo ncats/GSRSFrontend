@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StructureExportComponent } from './structure-export.component';
 
@@ -6,7 +6,7 @@ describe('StructureExportComponent', () => {
   let component: StructureExportComponent;
   let fixture: ComponentFixture<StructureExportComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ StructureExportComponent ]
     })

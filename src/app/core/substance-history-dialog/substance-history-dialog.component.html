@@ -1,55 +1,78 @@
 <div mat-dialog-title>
-        <h3 >Version Control</h3>
-        </div>
-      <div mat-dialog-content>
-          <div class = "main-text">
+  <h3 >Version Control</h3>
+</div>
+<div mat-dialog-content>
+  <div class = "main-text">
 
-      
-      <div *ngIf = "status === 'start'">
-            Are you sure you'd like to restore version {{version}}?
-            </div>
-        <div *ngIf = "status === 'running'">
-            Restoring...
-        </div>
-        <div *ngIf = "status === 'complete'">
-            Record restored successfullly. Close this dialog to redirect to the new version.
-        </div>
-        <div *ngIf = "status === 'failed'">
-              <div> There was a problem restoring this version. </div>
-              <div>Would you like to see the error details?</div>
-              <a class = "primary-color" (click) = "status = 'error'">Show errors</a>
 
-        </div>
-    </div>
-
-    <div class = "errors" *ngIf = "status === 'error'">
-        <div class = "error-title">
-                Error restoring record. Here is some information on the error to share with a system admin / developers.
-
-        </div>
-        <div *ngIf="validationMessages">
-                <span *ngIf = " validationMessages.length > 0"   >
-                    <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
-                            {{message.message.message? message.message.message : message.message}}
-                    </div>
-                </span>
-        </div>
-
-        <div *ngIf="serverError" class="server-error">
-                <pre>{{ serverError }}</pre>
-            </div>
-            <div *ngIf = "!validationMessages && !serverError">
-                <i>No error information returned from the server</i>
-            </div>
-        </div>
-
-        </div>
-      <div mat-dialog-actions>
-        <button mat-flat-button color="primary" *ngIf = "status !== 'complete'" matDialogClose>Cancel</button>
-
-      
-        <span class="middle-fill"></span>
-        <button mat-flat-button color="primary"  *ngIf = "status === 'start'" (click) ="accept()">Accept</button>
-        <button mat-flat-button color="primary" *ngIf = "status === 'complete'" (click) = "close()">Close</button>
-
+    @if (status === 'start') {
+      <div>
+        Are you sure you'd like to restore version {{version}}?
       </div>
+    }
+    @if (status === 'running') {
+      <div>
+        Restoring...
+      </div>
+    }
+    @if (status === 'complete') {
+      <div>
+        Record restored successfullly. Close this dialog to redirect to the new version.
+      </div>
+    }
+    @if (status === 'failed') {
+      <div>
+        <div> There was a problem restoring this version. </div>
+        <div>Would you like to see the error details?</div>
+        <a class = "primary-color" (click) = "status = 'error'">Show errors</a>
+      </div>
+    }
+  </div>
+
+  @if (status === 'error') {
+    <div class = "errors">
+      <div class = "error-title">
+        Error restoring record. Here is some information on the error to share with a system admin / developers.
+      </div>
+      @if (validationMessages) {
+        <div>
+          @if ( validationMessages.length > 0) {
+            <span   >
+              @for (message of validationMessages; track message; let i = $index) {
+                <div class="validation-message" >
+                  {{message.message.message? message.message.message : message.message}}
+                </div>
+              }
+            </span>
+          }
+        </div>
+      }
+      @if (serverError) {
+        <div class="server-error">
+          <pre>{{ serverError }}</pre>
+        </div>
+      }
+      @if (!validationMessages && !serverError) {
+        <div>
+          <i>No error information returned from the server</i>
+        </div>
+      }
+    </div>
+  }
+
+</div>
+<div mat-dialog-actions>
+  @if (status !== 'complete') {
+    <button mat-flat-button color="primary" matDialogClose>Cancel</button>
+  }
+
+
+  <span class="middle-fill"></span>
+  @if (status === 'start') {
+    <button mat-flat-button color="primary"  (click) ="accept()">Accept</button>
+  }
+  @if (status === 'complete') {
+    <button mat-flat-button color="primary" (click) = "close()">Close</button>
+  }
+
+</div>

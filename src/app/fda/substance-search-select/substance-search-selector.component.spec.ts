@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceSearchSelectorComponent } from './substance-search-selector.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceSearchSelectorComponent', () => {
   let component: SubstanceSearchSelectorComponent;
   let fixture: ComponentFixture<SubstanceSearchSelectorComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceSearchSelectorComponent ]
     })

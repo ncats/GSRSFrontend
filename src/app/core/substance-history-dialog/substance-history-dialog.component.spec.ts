@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceHistoryDialogComponent } from './substance-history-dialog.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceHistoryDialogComponent', () => {
   let component: SubstanceHistoryDialogComponent;
   let fixture: ComponentFixture<SubstanceHistoryDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceHistoryDialogComponent ]
     })

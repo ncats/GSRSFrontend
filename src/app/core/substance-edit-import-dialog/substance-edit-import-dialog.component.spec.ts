@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceEditImportDialogComponent } from './substance-edit-import-dialog.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceEditImportDialogComponent', () => {
   let component: SubstanceEditImportDialogComponent;
   let fixture: ComponentFixture<SubstanceEditImportDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceEditImportDialogComponent ]
     })

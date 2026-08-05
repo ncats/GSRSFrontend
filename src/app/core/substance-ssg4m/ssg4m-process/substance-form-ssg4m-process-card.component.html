@@ -13,28 +13,32 @@
         </button>
       </div>
       -->
-      <div *ngIf="process && process.length > 0">
-        <mat-checkbox [checked]="showAdvancedSettings" (change)="updateAdvancedSettings($event)">
-          Show All Parameters
-        </mat-checkbox>
-      </div>
+      @if (process && process.length > 0) {
+        <div>
+          <mat-checkbox [checked]="showAdvancedSettings" (change)="updateAdvancedSettings($event)">
+            Show All Parameters
+          </mat-checkbox>
+        </div>
+      }
     </div>
 
-    <mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
-      [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
-      [pageSizeOptions]="[5, 10, 25, 100]">
-    </mat-paginator>
+    @if (process && process.length > 5) {
+      <mat-paginator [length]="filtered && filtered.length || 0" [pageIndex]="page"
+        [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
+        [pageSizeOptions]="[5, 10, 25, 100]">
+      </mat-paginator>
+    }
 
-    <div class="process" *ngFor="let process of paged; let processIndex = index">
-      <fieldset class="border">
-        <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}} of
-              {{paged.length}}</span></b>
+    @for (process of paged; track process; let processIndex = $index) {
+      <div class="process">
+        <fieldset class="border">
+          <legend class="border">Process &nbsp;<b><span class="colorgreen font17px">{{processIndex + 1}} of
+          {{paged.length}}</span></b>
         </legend>
         <app-ssg4m-process-form [process]="process" [processIndex]="processIndex"
           [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
           (processDeleted)="deleteProcess($event)" (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
         </app-ssg4m-process-form>
-
         <!-- Add Button -->
         <div class="divflex">
           <span class="middle-fill"></span>
@@ -44,26 +48,31 @@
         </div>
       </fieldset>
     </div>
+  }
 
-    <!-- Show Add Process button if there is zero Process -->
-    <div class="divflexright bordergray" *ngIf="process && process.length == 0">
+  <!-- Show Add Process button if there is zero Process -->
+  @if (process && process.length == 0) {
+    <div class="divflexright bordergray">
       <button mat-stroked-button color="primary" class="" (click)="addProcess()">
         <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Process
       </button>
     </div>
-    <br><br>
+  }
+  <br><br>
 
-    <mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
+  @if (process && process.length > 5) {
+    <mat-paginator [length]="filtered && filtered.length || 0" [pageIndex]="page"
       [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
       [pageSizeOptions]="[5, 10, 25, 100]">
     </mat-paginator>
+  }
 
-  </mat-tab>
+</mat-tab>
 
-  <mat-tab label="Step View">
+<mat-tab label="Step View">
 
-    <!-- Display in Step View-->
-    <app-ssg4m-scheme-view (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
-    </app-ssg4m-scheme-view>
+  <!-- Display in Step View-->
+  <app-ssg4m-scheme-view (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
+  </app-ssg4m-scheme-view>
 
-  </mat-tab>
+</mat-tab>

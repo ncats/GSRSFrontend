@@ -1,42 +1,72 @@
- <div class="widget form-group"  *ngIf = "!schema.CVDomain" [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'">
-	<label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+@if (!schema.CVDomain) {
+  <div class="widget form-group"  [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'">
+    @if (schema.title) {
+      <label [attr.for]="id" class="horizontal control-label">
         {{ schema.title }}
-        <sup *ngIf = "schema.comments && !schema.description"  ><mat-icon color="primary" style ="height: 18px;" class = "help-icon" (click) = "openModal(info, schema.comments)"svgIcon="help"></mat-icon></sup>
-
-	</label>
-	<span *ngIf="schema.description" class="formHelp">
-		{{schema.description}} <sup *ngIf = "schema.comments"  ><mat-icon color="primary" style ="height: 18px;" svgIcon="help"></mat-icon></sup>
-	</span>
-	<mat-select *ngIf="schema.type!='array'" [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control cv-select">
-		<ng-container *ngIf="schema.oneOf; else use_enum">
-			<mat-option *ngFor="let option of schema.oneOf" [value]="option.enum[0]" >{{option.description}}</mat-option>
-		</ng-container>
-		<ng-template #use_enum>
-			<mat-option *ngFor="let option of schema.enum" [value]="option" >{{option}}</mat-option>
-		</ng-template>
-	</mat-select>
-	<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+        @if (schema.comments && !schema.description) {
+          <sup  ><mat-icon color="primary" style ="height: 18px;" class = "help-icon" (click) = "openModal(info, schema.comments)"svgIcon="help"></mat-icon></sup>
+        }
+      </label>
+    }
+    @if (schema.description) {
+      <span class="formHelp">
+        {{schema.description}} @if (schema.comments) {
+        <sup  ><mat-icon color="primary" style ="height: 18px;" svgIcon="help"></mat-icon></sup>
+      }
+    </span>
+  }
+  @if (schema.type!='array') {
+    <mat-select [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control cv-select">
+      @if (schema.oneOf) {
+        @for (option of schema.oneOf; track option) {
+          <mat-option [value]="option.enum[0]" >{{option.description}}</mat-option>
+        }
+      } @else {
+        @for (option of schema.enum; track option) {
+          <mat-option [value]="option" >{{option}}</mat-option>
+        }
+      }
+    </mat-select>
+  }
+  @if (schema.readOnly) {
+    <input [attr.name]="name" type="hidden" [formControl]="control">
+  }
 </div>
+}
 
-<div class="widget form-group"  *ngIf = "schema.CVDomain" [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'">
-	<label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+@if (schema.CVDomain) {
+  <div class="widget form-group"  [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'">
+    @if (schema.title) {
+      <label [attr.for]="id" class="horizontal control-label">
         {{ schema.title }}
-        <sup *ngIf = "schema.comments && !schema.description"  ><mat-icon color="primary" style ="height: 18px;" svgIcon="help" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
-
-	</label>
-	<span *ngIf="schema.description" class="formHelp">
-		{{schema.description}} <sup *ngIf = "schema.comments"  ><mat-icon color="primary" style ="height: 18px;" svgIcon="help" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
-	</span>
-	<mat-select *ngIf="schema.type!='array'" [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control cv-select">
-		<ng-container >
-			<mat-option *ngFor="let option of options" [value]="option.value" >{{option.display}} -{{option.value}}</mat-option>
-		</ng-container>
-	</mat-select>
-	<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+        @if (schema.comments && !schema.description) {
+          <sup  ><mat-icon color="primary" style ="height: 18px;" svgIcon="help" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+        }
+      </label>
+    }
+    @if (schema.description) {
+      <span class="formHelp">
+        {{schema.description}} @if (schema.comments) {
+        <sup  ><mat-icon color="primary" style ="height: 18px;" svgIcon="help" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+      }
+    </span>
+  }
+  @if (schema.type!='array') {
+    <mat-select [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control cv-select">
+      <ng-container >
+        @for (option of options; track option) {
+          <mat-option [value]="option.value" >{{option.display}} -{{option.value}}</mat-option>
+        }
+      </ng-container>
+    </mat-select>
+  }
+  @if (schema.readOnly) {
+    <input [attr.name]="name" type="hidden" [formControl]="control">
+  }
 </div>
+}
 
 
 <ng-template #info let-data>
-	{{data.comment}}
-      </ng-template>
-    
+  {{data.comment}}
+</ng-template>

@@ -1,5 +1,9 @@
-<h1 mat-dialog-title *ngIf="data.card !== 'feature'">Select Sites</h1>
-<h1 mat-dialog-title *ngIf="data.card === 'feature'">Add / Modify Feature</h1>
+@if (data.card !== 'feature') {
+  <h1 mat-dialog-title>Select Sites</h1>
+}
+@if (data.card === 'feature') {
+  <h1 mat-dialog-title>Add / Modify Feature</h1>
+}
 
 <app-subunit-selector
   [card]="data.card"

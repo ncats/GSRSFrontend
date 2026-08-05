@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceDetailsComponent } from './substance-details.component';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -26,7 +26,7 @@ describe('SubstanceDetailsComponent', () => {
   let setNotificationSpy: jasmine.Spy;
   let routerStub: RouterStub;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     activatedRouteStub = new ActivatedRouteStub(
       {
         'id': 'test_id'

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceFormComponent } from './substance-form.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceFormComponent', () => {
   let component: SubstanceFormComponent;
   let fixture: ComponentFixture<SubstanceFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceFormComponent ]
     })

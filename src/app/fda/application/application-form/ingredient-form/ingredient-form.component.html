@@ -6,7 +6,7 @@
     [disabled]="totalIngredient == 1"
     (click)="confirmDeleteIngredient(prodIndex, ingredIndex)"
     matTooltip="Delete Ingredient Details {{ ingredIndex + 1 }}"
-  >
+    >
     <mat-icon [class.disabled]="totalIngredient == 1">delete_forever</mat-icon>
   </button>
   &nbsp;&nbsp;
@@ -15,7 +15,7 @@
     [ngStyle]="{ color: 'orangered' }"
     (click)="copyIngredient(ingredient, prodIndex)"
     matTooltip="Copy Ingredient Details {{ ingredIndex + 1 }} to New Ingredient"
-  >
+    >
     <mat-icon>file_copy</mat-icon>
   </button>
   &nbsp;&nbsp;
@@ -26,34 +26,40 @@
     matTooltip="Click to Confirm Ingredient Details {{
       ingredIndex + 1
     }} data has been Reviewed"
-  >
+    >
     <mat-icon>check_circle</mat-icon>
   </button>
-  <span *ngIf="ingredient.reviewDate" class="colorgray font12px"
-    >Reviewed By:&nbsp;{{ ingredient.reviewedBy }}&nbsp;{{
+  @if (ingredient.reviewDate) {
+    <span class="colorgray font12px"
+      >Reviewed By:&nbsp;{{ ingredient.reviewedBy }}&nbsp;{{
       ingredient.reviewDate | date: "MM/dd/yyyy hh:mm:ss a"
-    }}
-  </span>
+      }}
+    </span>
+  }
 
   &nbsp;&nbsp;&nbsp;
-  <span class="font11px" *ngIf="ingredient">
-    <span *ngIf="ingredient.id">
-      <span class="colorgray">Created By:</span>
-      {{ ingredient.createdBy }}&nbsp;&nbsp;&nbsp;
-      {{
-        ingredient.creationDate | date: "MM/dd/yyyy hh:mm:ss a"
-      }}&nbsp;&nbsp;&nbsp; <span class="colorgray">Modified By:</span>
-      {{ ingredient.modifiedBy }}&nbsp;&nbsp;&nbsp;
-      {{ ingredient.lastModifiedDate | date: "MM/dd/yyyy hh:mm:ss a" }}
+  @if (ingredient) {
+    <span class="font11px">
+      @if (ingredient.id) {
+        <span>
+          <span class="colorgray">Created By:</span>
+          {{ ingredient.createdBy }}&nbsp;&nbsp;&nbsp;
+          {{
+          ingredient.creationDate | date: "MM/dd/yyyy hh:mm:ss a"
+          }}&nbsp;&nbsp;&nbsp; <span class="colorgray">Modified By:</span>
+          {{ ingredient.modifiedBy }}&nbsp;&nbsp;&nbsp;
+          {{ ingredient.lastModifiedDate | date: "MM/dd/yyyy hh:mm:ss a" }}
+        </span>
+      }
     </span>
-  </span>
+  }
 </div>
 
 <!-- Ingredient Details -->
 <fieldset class="border">
   <legend class="border">
     Ingredient Details&nbsp;<b
-      ><span class="font17px">{{ ingredIndex + 1 }}</span></b
+    ><span class="font17px">{{ ingredIndex + 1 }}</span></b
     >
   </legend>
 
@@ -64,7 +70,7 @@
         matInput
         [(ngModel)]="ingredient.applicantIngredName"
         name="applicantIngredName"
-      />
+        />
     </mat-form-field>
 
     <!-- Ingredient Name -->
@@ -78,182 +84,197 @@
           placeholder="Ingredient Name"
           header="Ingredient Name"
           [subuuid]="substanceUuid"
-        >
+          >
         </app-substance-search-selector>
 
-        <div *ngIf="ingredientNameMessage" class="colorred font12px">
-          {{ ingredientNameMessage }}
-        </div>
+        @if (ingredientNameMessage) {
+          <div class="colorred font12px">
+            {{ ingredientNameMessage }}
+          </div>
+        }
 
         <!-- Display Ingredient Name -->
         <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="ingredientName">
-            <span class="colormaroon"
-              ><b>{{ ingredientName }}</b></span
-            >
-            <br />
-            <!-- Display Active Moiety -->
-            <div
-              *ngFor="
-                let active of ingredientNameActiveMoiety;
-                let activeIndex = index
-              "
-            >
-              {{ active }}
-              <span class="colorgray font11px">(Active Moiety)</span>
+          @if (ingredientName) {
+            <div>
+              <span class="colormaroon"
+                ><b>{{ ingredientName }}</b></span
+                >
+                <br />
+                <!-- Display Active Moiety -->
+                @for (
+                  active of ingredientNameActiveMoiety; track
+                  active; let activeIndex = $index) {
+                  <div
+                    >
+                    {{ active }}
+                    <span class="colorgray font11px">(Active Moiety)</span>
+                  </div>
+                }
+              </div>
+            }
+            @if (ingredient.substanceKey || ingredientName) {
+              <div>
+                <span class="colororange">{{ ingredient.substanceKey }}</span>
+                <span class="colorgray font11px">
+                  @if (ingredient.substanceKeyType) {
+                    <span>
+                      ({{ ingredient.substanceKeyType }})</span
+                      >
+                    }
+                  </span>
+                  <br />
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="confirmDeleteIngredientName(ingredIndex)"
+                    matTooltip="Delete Ingredient Name {{ ingredIndex + 1 }}"
+                    >
+                    <mat-icon>delete_forever</mat-icon>
+                  </button>
+                </div>
+              }
             </div>
           </div>
-          <div *ngIf="ingredient.substanceKey || ingredientName">
-            <span class="colororange">{{ ingredient.substanceKey }}</span>
-            <span class="colorgray font11px">
-              <span *ngIf="ingredient.substanceKeyType">
-                ({{ ingredient.substanceKeyType }})</span
+        </div>
+
+        <!-- Basis of Strength -->
+        <div class="col-2 flex-column related-substance">
+          <div class="related-substance-border">
+            <app-substance-search-selector
+              (selectionUpdated)="basisOfStrengthUpdated($event)"
+              (showMessage)="showMessageBasisOfStrength($event)"
+              (searchValueOut)="searchValueBasisOutChange($event)"
+              eventCategory="substanceRelationshipRelatedSub"
+              placeholder="Basis Of Strength"
+              header="Basis Of Strength"
+              [subuuid]="basisOfStrengthSubstanceUuid"
               >
-            </span>
-            <br />
-            <button
-              mat-icon-button
-              color="primary"
-              (click)="confirmDeleteIngredientName(ingredIndex)"
-              matTooltip="Delete Ingredient Name {{ ingredIndex + 1 }}"
-            >
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            </app-substance-search-selector>
 
-    <!-- Basis of Strength -->
-    <div class="col-2 flex-column related-substance">
-      <div class="related-substance-border">
-        <app-substance-search-selector
-          (selectionUpdated)="basisOfStrengthUpdated($event)"
-          (showMessage)="showMessageBasisOfStrength($event)"
-          (searchValueOut)="searchValueBasisOutChange($event)"
-          eventCategory="substanceRelationshipRelatedSub"
-          placeholder="Basis Of Strength"
-          header="Basis Of Strength"
-          [subuuid]="basisOfStrengthSubstanceUuid"
-        >
-        </app-substance-search-selector>
+            @if (basisOfStrengthMessage) {
+              <div class="colorred font12px">
+                {{ basisOfStrengthMessage }}
+              </div>
+            }
 
-        <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
-          {{ basisOfStrengthMessage }}
-        </div>
+            <div class="padall5px fontfamilyhelvetica">
+              @if (basisOfStrengthIngredientName) {
+                <div>
+                  <span class="colormaroon"
+                    ><b>{{ basisOfStrengthIngredientName }}</b></span
+                    >
+                    <br />
+                    <!-- Display Active Moiety -->
+                    @for (
+                      active of basisOfStrengthActiveMoiety; track
+                      active; let activeIndex = $index) {
+                      <div
+                        >
+                        {{ active }}
+                        <span class="colorgray font11px">(Active Moiety)</span>
+                      </div>
+                    }
+                  </div>
+                }
 
-        <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="basisOfStrengthIngredientName">
-            <span class="colormaroon"
-              ><b>{{ basisOfStrengthIngredientName }}</b></span
-            >
-            <br />
-            <!-- Display Active Moiety -->
-            <div
-              *ngFor="
-                let active of basisOfStrengthActiveMoiety;
-                let activeIndex = index
-              "
-            >
-              {{ active }}
-              <span class="colorgray font11px">(Active Moiety)</span>
+                @if (
+                  ingredient.basisOfStrengthSubstanceKey ||
+                  basisOfStrengthIngredientName
+                  ) {
+                  <div
+                    >
+                    <span class="colororange">{{
+                      ingredient.basisOfStrengthSubstanceKey
+                    }}</span>
+                    <span class="colorgray font11px">
+                      @if (ingredient.basisOfStrengthSubstanceKeyType) {
+                        <span>
+                          ({{ ingredient.basisOfStrengthSubstanceKeyType }})
+                        </span>
+                      }
+                    </span>
+                    <br />
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      (click)="confirmDeleteBasisOfStrength(ingredIndex)"
+                      matTooltip="Delete Basis of Strength {{ ingredIndex + 1 }}"
+                      >
+                      <mat-icon>delete_forever</mat-icon>
+                    </button>
+                  </div>
+                }
+              </div>
             </div>
           </div>
 
-          <div
-            *ngIf="
-              ingredient.basisOfStrengthSubstanceKey ||
-              basisOfStrengthIngredientName
-            "
-          >
-            <span class="colororange">{{
-              ingredient.basisOfStrengthSubstanceKey
-            }}</span>
-            <span class="colorgray font11px">
-              <span *ngIf="ingredient.basisOfStrengthSubstanceKeyType">
-                ({{ ingredient.basisOfStrengthSubstanceKeyType }})
-              </span>
-            </span>
-            <br />
-            <button
-              mat-icon-button
-              color="primary"
-              (click)="confirmDeleteBasisOfStrength(ingredIndex)"
-              matTooltip="Delete Basis of Strength {{ ingredIndex + 1 }}"
+          <app-cv-input
+            class="col-2-nomargin"
+            domain="PROD_GRADE"
+            title="Grade"
+            name="grade"
+            [model]="ingredient.grade"
+            (valueChange)="ingredient.grade = $event"
             >
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
+          </app-cv-input>
         </div>
-      </div>
-    </div>
 
-    <app-cv-input
-      class="col-2-nomargin"
-      domain="PROD_GRADE"
-      title="Grade"
-      name="grade"
-      [model]="ingredient.grade"
-      (valueChange)="ingredient.grade = $event"
-    >
-    </app-cv-input>
-  </div>
+        <div class="form-row margintop10px">
+          <app-cv-input
+            class="col-2"
+            domain="INGREDIENT_TYPE"
+            title="Ingredient Type"
+            name="ingredientType"
+            [model]="ingredient.ingredientType"
+            (valueChange)="ingredient.ingredientType = $event"
+            >
+          </app-cv-input>
 
-  <div class="form-row margintop10px">
-    <app-cv-input
-      class="col-2"
-      domain="INGREDIENT_TYPE"
-      title="Ingredient Type"
-      name="ingredientType"
-      [model]="ingredient.ingredientType"
-      (valueChange)="ingredient.ingredientType = $event"
-    >
-    </app-cv-input>
+          <mat-form-field class="col-1">
+            <mat-label>Average</mat-label>
+            <input matInput [(ngModel)]="ingredient.average" name="average" />
+          </mat-form-field>
 
-    <mat-form-field class="col-1">
-      <mat-label>Average</mat-label>
-      <input matInput [(ngModel)]="ingredient.average" name="average" />
-    </mat-form-field>
+          <mat-form-field class="col-1">
+            <mat-label>Low</mat-label>
+            <input matInput [(ngModel)]="ingredient.low" name="low" />
+          </mat-form-field>
 
-    <mat-form-field class="col-1">
-      <mat-label>Low</mat-label>
-      <input matInput [(ngModel)]="ingredient.low" name="low" />
-    </mat-form-field>
+          <mat-form-field class="col-1">
+            <mat-label>High</mat-label>
+            <input matInput [(ngModel)]="ingredient.high" name="high" />
+          </mat-form-field>
 
-    <mat-form-field class="col-1">
-      <mat-label>High</mat-label>
-      <input matInput [(ngModel)]="ingredient.high" name="high" />
-    </mat-form-field>
+          <mat-form-field class="col-1">
+            <mat-label>Low Limit</mat-label>
+            <input matInput [(ngModel)]="ingredient.lowLimit" name="lowLimit" />
+          </mat-form-field>
 
-    <mat-form-field class="col-1">
-      <mat-label>Low Limit</mat-label>
-      <input matInput [(ngModel)]="ingredient.lowLimit" name="lowLimit" />
-    </mat-form-field>
+          <mat-form-field class="col-1">
+            <mat-label>High Limit</mat-label>
+            <input matInput [(ngModel)]="ingredient.highLimit" name="highLimit" />
+          </mat-form-field>
 
-    <mat-form-field class="col-1">
-      <mat-label>High Limit</mat-label>
-      <input matInput [(ngModel)]="ingredient.highLimit" name="highLimit" />
-    </mat-form-field>
+          <app-cv-input
+            class="col-1"
+            domain="PROD_UNIT"
+            title="Unit"
+            name="unit"
+            [model]="ingredient.unit"
+            (valueChange)="ingredient.unit = $event"
+            >
+          </app-cv-input>
 
-    <app-cv-input
-      class="col-1"
-      domain="PROD_UNIT"
-      title="Unit"
-      name="unit"
-      [model]="ingredient.unit"
-      (valueChange)="ingredient.unit = $event"
-    >
-    </app-cv-input>
-
-    <mat-form-field class="col-1">
-      <mat-label>Non-Numeric Value</mat-label>
-      <input
-        matInput
-        [(ngModel)]="ingredient.nonNumericValue"
-        name="nonNumericValue"
-      />
-    </mat-form-field>
-  </div>
-  <!-- row-->
-</fieldset>
-<br />
+          <mat-form-field class="col-1">
+            <mat-label>Non-Numeric Value</mat-label>
+            <input
+              matInput
+              [(ngModel)]="ingredient.nonNumericValue"
+              name="nonNumericValue"
+              />
+          </mat-form-field>
+        </div>
+        <!-- row-->
+      </fieldset>
+      <br />

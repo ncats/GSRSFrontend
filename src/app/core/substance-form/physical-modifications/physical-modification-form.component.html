@@ -1,10 +1,12 @@
 <div class="physical-form-container">
-  <div *ngIf="mod.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
+  @if (mod.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+  }
   <div class="form-row">
     <div class="delete-container">
       <button mat-icon-button matTooltip="Delete name" (click)="deleteMod()">
@@ -24,180 +26,200 @@
         mat-icon-button
         matTooltip="add / edit parameters"
         (click)="openPropertyParameter()"
-      >
+        >
         <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
       <div class="param-display">
         <mat-list>
-          <div
-            mat-list-item
-            *ngFor="let parameter of mod.parameters; index as index"
-          >
-            <button
-              mat-icon-button
-              (click)="deleteParameter(index)"
-              class="parameter-delete-icon"
-            >
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-
-            <span>{{ parameter.parameterName }}</span>
-            <span *ngIf="parameter.amount != null">
-              <span>
-                &nbsp;
-                {{ parameter.amount.type }}
-              </span>
-              <span
-                *ngIf="
-                  parameter.amount.average != null &&
-                  parameter.amount.average != ''
-                "
+          @for (parameter of mod.parameters; track parameter; let index = $index) {
+            <div
+              mat-list-item
               >
-                &nbsp;- &nbsp;
-                {{ parameter.amount.average }}
-                &nbsp;
-                {{ parameter.amount.units }}
-              </span>
-              <span
-                *ngIf="
-                  (parameter.amount.low != null &&
+              <button
+                mat-icon-button
+                (click)="deleteParameter(index)"
+                class="parameter-delete-icon"
+                >
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+              <span>{{ parameter.parameterName }}</span>
+              @if (parameter.amount != null) {
+                <span>
+                  <span>
+                    &nbsp;
+                    {{ parameter.amount.type }}
+                  </span>
+                  @if (
+                    parameter.amount.average != null &&
+                    parameter.amount.average != ''
+                    ) {
+                    <span
+                      >
+                      &nbsp;- &nbsp;
+                      {{ parameter.amount.average }}
+                      &nbsp;
+                      {{ parameter.amount.units }}
+                    </span>
+                  }
+                  @if (
+                    (parameter.amount.low != null &&
                     parameter.amount.low != '') ||
-                  (parameter.amount.high != null && parameter.amount.high != '')
-                "
-              >
-                <span
-                  *ngIf="
-                    parameter.amount.average == null ||
-                    parameter.amount.average == ''
-                  "
-                >
-                  &nbsp; -
-                </span>
-                &nbsp; [
-                <span
-                  *ngIf="
-                    parameter.amount.high == null || parameter.amount.high == ''
-                  "
-                >
-                  >
-                </span>
-                <span
-                  *ngIf="
-                    parameter.amount.low == null || parameter.amount.low == ''
-                  "
-                >
-                  <
-                </span>
-                <span
-                  *ngIf="
-                    parameter.amount.low != null && parameter.amount.low != ''
-                  "
-                >
-                  {{ parameter.amount.low }}
-                </span>
-                <span
-                  *ngIf="
-                    parameter.amount.low != null &&
-                    parameter.amount.low != '' &&
-                    parameter.amount.high != null &&
-                    parameter.amount.high != ''
-                  "
-                >
-                  &nbsp;to&nbsp;
-                </span>
-                <span
-                  *ngIf="
-                    parameter.amount.high != null && parameter.amount.high != ''
-                  "
-                >
-                  {{ parameter.amount.high }}
-                </span>
-                ]
-                <span
-                  *ngIf="
-                    parameter.amount.average == null ||
-                    parameter.amount.average == ''
-                  "
-                >
-                  &nbsp;
-                  {{ parameter.amount.units }}
-                  &nbsp; (average)
-                </span>
-              </span>
-              <span
-                *ngIf="
-                  parameter.amount.average != null &&
-                  parameter.amount.average != ''
-                "
-              >
-                &nbsp; (average)
-              </span>
-              <span
-                *ngIf="
-                  (parameter.amount.lowLimit != null &&
+                    (parameter.amount.high != null && parameter.amount.high != '')
+                    ) {
+                    <span
+                      >
+                      @if (
+                        parameter.amount.average == null ||
+                        parameter.amount.average == ''
+                        ) {
+                        <span
+                          >
+                          &nbsp; -
+                        </span>
+                      }
+                      &nbsp; [
+                      @if (
+                        parameter.amount.high == null || parameter.amount.high == ''
+                        ) {
+                        <span
+                          >
+                          >
+                        </span>
+                      }
+                      @if (
+                        parameter.amount.low == null || parameter.amount.low == ''
+                        ) {
+                        <span
+                          >
+                          <
+                        </span>
+                      }
+                      @if (
+                        parameter.amount.low != null && parameter.amount.low != ''
+                        ) {
+                        <span
+                          >
+                          {{ parameter.amount.low }}
+                        </span>
+                      }
+                      @if (
+                        parameter.amount.low != null &&
+                        parameter.amount.low != '' &&
+                        parameter.amount.high != null &&
+                        parameter.amount.high != ''
+                        ) {
+                        <span
+                          >
+                          &nbsp;to&nbsp;
+                        </span>
+                      }
+                      @if (
+                        parameter.amount.high != null && parameter.amount.high != ''
+                        ) {
+                        <span
+                          >
+                          {{ parameter.amount.high }}
+                        </span>
+                      }
+                      ]
+                      @if (
+                        parameter.amount.average == null ||
+                        parameter.amount.average == ''
+                        ) {
+                        <span
+                          >
+                          &nbsp;
+                          {{ parameter.amount.units }}
+                          &nbsp; (average)
+                        </span>
+                      }
+                    </span>
+                  }
+                  @if (
+                    parameter.amount.average != null &&
+                    parameter.amount.average != ''
+                    ) {
+                    <span
+                      >
+                      &nbsp; (average)
+                    </span>
+                  }
+                  @if (
+                    (parameter.amount.lowLimit != null &&
                     parameter.amount.lowLimit != '') ||
-                  (parameter.amount.highLimit != null &&
+                    (parameter.amount.highLimit != null &&
                     parameter.amount.highLimit != '')
-                "
-              >
-                &nbsp;- &nbsp; [
-                <span
-                  *ngIf="
-                    parameter.amount.highLimit == null ||
-                    parameter.amount.highLimit == ''
-                  "
-                >
-                  >
+                    ) {
+                    <span
+                      >
+                      &nbsp;- &nbsp; [
+                      @if (
+                        parameter.amount.highLimit == null ||
+                        parameter.amount.highLimit == ''
+                        ) {
+                        <span
+                          >
+                          >
+                        </span>
+                      }
+                      @if (
+                        parameter.amount.lowLimit == null ||
+                        parameter.amount.lowLimit == ''
+                        ) {
+                        <span
+                          >
+                          <
+                        </span>
+                      }
+                      @if (
+                        parameter.amount.lowLimit != null &&
+                        parameter.amount.lowLimit != ''
+                        ) {
+                        <span
+                          >
+                          {{ parameter.amount.lowLimit }}
+                        </span>
+                      }
+                      @if (
+                        parameter.amount.lowLimit != null &&
+                        parameter.amount.lowLimit != '' &&
+                        parameter.amount.highLimit != null &&
+                        parameter.amount.highLimit != ''
+                        ) {
+                        <span
+                          >
+                          &nbsp;to&nbsp;
+                        </span>
+                      }
+                      @if (
+                        parameter.amount.highLimit != null &&
+                        parameter.amount.highLimit != ''
+                        ) {
+                        <span
+                          >
+                          {{ parameter.amount.highLimit }}
+                        </span>
+                      }
+                      ] &nbsp;(limits)
+                    </span>
+                  }
+                  @if (parameter.amount.nonNumericValue) {
+                    <span>
+                      &nbsp;-&nbsp;
+                      {{ parameter.amount.nonNumericValue }}
+                    </span>
+                  }
                 </span>
-                <span
-                  *ngIf="
-                    parameter.amount.lowLimit == null ||
-                    parameter.amount.lowLimit == ''
-                  "
+              }
+              <button
+                mat-icon-button
+                (click)="openPropertyParameter(parameter)"
+                class="parameter-icon"
                 >
-                  <
-                </span>
-                <span
-                  *ngIf="
-                    parameter.amount.lowLimit != null &&
-                    parameter.amount.lowLimit != ''
-                  "
-                >
-                  {{ parameter.amount.lowLimit }}
-                </span>
-                <span
-                  *ngIf="
-                    parameter.amount.lowLimit != null &&
-                    parameter.amount.lowLimit != '' &&
-                    parameter.amount.highLimit != null &&
-                    parameter.amount.highLimit != ''
-                  "
-                >
-                  &nbsp;to&nbsp;
-                </span>
-                <span
-                  *ngIf="
-                    parameter.amount.highLimit != null &&
-                    parameter.amount.highLimit != ''
-                  "
-                >
-                  {{ parameter.amount.highLimit }}
-                </span>
-                ] &nbsp;(limits)
-              </span>
-              <span *ngIf="parameter.amount.nonNumericValue">
-                &nbsp;-&nbsp;
-                {{ parameter.amount.nonNumericValue }}
-              </span>
-            </span>
-            <button
-              mat-icon-button
-              (click)="openPropertyParameter(parameter)"
-              class="parameter-icon"
-            >
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-          </div>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+            </div>
+          }
         </mat-list>
       </div>
     </div>
@@ -209,21 +231,23 @@
           [(ngModel)]="mod.modificationGroup"
           required
           name="group"
-        />
+          />
       </mat-form-field>
     </div>
     <div class="access">
       <app-access-manager
         (accessOut)="updateAccess($event)"
         [access]="mod.access"
-      >
+        >
       </app-access-manager>
     </div>
   </div>
   <div class="form-row">
     <app-audit-info [source]="mod"></app-audit-info>
   </div>
-  <div class="form-row invalid-note" *ngIf="invalid">
-    <div>*physical modifications require a modification role or parameter</div>
-  </div>
+  @if (invalid) {
+    <div class="form-row invalid-note">
+      <div>*physical modifications require a modification role or parameter</div>
+    </div>
+  }
 </div>

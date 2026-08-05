@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StructuralUnitFormComponent } from './structural-unit-form.component';
 
@@ -6,7 +6,7 @@ describe('StructuralUnitFormComponent', () => {
   let component: StructuralUnitFormComponent;
   let fixture: ComponentFixture<StructuralUnitFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ StructuralUnitFormComponent ]
     })

@@ -1,180 +1,200 @@
-<div *ngIf="definition">
-  <div class="substance-form-row form-header">
-    <div>
-      <span class="sub-header">{{
-        uuid && !imported ? "Editing " : "Registering New "
-      }}</span>
-      <span> {{ substanceClass | titlecase }}</span>
-    </div>
-    <span
-      class="approval"
-      *ngIf="definition.approvalID && definition.approvalID !== ''"
-      >{{ definition.approvalID }}</span
-    >
-  </div>
-  <div class="substance-form-row form-name" *ngIf="definition._name">
-    <div>
-      {{ "displayNameTitle" | elementLabel: "substance_names_name" }}:
-      <span
-        class="name"
+@if (definition) {
+  <div>
+    <div class="substance-form-row form-header">
+      <div>
+        <span class="sub-header">{{
+          uuid && !imported ? "Editing " : "Registering New "
+        }}</span>
+        <span> {{ substanceClass | titlecase }}</span>
+      </div>
+      @if (definition.approvalID && definition.approvalID !== '') {
+        <span
+          class="approval"
+          >{{ definition.approvalID }}</span
+          >
+        }
+      </div>
+      @if (definition._name) {
+        <div class="substance-form-row form-name">
+          <div>
+            {{ "displayNameTitle" | elementLabel: "substance_names_name" }}:
+            <span
+              class="name"
         [innerHTML]="
           definition._nameHTML ? definition._nameHTML : definition._name
         "
-      ></span>
-    </div>
-  </div>
-  <div class="substance-form-row">
-    <mat-form-field
-      *ngIf="definition.substanceClass !== 'concept'"
-      style="margin-right: 5px"
-    >
-      <mat-label>Definition Type</mat-label>
-      <mat-select
-        [(ngModel)]="definition.definitionType"
-        name="definitionType"
-        (selectionChange)="updateDefinitionType($event)"
-        required
-      >
-        <mat-option
-          *ngFor="let defitionType of definitionTypes"
-          [value]="defitionType.value"
-        >
-          {{ defitionType.display }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div
-      class="primary-substance-container"
-      *ngIf="definition.definitionType == 'ALTERNATIVE'"
-    >
-      <app-substance-selector
-        (selectionUpdated)="primartySubstanceUpdated($event)"
-        eventCategory="substanceFormDefinitionType"
-        placeholder="Primary Substance"
-        header="Primary Substance"
-        [subuuid]="primarySubUuid"
-      >
-      </app-substance-selector>
-    </div>
-    <mat-form-field *ngIf="definition.substanceClass !== 'concept'">
-      <mat-label>Definition Level</mat-label>
-      <mat-select
-        [(ngModel)]="definition.definitionLevel"
-        name="definitionLevel"
-        (selectionChange)="updateDefinition()"
-      >
-        <mat-option
-          *ngFor="let defitionLevel of definitionLevels"
-          [value]="defitionLevel.value"
-        >
-          {{ defitionLevel.display }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div class="checkbox-container">
-      <mat-checkbox
-        [(ngModel)]="definition.deprecated"
-        name="deprecated"
-        (change)="updateDefinition()"
-        >Deprecated</mat-checkbox
-      >
-    </div>
-    <div>
-      <app-access-manager
-        (accessOut)="updateAccess($event)"
-        [access]="definition.access"
-        label="Record Level Access"
-      ></app-access-manager>
-    </div>
-    <div class="redirect-links" *ngIf="uuid">
-      <a
-        [href]="getRedirect()"
-        *ngIf="oldlink"
-        target="_blank"
-        matTooltip="open old edit form in new tab"
-      >
-        Old edit form <mat-icon class="icon" svgIcon="open_in_new"></mat-icon>
-      </a>
-      <br />
-      <a
-        [routerLink]="['/substances', uuid]"
-        target="_blank"
-        matTooltip="open details page in new tab"
-      >
-        Details page <mat-icon class="icon" svgIcon="open_in_new"></mat-icon>
-      </a>
-    </div>
-  </div>
-  <div class="substance-form-row tag-row">
-    <mat-form-field class="tag-list">
-      <mat-label>Substance tags</mat-label>
-      <mat-chip-grid #tagList aria-label="Tags edit">
-        <mat-chip-row
-          *ngFor="let tag of definition.tags"
-          (removed)="removeTag(tag)"
-        >
-          {{ tag }}
-          <button matChipRemove>
-            <mat-icon svgIcon="cancel"></mat-icon>
-          </button>
-        </mat-chip-row>
-        <input
-          matInput
-          #tagsInput
-          [formControl]="tagsCtrl"
-          [matAutocomplete]="tagsAuto"
-          [matChipInputFor]="tagList"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          (matChipInputTokenEnd)="tagAdded($event)"
-          (blur)="tagsBlurred()"
-        />
-      </mat-chip-grid>
-      <mat-autocomplete
-        #tagsAuto="matAutocomplete"
-        (opened)="increaseOverlayZindex()"
-        (closed)="tagsAutocompleteClosed()"
-        (optionSelected)="selectedTag($event)"
-      >
-        <mat-option *ngFor="let tag of filteredSuggestedTags" [value]="tag">
-          {{ tag }}
-        </mat-option>
-      </mat-autocomplete>
-      <mat-hint
-        >Enter new tags (and press Enter after each entry) or select from
-        suggested tags below</mat-hint
-      >
-    </mat-form-field>
-  </div>
-  <div
-    class="substance-form-row"
-    *ngIf="definition.substanceClass !== 'concept'"
-  >
-    <div class="references-container">
-      <app-domain-references
-        [referencesUuids]="definition.references"
-        card="definition"
-        #references
-      ></app-domain-references>
-    </div>
-  </div>
-  <div
-    class="substance-form-row"
-    *ngIf="definition.substanceClass !== 'concept'"
-  >
-    <div matTooltip="Set {{ definition.substanceClass }} access">
-      <app-access-manager
-        (accessOut)="updateDefAccess($event)"
-        [access]="defAccess"
-        label="Definition Access"
-      ></app-access-manager>
-    </div>
-  </div>
-
-  <div class="concept-info-row" *ngIf="definition.substanceClass === 'concept'">
-    Concepts have no defining information, but are collections of terms, codes
-    and related information. <br />
-    They can be promoted to a defined substance at a later time, when
-    appropriate.
-  </div>
-  <app-audit-info [source]="definition"></app-audit-info>
-</div>
+            ></span>
+          </div>
+        </div>
+      }
+      <div class="substance-form-row">
+        @if (definition.substanceClass !== 'concept') {
+          <mat-form-field
+            style="margin-right: 5px"
+            >
+            <mat-label>Definition Type</mat-label>
+            <mat-select
+              [(ngModel)]="definition.definitionType"
+              name="definitionType"
+              (selectionChange)="updateDefinitionType($event)"
+              required
+              >
+              @for (defitionType of definitionTypes; track defitionType) {
+                <mat-option
+                  [value]="defitionType.value"
+                  >
+                  {{ defitionType.display }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+        @if (definition.definitionType == 'ALTERNATIVE') {
+          <div
+            class="primary-substance-container"
+            >
+            <app-substance-selector
+              (selectionUpdated)="primartySubstanceUpdated($event)"
+              eventCategory="substanceFormDefinitionType"
+              placeholder="Primary Substance"
+              header="Primary Substance"
+              [subuuid]="primarySubUuid"
+              >
+            </app-substance-selector>
+          </div>
+        }
+        @if (definition.substanceClass !== 'concept') {
+          <mat-form-field>
+            <mat-label>Definition Level</mat-label>
+            <mat-select
+              [(ngModel)]="definition.definitionLevel"
+              name="definitionLevel"
+              (selectionChange)="updateDefinition()"
+              >
+              @for (defitionLevel of definitionLevels; track defitionLevel) {
+                <mat-option
+                  [value]="defitionLevel.value"
+                  >
+                  {{ defitionLevel.display }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+        <div class="checkbox-container">
+          <mat-checkbox
+            [(ngModel)]="definition.deprecated"
+            name="deprecated"
+            (change)="updateDefinition()"
+            >Deprecated</mat-checkbox
+            >
+          </div>
+          <div>
+            <app-access-manager
+              (accessOut)="updateAccess($event)"
+              [access]="definition.access"
+              label="Record Level Access"
+            ></app-access-manager>
+          </div>
+          @if (uuid) {
+            <div class="redirect-links">
+              @if (oldlink) {
+                <a
+                  [href]="getRedirect()"
+                  target="_blank"
+                  matTooltip="open old edit form in new tab"
+                  >
+                  Old edit form <mat-icon class="icon" svgIcon="open_in_new"></mat-icon>
+                </a>
+              }
+              <br />
+              <a
+                [routerLink]="['/substances', uuid]"
+                target="_blank"
+                matTooltip="open details page in new tab"
+                >
+                Details page <mat-icon class="icon" svgIcon="open_in_new"></mat-icon>
+              </a>
+            </div>
+          }
+        </div>
+        <div class="substance-form-row tag-row">
+          <mat-form-field class="tag-list">
+            <mat-label>Substance tags</mat-label>
+            <mat-chip-grid #tagList aria-label="Tags edit">
+              @for (tag of definition.tags; track tag) {
+                <mat-chip-row
+                  (removed)="removeTag(tag)"
+                  >
+                  {{ tag }}
+                  <button matChipRemove>
+                    <mat-icon svgIcon="cancel"></mat-icon>
+                  </button>
+                </mat-chip-row>
+              }
+              <input
+                matInput
+                #tagsInput
+                [formControl]="tagsCtrl"
+                [matAutocomplete]="tagsAuto"
+                [matChipInputFor]="tagList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="tagAdded($event)"
+                (blur)="tagsBlurred()"
+                />
+            </mat-chip-grid>
+            <mat-autocomplete
+              #tagsAuto="matAutocomplete"
+              (opened)="increaseOverlayZindex()"
+              (closed)="tagsAutocompleteClosed()"
+              (optionSelected)="selectedTag($event)"
+              >
+              @for (tag of filteredSuggestedTags; track tag) {
+                <mat-option [value]="tag">
+                  {{ tag }}
+                </mat-option>
+              }
+            </mat-autocomplete>
+            <mat-hint
+              >Enter new tags (and press Enter after each entry) or select from
+              suggested tags below</mat-hint
+              >
+            </mat-form-field>
+          </div>
+          @if (definition.substanceClass !== 'concept') {
+            <div
+              class="substance-form-row"
+              >
+              <div class="references-container">
+                <app-domain-references
+                  [referencesUuids]="definition.references"
+                  card="definition"
+                  #references
+                ></app-domain-references>
+              </div>
+            </div>
+          }
+          @if (definition.substanceClass !== 'concept') {
+            <div
+              class="substance-form-row"
+              >
+              <div matTooltip="Set {{ definition.substanceClass }} access">
+                <app-access-manager
+                  (accessOut)="updateDefAccess($event)"
+                  [access]="defAccess"
+                  label="Definition Access"
+                ></app-access-manager>
+              </div>
+            </div>
+          }
+          @if (definition.substanceClass === 'concept') {
+            <div class="concept-info-row">
+              Concepts have no defining information, but are collections of terms, codes
+              and related information. <br />
+              They can be promoted to a defined substance at a later time, when
+              appropriate.
+            </div>
+          }
+          <app-audit-info [source]="definition"></app-audit-info>
+        </div>
+      }

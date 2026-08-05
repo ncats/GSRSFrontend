@@ -50,19 +50,19 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
     }, interval);
 }
 @HostListener('mouseover')
-private onIframeMouseOver() {
+onIframeMouseOver() {
   this.iframeMouseOver = true;
   this.resetFocusOnWindow();
 }
 
 @HostListener('mouseout')
-private onIframeMouseOut() {
+onIframeMouseOut() {
   this.iframeMouseOver = false;
   this.resetFocusOnWindow();
 }
 
 @HostListener('click')
-private onClick() {
+onClick() {
  // this.iframeMouseOver = false;
  setTimeout(() => {
   this.resetFocusOnWindow();

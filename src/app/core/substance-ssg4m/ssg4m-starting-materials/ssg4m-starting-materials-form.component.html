@@ -1,6 +1,8 @@
-<div *ngIf="startingMaterialIndex > 0">
-  <hr class="style" />
-</div>
+@if (startingMaterialIndex > 0) {
+  <div>
+    <hr class="style" />
+  </div>
+}
 
 <div class="form-container">
   <!-- Delete Starting Material Button -->
@@ -9,7 +11,7 @@
       mat-icon-button
       matTooltip="Delete Starting Material {{ startingMaterialIndex + 1 }}"
       (click)="confirmDeleteStartingMaterial()"
-    >
+      >
       <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
     </button>
   </div>
@@ -17,444 +19,455 @@
   <div class="divflex" style="vertical-align: top">
     <!-- FIRST COLUMN START -->
     <div>
-      <div
-        class="padtop10px related-substance"
-        *ngIf="
-          configSettingsDisplay['substanceName'] ||
-          (configSettingsDisplay['substanceName'] === undefined && true)
-        "
-      >
-        <app-substance-selector
-          (selectionUpdated)="relatedSubstanceUpdated($event)"
-          (draftSelected)="draftSubstanceSelected($event)"
-          eventCategory="substanceRelationshipRelatedSub"
-          placeholder="Search by Name/CAS RN/UNII/BDNUM"
-          header=""
-          [subuuid]="relatedSubstanceUuid"
-          [showMorelinks]="true"
-          [showDraftOption]="true"
-        >
-        </app-substance-selector>
-      </div>
+      @if (
+        configSettingsDisplay['substanceName'] ||
+        (configSettingsDisplay['substanceName'] === undefined && true)
+        ) {
+        <div
+          class="padtop10px related-substance"
+          >
+          <app-substance-selector
+            (selectionUpdated)="relatedSubstanceUpdated($event)"
+            (draftSelected)="draftSubstanceSelected($event)"
+            eventCategory="substanceRelationshipRelatedSub"
+            placeholder="Search by Name/CAS RN/UNII/BDNUM"
+            header=""
+            [subuuid]="relatedSubstanceUuid"
+            [showMorelinks]="true"
+            [showDraftOption]="true"
+            >
+          </app-substance-selector>
+        </div>
+      }
     </div>
     <!-- FIRST COLUMN END -->
 
     <!-- SECOND COLUMN START -->
     <div class="width80percent">
       <div class="form-row">
-        <mat-form-field
-          class="col"
-          *ngIf="
-            configSettingsDisplay['verbatimName'] ||
-            (configSettingsDisplay['verbatimName'] === undefined && true)
-          "
-        >
-          <mat-label>Material Display Name</mat-label>
-          <input
-            matInput
-            [(ngModel)]="startingMaterial.verbatimName"
-            name="startingMaterial.verbatimName"
-          />
-        </mat-form-field>
+        @if (
+          configSettingsDisplay['verbatimName'] ||
+          (configSettingsDisplay['verbatimName'] === undefined && true)
+          ) {
+          <mat-form-field
+            class="col"
+            >
+            <mat-label>Material Display Name</mat-label>
+            <input
+              matInput
+              [(ngModel)]="startingMaterial.verbatimName"
+              name="startingMaterial.verbatimName"
+              />
+          </mat-form-field>
+        }
 
-        <app-cv-input
-          class="col"
-          *ngIf="
-            configSettingsDisplay['substanceRole'] ||
-            (configSettingsDisplay['substanceRole'] === undefined && true)
-          "
-          domain="SSG_SUBSTANCE_ROLE"
-          required="true"
-          title="Substance Role"
-          [model]="startingMaterial.substanceRole"
-          (valueChange)="updateSubstanceRole($event)"
-        >
-        </app-cv-input>
+        @if (
+          configSettingsDisplay['substanceRole'] ||
+          (configSettingsDisplay['substanceRole'] === undefined && true)
+          ) {
+          <app-cv-input
+            class="col"
+            domain="SSG_SUBSTANCE_ROLE"
+            required="true"
+            title="Substance Role"
+            [model]="startingMaterial.substanceRole"
+            (valueChange)="updateSubstanceRole($event)"
+            >
+          </app-cv-input>
+        }
       </div>
 
       <div class="form-row">
-        <app-cv-input
-          class="col"
-          *ngIf="
-            configSettingsDisplay['substanceGrade'] ||
-            (configSettingsDisplay['substanceGrade'] === undefined && true)
-          "
-          domain="SSG_SUBSTANCE_GRADE"
-          title="Substance Grade"
-          [model]="startingMaterial.substanceGrade"
-          (valueChange)="updateSubstanceGrade($event)"
-        >
-        </app-cv-input>
+        @if (
+          configSettingsDisplay['substanceGrade'] ||
+          (configSettingsDisplay['substanceGrade'] === undefined && true)
+          ) {
+          <app-cv-input
+            class="col"
+            domain="SSG_SUBSTANCE_GRADE"
+            title="Substance Grade"
+            [model]="startingMaterial.substanceGrade"
+            (valueChange)="updateSubstanceGrade($event)"
+            >
+          </app-cv-input>
+        }
 
-        <mat-form-field
-          class="col"
-          *ngIf="
-            configSettingsDisplay['comments'] ||
-            (configSettingsDisplay['comments'] === undefined &&
-              showAdvancedSettings)
-          "
-        >
-          <mat-label>Comments</mat-label>
-          <textarea
-            matInput
-            [(ngModel)]="startingMaterial.comments"
-            name="startingMaterial.comments"
-            rows="1"
-          ></textarea>
-        </mat-form-field>
+        @if (
+          configSettingsDisplay['comments'] ||
+          (configSettingsDisplay['comments'] === undefined &&
+          showAdvancedSettings)
+          ) {
+          <mat-form-field
+            class="col"
+            >
+            <mat-label>Comments</mat-label>
+            <textarea
+              matInput
+              [(ngModel)]="startingMaterial.comments"
+              name="startingMaterial.comments"
+              rows="1"
+            ></textarea>
+          </mat-form-field>
+        }
       </div>
 
       <!-- Amount -->
       <div class="form-row">
-        <div
-          class="col margintop10px"
-          *ngIf="
-            configSettingsDisplay['amount'] ||
-            (configSettingsDisplay['amount'] === undefined &&
-              showAdvancedSettings)
-          "
-        >
-          <div class="divflex">
-            <div class="label amt-label">
-              Amount
-              <button
-                mat-icon-button
-                matTooltip="add"
-                (click)="openAmountDialog()"
-              >
-                <mat-icon svgIcon="add_circle_outline"></mat-icon>
-              </button>
-            </div>
-            <div class="padleft15px amount-display">
-              <div *ngIf="startingMaterial.amount">
-                {{ displayAmount(startingMaterial.amount) }}
+        @if (
+          configSettingsDisplay['amount'] ||
+          (configSettingsDisplay['amount'] === undefined &&
+          showAdvancedSettings)
+          ) {
+          <div
+            class="col margintop10px"
+            >
+            <div class="divflex">
+              <div class="label amt-label">
+                Amount
+                <button
+                  mat-icon-button
+                  matTooltip="add"
+                  (click)="openAmountDialog()"
+                  >
+                  <mat-icon svgIcon="add_circle_outline"></mat-icon>
+                </button>
+              </div>
+              <div class="padleft15px amount-display">
+                @if (startingMaterial.amount) {
+                  <div>
+                    {{ displayAmount(startingMaterial.amount) }}
+                  </div>
+                }
               </div>
             </div>
           </div>
-        </div>
+        }
       </div>
       <!-- Amount End -->
 
       <!-- Specification Type -->
-      <div
-        class="margintop20px"
-        *ngIf="
-          configSettingsDisplay['specificationReference'] ||
-          (configSettingsDisplay['specificationReference'] === undefined &&
-            showAdvancedSettings)
-        "
-      >
-        <div class="col" *ngIf="!startingMaterial.specificationReference">
-          <button
-            mat-button
-            ncatsFileSelect
-            (selectedFile)="fileSelected($event)"
-            class="marginleftneg15px"
-          >
-            <span>Certification Of Analysis</span>&nbsp;
-            <mat-icon svgIcon="cloud_upload"></mat-icon>
-          </button>
-        </div>
-
+      @if (
+        configSettingsDisplay['specificationReference'] ||
+        (configSettingsDisplay['specificationReference'] === undefined &&
+        showAdvancedSettings)
+        ) {
         <div
-          class="padleftneg10"
-          *ngIf="startingMaterial.specificationReference"
-        >
-          <button
-            mat-button
-            [matMenuTriggerFor]="documentMenu"
-            class="marginleftneg15px"
+          class="margintop20px"
           >
-            Certification Of Analysis: &nbsp;&nbsp;See Attachment
-            <mat-icon svgIcon="attachment"></mat-icon>
-          </button>
-          <mat-menu #documentMenu="matMenu" class="margintopneg30px">
-            <a
-              mat-menu-item
+          @if (!startingMaterial.specificationReference) {
+            <div class="col">
+              <button
+                mat-button
+                ncatsFileSelect
+                (selectedFile)="fileSelected($event)"
+                class="marginleftneg15px"
+                >
+                <span>Certification Of Analysis</span>&nbsp;
+                <mat-icon svgIcon="cloud_upload"></mat-icon>
+              </button>
+            </div>
+          }
+          @if (startingMaterial.specificationReference) {
+            <div
+              class="padleftneg10"
+              >
+              <button
+                mat-button
+                [matMenuTriggerFor]="documentMenu"
+                class="marginleftneg15px"
+                >
+                Certification Of Analysis: &nbsp;&nbsp;See Attachment
+                <mat-icon svgIcon="attachment"></mat-icon>
+              </button>
+              <mat-menu #documentMenu="matMenu" class="margintopneg30px">
+                <a
+                  mat-menu-item
               (click)="
                 downloadDocument(startingMaterial.specificationReference)
               "
-              >Download</a
-            >
-            <button
-              mat-menu-item
-              ncatsFileSelect
-              (selectedFile)="fileSelected($event)"
-            >
-              Replace
-            </button>
-            <button
-              mat-menu-item
-              (click)="startingMaterial.specificationReference = null"
-            >
-              Delete
-            </button>
-          </mat-menu>
-        </div>
-
-        <div class="loading-container" *ngIf="loading === true">
-          <div class="spinner-container">
-            <mat-progress-spinner
-              class="progress-spinner spinner"
-              [color]="primary"
-              mode="indeterminate"
-            >
-            </mat-progress-spinner>
+                  >Download</a
+                  >
+                  <button
+                    mat-menu-item
+                    ncatsFileSelect
+                    (selectedFile)="fileSelected($event)"
+                    >
+                    Replace
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="startingMaterial.specificationReference = null"
+                    >
+                    Delete
+                  </button>
+                </mat-menu>
+              </div>
+            }
+            @if (loading === true) {
+              <div class="loading-container">
+                <div class="spinner-container">
+                  <mat-progress-spinner
+                    class="progress-spinner spinner"
+                    [color]="primary"
+                    mode="indeterminate"
+                    >
+                  </mat-progress-spinner>
+                </div>
+                <span>Uploading</span>
+              </div>
+            }
+            @if (loading === false && error === true) {
+              <div
+                class="loading-container"
+                >
+                Error: There was a problem uploading this document
+              </div>
+            }
           </div>
-          <span>Uploading</span>
-        </div>
+        }
+        <!-- Specification Type End -->
 
-        <div
-          class="loading-container"
-          *ngIf="loading === false && error === true"
-        >
-          Error: There was a problem uploading this document
-        </div>
-      </div>
-      <!-- Specification Type End -->
-
-      <!-- Acceptance Criteria Add button -->
-      <div
-        *ngIf="
+        <!-- Acceptance Criteria Add button -->
+        @if (
           configSettingsDisplay['acceptanceCriteria'] ||
           (configSettingsDisplay['acceptanceCriteria'] === undefined && true)
-        "
-      >
-        <br />
-        <b>Acceptance Criterias: </b>&nbsp;
-        <button
-          mat-raised-button
-          color="primary"
-          class=""
-          matTooltip="Add Acceptance Criteria"
-          (click)="addAcceptanceCriteria(processIndex, siteIndex, stageIndex)"
-        >
-          <mat-icon>add_circle_outline</mat-icon>Add Acceptance Criteria
-        </button>
-
-        <!-- Acceptance Criteria Loop -->
-        <div *ngIf="startingMaterial.acceptanceCriterias != null">
+          ) {
           <div
-            class="margintop10px marginbottom10px"
-            *ngFor="
-              let acceptanceCriteria of startingMaterial.acceptanceCriterias;
-              let acceptanceIndex = index
-            "
-          >
-            <div class="form-row">
-              <mat-form-field class="col">
-                <mat-label>Acceptance Criteria</mat-label>
-                <input
-                  matInput
-                  [(ngModel)]="acceptanceCriteria.acceptanceCriteria"
-                  name="acceptanceCriteria.acceptanceCriteria"
-                />
-              </mat-form-field>
-
-              <app-cv-input
-                class="col"
-                domain="SSG_ACCEPTANCE_CRITERIA_TYPE"
-                title="Acceptance Criteria Type"
-                [model]="acceptanceCriteria.acceptanceCriteriaType"
+            >
+            <br />
+            <b>Acceptance Criterias: </b>&nbsp;
+            <button
+              mat-raised-button
+              color="primary"
+              class=""
+              matTooltip="Add Acceptance Criteria"
+              (click)="addAcceptanceCriteria(processIndex, siteIndex, stageIndex)"
+              >
+              <mat-icon>add_circle_outline</mat-icon>Add Acceptance Criteria
+            </button>
+            <!-- Acceptance Criteria Loop -->
+            @if (startingMaterial.acceptanceCriterias != null) {
+              <div>
+                @for (
+                  acceptanceCriteria of startingMaterial.acceptanceCriterias; track
+                  acceptanceCriteria; let acceptanceIndex = $index) {
+                  <div
+                    class="margintop10px marginbottom10px"
+                    >
+                    <div class="form-row">
+                      <mat-form-field class="col">
+                        <mat-label>Acceptance Criteria</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="acceptanceCriteria.acceptanceCriteria"
+                          name="acceptanceCriteria.acceptanceCriteria"
+                          />
+                      </mat-form-field>
+                      <app-cv-input
+                        class="col"
+                        domain="SSG_ACCEPTANCE_CRITERIA_TYPE"
+                        title="Acceptance Criteria Type"
+                        [model]="acceptanceCriteria.acceptanceCriteriaType"
                 (valueChange)="
                   updateAcceptanceCriteriaType($event, acceptanceIndex)
                 "
-              >
-              </app-cv-input>
-
-              <div class="button-delete">
-                <button
-                  mat-icon-button
+                        >
+                      </app-cv-input>
+                      <div class="button-delete">
+                        <button
+                          mat-icon-button
                   matTooltip="Delete Manufacturer Details{{
                     acceptanceIndex + 1
                   }}"
-                  (click)="confirmDeleteAcceptanceCriteria(acceptanceIndex)"
-                >
-                  <mat-icon
-                    class="colorred"
-                    svgIcon="delete_forever"
-                  ></mat-icon>
-                </button>
+                          (click)="confirmDeleteAcceptanceCriteria(acceptanceIndex)"
+                          >
+                          <mat-icon
+                            class="colorred"
+                            svgIcon="delete_forever"
+                          ></mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+                <!-- loop Acceptance Criteria -->
               </div>
-            </div>
+            }
           </div>
-          <!-- loop Acceptance Criteria -->
-        </div>
-      </div>
-      <!-- Acceptance Criteria Config -->
+        }
+        <!-- Acceptance Criteria Config -->
 
-      <!-- Manufacturer Detail Config, Add button -->
-      <div
-        *ngIf="
+        <!-- Manufacturer Detail Config, Add button -->
+        @if (
           configSettingsDisplay['manufacturer'] ||
           (configSettingsDisplay['manufacturer'] === undefined && true)
-        "
-      >
-        <br />
-        <br />
-        <b>Manufacturer Details: </b>&nbsp;
-        <!--{{startingMaterial.manufactureDetails.length}} -->
-        <button
-          mat-raised-button
-          color="primary"
-          class=""
-          matTooltip="Add Manufacturer"
-          (click)="addManufacturer(processIndex, siteIndex, stageIndex)"
-        >
-          <mat-icon>add_circle_outline</mat-icon>Add Manufacturer
-        </button>
-
-        <!-- Manufacturer Detail Loop -->
-        <div *ngIf="startingMaterial.manufacturerDetails != null">
+          ) {
           <div
-            class="margintop10px marginbottom10px"
-            *ngFor="
-              let manufacturerDetails of startingMaterial.manufacturerDetails;
-              let manufacturerIndex = index
-            "
-          >
-            <div class="form-row">
-              <mat-form-field class="col">
-                <mat-label>Manufacturer Name</mat-label>
-                <input
-                  matInput
-                  [(ngModel)]="manufacturerDetails.manufacturerName"
-                  name="manufacturerDetails.manufacturerName"
-                />
-              </mat-form-field>
-
-              <app-cv-input
-                class="col"
-                domain="SSG_MANUFACTURE_ID_TYPE"
-                title="Manufacturer ID Type"
-                [model]="manufacturerDetails.manufacturerIdType"
+            >
+            <br />
+            <br />
+            <b>Manufacturer Details: </b>&nbsp;
+            <!--{{startingMaterial.manufactureDetails.length}} -->
+            <button
+              mat-raised-button
+              color="primary"
+              class=""
+              matTooltip="Add Manufacturer"
+              (click)="addManufacturer(processIndex, siteIndex, stageIndex)"
+              >
+              <mat-icon>add_circle_outline</mat-icon>Add Manufacturer
+            </button>
+            <!-- Manufacturer Detail Loop -->
+            @if (startingMaterial.manufacturerDetails != null) {
+              <div>
+                @for (
+                  manufacturerDetails of startingMaterial.manufacturerDetails; track
+                  manufacturerDetails; let manufacturerIndex = $index) {
+                  <div
+                    class="margintop10px marginbottom10px"
+                    >
+                    <div class="form-row">
+                      <mat-form-field class="col">
+                        <mat-label>Manufacturer Name</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="manufacturerDetails.manufacturerName"
+                          name="manufacturerDetails.manufacturerName"
+                          />
+                      </mat-form-field>
+                      <app-cv-input
+                        class="col"
+                        domain="SSG_MANUFACTURE_ID_TYPE"
+                        title="Manufacturer ID Type"
+                        [model]="manufacturerDetails.manufacturerIdType"
                 (valueChange)="
                   updateManufacturerIdType(manufacturerIndex, $event)
                 "
-              >
-              </app-cv-input>
-
-              <mat-form-field class="col">
-                <mat-label>Manufacturer ID</mat-label>
-                <input
-                  matInput
-                  [(ngModel)]="manufacturerDetails.manufacturerId"
-                  name="manufactureDetails.manufacturerId"
-                />
-              </mat-form-field>
-
-              <mat-form-field class="col">
-                <mat-label>Lot No</mat-label>
-                <input
-                  matInput
-                  [(ngModel)]="manufacturerDetails.lotNo"
-                  name="manufactureDetails.lotNo"
-                />
-              </mat-form-field>
-
-              <div class="button-delete">
-                <button
-                  mat-icon-button
+                        >
+                      </app-cv-input>
+                      <mat-form-field class="col">
+                        <mat-label>Manufacturer ID</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="manufacturerDetails.manufacturerId"
+                          name="manufactureDetails.manufacturerId"
+                          />
+                      </mat-form-field>
+                      <mat-form-field class="col">
+                        <mat-label>Lot No</mat-label>
+                        <input
+                          matInput
+                          [(ngModel)]="manufacturerDetails.lotNo"
+                          name="manufactureDetails.lotNo"
+                          />
+                      </mat-form-field>
+                      <div class="button-delete">
+                        <button
+                          mat-icon-button
                   matTooltip="Delete Manufacturer Details{{
                     manufacturerIndex + 1
                   }}"
-                  (click)="confirmDeleteManufacturer(manufacturerIndex)"
-                >
-                  <mat-icon
-                    class="colorred"
-                    svgIcon="delete_forever"
-                  ></mat-icon>
-                </button>
+                          (click)="confirmDeleteManufacturer(manufacturerIndex)"
+                          >
+                          <mat-icon
+                            class="colorred"
+                            svgIcon="delete_forever"
+                          ></mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+                <!-- loop Manufacturer Details -->
               </div>
-            </div>
+            }
           </div>
-          <!-- loop Manufacturer Details -->
-        </div>
+        }
+        <!-- Manufacturer config -->
       </div>
-      <!-- Manufacturer config -->
+      <!-- SECOND COLUMN -->
     </div>
-    <!-- SECOND COLUMN -->
-  </div>
-  <!-- divflex -->
+    <!-- divflex -->
 
-  <!-- References -->
-  <div
-    class="form-row margintop10px"
-    *ngIf="
+    <!-- References -->
+    @if (
       configSettingsDisplay['references'] ||
       (configSettingsDisplay['references'] === undefined &&
-        showAdvancedSettings)
-    "
-  >
-    <br />
-    <div class="references-container">
-      <app-domain-references
-        [referencesUuids]="startingMaterial.references"
-        #references
-      ></app-domain-references>
-    </div>
-  </div>
+      showAdvancedSettings)
+      ) {
+      <div
+        class="form-row margintop10px"
+        >
+        <br />
+        <div class="references-container">
+          <app-domain-references
+            [referencesUuids]="startingMaterial.references"
+            #references
+          ></app-domain-references>
+        </div>
+      </div>
+    }
 
-  <!--
+    <!--
     <div class="form-row">
-    -->
-  <!-- Amount -->
-  <!--
-    <div class='col margintop10px'
-      *ngIf="configSettingsDisplay['amount'] || (configSettingsDisplay['amount'] === undefined && showAdvancedSettings)">
-      <br>
-      <div class="label amt-label">
-        Amount
-        <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
-          <mat-icon svgIcon="add_circle_outline"></mat-icon>
-        </button>
-      </div>
-      <div class="amount-display">
-        <div *ngIf="startingMaterial.amount">
-          {{displayAmount(startingMaterial.amount)}}
+      -->
+      <!-- Amount -->
+      <!--
+      <div class='col margintop10px'
+        *ngIf="configSettingsDisplay['amount'] || (configSettingsDisplay['amount'] === undefined && showAdvancedSettings)">
+        <br>
+          <div class="label amt-label">
+            Amount
+            <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>
+            </button>
+          </div>
+          <div class="amount-display">
+            <div *ngIf="startingMaterial.amount">
+              {{displayAmount(startingMaterial.amount)}}
+            </div>
+          </div>
         </div>
-      </div>
+        -->
+
+        <!-- Specification Type -->
+        <!--
+        <div class="margintop10px"
+          *ngIf="configSettingsDisplay['specificationReference'] || (configSettingsDisplay['specificationReference'] === undefined && showAdvancedSettings)">
+          <div class="col" *ngIf="!startingMaterial.specificationReference">
+            <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
+              <span>Certification Of Analysis</span>&nbsp;
+              <mat-icon svgIcon="cloud_upload"></mat-icon>
+            </button>
+          </div>
+          <div *ngIf="startingMaterial.specificationReference">
+            <button mat-button [matMenuTriggerFor]="documentMenu">
+              Certification Of Analysis: &nbsp;&nbsp;See Attachment
+              <mat-icon svgIcon="attachment"></mat-icon>
+            </button>
+            <mat-menu #documentMenu="matMenu">
+              <a mat-menu-item (click)="downloadDocument(startingMaterial.specificationReference)">Download</a>
+              <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Replace</button>
+              <button mat-menu-item (click)="startingMaterial.specificationReference = null">Delete</button>
+            </mat-menu>
+          </div>
+          <div class="loading-container" *ngIf="loading === true">
+            <div class="spinner-container">
+              <mat-progress-spinner class="progress-spinner spinner" [color]="primary" mode="indeterminate">
+              </mat-progress-spinner>
+            </div>
+
+            <span>Uploading</span>
+          </div>
+          <div class="loading-container" *ngIf="loading === false && error === true">
+            Error: There was a problem uploading this document
+          </div>
+        </div> -->
+        <!-- Specification Type End -->
+
+        <!--
+        <div class="middle-fill"></div>
+
+      </div> -->
+      <!-- form-row-->
     </div>
-    -->
-
-  <!-- Specification Type -->
-  <!--
-    <div class="margintop10px"
-      *ngIf="configSettingsDisplay['specificationReference'] || (configSettingsDisplay['specificationReference'] === undefined && showAdvancedSettings)">
-      <div class="col" *ngIf="!startingMaterial.specificationReference">
-        <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
-          <span>Certification Of Analysis</span>&nbsp;
-          <mat-icon svgIcon="cloud_upload"></mat-icon>
-        </button>
-      </div>
-      <div *ngIf="startingMaterial.specificationReference">
-        <button mat-button [matMenuTriggerFor]="documentMenu">
-          Certification Of Analysis: &nbsp;&nbsp;See Attachment
-          <mat-icon svgIcon="attachment"></mat-icon>
-        </button>
-        <mat-menu #documentMenu="matMenu">
-          <a mat-menu-item (click)="downloadDocument(startingMaterial.specificationReference)">Download</a>
-          <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Replace</button>
-          <button mat-menu-item (click)="startingMaterial.specificationReference = null">Delete</button>
-        </mat-menu>
-      </div>
-      <div class="loading-container" *ngIf="loading === true">
-        <div class="spinner-container">
-          <mat-progress-spinner class="progress-spinner spinner" [color]="primary" mode="indeterminate">
-          </mat-progress-spinner>
-        </div>
-
-        <span>Uploading</span>
-      </div>
-      <div class="loading-container" *ngIf="loading === false && error === true">
-        Error: There was a problem uploading this document
-      </div>
-    </div> -->
-  <!-- Specification Type End -->
-
-  <!--
-    <div class="middle-fill"></div>
-
-  </div> -->
-  <!-- form-row-->
-</div>

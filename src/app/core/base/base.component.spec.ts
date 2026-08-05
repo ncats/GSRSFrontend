@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BaseComponent } from './base.component';
@@ -23,7 +23,7 @@ describe('BaseComponent', () => {
   let routerStub: RouterStub;
   let activatedRouteStub: Partial<ActivatedRoute>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     routerStub = new RouterStub();
     const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
     const topSearchServiceSpy = jasmine.createSpyObj('TopSearchService', ['clearSearch', 'clearSearchEvent']);
@@ -77,14 +77,14 @@ describe('BaseComponent', () => {
       fixture.detectChanges(); // ngOnInit()
     });
 
-    it('should set mainPathSegment on init', async(() => {
+    it('should set mainPathSegment on init', waitForAsync(() => {
       fixture.whenStable().then(() => {
         fixture.detectChanges();
         expect(component.mainPathSegment).toBe('test-before', 'mainPathSegment should be set correctly');
       });
     }));
 
-    it('should set mainPathSegment when the router completes a state change', async(() => {
+    it('should set mainPathSegment when the router completes a state change', waitForAsync(() => {
       fixture.whenStable().then(() => {
         routerStub.fireNavigationEndEvent('/test-after/test');
         fixture.detectChanges();

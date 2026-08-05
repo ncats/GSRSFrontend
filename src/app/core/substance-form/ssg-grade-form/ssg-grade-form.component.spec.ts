@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SsgGradeFormComponent } from './ssg-grade-form.component';
 
@@ -6,7 +6,7 @@ describe('SsgGradeFormComponent', () => {
   let component: SsgGradeFormComponent;
   let fixture: ComponentFixture<SsgGradeFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SsgGradeFormComponent ]
     })

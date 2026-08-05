@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FacetsManagerComponent } from './facets-manager.component';
 
@@ -6,7 +6,7 @@ describe('FacetsManagerComponent', () => {
   let component: FacetsManagerComponent;
   let fixture: ComponentFixture<FacetsManagerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FacetsManagerComponent ]
     })

@@ -12,8 +12,12 @@
   <ng-container matColumnDef="citation">
     <th mat-header-cell *matHeaderCellDef> Source Text / Citation </th>
     <td mat-cell *matCellDef="let ref">
-      <a *ngIf="ref.url" target="_blank" [href]="ref.url" appTrackLinkEvent evCategory="substanceOverview">{{ref.citation}}</a>
-      <span *ngIf="!ref.url">{{ref.citation}}</span>
+      @if (ref.url) {
+        <a target="_blank" [href]="ref.url" appTrackLinkEvent evCategory="substanceOverview">{{ref.citation}}</a>
+      }
+      @if (!ref.url) {
+        <span>{{ref.citation}}</span>
+      }
     </td>
   </ng-container>
 
@@ -25,35 +29,51 @@
   <ng-container matColumnDef="tags">
     <th mat-header-cell *matHeaderCellDef> Tags </th>
     <td mat-cell *matCellDef="let ref">
-      <span  *ngIf = "showmore && (ref.tags && ref.tags.length > 0)" ><span class = "badge" *ngFor = "let tag of ref.tags"> {{tag}} </span> <a *ngIf = "ref.tags.length > 1" class = "morelink" (click) = "showmore = !showmore">hide</a> </span>  
-        <span  *ngIf = "!showmore && (ref.tags && ref.tags.length > 0)" ><span class = "badge" > {{ref.tags.length > 0? ref.tags[0]:null}}</span> <a *ngIf = "ref.tags.length > 1" class = "morelink" (click) = "showmore = !showmore">more...</a> </span>  
-        </td>
-  </ng-container>
+      @if (showmore && (ref.tags && ref.tags.length > 0)) {
+        <span  >@for (tag of ref.tags; track tag) {
+          <span class = "badge"> {{tag}} </span>
+          } @if (ref.tags.length > 1) {
+          <a class = "morelink" (click) = "showmore = !showmore">hide</a>
+        } </span>
+      }
+      @if (!showmore && (ref.tags && ref.tags.length > 0)) {
+        <span  ><span class = "badge" > {{ref.tags.length > 0? ref.tags[0]:null}}</span> @if (ref.tags.length > 1) {
+        <a class = "morelink" (click) = "showmore = !showmore">more...</a>
+      } </span>
+    }
+  </td>
+</ng-container>
 
-  <ng-container matColumnDef="files">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> File </th>
-    <td mat-cell *matCellDef="let ref">    
-      <a *ngIf ="ref.uploadedFile" [href] = "ref.uploadedFile"><mat-icon color = "primary" class = "blue" svgIcon="cloud_download"></mat-icon></a>
-    </td>
-  </ng-container>
+<ng-container matColumnDef="files">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> File </th>
+  <td mat-cell *matCellDef="let ref">
+    @if (ref.uploadedFile) {
+      <a [href] = "ref.uploadedFile"><mat-icon color = "primary" class = "blue" svgIcon="cloud_download"></mat-icon></a>
+    }
+  </td>
+</ng-container>
 
-  <ng-container matColumnDef="lastEdited">
-    <th mat-header-cell *matHeaderCellDef> Date Accessed </th>
-    <td mat-cell *matCellDef="let ref">
-      {{convertTimestamp(ref.lastEdited)}}
-    </td>
-  </ng-container>
+<ng-container matColumnDef="lastEdited">
+  <th mat-header-cell *matHeaderCellDef> Date Accessed </th>
+  <td mat-cell *matCellDef="let ref">
+    {{convertTimestamp(ref.lastEdited)}}
+  </td>
+</ng-container>
 
-  <ng-container matColumnDef="access">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Access </th>
-      <td mat-cell *matCellDef="let reference">
-        <span *ngIf="reference.access?.length" matTooltip="Not Public">
-          <mat-icon svgIcon="lock" class="icon-align blue-font"></mat-icon></span>
-          <span *ngIf="!reference.access?.length" matTooltip="Public">
-              <mat-icon svgIcon="lock_open" class="icon-align blue-font"></mat-icon></span>
-        </td>
+<ng-container matColumnDef="access">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Access </th>
+  <td mat-cell *matCellDef="let reference">
+    @if (reference.access?.length) {
+      <span matTooltip="Not Public">
+        <mat-icon svgIcon="lock" class="icon-align blue-font"></mat-icon></span>
+      }
+      @if (!reference.access?.length) {
+        <span matTooltip="Public">
+          <mat-icon svgIcon="lock_open" class="icon-align blue-font"></mat-icon></span>
+        }
+      </td>
     </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>

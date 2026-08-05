@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubunitSelectorComponent } from './subunit-selector.component';
 
@@ -6,7 +6,7 @@ describe('SubunitSelectorComponent', () => {
   let component: SubunitSelectorComponent;
   let fixture: ComponentFixture<SubunitSelectorComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubunitSelectorComponent ]
     })

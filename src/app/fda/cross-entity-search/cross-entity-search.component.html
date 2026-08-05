@@ -2,9 +2,11 @@
 <mat-form-field class="entitydropdown dropdownoverlap">
   <mat-label>Show Facets for:</mat-label> <!-- DO not display the option if the entity is same as option value -->
   <mat-select [formControl]="showFacetForFormControl" (selectionChange)="subEntitySelectedChange($event)">
-    <mat-option *ngFor="let subEntity of filteredSubEntity; index as index" [value]="subEntity.entity">
-      {{subEntity.entityDisplay}}
-    </mat-option>
+    @for (subEntity of filteredSubEntity; track subEntity; let index = $index) {
+      <mat-option [value]="subEntity.entity">
+        {{subEntity.entityDisplay}}
+      </mat-option>
+    }
   </mat-select>
 </mat-form-field>
 
@@ -39,122 +41,130 @@
       <div class="margintop10px marginbottom10px padbottom10px borderbottomgray">
         <!-- display search term for current entity -->
         <div class="search-parameters">
-          <div class="mat-elevation-z2 selected-parameter" *ngIf="thisEntitySearchTerm">
-            <div>
-              <span class="capitalized font-medium-bold">Search Query:</span>&nbsp;
-              <span>{{thisEntitySearchTerm}}</span>
+          @if (thisEntitySearchTerm) {
+            <div class="mat-elevation-z2 selected-parameter">
+              <div>
+                <span class="capitalized font-medium-bold">Search Query:</span>&nbsp;
+                <span>{{thisEntitySearchTerm}}</span>
+              </div>
             </div>
-          </div>
+          }
 
           <!-- display Facets for current entity -->
 
-          <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of thisEntityDisplayFacets">
-            <div class='selected-container'>
-              <span class="selected-label">
-                <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
-                {{facet.type}}:
-              </span>
-              <span class="no-break selected-value">
-                {{facet.val}}
-              </span>
+          @for (facet of thisEntityDisplayFacets; track facet) {
+            <div class="mat-elevation-z2 selected-parameter">
+              <div class='selected-container'>
+                <span class="selected-label">
+                  @if (!facet.bool) {
+                    <mat-icon class="not-icon" svgIcon="not_interested"></mat-icon>
+                  }
+                  {{facet.type}}:
+                </span>
+                <span class="no-break selected-value">
+                  {{facet.val}}
+                </span>
+              </div>
+              <div class="actions-container">
+              </div>
             </div>
-
-            <div class="actions-container">
-            </div>
-
-          </div>
+          }
 
         </div> <!-- search-parameters -->
 
       </div> <!-- ENTITY DETAILS END -->
 
       <!-- Display Status Message -->
-      <div class="margintop10px font12px" *ngIf="statusMessageSecond">
-        <span [innerHTML]="statusMessageSecond"></span>
-      </div>
+      @if (statusMessageSecond) {
+        <div class="margintop10px font12px">
+          <span [innerHTML]="statusMessageSecond"></span>
+        </div>
+      }
 
-      <div class="divflex margintop25px" *ngIf="statusMessage">
-        <!-- Display More Status Message -->
-        <div class="marginbottom10px colorred">
-          <span [innerHTML]="statusMessage"></span>
+      @if (statusMessage) {
+        <div class="divflex margintop25px">
+          <!-- Display More Status Message -->
+          <div class="marginbottom10px colorred">
+            <span [innerHTML]="statusMessage"></span>
+          </div>
+          @if (isSearchRunning == false && facetsParamsUpdateCount == 0) {
+            <div class="margintop30px marginleft30px">
+              <div>
+                <button mat-raised-button color="primary" (click)="showSubEntityFacets()">
+                  Show {{subEntityDisplay}} Facets
+                </button>
+              </div>
+            </div>
+          }
+          @if (isSearchRunning == true) {
+            <div class="margintop30px marginleft30px">
+              <div>
+                <button mat-raised-button color="primary" (click)="cancelBulkSearch()">
+                  Cancel Search
+                </button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a mat-raised-button color="primary" [routerLink]="['/home']" matTooltip='Open GSRS in new tab' target="_blank">Open GSRS in new tab</a>
+              </div>
+            </div>
+          }
+        </div>
+        } <!-- divflex -->
+
+
+        <!-- SHOW PROGRESS BAR -->
+        @if ((isSearchRunning == true && facetsParamsUpdateCount == 0) && bulkSearchTotal > 0) {
+          <div class="progress-bar-container margintop20px">
+            <div class="progress-bar" [style.width.%]="bulkSearchTotalPercent"></div>
+            <div class="progress-text">
+              {{bulkSearchCurrentCount}} of {{bulkSearchTotal}}
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {{ bulkSearchTotalPercent }}%
+            </div>
+          </div>
+        }
+
+
+        <!-- ****************************************************** -->
+        <!-- ***** DISPLAY FACETS FOR SUB ENTITY  ***************** -->
+
+        <!-- SHOW FACETS HERE -->
+        @if (((rawFacets && rawFacets.length > 0) && (showFacets == true))) {
+          <div class="margintop10px">
+            <div class="divflex">
+              <div>
+                <span class="font20px colorlightblue fontbold"><b>{{subEntityDisplay}}</b> Facets</span>
+              </div>
+              <div class="marginleft40px">
+                Total {{subEntityDisplay}} Records: <span><b>{{subEntityTotalRecords}}</b></span>
+              </div>
+            </div> <!-- divflex -->
+            <!-- SHOW SUB ENTITY FACETS -->
+            <div class="divflex margintop15px">
+              <div class="width400px">
+                <app-facets-manager (facetsParamsUpdated)="subEntityfacetsParamsUpdated($event)"
+                  (facetsLoaded)="facetsLoaded($event)" [rawFacets]="rawFacets"
+                  [facetViewCategorySelected]="facetViewCategorySelected" [configName]="subEntityEndpoint"
+                  [calledFrom]="crossEntitySearch" includeFacetSearch="true">
+                </app-facets-manager>
+              </div>
+              <div>
+                &nbsp;
+              </div>
+            </div> <!-- divflex -->
+          </div>
+          } <!-- rowFacets.length > 0 -->
+
+          <br><br>
+        </div> <!-- mat-dialog-content -->
+
+        <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          @if (!isSearchRunning) {
+            <button mat-raised-button color="primary" (click)="closePopup()" mat-dialog-close>Close</button>
+          }
         </div>
 
-        <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == false && facetsParamsUpdateCount == 0">
-          <div>
-            <button mat-raised-button color="primary" (click)="showSubEntityFacets()">
-              Show {{subEntityDisplay}} Facets
-            </button>
-          </div>
-        </div>
-
-        <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == true">
-          <div>
-            <button mat-raised-button color="primary" (click)="cancelBulkSearch()">
-              Cancel Search
-            </button>
-
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <a mat-raised-button color="primary" [routerLink]="['/home']" matTooltip='Open GSRS in new tab' target="_blank">Open GSRS in new tab</a>
-          </div>
-        </div>
-
-      </div> <!-- divflex -->
-
-
-      <!-- SHOW PROGRESS BAR -->
-      <div class="progress-bar-container margintop20px" *ngIf="(isSearchRunning == true && facetsParamsUpdateCount == 0) && bulkSearchTotal > 0">
-          <div class="progress-bar" [style.width.%]="bulkSearchTotalPercent"></div>
-          <div class="progress-text">
-            {{bulkSearchCurrentCount}} of {{bulkSearchTotal}}
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {{ bulkSearchTotalPercent }}%
-          </div>
-      </div>
-
-
-      <!-- ****************************************************** -->
-      <!-- ***** DISPLAY FACETS FOR SUB ENTITY  ***************** -->
-
-      <!-- SHOW FACETS HERE -->
-      <div class="margintop10px" *ngIf="((rawFacets && rawFacets.length > 0) && (showFacets == true))">
-
-        <div class="divflex">
-          <div>
-            <span class="font20px colorlightblue fontbold"><b>{{subEntityDisplay}}</b> Facets</span>
-          </div>
-
-          <div class="marginleft40px">
-            Total {{subEntityDisplay}} Records: <span><b>{{subEntityTotalRecords}}</b></span>
-          </div>
-        </div> <!-- divflex -->
-
-        <!-- SHOW SUB ENTITY FACETS -->
-        <div class="divflex margintop15px">
-
-          <div class="width400px">
-            <app-facets-manager (facetsParamsUpdated)="subEntityfacetsParamsUpdated($event)"
-              (facetsLoaded)="facetsLoaded($event)" [rawFacets]="rawFacets"
-              [facetViewCategorySelected]="facetViewCategorySelected" [configName]="subEntityEndpoint"
-              [calledFrom]="crossEntitySearch" includeFacetSearch="true">
-            </app-facets-manager>
-          </div>
-
-          <div>
-            &nbsp;
-          </div>
-        </div> <!-- divflex -->
-
-      </div> <!-- rowFacets.length > 0 -->
-
-      <br><br>
-    </div> <!-- mat-dialog-content -->
-
-    <div mat-dialog-actions>
-      <span class="middle-fill"></span>
-      <button *ngIf="!isSearchRunning" mat-raised-button color="primary" (click)="closePopup()" mat-dialog-close>Close</button>
+      </ng-template>
+      <!-- POPUP DIALOG for CONTROLS END -->
     </div>
-
-  </ng-template>
-  <!-- POPUP DIALOG for CONTROLS END -->
-</div>
-<!-- END: CROSS-ENTITY Search -->
+    <!-- END: CROSS-ENTITY Search -->

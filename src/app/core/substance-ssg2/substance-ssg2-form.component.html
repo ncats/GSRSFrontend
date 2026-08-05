@@ -3,57 +3,79 @@
     <button mat-flat-button color="primary" class="json-button" (click)="showJSON()">Show JSON</button>
     <button mat-flat-button color="primary" class="import-button" (click)="importDialog()">Import JSON</button>
 
-    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-      *ngIf="(validationMessages && validationMessages.length > 0)">
-      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
-      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
-    </button>
+    @if ((validationMessages && validationMessages.length > 0)) {
+      <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+        >
+        {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+        <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+      </button>
+    }
     <span class="middle-fill"></span>
     <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
-    <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
-      *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
+    @if (definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE') {
+      <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
       (click)="validate('approval')">Approve</button>
+    }
 
   </div>
   <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
-    <div class="submission-message" *ngIf="submissionMessage">
-      {{submissionMessage}}
-    </div>
-    <div *ngIf="validationMessages">
-      <span *ngIf=" validationMessages.length > 0">
-        <div class="submission-message" *ngIf='!serverError && !approving'>
-          Please correct or dismiss the following errors and submit again:
-        </div>
-        <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
-          <span class = "validation-body" >
-          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
-            {{message.messageType}}</div>
-          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />
-              <a [href]="fixLink(link.href)" class="internal-link"
-                target="_blank">{{link.text}}</a></span>
-          </div>
-        </span>
-        <span class = "validation-dismiss">
-          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-            (click)="dismissValidationMessage(i)">
-            <mat-icon svgIcon="cancel"></mat-icon>
-          </button>
-        </span>
-        </div>
-      </span>
-      <div class="dismiss-container">
-        <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
-          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
-          Submit</button>
-          <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false"
-           >
-          Cancel</button>
-        <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
-          [disabled]="isLoading || !canApprove"> Confirm Approval</button>
-
+    @if (submissionMessage) {
+      <div class="submission-message">
+        {{submissionMessage}}
       </div>
-    </div>
+    }
+    @if (validationMessages) {
+      <div>
+        @if ( validationMessages.length > 0) {
+          <span>
+            @if (!serverError && !approving) {
+              <div class="submission-message">
+                Please correct or dismiss the following errors and submit again:
+              </div>
+            }
+            @for (message of validationMessages; track message; let i = $index) {
+              <div class="validation-message" >
+                <span class = "validation-body" >
+                  <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+                  {{message.messageType}}</div>
+                  <div class="message">{{message.message}}@for (link of message.links; track link) {
+                    <span><br />
+                      <a [href]="fixLink(link.href)" class="internal-link"
+                      target="_blank">{{link.text}}</a></span>
+                    }
+                  </div>
+                </span>
+                <span class = "validation-dismiss">
+                  @if (message.messageType != 'ERROR' && !approving) {
+                    <button mat-icon-button matTooltip="Dismiss"
+                      (click)="dismissValidationMessage(i)">
+                      <mat-icon svgIcon="cancel"></mat-icon>
+                    </button>
+                  }
+                </span>
+              </div>
+            }
+          </span>
+        }
+        <div class="dismiss-container">
+          <span class="middle-fill"></span>
+          @if (!approving) {
+            <button mat-flat-button color="primary" (click)="submit()"
+              [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
+            Submit</button>
+          }
+          @if (!approving) {
+            <button mat-flat-button (click)="showSubmissionMessages = false"
+              >
+            Cancel</button>
+          }
+          @if (approving) {
+            <button mat-flat-button color="primary" (click)="approve()"
+            [disabled]="isLoading || !canApprove"> Confirm Approval</button>
+          }
+        </div>
+      </div>
+    }
   </div>
 </div>
 <div class="form-content-container">
@@ -66,24 +88,28 @@
   <div class="scrollable-container">
     <div class="cards-container">
       <mat-accordion multi="true">
-        <mat-expansion-panel #expansionPanel [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
-          *ngFor="let section of formSections; index as index; last as isLast" [id]="section.dynamicComponentName"
-          [ngClass]="{'hidden': section.isHidden}">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <h2>{{section.menuLabel}}</h2>
-              <div class="middle-fill"></div>
-              <div *ngIf="section.canAddItem">
-                <button mat-flat-button color="primary" id = "Add new {{section.menuLabel}}" (click)="section.addItem(); $event.stopPropagation()"
-                  matTooltip="Add new {{section.menuLabel}}">
-                  Add {{section.menuLabel}}
-                  <mat-icon svgIcon="add_circle_outline"></mat-icon>
-                </button>
-              </div>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div #dynamicComponent></div>
-        </mat-expansion-panel>
+        @for (section of formSections; track section; let index = $index; let isLast = $last) {
+          <mat-expansion-panel #expansionPanel [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
+            [id]="section.dynamicComponentName"
+            [ngClass]="{'hidden': section.isHidden}">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <h2>{{section.menuLabel}}</h2>
+                <div class="middle-fill"></div>
+                @if (section.canAddItem) {
+                  <div>
+                    <button mat-flat-button color="primary" id = "Add new {{section.menuLabel}}" (click)="section.addItem(); $event.stopPropagation()"
+                      matTooltip="Add new {{section.menuLabel}}">
+                      Add {{section.menuLabel}}
+                      <mat-icon svgIcon="add_circle_outline"></mat-icon>
+                    </button>
+                  </div>
+                }
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div #dynamicComponent></div>
+          </mat-expansion-panel>
+        }
       </mat-accordion>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceFormStructurallyDiverseOrganismComponent } from './substance-form-structurally-diverse-organism.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceFormStructurallyDiverseOrganismComponent', () => {
   let component: SubstanceFormStructurallyDiverseOrganismComponent;
   let fixture: ComponentFixture<SubstanceFormStructurallyDiverseOrganismComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceFormStructurallyDiverseOrganismComponent ]
     })

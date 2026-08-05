@@ -2,17 +2,21 @@
   <div class = "form-row">
   </div>
   <div class = 'form-row' [ngClass] = "invalidSites === 0?'':'too-many'">Remaining Links: {{invalidSites === 0?remainingSites.length : invalidSites}}</div>
-  <div class = "alternate-backgrounds" *ngFor = "let links of links; last as isLast; index as index"  appScrollToTarget [id]="'substance-other-links-' + index" >
-    <app-link-form [link]="links" [remaining] = 'remainingSites' (linkDeleted)="deleteLink($event)"></app-link-form>
-    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
+  @for (links of links; track links; let isLast = $last; let index = $index) {
+    <div class = "alternate-backgrounds"  appScrollToTarget [id]="'substance-other-links-' + index" >
+      <app-link-form [link]="links" [remaining] = 'remainingSites' (linkDeleted)="deleteLink($event)"></app-link-form>
+      @if (!isLast) {
+        <mat-divider class="form-divider" [inset]="true"></mat-divider>
+      }
+    </div>
+  }
+
+
+
+  <div class = "form-row">
+    <span class = "middle-fill"></span>
+    <button mat-button (click)="addOtherLink()">
+      Add linkage <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    </button>
   </div>
-
-
-
-    <div class = "form-row">
-        <span class = "middle-fill"></span>
-           <button mat-button (click)="addOtherLink()">
-            Add linkage <mat-icon svgIcon="add_circle_outline"></mat-icon>
-          </button>
-</div>
 </div>

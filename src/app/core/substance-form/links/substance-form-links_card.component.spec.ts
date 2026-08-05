@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceFormLinksCardComponent } from './substance-form-links_card.component';
 
@@ -6,7 +6,7 @@ describe('SubstanceFormLinksComponent', () => {
   let component: SubstanceFormLinksCardComponent;
   let fixture: ComponentFixture<SubstanceFormLinksCardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SubstanceFormLinksCardComponent ]
     })
