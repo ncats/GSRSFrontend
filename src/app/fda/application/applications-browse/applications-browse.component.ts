@@ -7,7 +7,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as _ from 'lodash';
 import { Sort } from '@angular/material/sort';
 
 // GSRS Imports

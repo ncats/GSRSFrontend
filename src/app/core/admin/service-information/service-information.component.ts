@@ -4,7 +4,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
+import lodashFilter from 'lodash/filter';
+import lodashMap from 'lodash/map';
 
 @Component({
     selector: 'app-service-information',
@@ -89,8 +90,8 @@ export class ServiceInformationComponent implements OnInit {
     }
 
     ngOnInit() {
-      let activeServices = _.filter(this.configService.configData?.services || [], {  'active': true });
-      this.services = _.map(activeServices, "name", ).sort();
+      let activeServices = lodashFilter(this.configService.configData?.services || [], {  'active': true });
+      this.services = lodashMap(activeServices, "name", ).sort();
       this.loading = false;
       if(this.currentService) {
         setTimeout(() => {

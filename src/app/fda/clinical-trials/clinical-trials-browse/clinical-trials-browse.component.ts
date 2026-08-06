@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial } from '../clinical-trial/clinical-trial.model';
 import { ConfigService } from '@gsrs-core/config';
-import * as _ from 'lodash';
+import lodashHas from 'lodash/has';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -36,7 +36,6 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analy
 })
 
 export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  public lodash = _;
   public privateSearchTerm = '';
   private privateSearchType = 'all';
   private privateSearchCutoff?: number;
@@ -313,7 +312,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   deleteClinicalTrial(index: number) {
-    if (typeof this.clinicalTrials[index] === 'undefined' || ! _.has(this.clinicalTrials[index], 'trialNumber')) {
+    if (typeof this.clinicalTrials[index] === 'undefined' || ! lodashHas(this.clinicalTrials[index], 'trialNumber')) {
         alert('A trial number is required.');
         return;
     }

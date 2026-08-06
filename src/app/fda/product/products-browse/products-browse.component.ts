@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import * as moment from 'moment';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
@@ -917,7 +917,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     const date = new Date();
     let jsonFilename = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    const copyProd = _.cloneDeep(this.products[productIndex]);
+    const copyProd = lodashCloneDeep(this.products[productIndex]);
     let cleanProduct = this.scrub(copyProd);
 
     let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };
@@ -934,7 +934,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   saveJSON(productIndex: number): void {
-    const copyProd = _.cloneDeep(this.products[productIndex]);
+    const copyProd = lodashCloneDeep(this.products[productIndex]);
     let cleanProduct = this.scrub(copyProd);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanProduct)));

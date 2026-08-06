@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, Inject } from '@angular/core';
 import { Editor } from '@gsrs-core/structure-editor';
-import * as _ from 'lodash';
+import lodashChain from 'lodash/chain';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
 import { EventEmitter } from '@angular/core';
@@ -317,7 +317,7 @@ this.dialogRef.close(this.privateTerm);
     } else {
       selected = this.vocabulary;
     }
-    var rgs = _.chain(selected.terms).map(function (t) {
+    var rgs = lodashChain(selected.terms).map(function (t) {
       return t.fragmentStructure;
     }).filter(function (t) {
       return typeof t !== 'undefined';

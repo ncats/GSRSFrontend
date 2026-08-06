@@ -17,7 +17,6 @@ import { AuthService } from '../../core/auth/auth.service';
 import { BulkSearchService } from './service/bulk-search.service';
 import { BulkQuery } from './bulk-query.model';
 import { BulkSearch } from './bulk-search.model';
-import * as lodash from 'lodash';
 
   @Component({
     selector: 'app-bulk-query',
@@ -27,7 +26,6 @@ import * as lodash from 'lodash';
 })
 
 export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
-  _ = lodash;
   loadedComponents: LoadedComponents;
   isLoggedIn = false;
   showDeprecated = false;

@@ -26,7 +26,8 @@ import {Subscription, Observable, Subject} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import * as _ from 'lodash';
+import lodashChain from 'lodash/chain';
+import lodashRemove from 'lodash/remove';
 import {Title} from '@angular/platform-browser';
 import {AuthService} from '@gsrs-core/auth';
 import {take, map, filter} from 'rxjs/operators';
@@ -1324,7 +1325,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       remove = this.configService.configData.filteredDuplicationCodes;
     }
     remove.forEach(code => {
-      _.remove(old.codes, {
+      lodashRemove(old.codes, {
         codeSystem: code
       });
     })
@@ -1378,7 +1379,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       }
     }
 
-    const nrefs = _.chain(old.references)
+    const nrefs = lodashChain(old.references)
       .filter(function (ref) {
         if (refSet[ref.uuid]) {
           return true;

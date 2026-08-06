@@ -6,7 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -128,7 +128,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    const copyAssay = _.cloneDeep(this.assay);
+    const copyAssay = lodashCloneDeep(this.assay);
     let cleanAssay = this.scrub(copyAssay);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanAssay)));
@@ -142,7 +142,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     const date = new Date();
     let jsonFilename = 'invitro_pharm_assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    const copyAssay = _.cloneDeep(this.assay);
+    const copyAssay = lodashCloneDeep(this.assay);
     let cleanAssay = this.scrub(copyAssay);
 
     let data = { jsonData: cleanAssay, jsonFilename: jsonFilename };

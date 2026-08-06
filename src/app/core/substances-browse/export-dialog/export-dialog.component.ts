@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import * as moment from 'moment';
-import * as _ from 'lodash';
+import lodashIsEqual from 'lodash/isEqual';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 
@@ -263,7 +263,7 @@ export class ExportDialogComponent implements OnInit {
     // we need to treat properties that are undefined, null, false, or empty arrays as the same value for the sake of detecting differences
 
     let result = false;
-    if (!_.isEqual(config, model)) {
+    if (!lodashIsEqual(config, model)) {
       if ((!config || Object.keys(config).length === 0) && 
       (!model || Object.keys(model).length === 0)) {
       } else {
@@ -280,7 +280,7 @@ export class ExportDialogComponent implements OnInit {
             delete check2[key];
           }
         });
-        if (!_.isEqual(check1, check2)) {
+        if (!lodashIsEqual(check1, check2)) {
           result = true;
         }
       }

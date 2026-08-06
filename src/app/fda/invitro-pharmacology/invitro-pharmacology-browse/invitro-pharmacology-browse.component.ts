@@ -8,7 +8,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import * as moment from 'moment';
 
 /* GSRS Core Imports */
@@ -1169,7 +1169,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit, AfterViewInit
     const date = new Date();
     let jsonFilename = 'Invitro_Pharmacology_Assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    const copyAssay = _.cloneDeep(this.assays[index]);
+    const copyAssay = lodashCloneDeep(this.assays[index]);
     //let cleanProduct = this.scrub(copyProd);
 
     let data = { jsonData: copyAssay, jsonFilename: jsonFilename };

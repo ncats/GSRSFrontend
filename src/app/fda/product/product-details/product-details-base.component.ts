@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DomSanitizer, SafeUrl, Title } from '@angular/platform-browser';
 import * as moment from 'moment';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 
 /* GSRS Core Import */
 import { LoadingService } from '@gsrs-core/loading';
@@ -433,7 +433,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   saveJSON(): void {
-    const copyProd = _.cloneDeep(this.product);
+    const copyProd = lodashCloneDeep(this.product);
     let cleanProduct = this.scrub(copyProd);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanProduct)));
@@ -447,7 +447,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     const date = new Date();
     let jsonFilename = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    const copyProd = _.cloneDeep(this.product);
+    const copyProd = lodashCloneDeep(this.product);
     let cleanProduct = this.scrub(copyProd);
 
     let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };

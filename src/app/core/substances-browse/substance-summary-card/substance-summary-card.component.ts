@@ -36,7 +36,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ShowMolfileDialogComponent } from "@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component";
 import { ConfigService } from "@gsrs-core/config";
 import { Vocabulary } from "@gsrs-core/controlled-vocabulary";
-import * as lodash from "lodash";
+import join from 'lodash/join';
 import { BulkSearchService } from "@gsrs-core/bulk-search/service/bulk-search.service";
 import { ListCreateDialogComponent } from "@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component";
 
@@ -75,7 +75,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   privateNames?: Array<SubstanceName>;
   nameLoading = true;
   selectedList: string;
-  _ = lodash;
+  join = join;
 
   constructor(
     public utilsService: UtilsService,

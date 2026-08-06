@@ -17,7 +17,7 @@ import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceSummary } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
 import { LoadedComponents } from '../config/config.model';
-import * as _ from 'lodash';
+import lodashSortBy from 'lodash/sortBy';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
@@ -780,7 +780,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   sortMatchTypes(a: Array<string>) {
-    return _.sortBy(a);
+    return lodashSortBy(a);
   }
 
   searchTermOkforBeginsWithSearch(): boolean {

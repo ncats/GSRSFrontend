@@ -4,7 +4,8 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SubstanceDetail, SubstanceRelated, SubstanceService} from '@gsrs-core/substance';
 import {take} from 'rxjs/operators';
-import * as _ from 'lodash';
+import lodashChain from 'lodash/chain';
+import lodashRemove from 'lodash/remove';
 import jp from 'jsonpath';
 
 @Component({
@@ -47,7 +48,7 @@ export class MergeConceptDialogComponent implements OnInit {
     this.loading = true;
     this.substanceService.getSubstanceDetails(this.data.uuid).pipe(take(1)).subscribe(sub => {
       this.copy = sub;
-      this.subconcepts = _.chain(sub.relationships).filter(relationship => {
+      this.subconcepts = lodashChain(sub.relationships).filter(relationship => {
         return relationship.type === 'SUB_CONCEPT->SUBSTANCE';
       }).map(relationship => {
         return relationship.relatedSubstance;
@@ -76,7 +77,7 @@ export class MergeConceptDialogComponent implements OnInit {
     this.loading = true;
 
     function BDNUM_MAPPER(oldSub) {
-      return _.chain(oldSub.codes).filter(function (code) {
+      return lodashChain(oldSub.codes).filter(function (code) {
         return code.codeSystem === 'BDNUM';
       }).filter(function (code) {
         return code.type === 'PRIMARY';
@@ -113,7 +114,7 @@ export class MergeConceptDialogComponent implements OnInit {
         'access': ['protected']
       };
 
-      const oldref = _.chain(oldSub.relationships).filter(r => {
+      const oldref = lodashChain(oldSub.relationships).filter(r => {
         return r.relatedSubstance.refuuid === uuid;
       }).value();
 
@@ -122,7 +123,7 @@ export class MergeConceptDialogComponent implements OnInit {
       }
 
 
-      newSub.relationships = _.chain(newSub.relationships).filter(r => {
+      newSub.relationships = lodashChain(newSub.relationships).filter(r => {
         return r.type !== 'SUBSTANCE->SUB_CONCEPT';
       }).value();
       newSub.references.push(bdref);
@@ -186,13 +187,13 @@ export class MergeConceptDialogComponent implements OnInit {
     'access': ['admin', 'protected'],
     'references': [depRef.uuid]
   }];
-  concept.codes = _.chain(concept.codes).filter(function (c) {
+  concept.codes = lodashChain(concept.codes).filter(function (c) {
     return c.codeSystem === 'BDNUM';
   }).value();
   concept.notes = [{
     'note': 'Data migrated to record:' + this.oldBdnum
   }];
-  concept.relationships = _.chain(concept.relationships).filter(function (r) {
+  concept.relationships = lodashChain(concept.relationships).filter(function (r) {
     return r.type === 'SUBSTANCE->SUB_CONCEPT';
   }).value();
   concept.deprecated = true;
@@ -258,7 +259,7 @@ export class MergeConceptDialogComponent implements OnInit {
         refs[j] = map[or];
       }
     }
-    _.remove(old.codes, {
+    lodashRemove(old.codes, {
       codeSystem: 'BDNUM'
     });
     const createHolders = jp.query(old, '$..[?(@.created)]');
@@ -310,7 +311,7 @@ export class MergeConceptDialogComponent implements OnInit {
         }
       }
 
-      const nrefs = _.chain(old.references)
+      const nrefs = lodashChain(old.references)
         .filter(function(ref) {
           if (refSet[ref.uuid]) {
             return true;

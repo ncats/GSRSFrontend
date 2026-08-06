@@ -3,7 +3,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { ConfigService } from '@gsrs-core/config';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
+import lodashFilter from 'lodash/filter';
+import lodashMap from 'lodash/map';
 
 
 @Component({
@@ -39,8 +40,8 @@ export class ScheduledJobsComponent implements OnInit {
   }
   
   ngOnInit() {
-    let activeAndHasEntitiesServices = _.filter(this.configService.configData?.services || [], {  'active': true, 'hasEntities': true });
-    this.services = _.map(activeAndHasEntitiesServices, "name", ).sort();
+    let activeAndHasEntitiesServices = lodashFilter(this.configService.configData?.services || [], {  'active': true, 'hasEntities': true });
+    this.services = lodashMap(activeAndHasEntitiesServices, "name", ).sort();
     this.loading = true;
     setTimeout(() => {
       this.adminService.fetchJobs(this.currentService).pipe(take(1)).subscribe( resp => {

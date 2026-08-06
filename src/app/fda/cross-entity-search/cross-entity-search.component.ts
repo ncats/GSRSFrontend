@@ -5,7 +5,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 
 /* GSRS Import */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -205,7 +205,7 @@ export class CrossEntitySearchComponent implements OnInit, OnDestroy {
     this.idListForSearch = list || [];
 
     // copy the lists in the temporary array to use later for comparison
-    this.idListForSearchOld = _.cloneDeep(this.idListForSearch);
+    this.idListForSearchOld = lodashCloneDeep(this.idListForSearch);
 
     // Only run if search is not canceled
     if (this.cancelSearch == false) {
@@ -366,7 +366,7 @@ export class CrossEntitySearchComponent implements OnInit, OnDestroy {
     // Some how the facets selected in entity has been passed to sub-entity. Need to strip this off.
     if (this.facetsParamsUpdateCount == 1) {
       if (Object.keys(this.privateFacetParams).length > 0) {
-        this.removePrivateFacetParams = _.cloneDeep(this.privateFacetParams);
+        this.removePrivateFacetParams = lodashCloneDeep(this.privateFacetParams);
       }
     }
 

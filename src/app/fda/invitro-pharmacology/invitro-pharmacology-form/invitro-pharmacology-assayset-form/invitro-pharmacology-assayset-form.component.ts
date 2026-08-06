@@ -16,7 +16,7 @@ import { DatePipe, formatDate } from "@angular/common";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { forkJoin, Subscription } from "rxjs";
 import { take, map, catchError } from "rxjs/operators";
-import * as _ from "lodash";
+import lodashCloneDeep from 'lodash/cloneDeep';
 import * as moment from "moment";
 import * as XLSX from "xlsx";
 
@@ -247,7 +247,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit, OnDestr
 
                 if (this.isBuildFromExistingSet == true) {
                   // Copy this assay to new variable;
-                  let assaySave = _.cloneDeep(assay);
+                  let assaySave = lodashCloneDeep(assay);
 
                   if (this.newAssaySet) {
                     const newAssaySetObject = { assaySet: this.newAssaySet };
@@ -407,7 +407,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit, OnDestr
     actionType: string,
   ) {
     // Copy the Assay to new variable
-    let assaySave = _.cloneDeep(assay);
+    let assaySave = lodashCloneDeep(assay);
 
     if (actionType) {
       if (actionType === "add") {

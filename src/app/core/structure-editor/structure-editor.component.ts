@@ -16,7 +16,6 @@ import { environment } from '../../../environments/environment';
 import { StructureService } from '@gsrs-core/structure';
 import { LoadingService } from '@gsrs-core/loading';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
 import { ConfigService } from '@gsrs-core/config';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.component';

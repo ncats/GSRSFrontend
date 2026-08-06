@@ -32,7 +32,7 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service';
 import { InvitroAssayInformation, InvitroAssayScreening, InvitroSummary, InvitroReference, InvitroTestAgent, ValidationMessage, InvitroAssayResultInformation } from '../../model/invitro-pharmacology.model';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import jp from 'jsonpath';
 
 @Component({
@@ -254,8 +254,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
         if (response) {
 
           this.assayList = response;
-          this.assayListOriginal = _.cloneDeep(response);
-          this.assayToSave = _.cloneDeep(response);
+          this.assayListOriginal = lodashCloneDeep(response);
+          this.assayToSave = lodashCloneDeep(response);
 
           if (this.assayList.length > 0) {
 
@@ -885,7 +885,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     }
     this.screeningList[indexScreening]._assayResults = [];
 
-    let assay = _.cloneDeep(this.screeningList[indexScreening]._selectedAssay);
+    let assay = lodashCloneDeep(this.screeningList[indexScreening]._selectedAssay);
     assay.invitroAssayScreenings.push(this.screeningList[indexScreening]);
 
     this.assayToSave.push(assay);

@@ -13,7 +13,6 @@ import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestion
 
 /* GSRS Invitro Pharmacology Imports */
 import { InvitroAssayInformation, InvitroAssayAnalyte, InvitroAssayResult, InvitroAssayScreening, InvitroSummary, ValidationResults } from '../model/invitro-pharmacology.model';
-import { identity } from 'lodash';
 
 @Injectable(
   {

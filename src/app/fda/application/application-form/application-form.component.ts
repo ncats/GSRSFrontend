@@ -28,7 +28,6 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 import { ApplicationService } from '../service/application.service';
 import { GeneralService } from '../../service/general.service';
 import { Application, ValidationMessage } from '../model/application.model';
-import { forEach } from 'lodash';
 
 @Component({
   selector: 'app-application-form',

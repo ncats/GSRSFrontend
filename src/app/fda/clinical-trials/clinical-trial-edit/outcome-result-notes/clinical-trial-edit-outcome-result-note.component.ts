@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { OutcomeResultNote } from '../../clinical-trial/clinical-trial.model';
 import { ConfigService } from '@gsrs-core/config';
-import * as _ from 'lodash';
 import { FormControl } from '@angular/forms';
 
 @Component({

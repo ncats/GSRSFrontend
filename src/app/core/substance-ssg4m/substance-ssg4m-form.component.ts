@@ -20,7 +20,8 @@ import { MatExpansionPanel } from "@angular/material/expansion";
 import { MatDialog } from "@angular/material/dialog";
 import { take, map } from "rxjs/operators";
 import { Subscription, Observable } from "rxjs";
-import * as _ from "lodash";
+import lodashChain from 'lodash/chain';
+import lodashRemove from 'lodash/remove';
 import * as moment from "moment";
 import { Title } from "@angular/platform-browser";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
@@ -1854,7 +1855,7 @@ export class SubstanceSsg4ManufactureFormComponent
         refs[j] = _map[or];
       }
     }
-    _.remove(old.codes, {
+    lodashRemove(old.codes, {
       codeSystem: "BDNUM",
     });
     const createHolders = jp.query(old, '$..[?(@.created)]');
@@ -1906,7 +1907,7 @@ export class SubstanceSsg4ManufactureFormComponent
         }
       }
 
-      const nrefs = _.chain(old.references)
+      const nrefs = lodashChain(old.references)
         .filter(function (ref) {
           if (refSet[ref.uuid]) {
             return true;

@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs';
 import { RegisterComponent } from '../../register/register.component';
 
 import { LoadedComponents } from '@gsrs-core/config'
-import * as _ from 'lodash';
 import {sprintf} from "sprintf-js";
 
 @Component({

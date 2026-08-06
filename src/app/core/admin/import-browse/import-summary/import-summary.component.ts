@@ -20,7 +20,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
-import * as lodash from 'lodash';
+import join from 'lodash/join';
 import { CardDynamicSectionDirective } from '@gsrs-core/substances-browse/card-dynamic-section/card-dynamic-section.directive';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { LoadingService } from '@gsrs-core/loading';
@@ -69,7 +69,7 @@ export class ImportSummaryComponent implements OnInit {
   showLessCodes = true;
   privateNames?: Array<SubstanceName>;
   nameLoading = true;
-  _ = lodash;
+  join = join;
   codeSystems = [];
   displayedColumns = ['name', 'source', 'keys', 'merge'];
   displayedColumns2 = ['type', 'message'];

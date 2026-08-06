@@ -11,7 +11,7 @@ import { Title } from '@angular/platform-browser';
 import jp from 'jsonpath';
 import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import { DatePipe, formatDate } from '@angular/common';
 
 /* GSRS Imports */
@@ -720,7 +720,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   cleanImpurities(): any {
-    const copiedImpurities = _.cloneDeep(this.impurities);
+    const copiedImpurities = lodashCloneDeep(this.impurities);
 
     delete copiedImpurities._dateTypeDate;
 

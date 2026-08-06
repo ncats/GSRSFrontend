@@ -14,7 +14,7 @@ import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
+import lodashMap from 'lodash/map';
 import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
 
 @Component({
@@ -174,7 +174,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
   joinMeddraTerms(cteu: any) {
     if(cteu) {
       // const a =[{"meddraTerm": "meddraTerm1"}, {"meddraTerm": "meddraTerm2"},{"meddraTerm": "meddraTerm3"},{"meddraTerm": "meddraTerm4"}];
-      return _.map(cteu.clinicalTrialEuropeMeddraList, 'meddraTerm').join("|");
+      return lodashMap(cteu.clinicalTrialEuropeMeddraList, 'meddraTerm').join("|");
     }
   }
 

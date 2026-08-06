@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { SubstanceRole } from '../../clinical-trial/clinical-trial.model';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
-import * as _ from 'lodash';
+import lodashIntersection from 'lodash/intersection';
+import lodashMap from 'lodash/map';
 import { FormControl } from '@angular/forms';
 import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 
@@ -31,11 +32,11 @@ export class ClinicalTrialEditSubstanceRolesComponent implements OnInit {
     this.cvService.getDomainVocabulary('CTUS_SUBSTANCE_ROLES').subscribe(response => {
       this.rolesList = response['CTUS_SUBSTANCE_ROLES'].list;
       if(this.initialSubstanceRoles)  {
-        this.initialSelections = _.intersection(
-          _.map(this.initialSubstanceRoles, 'substanceRole'),
-          _.map(this.rolesList, 'value')
+        this.initialSelections = lodashIntersection(
+          lodashMap(this.initialSubstanceRoles, 'substanceRole'),
+          lodashMap(this.rolesList, 'value')
         );
-        this.selectedRolesTitle = _.map(this.rolesList.filter(v => this.initialSelections.includes(v.value)), 'display').join(', ');
+        this.selectedRolesTitle = lodashMap(this.rolesList.filter(v => this.initialSelections.includes(v.value)), 'display').join(', ');
       }
       this.substanceRolesForm = new FormControl(this.initialSelections);
     });

@@ -11,7 +11,8 @@ import { Subscription } from 'rxjs';
 import { take, map, finalize } from 'rxjs/operators';
 import { forkJoin, from, tap, of, toArray, concatMap, catchError, throwError } from 'rxjs';
 import * as moment from 'moment';
-import * as _ from 'lodash';
+import lodashClone from 'lodash/clone';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import * as XLSX from 'xlsx';
 
 
@@ -733,7 +734,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
   }
 
   createInvitroReference(object: any): any {
-    let tempObject = _.cloneDeep(object);
+    let tempObject = lodashCloneDeep(object);
 
     // Delete the keys that not needed
     delete tempObject.externalAssaySource;
@@ -751,7 +752,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
   createNewInvitroControl(resultObject: any): any {
     let invitroControls: Array<InvitroControl> = [];
 
-    let tempResultObject = _.cloneDeep(resultObject);
+    let tempResultObject = lodashCloneDeep(resultObject);
 
     // CONTROL ASSAY CHECK, check if Result Assays match control Assays
     this.invitroControlsTemp.forEach(ctrl => {
@@ -760,7 +761,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
           // if Result and Control Assays match 
           if ((ctrl.externalAssaySource === tempResultObject.externalAssaySource)
             && (ctrl.externalAssayId === tempResultObject.externalAssayId)) {
-            let tempObject = _.cloneDeep(ctrl);
+            let tempObject = lodashCloneDeep(ctrl);
 
             // Delete the keys that not needed
             delete tempObject.externalAssaySource;
@@ -782,7 +783,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
   }
 
   createInvitroResult(object: any): any {
-    let tempObject = _.cloneDeep(object);
+    let tempObject = lodashCloneDeep(object);
 
     // Delete the keys that not needed
     delete tempObject.externalAssaySource;
@@ -1017,7 +1018,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
                 // Assay found: update the result and cache it.
                 result.assayFoundInDb = 'true';
                 // cached Assay will also have new Screening data
-                initialState.cachedAssay = _.cloneDeep(dbAssay); // Cache the new assay
+                initialState.cachedAssay = lodashCloneDeep(dbAssay); // Cache the new assay
 
                 this.createNewScreeningData(dbAssay, result);
               } else {
@@ -1085,7 +1086,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
     if (this.assayToSaveList && this.assayToSaveList.length > 0) {
 
       // Get First Record from the Array
-      let firstAssay = _.cloneDeep(this.assayToSaveList[0]);
+      let firstAssay = lodashCloneDeep(this.assayToSaveList[0]);
 
       // Find the index of the first screening to keep.
       if (firstAssay.invitroAssayScreenings && firstAssay.invitroAssayScreenings.length > 0) {
@@ -1140,7 +1141,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
                       if (result.invitroAssayScreenings[result.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id) {
                         this.savedResultInfo = result.invitroAssayScreenings[result.invitroAssayScreenings.length - 1].invitroAssayResultInformation;
 
-                        let newAssay = _.clone(result);
+                        let newAssay = lodashClone(result);
 
                         if (this.firstAssayRemainingScreening != null && this.firstAssayRemainingScreening.length > 0) {
                           this.firstAssayRemainingScreening.forEach(screening => {
@@ -1212,7 +1213,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
       // 'concatMap' ensures each assay is processed one by one, waiting for the previous save to complete.
       concatMap((assayToSave, index) => {
 
-        assayReadyToSave = _.cloneDeep(assayToSave);
+        assayReadyToSave = lodashCloneDeep(assayToSave);
 
         assayReadyToSave.invitroAssayScreenings.forEach((screening, indexScreening) => {
           if (screening) {
@@ -1235,7 +1236,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
             // Update the state for the next iteration with the current source and ID.
             initialState.lastCheckedSource = savedAssay.externalAssaySource;
             initialState.lastCheckedAssayId = savedAssay.externalAssayId; // ADDED: Update the ID in our state
-            initialState.cachedAssay = _.cloneDeep(savedAssay); // Cache the new assay
+            initialState.cachedAssay = lodashCloneDeep(savedAssay); // Cache the new assay
 
             let savedAssayCount = index + 1;
             if (this.firstAssayRemainingScreening && this.firstAssayRemainingScreening.length > 0) {

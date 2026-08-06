@@ -11,7 +11,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { forkJoin, shareReplay, mergeMap, Subscription } from 'rxjs';
 import { take, map, catchError } from 'rxjs/operators';
 import * as moment from 'moment';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import * as XLSX from 'xlsx';
 
 /* GSRS Core Imports */
@@ -270,7 +270,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
           this.existingAssaysByAssaySetList = response;
 
           // Copy original records in the variable
-          this.originalAssaysFromDb = _.cloneDeep(response);
+          this.originalAssaysFromDb = lodashCloneDeep(response);
 
           // Loop through Assays and find result information id where same as url id
           this.existingAssaysByAssaySetList.forEach(assay => {
@@ -289,7 +289,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
 
                       if (screening.invitroAssayResult) {
 
-                        // assign _.show to true for this screening to show in the form
+                        // assign _show to true for this screening to show in the form
                         screening._show = true;
 
                         //Copy Result Information
@@ -299,7 +299,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
                       this.assayResultInfo = screening.invitroAssayResultInformation;
 
                       // copy the original invitroAssayResultInformation in variable
-                      this.originalAssayResultInfoFromDb = _.cloneDeep(screening.invitroAssayResultInformation);
+                      this.originalAssayResultInfoFromDb = lodashCloneDeep(screening.invitroAssayResultInformation);
 
                       // if references is null, create an object
                       if (this.assayResultInfo.invitroReferences == null || (this.assayResultInfo.invitroReferences && this.assayResultInfo.invitroReferences.length == 0)) {
@@ -598,7 +598,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
     }
 
     // Copy the Assays/Screening to new variable
-    let copiedAssays = _.cloneDeep(this.existingAssaysByAssaySetList);
+    let copiedAssays = lodashCloneDeep(this.existingAssaysByAssaySetList);
 
     copiedAssays.forEach((assay, indexAssay) => {
       if (assay) {
@@ -790,7 +790,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
     this.createNewSummary();
 
     // Copy the Assays/Screening to new variable
-    this.assaysToSave = _.cloneDeep(this.existingAssaysByAssaySetList);
+    this.assaysToSave = lodashCloneDeep(this.existingAssaysByAssaySetList);
 
     this.generateAssayToSave();
   }
@@ -928,7 +928,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
 
   saveRecordForkJoin(assayApiUrlList: any, isSameAssay: boolean) {
 
-    let copyAssayApiUrlList = _.cloneDeep(assayApiUrlList);
+    let copyAssayApiUrlList = lodashCloneDeep(assayApiUrlList);
 
     // Save Assays into the database
     let savedCount = 0;
@@ -956,7 +956,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
                 if (screening.invitroAssayResultInformation) {
 
                   // copy the Database/Original invitroAssayResultInformation in variable
-                  this.originalAssayResultInfoFromDb = _.cloneDeep(screening.invitroAssayResultInformation);
+                  this.originalAssayResultInfoFromDb = lodashCloneDeep(screening.invitroAssayResultInformation);
                 }
               } // invitroAssayScreenings.length > 0
 
@@ -1038,7 +1038,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
       this.copyResultInfoForSaving();
     }
 
-    let copyJson = _.cloneDeep(this.existingAssaysByAssaySetList);
+    let copyJson = lodashCloneDeep(this.existingAssaysByAssaySetList);
     let cleanJson = this.scrubShowFieldsMultiple(copyJson);
 
     let data = { jsonData: cleanJson, jsonFilename: jsonFilename };
@@ -1527,7 +1527,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
     this.existingAssaysByAssaySetList[indexCopyFromAssay].invitroAssayScreenings.forEach(copyFromScreening => {
       if (copyFromScreening) {
         if (copyFromScreening._show) {
-          let screen = _.cloneDeep(copyFromScreening);
+          let screen = lodashCloneDeep(copyFromScreening);
 
           // remove the ids, create date, etc.
           newScreening = this.scrub(screen);
@@ -1547,7 +1547,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, Afte
     */
 
     // Copy the assay to new variable
-    // let copyAssay = _.cloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
+    // let copyAssay = lodashCloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
 
     copyAssay.invitroAssayScreenings.push(newScreening);
 

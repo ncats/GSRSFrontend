@@ -12,7 +12,7 @@ import {
   QueryList
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
-import * as _ from 'lodash';
+import lodashSortBy from 'lodash/sortBy';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -795,7 +795,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 sortMatchTypes(a:Array<string>) {
-    return _.sortBy(a);
+    return lodashSortBy(a);
 }
 
 searchTermOkforBeginsWithSearch(): boolean {

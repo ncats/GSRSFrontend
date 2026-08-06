@@ -19,7 +19,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription, take } from 'rxjs';
-import { transform } from 'lodash';
 import { environment } from '../../../environments/environment';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { UtilsService } from '@gsrs-core/utils';

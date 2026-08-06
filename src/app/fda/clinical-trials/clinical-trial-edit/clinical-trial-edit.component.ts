@@ -5,7 +5,7 @@ import { ClinicalTrial, OutcomeResultNote } from '../clinical-trial/clinical-tri
 import { ClinicalTrialUSDrug } from '../clinical-trial/clinical-trial.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -172,7 +172,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
             }
           });
           // don't know why but deep clone makes the myInitialSearch value work as expected perhaps by rerendering table.
-          const data = _.cloneDeep(this.dataSource.data);
+          const data = lodashCloneDeep(this.dataSource.data);
           // but this doesn't work.
           // const data = [...this.dataSource.data];
           this.dataSource.data = data;
@@ -216,7 +216,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   updateClinicalTrial() {
     // var that = this;
     this.loadingService.setLoading(true);
-    const newClinicalTrial = _.cloneDeep(this.clinicalTrial);
+    const newClinicalTrial = lodashCloneDeep(this.clinicalTrial);
     const newClinicalTrialUSDrugs: Array<ClinicalTrialUSDrug> = [];
     this.dataSource.data.forEach((element)  => {
       const ctd = {} as ClinicalTrialUSDrug;
