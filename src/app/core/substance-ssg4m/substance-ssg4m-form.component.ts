@@ -22,7 +22,7 @@ import { take, map } from "rxjs/operators";
 import { Subscription, Observable } from "rxjs";
 import lodashChain from 'lodash/chain';
 import lodashRemove from 'lodash/remove';
-import * as moment from "moment";
+import moment from "moment";
 import { Title } from "@angular/platform-browser";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 // GSRS Import

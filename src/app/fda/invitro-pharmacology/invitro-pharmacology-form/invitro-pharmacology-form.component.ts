@@ -10,7 +10,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { forkJoin, shareReplay, mergeMap, Subscription } from 'rxjs';
 import { take, map, catchError } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import * as XLSX from 'xlsx';
 

@@ -17,7 +17,7 @@ import { OverlayContainer } from "@angular/cdk/overlay";
 import { forkJoin, Subscription } from "rxjs";
 import { take, map, catchError } from "rxjs/operators";
 import lodashCloneDeep from 'lodash/cloneDeep';
-import * as moment from "moment";
+import moment from "moment";
 import * as XLSX from "xlsx";
 
 /* GSRS Core Imports */

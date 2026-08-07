@@ -10,7 +10,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription, forkJoin } from 'rxjs';
 import { take, map } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 import * as XLSX from 'xlsx';
 
 /* GSRS Core Imports */

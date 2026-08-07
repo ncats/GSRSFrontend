@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
 import { LoadingService } from '@gsrs-core/loading';

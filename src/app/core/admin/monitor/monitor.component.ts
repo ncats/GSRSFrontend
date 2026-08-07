@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
 
 @Component({

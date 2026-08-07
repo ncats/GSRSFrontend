@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Location, LocationStrategy } from '@angular/common';
 
 /* GSRS Core Imports */

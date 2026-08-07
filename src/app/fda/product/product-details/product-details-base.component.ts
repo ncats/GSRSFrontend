@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DomSanitizer, SafeUrl, Title } from '@angular/platform-browser';
-import * as moment from 'moment';
+import moment from 'moment';
 import lodashCloneDeep from 'lodash/cloneDeep';
 
 /* GSRS Core Import */

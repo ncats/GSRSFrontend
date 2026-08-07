@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as moment from 'moment';
+import moment from 'moment';
 
 /* GSRS Core Imports */
 import { ConfigService } from '@gsrs-core/config';

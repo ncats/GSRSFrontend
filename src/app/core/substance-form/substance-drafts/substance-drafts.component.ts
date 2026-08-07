@@ -6,7 +6,7 @@ import { UtilsService } from '@gsrs-core/utils';
 import { Sort } from '@angular/material/sort';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ValidationMessage } from '@gsrs-core/substance-form/substance-form.model'
 
 enum SubmissionStatus {

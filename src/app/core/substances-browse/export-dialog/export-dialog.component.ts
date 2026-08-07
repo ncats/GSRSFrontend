@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import lodashIsEqual from 'lodash/isEqual';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';

@@ -15,7 +15,7 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { Subject, Subscription } from 'rxjs';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import * as deepEqual from 'deep-equal';
+import deepEqual from 'deep-equal';
 import { SubstanceFormLinksService } from '../links/substance-form-links.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';

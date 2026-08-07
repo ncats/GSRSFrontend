@@ -22,7 +22,7 @@ import {Subject, Subscription} from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 import {DataDictionary} from '@gsrs-core/utils/data-dictionary';
-import * as jsonpath from 'jsonpath';
+import jsonpath from 'jsonpath';
 
 @Component({
     selector: 'app-substance-history',

@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import lodashCloneDeep from 'lodash/cloneDeep';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';

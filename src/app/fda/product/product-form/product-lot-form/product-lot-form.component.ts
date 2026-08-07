@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as moment from 'moment';
+import moment from 'moment';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';

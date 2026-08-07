@@ -34,7 +34,7 @@ import { SubstanceTextSearchService } from "@gsrs-core/substance-text-search/sub
 import { NavItem, LoadedComponents } from "../config/config.model";
 import { UtilsService } from "@gsrs-core/utils";
 import { take } from "rxjs/operators";
-import * as moment from "moment";
+import moment from "moment";
 import { SubstanceEditImportDialogComponent } from "@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component";
 import { WildcardService } from "@gsrs-core/utils/wildcard.service";
 import { SubstanceDraftsComponent } from "@gsrs-core/substance-form/substance-drafts/substance-drafts.component";

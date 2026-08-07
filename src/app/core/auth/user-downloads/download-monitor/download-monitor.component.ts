@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { NavigationExtras } from '@angular/router';

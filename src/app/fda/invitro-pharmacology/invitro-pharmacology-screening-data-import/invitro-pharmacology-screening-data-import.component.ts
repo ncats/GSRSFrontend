@@ -10,7 +10,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { take, map, finalize } from 'rxjs/operators';
 import { forkJoin, from, tap, of, toArray, concatMap, catchError, throwError } from 'rxjs';
-import * as moment from 'moment';
+import moment from 'moment';
 import lodashClone from 'lodash/clone';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import * as XLSX from 'xlsx';

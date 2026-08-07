@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import lodashCloneDeep from 'lodash/cloneDeep';
-import * as moment from 'moment';
+import moment from 'moment';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';

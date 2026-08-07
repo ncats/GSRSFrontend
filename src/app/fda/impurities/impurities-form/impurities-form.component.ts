@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import jp from 'jsonpath';
 import { take, map } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { DatePipe, formatDate } from '@angular/common';
 

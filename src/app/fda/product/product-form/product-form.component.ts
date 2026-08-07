@@ -6,7 +6,7 @@ import { Title, DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as moment from 'moment';
+import moment from 'moment';
 
 /* GSRS Core Imports */
 import { LoadingService } from '@gsrs-core/loading';
@@ -20,7 +20,7 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import jp from 'jsonpath';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
+import '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 
 /* GSRS Product Imports */
 import { ProductService } from '../service/product.service';

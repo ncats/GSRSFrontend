@@ -3,7 +3,7 @@ import { HealthInfo } from '@gsrs-core/admin/admin-objects.model';
 import { AuthService } from '@gsrs-core/auth';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { Subscription } from 'rxjs';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
     selector: 'app-cache-summary',
