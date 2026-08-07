@@ -12,7 +12,14 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { QueryStatementComponent } from './query-statement/query-statement.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+
+const guidedSearchRoutes: Routes = [
+  {
+    path: '',
+    component: GuidedSearchComponent
+  }
+];
 
 @NgModule({
   declarations: [
@@ -32,7 +39,7 @@ import { RouterModule } from '@angular/router';
     MatButtonModule,
     MatIconModule,
     MatDatepickerModule,
-    RouterModule
+    RouterModule.forChild(guidedSearchRoutes)
   ],
   exports: [
     GuidedSearchComponent

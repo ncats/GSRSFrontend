@@ -75,9 +75,7 @@ import { StructureModule } from './structure/structure.module';
 import {MatTreeModule} from '@angular/material/tree';
 import {SubstanceHierarchyComponent} from '@gsrs-core/substances-browse/substance-hierarchy/substance-hierarchy.component';
 import {SequenceAlignmentComponent} from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
-import { AdminModule } from '@gsrs-core/admin/admin.module';
 import { FacetsManagerModule } from './facets-manager/facets-manager.module';
-import { GuidedSearchModule } from './guided-search/guided-search.module';
 import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
@@ -120,11 +118,9 @@ import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
-import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
 import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
 import { FileSelectModule } from './file-select/file-select.module';
-import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamine-standalone.module';
 import { MatDividerModule } from '@angular/material/divider';
 @NgModule({
   declarations: [
@@ -222,9 +218,7 @@ import { MatDividerModule } from '@angular/material/divider';
     StructureModule,
     MatTreeModule,
     FacetsManagerModule,
-    GuidedSearchModule,
     MatNativeDateModule,
-    AdminModule,
     FacetsManagerModule,
     CodeDisplayModule,
     SubstanceSsg4mModule,
@@ -238,9 +232,7 @@ import { MatDividerModule } from '@angular/material/divider';
     SchemaFormModule.forRoot(),
     BulkSearchModule,
     ElementLabelDisplayModule,
-    PrivacyStatementModule,
     CrossEntitySearchModule,
-    NitrosamineStandaloneModule,
     MatDividerModule
   ],
   providers: [

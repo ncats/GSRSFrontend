@@ -13,8 +13,6 @@ import { SubstanceFormComponent } from './substance-form/substance-form.componen
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
-import { GuidedSearchComponent } from './guided-search/guided-search.component';
-import { AdminComponent } from '@gsrs-core/admin/admin.component';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
@@ -23,8 +21,6 @@ import { CanActivateAdminPage } from './admin/can-activate-admin-page';
 import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
 import { SubstanceSsg4ManufactureFormComponent } from './substance-ssg4m/substance-ssg4m-form.component';
 import { ImportBrowseComponent } from '@gsrs-core/admin/import-browse/import-browse.component';
-import { CanImportData } from './admin/can-import-data';
-import { ImportManagementComponent } from './admin/import-management/import-management.component';
 
 const childRoutes: Routes = [
   {
@@ -71,7 +67,7 @@ const childRoutes: Routes = [
   },
   {
     path: 'guided-search',
-    component: GuidedSearchComponent
+    loadChildren: () => import('./guided-search/guided-search.module').then(m => m.GuidedSearchModule)
   },
   {
     path: 'sequence-search',
@@ -93,27 +89,8 @@ const childRoutes: Routes = [
     canDeactivate: [CanDeactivateSubstanceFormGuard]
   },
   {
-    path: 'admin/staging-area',
-    component: ImportBrowseComponent,
-    pathMatch: 'full',
-    canActivate: [CanImportData]
-  },
-  {
-    path: 'admin/:function',
-    component: AdminComponent,
-    canActivate: [CanActivateAdmin],
-  },
-    {
     path: 'admin',
-    component: AdminComponent,
-    canActivate: [CanActivateAdmin],
-    children :[
-      {
-        path: 'import',
-        component: ImportManagementComponent,
-        canActivate: [CanImportData]
-      }
-     ]
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
   {
     path: 'monitor/:id',
@@ -135,6 +112,14 @@ const childRoutes: Routes = [
   {
     path: 'structure-features',
     component: SubstanceFormComponent
+  },
+  {
+    path: 'privacy-statement',
+    loadChildren: () => import('./privacy-statement/privacy-statement.module').then(m => m.PrivacyStatementModule)
+  },
+  {
+    path: 'nitrosamine-standalone',
+    loadChildren: () => import('./nitrosamine-standalone/nitrosamine-standalone.module').then(m => m.NitrosamineStandaloneModule)
   },
 ];
 

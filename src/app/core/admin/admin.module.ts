@@ -32,7 +32,6 @@ import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summ
 import { DataManagementComponent } from '@gsrs-core/admin/data-management/data-management.component';
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AllFilesComponent } from '@gsrs-core/admin/all-files/all-files.component';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { StructureEditorModule } from '@gsrs-core/structure-editor';
@@ -42,7 +41,8 @@ import { ImportBrowseComponent } from '@gsrs-core/admin/import-browse/import-bro
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { ImportSummaryComponent } from '@gsrs-core/admin/import-browse/import-summary/import-summary.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { CanImportData } from '@gsrs-core/admin/can-import-data';
 import { MatMenuModule } from '@angular/material/menu';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
@@ -54,6 +54,24 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
 import { TakeImportPipe } from '@gsrs-core/admin/import-browse/take-import.pipe';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
+const adminRoutes: Routes = [
+  {
+    path: 'staging-area',
+    component: ImportBrowseComponent,
+    pathMatch: 'full',
+    canActivate: [CanImportData]
+  },
+  {
+    path: '',
+    component: AdminComponent,
+    canActivate: [CanActivateAdmin]
+  },
+  {
+    path: ':function',
+    component: AdminComponent,
+    canActivate: [CanActivateAdmin]
+  }
+];
 
 @NgModule({
   imports: [
@@ -66,7 +84,6 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
   MatInputModule,
   MatTabsModule,
   MatTooltipModule,
-  BrowserAnimationsModule,
   MatTreeModule,
   MatProgressSpinnerModule,
   MatProgressBarModule,
@@ -74,7 +91,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
   MatCheckboxModule,
   MatSelectModule,
     MatOptionModule,
-  RouterModule,
+  RouterModule.forChild(adminRoutes),
   MatMenuModule,
     MatSortModule,
     MatTooltipModule,
@@ -137,7 +154,6 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
   ],
   providers: [
-    CanActivateAdmin,
     {
       provide: MatDialogRef,
       useValue: {}
