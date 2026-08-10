@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "downlevelIteration": true,
     "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "esModuleInterop": true,
     "declaration": false,
     "module": "esnext",
     "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2022",
-    "allowSyntheticDefaultImports": true,
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -27,7 +26,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "exclude": ["testing", "test.ts", "**/*.spec.ts", "src/testing/**/*"],
   "angularCompilerOptions": {
     // Removed obsolete settings: enableIvy (always true), fullTemplateTypeCheck (deprecated)
     // Progressive strictness enablement
