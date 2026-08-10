@@ -1,4 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Editor } from '@gsrs-core/structure-editor';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
@@ -77,6 +78,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   private privateSequenceSearchKey?: string;
+  private destroyRef = inject(DestroyRef);
 
 
   constructor(
@@ -129,9 +131,9 @@ export class AdvancedSelectorDialogComponent implements OnInit {
 
   standardize(standard: string): void {
     let mol = ''
-    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+    this.editor.getMolfile().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       mol = response;
-      this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
+      this.structureService.interpretStructure(mol, '', standard).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((response: InterpretStructureResponse) => {
         if (response && response.structure && response.structure.molfile) {
           this.editor.setMolecule(response.structure.molfile);
         }
@@ -196,7 +198,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
     this.loadingService.setLoading(false);
     this.editor = editor;
     if(this.dat && this.dat.uuid) {
-      this.structureService.getMolfile(this.data.uuid).subscribe( response => {
+      this.structureService.getMolfile(this.data.uuid).pipe(takeUntilDestroyed(this.destroyRef)).subscribe( response => {
         this.editor.setMolecule(response);
         this.overlayContainer.style.zIndex = '1003';
 
@@ -220,9 +222,9 @@ export class AdvancedSelectorDialogComponent implements OnInit {
 
   search(): void {
     let mol = '';
-    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+    this.editor.getMolfile().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       mol = response;
-      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+      this.structureService.interpretStructure(mol).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((response: InterpretStructureResponse) => {
         this.smiles = response.structure.smiles;
         this.response = response.structure.id;
         this.searchSubstances(response.structure.id, response.structure.smiles);
@@ -345,6 +347,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
       sequenceSearchKey: this.privateSequenceSearchKey,
       deprecated: false
     })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(pagingResponse => {
 
           if(type && type === 'name') {
@@ -395,7 +398,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
     });
     //  this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((structurePostResponse?: InterpretStructureResponse) => {
       setTimeout(() => {
         this.overlayContainer.style.zIndex = '1003';
         this.overlayContainer.style.zIndex = '10003';
@@ -416,10 +419,10 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   openStructureExportDialog(): void {
     let mol = '';
     let smiles = '';
-    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+    this.editor.getMolfile().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       mol = response;
 
-      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+      this.structureService.interpretStructure(mol).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((response: InterpretStructureResponse) => {
         smiles = response.structure.smiles;
 
         const dialogRef = this.dialog.open(StructureExportComponent, {
@@ -431,7 +434,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
           }
         });
 
-        dialogRef.afterClosed().subscribe(() => {
+        dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
           setTimeout(() => {
             this.overlayContainer.style.zIndex = '1003';
             this.overlayContainer.style.zIndex = '10003';
@@ -491,7 +494,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
 
     this.overlayContainer.style.zIndex = '1002';
 
-    const subscription = dialogRef.afterClosed().subscribe(response => {
+    const subscription = dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       if (response && response === 'molfile') {
         this.panelOpenState = true;
         if (this.activeTab === 1) {

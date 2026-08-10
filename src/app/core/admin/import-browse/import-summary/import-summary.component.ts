@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild, TemplateRef, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   SubstanceDetail,
   SubstanceName,
@@ -81,6 +82,7 @@ export class ImportSummaryComponent implements OnInit {
   performedAction: string;
   @ViewChild('infoDialog', { static: true }) infoDialog: TemplateRef<any>;
   dialogRef: MatDialogRef<any>;
+  private destroyRef = inject(DestroyRef);
 
 
   constructor(
@@ -206,13 +208,13 @@ export class ImportSummaryComponent implements OnInit {
 
     this.privateMatches.forEach(record => {
       if (record.source && record.source === 'Staging Area'){
-        this.adminService.GetStagedRecord(record.ID).subscribe(response => {
+        this.adminService.GetStagedRecord(record.ID).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           record._name = response._name;
         }, error => {
           console.log(error);
         })
       } else {
-        this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
+        this.substanceService.getSubstanceSummary(record.ID).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           record.uuid = response.uuid;
           record._name = response._name;
         }, error => {
@@ -264,7 +266,7 @@ export class ImportSummaryComponent implements OnInit {
 
   getStructureID() {
     if(this.privateSubstance && this.privateSubstance.structure && this.privateSubstance.structure.molfile) {
-        this.structureService.interpretStructure(this.privateSubstance.structure.molfile).subscribe(response => {
+        this.structureService.interpretStructure(this.privateSubstance.structure.molfile).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           this.privateSubstance.structureID = response.structure.id;
           this.substance.structureID = response.structure.id;
         });
@@ -292,7 +294,7 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   deleteRecord() {
-    this.adminService.deleteStagedRecord([this.privateSubstance._metadata.recordId]).subscribe(response => {
+    this.adminService.deleteStagedRecord([this.privateSubstance._metadata.recordId]).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.message = "Successfully deleted staging area record data. Closing dialog.";
       this.deleted = true;
       setTimeout(() => {
@@ -307,7 +309,7 @@ export class ImportSummaryComponent implements OnInit {
   doAction(action: string, mergeID?: string) {
     this.displayAction = action;
     this.loadingService.setLoading(true);
-    this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {
+    this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if (result.jobStatus === 'completed') {
         this.loadingService.setLoading(false);
         this.doneAction.emit(this.privateSubstance.uuid);
@@ -321,7 +323,7 @@ export class ImportSummaryComponent implements OnInit {
         this.dialogRef =  this.dialog.open(this.infoDialog,
           {data: {'message': 'Record successfuly Created', 'action': action},
         width: '600px'});
-         const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+         const dialogSubscription = this.dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
          });
 
@@ -330,21 +332,21 @@ export class ImportSummaryComponent implements OnInit {
           this.processingstatus(result.id, action, result);
         }, 200);
       }
-     
+
     }, error => {
       this.message = "Error: failed to " + action + " record";
       this.loadingService.setLoading(false);
       this.dialogRef =  this.dialog.open(this.infoDialog,
         {data: {'message': 'Error: failed to', 'action': action},
       width: '600px'});
-       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+       const dialogSubscription = this.dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
 
        });
     });
   }
 
   processingstatus(id: string, action?: any, result?: any): void {
-    this.adminService.processingstatus(id).subscribe(response => {
+    this.adminService.processingstatus(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       if (response.jobStatus === 'completed') {
              this.loadingService.setLoading(false);
               this.doneAction.emit(this.privateSubstance.uuid);
@@ -358,7 +360,7 @@ export class ImportSummaryComponent implements OnInit {
       this.dialogRef =  this.dialog.open(this.infoDialog,
         {data: {'message': 'Record successfuly Created', 'action': action},
       width: '600px'});
-       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+       const dialogSubscription = this.dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
         this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
        });
       } else {
@@ -444,13 +446,13 @@ export class ImportSummaryComponent implements OnInit {
     this.router.navigate(['/substances/' + this.substance.uuid + '/edit']);
   }
   getFasta(id: string, filename: string): void {
-    this.substanceService.getFasta(id).subscribe(response => {
+    this.substanceService.getFasta(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.downloadFile(response, filename);
     });
   }
 
   getMol(id: string, filename: string): void {
-    this.structureService.downloadMolfile(id).subscribe(response => {
+    this.structureService.downloadMolfile(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.downloadFile(response, filename);
     });
   }
@@ -467,7 +469,7 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   downloadJson() {
-    this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1)).subscribe(response => {
+    this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
         this.downloadFile(JSON.stringify(response), this.substance.uuid + '.json');
     });
   }
@@ -502,7 +504,7 @@ export class ImportSummaryComponent implements OnInit {
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       this.overlayContainer.style.zIndex = null;
     });
   }

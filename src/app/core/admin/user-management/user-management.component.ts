@@ -1,4 +1,5 @@
-import { Component, OnInit,  ViewChild } from '@angular/core';
+import { Component, OnInit,  ViewChild, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User, Auth, AuthService } from '@gsrs-core/auth';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
@@ -37,6 +38,7 @@ export class UserManagementComponent implements OnInit {
   checkedList: Array<string> = [];
   showHideActions: boolean = false;
   private searchTimer: any;
+  private destroyRef = inject(DestroyRef);
 
 constructor(
     private dialog: MatDialog,
@@ -52,7 +54,7 @@ constructor(
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.showAllUsers();
     this.pageChange();
-        this.searchControl.valueChanges.subscribe(value => {
+        this.searchControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
           this.filterList(value, this.users);
         }, error => {
         });
@@ -130,7 +132,7 @@ checkListToggle(username): void {
 showAllUsers(): void {
   this.loading = true;
   this.showAll = true;
-  this.adminService.getAllUsers().subscribe(response => {
+  this.adminService.getAllUsers().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
     this.users = response;
     this.filtered.data = response;
     this.showInactiveUsers();
@@ -204,7 +206,7 @@ showInactiveUsers(): void {
       panelClass: 'user-edit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
-    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    const dialogSubscription = dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.overlayContainer.style.zIndex = null;
         if (response ) {
          this.updateLocalData(response, index, userID, null);
@@ -232,7 +234,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
 
   deleteUser(username: string, index: number): void {
     if (confirm('Are you sure you want to set this user to inactive? If the user is inactive that user won\'t be able to log in until they\'ve been reactivated.')) {
-    this.adminService.deleteUser(username).subscribe( response => {
+    this.adminService.deleteUser(username).pipe(takeUntilDestroyed(this.destroyRef)).subscribe( response => {
       const dialogRef = this.dialog.open(UserEditDialogComponent, {
         data: {userID: response.id, submission: true},
         width: '800px',
@@ -241,7 +243,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
         panelClass: 'user-edit-dialog'
       });
       this.overlayContainer.style.zIndex = '1002';
-      const dialogSubscription = dialogRef.afterClosed().subscribe(response1 => {
+      const dialogSubscription = dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response1 => {
         this.overlayContainer.style.zIndex = null;
         if (response) {
           this.updateLocalData(response, index, null, username);
@@ -258,7 +260,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
   // identical to deleteUser but no warning since warning is combined in mark selected
   // only used when user selects multiple users to set inactive
   deleteUsers(username: string, index: number): void {
-    this.adminService.deleteUser(username).subscribe( response => {
+    this.adminService.deleteUser(username).pipe(takeUntilDestroyed(this.destroyRef)).subscribe( response => {
       const dialogRef = this.dialog.open(UserEditDialogComponent, {
         data: {userID: response.id, submission: true},
         width: '800px',
@@ -267,7 +269,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
         panelClass: 'user-edit-dialog'
       });
       this.overlayContainer.style.zIndex = '1002';
-      const dialogSubscription = dialogRef.afterClosed().subscribe(response1 => {
+      const dialogSubscription = dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response1 => {
         this.overlayContainer.style.zIndex = null;
         if (response) {
           this.updateLocalData(response, index, null, username);
@@ -288,7 +290,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
       panelClass: 'user-edit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
-    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    const dialogSubscription = dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.overlayContainer.style.zIndex = null;
       if (response ) {
         this.users.push(response);

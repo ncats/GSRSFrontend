@@ -1,4 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { isString } from 'util';
@@ -44,6 +45,7 @@ export class UserEditDialogComponent implements OnInit {
     {name: 'SuperUpdate', hasRole: false},
     {name: 'Approver', hasRole: false},
     {name: 'Admin', hasRole: false}];
+  private destroyRef = inject(DestroyRef);
   constructor(
     private adminService: AdminService,
     public dialogRef: MatDialogRef<UserEditDialogComponent>,
@@ -69,7 +71,7 @@ export class UserEditDialogComponent implements OnInit {
         this.loading = false;
         this.newUser = false;
         this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
-          this.adminService.getGroups().pipe(take(1)).subscribe( response => {
+          this.adminService.getGroups().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe( response => {
             this.setupAssignableRoles();
             this.groups = [];
             response.forEach( grp => {
@@ -83,7 +85,7 @@ export class UserEditDialogComponent implements OnInit {
             });
           });
       } else if (this.userID) {
-          this.adminService.getUserByID(this.userID).pipe(take(1)).subscribe( resp => {
+          this.adminService.getUserByID(this.userID).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe( resp => {
             this.user = resp;
             this.checkRoles();
             this.originalName = resp.user.username;
@@ -93,7 +95,7 @@ export class UserEditDialogComponent implements OnInit {
             
             this.setupAssignableRoles();
 
-            this.adminService.getGroups().pipe(take(1)).subscribe( response => {
+            this.adminService.getGroups().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe( response => {
               this.groups = [];
               response.forEach( grp => {
                 const temp = {name: grp, hasGroup: false};
@@ -113,7 +115,7 @@ export class UserEditDialogComponent implements OnInit {
         this.user.active = true;
         this.loading = false;
         this.assignableRoles = [];
-        this.adminService.getAllAvailableRoles().subscribe(roleNames => {
+        this.adminService.getAllAvailableRoles().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(roleNames => {
           this.availableRoleNames = roleNames;
            this.availableRoleNames.forEach(r=>{
             let newRole = {roleName: r, assigned: false };
@@ -121,7 +123,7 @@ export class UserEditDialogComponent implements OnInit {
            })
         });
 
-        this.adminService.getGroups().pipe(take(1)).subscribe( response => {
+        this.adminService.getGroups().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe( response => {
           this.groups = [];
           response.forEach( grp => {
             const temp = {name: grp, hasGroup: false};
@@ -221,7 +223,7 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   editUser(userEditObj): void {
-    this.adminService.editUser(userEditObj, this.userID).pipe(take(1)).subscribe(response => {
+    this.adminService.editUser(userEditObj, this.userID).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       if (response && response.user) {
         this.isError = false;
         this.successfulChange(response);
@@ -272,7 +274,7 @@ export class UserEditDialogComponent implements OnInit {
         password: this.newPassword
       };
 
-      this.adminService.addUser(userEditObj).pipe(take(1)).subscribe(response => {
+      this.adminService.addUser(userEditObj).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
         this.message = '';
         if (response && response.user) {
           this.successfulChange(response);
@@ -285,7 +287,7 @@ export class UserEditDialogComponent implements OnInit {
           this.message += error.error.message === undefined ?
           dummytext : error.error.message.split(':')[1];
         }
-        this.adminService.getUserByName(this.user.user.username).pipe(take(1)).subscribe(response => {
+        this.adminService.getUserByName(this.user.user.username).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           let userIsActive = false;
           userIsActive = response.active;
           if(userIsActive) {
@@ -324,7 +326,7 @@ export class UserEditDialogComponent implements OnInit {
     } else {
       this.isError = false;
       if ( this.authService.getUser === this.user.identifier ) {
-        this.adminService.changeMyPassword('', this.newPassword).pipe(take(1)).subscribe(response => {
+        this.adminService.changeMyPassword('', this.newPassword).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
         this.isError = false;
           this.changePassword = !this.changePassword;
           this.message = 'Password updated successfully';
@@ -341,7 +343,7 @@ export class UserEditDialogComponent implements OnInit {
           }
         });
       } else {
-        this.adminService.changePassword( this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.adminService.changePassword( this.newPassword, this.user.id).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           this.changePassword = !this.changePassword;
           this.isError = false;
           this.message = 'Password updated successfully';
@@ -388,7 +390,7 @@ export class UserEditDialogComponent implements OnInit {
 
   private setupAssignableRoles() {
     this.assignableRoles = [];
-    this.adminService.getAllAvailableRoles().subscribe(roleNames => {
+    this.adminService.getAllAvailableRoles().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(roleNames => {
       this.availableRoleNames = roleNames;
       this.availableRoleNames.forEach(r=>{
         let hasRole:boolean = this.userHasRole(r);
