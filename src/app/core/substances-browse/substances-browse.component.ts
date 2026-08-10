@@ -16,6 +16,7 @@ import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/route
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceSummary } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
+import { LoadedComponents } from '../config/config.model';
 import * as _ from 'lodash';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
@@ -160,6 +161,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   entity = "substances";
   subEntity = null;
   showCrossEntitySearch = false;
+  loadedComponents: LoadedComponents;
   subEntitySearchHash: string;
   editSubEntitySearchHash: any;
   subEntityDisplayFacets: Array<DisplayFacet> = [];
@@ -318,6 +320,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
     this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
 
   }
 

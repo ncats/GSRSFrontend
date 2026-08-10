@@ -95,6 +95,7 @@ export interface Config {
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;
     enablePDFDownload ?: DownloadAsPDF;
+    downloadList ?: DownloadList;
     showCrossEntitySearchDropdown?: boolean;
     restApiPrefix?: string;
     nitrosamineDisplay?: boolean;
@@ -103,6 +104,20 @@ export interface Config {
     rxNormUrl?: string;
     roleSortingConfig?: roleSortConfig;
 }
+
+
+export interface Download {
+    enabled ?:boolean;
+    title?: string;
+    buttonName?: string;
+}
+
+export interface DownloadList {
+    disableAll ?:boolean;
+    downloads ?: [key: Download];
+}
+
+
 
 export interface StagingAreaSettings {
     mergeAction?: boolean;

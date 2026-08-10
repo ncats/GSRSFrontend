@@ -256,6 +256,17 @@
         download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
         <span>Download JSON</span>
       </a>
+
+      <a *ngIf="substance.uuid && allowDownload('emaSmsSimpleRecord')" name="download_emaSmsSimpleRecord"
+        mat-menu-item (click)="downloadEmaSmsFhirRecordAction1('@emaSmsSimpleRecord', substance.uuid, substance.uuid+'.emaSmsSimpleRecord.json')" >
+        <span title="{{getDownloadTitle('emaSmsSimpleRecord')}}">{{getDownloadButtonName('emaSmsSimpleRecord')}}</span>
+      </a>
+
+      <a *ngIf="substance.uuid && allowDownload('emaSmsSubstanceDefinition')" name="download_emaSmsSubstanceDefinition"
+        mat-menu-item (click)="downloadEmaSmsFhirRecordAction1('@emaSmsSubstanceDefinition', substance.uuid, substance.uuid+'.emaSmsSubstanceDefinition.json')" >
+        <span title="{{getDownloadTitle('emaSmsSubstanceDefinition')}}">{{getDownloadButtonName('emaSmsSubstanceDefinition')}}</span>
+      </a>
+
       <!--If  enablePDFDownloadOption is true then display option to download pdf-->
       <a *ngIf="substance.uuid && enablePDFDownloadOption" name="download_pdf" mat-menu-item (click)="downloadPDFSummary()">
         <span>{{pdfDownloadBtnName}}</span>

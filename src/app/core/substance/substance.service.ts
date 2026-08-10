@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { BehaviorSubject, concatMap, filter, interval, Observable, Observer, Subject, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpParameterCodec } from '@angular/common/http';
+import { BehaviorSubject, concatMap, Observable, Observer, Subject, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -11,7 +11,6 @@ import {
   SubstanceCode,
   SubstanceRelationship,
   SubstanceRelated,
-  SubstanceReference,
   SubstanceDiff
 } from './substance.model';
 import { PagingResponse, ShortResult } from '../utils/paging-response.model';
@@ -25,12 +24,9 @@ import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
+import { of } from 'rxjs';
 import { AuthService } from "@gsrs-core/auth";
-import { SubstancesBrowseComponent } from '@gsrs-core/substances-browse/substances-browse.component';
-
 class CustomEncoder implements HttpParameterCodec {
-
-
   encodeKey(key: string): string {
     return encodeURIComponent(key);
   }
@@ -820,16 +816,16 @@ export class SubstanceService extends BaseHttpService {
     if (version !== undefined && version !== null) {
       const v = String(version);
       const editurl = `${this.apiBaseUrl}substances(${id})/@edits`;
+
       return this.http.get<any[]>(editurl, { withCredentials: true }).pipe(
         switchMap((response: any[]) => {
           const match = (response ?? []).find(resp => String(resp?.version) === v);
+
           if(!match?.oldValue) {
             return throwError(() => new Error(
               `No @edits entry found for version=${v} on substance(${id}).`
             ));
           }
-          // /api/v1/substances
-          // /ginas/app/api/v1/substances
           const _matchOldValue = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, match.oldValue);
           return this.http.get<SubstanceDetail>(_matchOldValue, options);
         }));
@@ -837,6 +833,16 @@ export class SubstanceService extends BaseHttpService {
     } else {
       return this.http.get<SubstanceDetail>(url, options);
     }
+  }
+
+  public getSubstanceEmaSmsFhirRecord(id: string , endpointFunction: string): Observable< any > {
+    const responseType='json';
+    const url = `${this.apiBaseUrl}substances/${id}/${endpointFunction}`;
+    const result = this.http.get< any >(`${url}`, { responseType: responseType, observe: 'response' }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      return of(error);
+    }));
+    return result;
   }
 
   getSubstanceNames(id: string): Observable<Array<SubstanceName>> {
@@ -1104,7 +1110,6 @@ export class SubstanceService extends BaseHttpService {
       search = 'substances';
     }
     const url = `${this.configService.configData.apiBaseUrl}api/v1/${search}/export/${etag}`;
-    console.log("this is the url:"  + url);
     return this.http.get< any>(url);
   }
 

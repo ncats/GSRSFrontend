@@ -6,7 +6,7 @@ export const baseEnvironment: Environment = {
     clasicBaseHref: '',
     production: false,
     appId: 'gsrs',
-    structureEditor: 'jsdraw',
+    structureEditor: 'ketcher',
     googleAnalyticsId: '',
     version: '2.3.4',
     isAnalyticsPrivate: false,
