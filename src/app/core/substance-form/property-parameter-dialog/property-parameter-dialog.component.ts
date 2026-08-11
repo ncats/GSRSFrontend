@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceParameter } from '../../substance/substance.model';
 
@@ -6,7 +6,8 @@ import { SubstanceParameter } from '../../substance/substance.model';
     selector: 'app-property-parameter-dialog',
     templateUrl: './property-parameter-dialog.component.html',
     styleUrls: ['./property-parameter-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyParameterDialogComponent implements OnInit {
   isNew: boolean;

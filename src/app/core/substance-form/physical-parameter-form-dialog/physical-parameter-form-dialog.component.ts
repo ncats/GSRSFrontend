@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {PhysicalModificationParameter, SubstanceParameter} from '@gsrs-core/substance';
 
@@ -6,7 +6,8 @@ import {PhysicalModificationParameter, SubstanceParameter} from '@gsrs-core/subs
     selector: 'app-physical-parameter-form-dialog',
     templateUrl: './physical-parameter-form-dialog.component.html',
     styleUrls: ['./physical-parameter-form-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PhysicalParameterFormDialogComponent implements OnInit {
   isNew: boolean;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceReference } from '../../../substance/substance.model';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
@@ -8,7 +8,8 @@ import { AuthService } from '@gsrs-core/auth';
     selector: 'app-refernce-form-dialog',
     templateUrl: './refernce-form-dialog.component.html',
     styleUrls: ['./refernce-form-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RefernceFormDialogComponent implements OnInit {
 user: string;

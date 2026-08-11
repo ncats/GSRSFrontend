@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
 
@@ -6,7 +6,8 @@ import { SubstanceReference } from '@gsrs-core/substance/substance.model';
     selector: 'app-previous-references-dialog',
     templateUrl: './previous-references-dialog.component.html',
     styleUrls: ['./previous-references-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviousReferencesDialogComponent implements OnInit {
 

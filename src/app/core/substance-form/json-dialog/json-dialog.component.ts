@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -7,7 +7,8 @@ import {DomSanitizer} from '@angular/platform-browser';
     selector: 'app-json-dialog',
     templateUrl: './json-dialog.component.html',
     styleUrls: ['./json-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JsonDialogComponent implements OnInit {
   public dialogRef: MatDialogRef<JsonDialogComponent>;
