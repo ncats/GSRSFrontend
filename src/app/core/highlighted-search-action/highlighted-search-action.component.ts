@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 
@@ -6,7 +6,8 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
     selector: 'app-highlighted-search-action',
     templateUrl: './highlighted-search-action.component.html',
     styleUrls: ['./highlighted-search-action.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HighlightedSearchActionComponent implements OnInit {
   searchTerm: string;

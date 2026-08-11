@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfigService, ExternalSiteWarning } from '@gsrs-core/config';
 
@@ -6,7 +6,8 @@ import { ConfigService, ExternalSiteWarning } from '@gsrs-core/config';
     selector: 'app-external-site-warning-dialog',
     templateUrl: './external-site-warning-dialog.component.html',
     styleUrls: ['./external-site-warning-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExternalSiteWarningDialogComponent implements OnInit {
   externalSiteWarning: ExternalSiteWarning;
