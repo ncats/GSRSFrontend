@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import cloneDeep from 'lodash/cloneDeep';
 
@@ -6,7 +6,8 @@ import cloneDeep from 'lodash/cloneDeep';
     selector: 'app-subunit-selector-dialog',
     templateUrl: './subunit-selector-dialog.component.html',
     styleUrls: ['./subunit-selector-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
   feature: any;

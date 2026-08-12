@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { SubstanceNote } from '../../substance/substance.model';
 import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../../utils/utils.service';
@@ -7,7 +7,8 @@ import { UtilsService } from '../../utils/utils.service';
     selector: 'app-note-form',
     templateUrl: './note-form.component.html',
     styleUrls: ['./note-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteFormComponent implements OnInit {
   private privateNote: SubstanceNote;

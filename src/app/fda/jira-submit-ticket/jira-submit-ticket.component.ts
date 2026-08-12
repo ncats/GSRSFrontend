@@ -1,10 +1,11 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit } from '@angular/core';
 
 @Component({
     selector: 'app-jira-submit-ticket',
     templateUrl: './jira-submit-ticket.component.html',
     styleUrls: ['./jira-submit-ticket.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JiraSubmitTicketComponent implements OnInit, AfterViewInit {
 

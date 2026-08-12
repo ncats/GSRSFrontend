@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { UtilsService } from '@gsrs-core/utils';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -8,7 +8,8 @@ import { FormControl } from '@angular/forms';
     selector: 'app-import-dialog',
     templateUrl: './import-dialog.component.html',
     styleUrls: ['./import-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportDialogComponent implements OnInit {
   settingsActive: any;
