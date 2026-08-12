@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { OutcomeResultNote } from '../../clinical-trial/clinical-trial.model';
 import { ConfigService } from '@gsrs-core/config';
 import { FormControl } from '@angular/forms';
@@ -7,7 +7,8 @@ import { FormControl } from '@angular/forms';
     selector: 'app-clinical-trial-edit-outcome-result-note',
     templateUrl: './clinical-trial-edit-outcome-result-note.component.html',
     styleUrls: ['./clinical-trial-edit-outcome-result-note.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialEditOutcomeResultNoteComponent implements OnInit {
   @Input() outcomeResultNote: OutcomeResultNote;

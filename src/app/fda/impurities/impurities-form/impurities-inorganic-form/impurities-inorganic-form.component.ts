@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ConfigService } from '@gsrs-core/config';
@@ -12,7 +12,8 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
     selector: 'app-impurities-inorganic-form',
     templateUrl: './impurities-inorganic-form.component.html',
     styleUrls: ['./impurities-inorganic-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesInorganicFormComponent implements OnInit {
 

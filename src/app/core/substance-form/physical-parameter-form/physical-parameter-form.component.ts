@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {PhysicalModificationParameter, SubstanceAmount, SubstanceParameter} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 
@@ -6,7 +6,8 @@ import {UtilsService} from '@gsrs-core/utils';
     selector: 'app-physical-parameter-form',
     templateUrl: './physical-parameter-form.component.html',
     styleUrls: ['./physical-parameter-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PhysicalParameterFormComponent implements OnInit {
   private privateParameter: PhysicalModificationParameter;
