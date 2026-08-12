@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
@@ -8,7 +8,8 @@ import { AdverseEventService } from '../service/adverseevent.service';
     selector: 'app-adverse-events-browse',
     templateUrl: './adverse-events-browse.component.html',
     styleUrls: ['./adverse-events-browse.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdverseEventsBrowseComponent implements OnInit, AfterViewInit {
   adverseEventPtCount = 0;

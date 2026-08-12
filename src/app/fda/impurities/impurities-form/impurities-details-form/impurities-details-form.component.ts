@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ConfigService } from '@gsrs-core/config';
@@ -12,7 +12,8 @@ import { Impurities, ImpuritiesDetails, IdentityCriteria, SubRelationship } from
     selector: 'app-impurities-details-form',
     templateUrl: './impurities-details-form.component.html',
     styleUrls: ['./impurities-details-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesDetailsFormComponent implements OnInit {
 

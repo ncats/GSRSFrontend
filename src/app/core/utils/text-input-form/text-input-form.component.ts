@@ -1,11 +1,12 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Inject, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-text-input-form',
     templateUrl: './text-input-form.component.html',
     styleUrls: ['./text-input-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class TextInputFormComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceRelationship, SubstanceSummary, SubstanceRelated, MediatorSubstance } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -9,7 +9,8 @@ import { UtilsService } from '../../utils/utils.service';
     selector: 'app-relationship-form',
     templateUrl: './relationship-form.component.html',
     styleUrls: ['./relationship-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RelationshipFormComponent implements OnInit {
   private privateRelationship: SubstanceRelationship;

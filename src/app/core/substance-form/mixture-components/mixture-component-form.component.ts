@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, HostListener} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, HostListener} from '@angular/core';
 import {MixtureComponents, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
@@ -7,7 +7,8 @@ import {OverlayContainer} from '@angular/cdk/overlay';
     selector: 'app-mixture-component-form',
     templateUrl: './mixture-component-form.component.html',
     styleUrls: ['./mixture-component-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MixtureComponentFormComponent implements OnInit {
   private privateComp: MixtureComponents;
