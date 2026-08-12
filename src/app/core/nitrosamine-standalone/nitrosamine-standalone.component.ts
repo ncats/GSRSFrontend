@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-nitrosamine-standalone',
     templateUrl: './nitrosamine-standalone.component.html',
     styleUrls: ['./nitrosamine-standalone.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NitrosamineStandaloneComponent implements OnInit {
 

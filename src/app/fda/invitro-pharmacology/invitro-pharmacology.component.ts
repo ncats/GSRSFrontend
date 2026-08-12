@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 /* GSRS Imports */
@@ -9,7 +9,8 @@ import { InvitroAssayInformation, ValidationMessage } from './model/invitro-phar
     selector: 'app-invitro-pharmacology',
     templateUrl: './invitro-pharmacology.component.html',
     styleUrls: ['./invitro-pharmacology.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitroPharmacologyComponent implements OnInit {
 
