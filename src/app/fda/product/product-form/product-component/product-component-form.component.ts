@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -20,7 +20,8 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
     selector: 'app-product-component-form',
     templateUrl: './product-component-form.component.html',
     styleUrls: ['./product-component-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductComponentFormComponent implements OnInit {
 

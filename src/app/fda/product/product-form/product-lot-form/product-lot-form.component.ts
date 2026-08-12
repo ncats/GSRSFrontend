@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,7 +23,8 @@ import { formatDate } from '@angular/common';
     selector: 'app-product-lot-form',
     templateUrl: './product-lot-form.component.html',
     styleUrls: ['./product-lot-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductLotFormComponent implements OnInit {
 

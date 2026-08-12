@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, OnChanges, Input, SimpleChanges } from "@angular/core";
 import {
   SubstanceDetail,
   SubstanceReference,
@@ -12,6 +12,7 @@ import { take } from "rxjs/operators";
   templateUrl: "./references-manager.component.html",
   styleUrls: ["./references-manager.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReferencesManagerComponent implements OnInit, OnChanges {
   @Input() substance?: SubstanceDetail;
