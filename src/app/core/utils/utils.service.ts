@@ -112,27 +112,12 @@ export class UtilsService {
         .replace(/^(.)/, ($1) => $1.toLowerCase());
   }
 
-  // https://gist.github.com/jed/982883
-  newUUID(
-    a?: number                  // placeholder
-  ) {
-    return a           // if the placeholder was passed, return
-      ? (              // a random number from 0 to 15
-        a ^            // unless b is 8,
-        Math.random()  // in which case
-        * 16           // a random number from
-        >> a / 4         // 8 to 11
-        ).toString(16) // in hexadecimal
-      : (              // or otherwise a concatenated string:
-        [1e7] as any +        // 10000000 +
-        -1e3 +         // -1000 +
-        -4e3 +         // -4000 +
-        -8e3 +         // -80000000 +
-        -1e11          // -100000000000,
-        ).replace(     // replacing
-          /[018]/g,    // zeroes, ones, and eights with
-          this.newUUID            // random hex digits
-        );
+  newUUID(): string {
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+    bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 10
+    const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
   }
 
   // https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_get
