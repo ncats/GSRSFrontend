@@ -3,6 +3,7 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SubstanceDetail, SubstanceRelated, SubstanceService} from '@gsrs-core/substance';
+import {UtilsService} from '@gsrs-core/utils';
 import {take} from 'rxjs/operators';
 import * as _ from 'lodash';
 import jp from 'jsonpath';
@@ -31,6 +32,7 @@ export class MergeConceptDialogComponent implements OnInit {
     private substanceFormService: SubstanceFormService,
     private substanceService: SubstanceService,
     private sanitizer: DomSanitizer,
+    private utilsService: UtilsService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
   }
@@ -217,15 +219,7 @@ export class MergeConceptDialogComponent implements OnInit {
 }
 
   scrub(oldraw: any, importType?: string): SubstanceDetail {
-    function guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-    }
+    const guid = () => this.utilsService.newUUID();
     const old = JSON.parse(JSON.stringify(oldraw)); 
     const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const map = {};
@@ -325,13 +319,7 @@ export class MergeConceptDialogComponent implements OnInit {
   }
 
   guid(): string {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
+    return this.utilsService.newUUID();
   }
   
 }
