@@ -22,8 +22,8 @@ $my-blue: (
   A700: var(--version-text-color),
   contrast: (
     50: var(--surface-card),
-    100: rgba(var(--feedback-neutral-text), 0.87),
-    200: rgba(var(--feedback-neutral-text), 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
     300: var(--surface-card),
     400: var(--surface-card),
     500: var(--surface-card),

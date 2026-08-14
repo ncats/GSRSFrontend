@@ -7,8 +7,8 @@
  */
 
 /* Top loading bar (old + MDC) */
-::ng-deep .mat-progress-bar,
-::ng-deep .mat-mdc-progress-bar {
+:host ::ng-deep .mat-progress-bar,
+:host ::ng-deep .mat-mdc-progress-bar {
   z-index: 1003;
   position: fixed;
   top: 0;
@@ -21,8 +21,8 @@
  * - transparent background so the spinner floats over the page (or over
  *   the CDK overlay backdrop when a dialog is loading)
  */
-::ng-deep .mat-progress-spinner,
-::ng-deep .mat-mdc-progress-spinner {
+:host ::ng-deep .mat-progress-spinner,
+:host ::ng-deep .mat-mdc-progress-spinner {
   z-index: 1003;
   position: fixed;
   top: 50%;
@@ -44,13 +44,13 @@
 
 /* The track (background ring) of the spinner SVG — was black by default.
  * Make it a soft neutral grey so it pairs with the white surface. */
-::ng-deep .mat-progress-spinner circle,
-::ng-deep .mat-mdc-progress-spinner circle {
+:host ::ng-deep .mat-progress-spinner circle,
+:host ::ng-deep .mat-mdc-progress-spinner circle {
   stroke: var(--spinner-track-color);
 }
 
 /* The active arc color — pulled from the brand theme so it matches buttons. */
-::ng-deep .mat-progress-spinner[mode='indeterminate'] circle,
-::ng-deep .mat-mdc-progress-spinner[mode='indeterminate'] circle {
+:host ::ng-deep .mat-progress-spinner[mode='indeterminate'] circle,
+:host ::ng-deep .mat-mdc-progress-spinner[mode='indeterminate'] circle {
   stroke: var(--spinner-stroke-color);
 }

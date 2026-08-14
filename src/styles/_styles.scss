@@ -19,18 +19,18 @@
     --accent-deepest: navy;
     --highlight-soft: #f9f6e8;
     --highlight-main: yellow;
-    --accent-attention: orange;
+    --accent-attention-plain: orange;
     --accent-alert: orangered;
-    --accent-positive: green;
-    --accent-positive-strong: darkgreen;
+    --accent-positive-plain: green;
+    --accent-positive-strong-plain: darkgreen;
     --accent-natural: darkolivegreen;
     --accent-cool: turquoise;
     --accent-sky: lightskyblue;
     --accent-deep-primary: darkslateblue;
     --accent-mystical: purple;
     --accent-vivid: magenta;
-    --accent-deep-warm: maroon;
-    --accent-earth: #6e3408;
+    --accent-deep-warm-plain: maroon;
+    --accent-earth-plain: #6e3408;
     --primary-title-color: #0857d6;
     --secondary-title-color: #27288a;
     --lighter-title-color: rgba(0, 0, 0, 0.87);
@@ -58,7 +58,6 @@
     --accent-attention: rgb(231, 197, 2);
     --accent-spice: rgb(172, 141, 4);
     --text-soft: #777;
-    --text-dark: #262626;
     --highlight-soft-attention: rgb(251, 247, 206);
     --highlight-soft-attention-2: rgba(251, 251, 180, 0.705);
     --highlight-soft-attention-3: rgba(255, 222, 121, 0.96);
@@ -78,8 +77,6 @@
     --table-tr-even-bg-color-2: #DAE9F5;
     --table-tr-even-bg-color-3: #fbfdf7;
     --table-thead-bg-color: #0B6FA4;
-    --table-thead-bg-color-2: #c0ccee;
-    --table-thead-bg-color-3: #eeeadc;
     --table-thead-border-color: #444444;
     --table-th-color: #FFFFFF;
     --nth-child-color-1: rgba(128, 128, 128, .15);
@@ -113,13 +110,11 @@
     --box-shadow-color: rgba(0, 0, 0, 0.2);
     --box-shadow-color-2: rgba(0, 0, 0, 0.14);
     --box-shadow-color-3: rgba(0, 0, 0, 0.12);
-    --box-shadow-color-4: rgba(0, 0, 0, 0.35);
     --box-shadow-color-5: rgba(0, 0, 0, 0.26);
     --box-shadow-color-6: rgba(0, 0, 0, 0.45);
     --shadow-elevated: rgba(145, 140, 145, 1);
     --deprecated-color: rgba(0, 0, 0, .70);
     --surface-light: #f1f1f1;
-    --surface-extra-light: #f2f3f4 ;
     --text-disabled: #666666;
     --version-text-color: #182c4d;
     --nav-link-color: #e6e6e6;
@@ -156,7 +151,6 @@
     --legend-success-border: #16997d;
     --legend-info-border: #174793;
     --legend-info-border-2: #007cba;
-    --legend-warning-border: #b36d13;
     --legend-error-border: #700819;
     --legend-info-bg: #eff8ff;
     --legend-info-bg-strong: #2f6dd7;
@@ -169,7 +163,6 @@
     --chem-glycosylation-o-link: #ff6666;
     --fieldset-success-border: rgb(33, 136, 20);
     --fieldset-info-border: rgb(27, 15, 184);
-    --fieldset-warning-border: rgb(179, 101, 12);
     --fieldset-error-border: rgb(172, 63, 63);
     --fieldset-earth-border: #5f391c;
     --fieldset-shadow: rgba(110, 104, 110, 0.64);
@@ -178,7 +171,6 @@
     --tab-attention-bg: #eee2b9;
     --tab-info-bg: #cde3fd;
     --tab-muted-bg: #f3f1f1;
-    --tab-link-bg: #1565C0;
     --tab-link-bg-strong: #3768bd;
     --tab-gradient-start: #fff;
     --tab-gradient-end: #b2b2b2;
