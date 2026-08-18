@@ -1,11 +1,15 @@
-import { TestBed, waitForAsync, inject } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
+import { SubstanceFormService } from './substance-form.service';
 
 import { CanDeactivateSubstanceFormGuard } from './can-deactivate-substance-form.guard';
 
 describe('CanDeactivateSubstanceFormGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CanDeactivateSubstanceFormGuard]
+      providers: [
+        CanDeactivateSubstanceFormGuard,
+        { provide: SubstanceFormService, useValue: {} }
+      ]
     });
   });
 

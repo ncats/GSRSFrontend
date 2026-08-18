@@ -1,25 +1,19 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
+import { ApplicationService } from '../service/application.service';
 
 import { CanDeactivateApplicationFormComponent } from './can-deactivate-application-form.component';
 
 describe('CanDeactivateApplicationFormComponent', () => {
-  let component: CanDeactivateApplicationFormComponent;
-  let fixture: ComponentFixture<CanDeactivateApplicationFormComponent>;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CanDeactivateApplicationFormComponent ]
-    })
-    .compileComponents();
-  }));
-
   beforeEach(() => {
-    fixture = TestBed.createComponent(CanDeactivateApplicationFormComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      providers: [
+        CanDeactivateApplicationFormComponent,
+        { provide: ApplicationService, useValue: {} }
+      ]
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create', inject([CanDeactivateApplicationFormComponent], (guard: CanDeactivateApplicationFormComponent) => {
+    expect(guard).toBeTruthy();
+  }));
 });

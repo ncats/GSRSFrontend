@@ -55,6 +55,9 @@
             "browser": "src/main.ts"
           },
           "configurations": {
+            "unit-test": {
+              "polyfills": ["src/polyfills.ts", "zone.js/testing"]
+            },
             "gsrs.prod": {
               "assets": [
                 {
@@ -289,7 +292,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": ["src/polyfills.ts"],
+            "polyfills": ["src/polyfills.ts", "zone.js/testing"],
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
@@ -300,6 +303,14 @@
             ],
             "scripts": [],
             "assets": ["src/favicon.ico", "src/app/core/assets"]
+          }
+        },
+        "test-vitest": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "buildTarget": "gsrs-client:build:unit-test",
+            "tsConfig": "src/tsconfig.spec.json"
           }
         },
         "lint": {

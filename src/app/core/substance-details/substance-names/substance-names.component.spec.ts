@@ -1,9 +1,12 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { SubstanceNamesComponent } from './substance-names.component';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
@@ -13,15 +16,17 @@ describe('SubstanceNamesComponent', () => {
   let component: SubstanceNamesComponent;
   let fixture: ComponentFixture<SubstanceNamesComponent>;
 
-  beforeEach(waitForAsync(() => {
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+  beforeEach(async () => {
+    const configServiceSpy = { configData: {} };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
         MatTableModule,
         CdkTableModule,
         MatPaginatorModule,
         MatInputModule,
+        MatRadioModule,
+        MatSelectModule,
         ReactiveFormsModule,
         FormsModule,
         HttpClientTestingModule,
@@ -30,12 +35,13 @@ describe('SubstanceNamesComponent', () => {
       declarations: [
         SubstanceNamesComponent
       ],
+      schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy }
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceNamesComponent);

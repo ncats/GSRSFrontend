@@ -1,20 +1,30 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceFormPropertiesComponent } from './substance-form-properties-card.component';
+import { SubstanceFormPropertiesCardComponent } from './substance-form-properties-card.component';
+import { SubstanceFormPropertiesService } from './substance-form-properties.service';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { of } from 'rxjs';
 
-describe('SubstanceFormPropertiesComponent', () => {
-  let component: SubstanceFormPropertiesComponent;
-  let fixture: ComponentFixture<SubstanceFormPropertiesComponent>;
+describe('SubstanceFormPropertiesCardComponent', () => {
+  let component: SubstanceFormPropertiesCardComponent;
+  let fixture: ComponentFixture<SubstanceFormPropertiesCardComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SubstanceFormPropertiesComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ SubstanceFormPropertiesCardComponent ],
+      providers: [
+        // ngAfterViewInit subscribes to this directly, so it needs to actually emit.
+        { provide: SubstanceFormPropertiesService, useValue: { substanceProperties: of([]) } },
+        { provide: ScrollToService, useValue: {} },
+        { provide: GoogleAnalyticsService, useValue: {} },
+      ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceFormPropertiesComponent);
+    fixture = TestBed.createComponent(SubstanceFormPropertiesCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

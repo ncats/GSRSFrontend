@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceNotesComponent } from './substance-notes.component';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -7,8 +7,8 @@ describe('SubstanceNotesComponent', () => {
   let component: SubstanceNotesComponent;
   let fixture: ComponentFixture<SubstanceNotesComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         MatTableModule,
         CdkTableModule
@@ -18,7 +18,7 @@ describe('SubstanceNotesComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceNotesComponent);

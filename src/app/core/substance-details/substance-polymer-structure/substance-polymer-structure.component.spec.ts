@@ -1,20 +1,21 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstancePolymerStructureComponent } from './substance-polymer-structure.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { UtilsService } from '../../utils/utils.service';
-import { UtilsServiceStub } from '../../../testing/utils-service-stub';
+import { UtilsServiceStub } from '../../../../testing/utils-service-stub';
+import { vi } from 'vitest';
 
 describe('SubstancePolymerStructureComponent', () => {
   let component: SubstancePolymerStructureComponent;
   let fixture: ComponentFixture<SubstancePolymerStructureComponent>;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(waitForAsync(() => {
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+  beforeEach(async () => {
+    const configServiceSpy = { configData: vi.fn() };
     utilsServiceStub = new UtilsServiceStub();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule
       ],
@@ -27,7 +28,7 @@ describe('SubstancePolymerStructureComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstancePolymerStructureComponent);

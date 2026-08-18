@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceMonomersComponent } from './substance-monomers.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -8,20 +8,21 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
+import { RouterLinkDirectiveMock } from '../../../../testing/router-link-mock.directive';
 import { UtilsService } from '../../utils/utils.service';
-import { UtilsServiceStub } from '../../../testing/utils-service-stub';
+import { UtilsServiceStub } from '../../../../testing/utils-service-stub';
+import { vi } from 'vitest';
 
 describe('SubstanceMonomersComponent', () => {
   let component: SubstanceMonomersComponent;
   let fixture: ComponentFixture<SubstanceMonomersComponent>;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(waitForAsync(() => {
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+  beforeEach(async () => {
+    const configServiceSpy = { configData: vi.fn() };
     utilsServiceStub = new UtilsServiceStub();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
         MatInputModule,
         MatPaginatorModule,
@@ -42,7 +43,7 @@ describe('SubstanceMonomersComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceMonomersComponent);

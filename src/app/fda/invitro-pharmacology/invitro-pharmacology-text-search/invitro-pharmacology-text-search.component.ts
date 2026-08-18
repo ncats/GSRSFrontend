@@ -4,12 +4,12 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, take, takeUntil } from 'rxjs/operators';
 import { Sort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
 import { Location, LocationStrategy } from '@angular/common';
@@ -63,6 +63,8 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
   @Input() source?: string;
   private CasDisplay = 'CAS';
   codeSystemVocab?: any;
+  private deactivateSearchTimer?: ReturnType<typeof setTimeout>;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private element: ElementRef,
@@ -81,7 +83,8 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
         const eventCategory = this.eventCategory || 'substanceTextSearch';
         const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         return this.invitroPharmacologyService.getInvitroPharmacologySearchSuggestions(searchValue.toUpperCase());
-      })
+      }),
+      takeUntil(this.destroy$)
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
       let showTypes = ['Target_Name', 'Test_Agent', 'Application_Type_Number', 'Laboratory_Name', 'Control_Type'];
@@ -150,7 +153,11 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
     return this.privateErrorMessage;
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    clearTimeout(this.deactivateSearchTimer);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   autoCompleteClosed(): void {
     this.matOpen = false;
@@ -220,7 +227,11 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
 
   deactivateSearch(): void {
     this.searchContainerElement.classList.add('deactivate-search');
-    setTimeout(() => {
+    clearTimeout(this.deactivateSearchTimer);
+    this.deactivateSearchTimer = setTimeout(() => {
+      if (!this.searchContainerElement) {
+        return;
+      }
       if (this.source) {
 
         this.searchContainerElement.classList.remove('active-' + this.source);
@@ -263,4 +274,3 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
   }
 
 }
-

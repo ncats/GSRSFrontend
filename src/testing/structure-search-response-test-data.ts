@@ -1,4 +1,4 @@
-import { StructureSearchResponse } from '../app/substance/structure-search-response.model';
+import { StructureSearchResponse } from '../app/core/substance/structure-search-response.model';
 
 /* eslint-disable max-len */
 export const StructureSearchResponseTestData: StructureSearchResponse = {

@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { JiraSubmitTicketComponent } from './jira-submit-ticket.component';
 
@@ -6,12 +6,12 @@ describe('JiraSubmitTicketComponent', () => {
   let component: JiraSubmitTicketComponent;
   let fixture: ComponentFixture<JiraSubmitTicketComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [ JiraSubmitTicketComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(JiraSubmitTicketComponent);

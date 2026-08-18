@@ -1,15 +1,16 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SequenceSearchComponent } from './sequence-search.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterStub } from '../../testing/router-stub';
+import { RouterStub } from '../../../testing/router-stub';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ActivatedRouteStub } from '../../testing/activated-route-stub';
-import { MatInputModule } from '@angular/material';
+import { ActivatedRouteStub } from '../../../testing/activated-route-stub';
+import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('SequenceSearchComponent', () => {
   let component: SequenceSearchComponent;
@@ -25,10 +26,10 @@ describe('SequenceSearchComponent', () => {
     }
   );
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     routerStub = new RouterStub();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
         MatCardModule,
         MatFormFieldModule,
@@ -36,7 +37,8 @@ describe('SequenceSearchComponent', () => {
         MatSelectModule,
         MatButtonModule,
         MatInputModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        MatIconModule
       ],
       declarations: [
         SequenceSearchComponent
@@ -47,7 +49,7 @@ describe('SequenceSearchComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SequenceSearchComponent);

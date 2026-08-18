@@ -1,21 +1,26 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BaseComponent } from './base.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { LoadingModule } from '../loading/loading.module';
-import { RouterStub } from '../../testing/router-stub';
-import { RouterLinkDirectiveMock } from '../../testing/router-link-mock.directive';
+import { RouterStub } from '../../../testing/router-stub';
+import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
 import { MatMenuModule } from '@angular/material/menu';
 import { SubstanceTextSearchModule } from '../substance-text-search/substance-text-search.module';
 import { MainNotificationModule } from '../main-notification/main-notification.module';
 import { ConfigService } from '../config/config.service';
 import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
-import { ActivatedRouteStub } from '../../testing/activated-route-stub';
-import { RouterOutletStubComponent } from '../../testing/router-outlet-mock.component';
+import { ActivatedRouteStub } from '../../../testing/activated-route-stub';
+import { RouterOutletStubComponent } from '../../../testing/router-outlet-mock.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Subject } from 'rxjs';
-import { MatIconMock } from '../../testing/mat-icon-mock.component';
+import { Subject, NEVER, of } from 'rxjs';
+import { MatIconMock } from '../../../testing/mat-icon-mock.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 describe('BaseComponent', () => {
   let component: BaseComponent;
@@ -23,11 +28,27 @@ describe('BaseComponent', () => {
   let routerStub: RouterStub;
   let activatedRouteStub: Partial<ActivatedRoute>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     routerStub = new RouterStub();
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
-    const topSearchServiceSpy = jasmine.createSpyObj('TopSearchService', ['clearSearch', 'clearSearchEvent']);
+    const configServiceSpy = {
+      configData: { navItems: [] as any[] },
+      afterLoad: vi.fn().mockReturnValue(Promise.resolve({})),
+      environment: { clasicBaseHref: '' }
+    };
+    const topSearchServiceSpy: any = {
+      clearSearch: vi.fn(),
+      clearSearchEvent: vi.fn(),
+      registerSearchComponent: vi.fn(),
+      setSearchComponentValueEvent: vi.fn().mockReturnValue(NEVER)
+    };
     topSearchServiceSpy.clearSearchEvent = new Subject();
+    const authServiceSpy = {
+      getAuth: vi.fn().mockReturnValue(of(null)),
+      checkAuth: vi.fn().mockReturnValue(of(null)),
+      canEditData: vi.fn().mockReturnValue(Promise.resolve(false)),
+      hasSpecificPrivilege: vi.fn().mockReturnValue(Promise.resolve(false)),
+      logout: vi.fn()
+    };
     activatedRouteStub = new ActivatedRouteStub(
       {
         'search_term': 'test_search_term'
@@ -54,11 +75,15 @@ describe('BaseComponent', () => {
         { provide: Router, useValue: routerStub },
         { provide: ConfigService, useValue: configServiceSpy },
         { provide: SubstanceTextSearchService, useValue: topSearchServiceSpy },
-        { provide: ActivatedRoute, useValue: activatedRouteStub }
-      ]
+        { provide: ActivatedRoute, useValue: activatedRouteStub },
+        { provide: BreakpointObserver, useValue: { observe: vi.fn().mockReturnValue(NEVER) } },
+        { provide: AuthService, useValue: authServiceSpy },
+        { provide: OverlayContainer, useValue: { getContainerElement: vi.fn().mockReturnValue(document.createElement('div')) } }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BaseComponent);
@@ -77,19 +102,17 @@ describe('BaseComponent', () => {
       fixture.detectChanges(); // ngOnInit()
     });
 
-    it('should set mainPathSegment on init', waitForAsync(() => {
-      fixture.whenStable().then(() => {
-        fixture.detectChanges();
-        expect(component.mainPathSegment).toBe('test-before', 'mainPathSegment should be set correctly');
-      });
-    }));
+    it('should set mainPathSegment on init', async () => {
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(component.mainPathSegment).toBe('test-before', 'mainPathSegment should be set correctly');
+    });
 
-    it('should set mainPathSegment when the router completes a state change', waitForAsync(() => {
-      fixture.whenStable().then(() => {
-        routerStub.fireNavigationEndEvent('/test-after/test');
-        fixture.detectChanges();
-        expect(component.mainPathSegment).toBe('test-after', 'mainPathSegment should be set correctly');
-      });
-    }));
+    it('should set mainPathSegment when the router completes a state change', async () => {
+      await fixture.whenStable();
+      routerStub.fireNavigationEndEvent('/test-after/test');
+      fixture.detectChanges();
+      expect(component.mainPathSegment).toBe('test-after', 'mainPathSegment should be set correctly');
+    });
   });
 });

@@ -1,20 +1,36 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceFormReferencesComponent } from './substance-form-references-card.component';
+import { SubstanceFormReferencesCardComponent } from './substance-form-references-card.component';
+import { SubstanceFormReferencesService } from './substance-form-references.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ScrollToService } from '../../scroll-to/scroll-to.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ConfigService } from '@gsrs-core/config';
+import { of } from 'rxjs';
 
-describe('SubstanceFormReferencesComponent', () => {
-  let component: SubstanceFormReferencesComponent;
-  let fixture: ComponentFixture<SubstanceFormReferencesComponent>;
+describe('SubstanceFormReferencesCardComponent', () => {
+  let component: SubstanceFormReferencesCardComponent;
+  let fixture: ComponentFixture<SubstanceFormReferencesCardComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SubstanceFormReferencesComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ SubstanceFormReferencesCardComponent ],
+      providers: [
+        // ngAfterViewInit subscribes to this directly, so it needs to actually emit.
+        { provide: SubstanceFormReferencesService, useValue: { substanceReferences: of([]) } },
+        { provide: MatDialog, useValue: {} },
+        { provide: ScrollToService, useValue: {} },
+        { provide: GoogleAnalyticsService, useValue: {} },
+        { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
+        { provide: ConfigService, useValue: {} },
+      ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceFormReferencesComponent);
+    fixture = TestBed.createComponent(SubstanceFormReferencesCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

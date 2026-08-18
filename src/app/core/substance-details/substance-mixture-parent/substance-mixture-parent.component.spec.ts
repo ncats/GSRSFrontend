@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SubstanceMixtureParentComponent } from './substance-mixture-parent.component';
 
@@ -6,12 +6,12 @@ describe('SubstanceMixtureParentComponent', () => {
   let component: SubstanceMixtureParentComponent;
   let fixture: ComponentFixture<SubstanceMixtureParentComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [ SubstanceMixtureParentComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceMixtureParentComponent);

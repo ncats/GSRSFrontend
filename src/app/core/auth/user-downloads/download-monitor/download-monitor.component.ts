@@ -24,6 +24,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   displayOrder: string;
   type?: string;
   killed = false;
+  private refreshTimeout?: ReturnType<typeof setTimeout>;
   constructor(
     private authService: AuthService
   ) { }
@@ -50,7 +51,8 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
         }
         if (this.download.status === 'RUNNING' || this.download.status === 'PREPARING' || this.download.status === 'INITIALIZED') {
           if (!this.killed) {
-            setTimeout(() => {
+            clearTimeout(this.refreshTimeout);
+            this.refreshTimeout = setTimeout(() => {
               this.refresh();
             }, 1400);
           }
@@ -64,7 +66,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.killed = true;
     this.exists = false;
-    this.refresh(true);
+    clearTimeout(this.refreshTimeout);
   }
 
   cancel() {

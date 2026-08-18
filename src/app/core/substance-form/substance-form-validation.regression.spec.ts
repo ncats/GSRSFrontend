@@ -1,4 +1,5 @@
 import { of, Subject } from 'rxjs';
+import { vi } from 'vitest';
 import { SubstanceFormComponent } from './substance-form.component';
 import { SubstanceFormService } from './substance-form.service';
 import { ValidationResults } from './substance-form.model';
@@ -6,7 +7,7 @@ import { ValidationResults } from './substance-form.model';
 describe('Substance form validation regressions', () => {
   function createService(validationResults: ValidationResults) {
     const substanceService = {
-      validateSubstance: jasmine.createSpy('validateSubstance').and.returnValue(of(validationResults)),
+      validateSubstance: vi.fn().mockReturnValue(of(validationResults)),
     };
     const service = new SubstanceFormService(
       substanceService as any,
@@ -38,8 +39,8 @@ describe('Substance form validation regressions', () => {
 
     service.validateSubstance().subscribe();
 
-    expect(substanceService.validateSubstance).toHaveBeenCalledTimes(1);
-    const payload = substanceService.validateSubstance.calls.mostRecent().args[0];
+    expect(substanceService.validateSubstance.mock.calls.length).toBe(1);
+    const payload = substanceService.validateSubstance.mock.calls[substanceService.validateSubstance.mock.calls.length - 1][0];
     expect(payload.uuid).toBe('existing-substance');
     expect(payload.version).toBe('7');
     expect(payload.structure.molfile).toBe('current editor molfile');
@@ -59,7 +60,7 @@ describe('Substance form validation regressions', () => {
     let result: ValidationResults;
     service.validateSubstance().subscribe(value => result = value);
 
-    expect(result!.valid).toBeFalse();
+    expect(result!.valid).toBe(false);
     expect(result!.validationMessages).toEqual(messages);
   });
 
@@ -67,13 +68,13 @@ describe('Substance form validation regressions', () => {
     const component = Object.create(SubstanceFormComponent.prototype) as SubstanceFormComponent;
     let responseIndex = 0;
     (component as any).substanceFormService = {
-      validationMutations: jasmine.createSpy('validationMutations'),
-      validateSubstance: jasmine.createSpy('validateSubstance').and.callFake(
+      validationMutations: vi.fn(),
+      validateSubstance: vi.fn(
         () => validationResponses[responseIndex++],
       ),
     };
     (component as any).activatedRoute = { snapshot: { queryParams: {} } };
-    (component as any).loadingService = { setLoading: jasmine.createSpy('setLoading') };
+    (component as any).loadingService = { setLoading: vi.fn() };
     component.validationMessages = [{ messageType: 'ERROR', message: 'old error' } as any];
     component.submissionMessage = 'stale valid message';
     component.showSubmissionMessages = true;
@@ -88,8 +89,8 @@ describe('Substance form validation regressions', () => {
 
     expect(component.validationMessages).toBeNull();
     expect(component.submissionMessage).toBeNull();
-    expect(component.showSubmissionMessages).toBeFalse();
-    expect((component as any).substanceFormService.validateSubstance).toHaveBeenCalledTimes(1);
+    expect(component.showSubmissionMessages).toBe(false);
+    expect((component as any).substanceFormService.validateSubstance.mock.calls.length).toBe(1);
   });
 
   it('does not let an older valid response replace newer validation errors', () => {
@@ -105,7 +106,7 @@ describe('Substance form validation regressions', () => {
     });
     first.next({ valid: true, validationMessages: [] });
 
-    expect(component.validationResult).toBeFalse();
+    expect(component.validationResult).toBe(false);
     expect(component.validationMessages[0].message).toBe('duplicate');
     expect(component.submissionMessage).toBeNull();
   });

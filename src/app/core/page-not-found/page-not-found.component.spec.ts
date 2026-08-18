@@ -1,17 +1,17 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found.component';
-import { RouterStub } from '../../testing/router-stub';
+import { RouterStub } from '../../../testing/router-stub';
 
 describe('PageNotFoundComponent', () => {
   let component: PageNotFoundComponent;
   let fixture: ComponentFixture<PageNotFoundComponent>;
   let routerStub: RouterStub;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     routerStub = new RouterStub();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [
         PageNotFoundComponent
       ],
@@ -20,7 +20,7 @@ describe('PageNotFoundComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PageNotFoundComponent);

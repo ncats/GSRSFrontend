@@ -1,25 +1,19 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
+import { ImpuritiesService } from '../service/impurities.service';
 
 import { CanDeactivateImpuritiesFormComponent } from './can-deactivate-impurities-form.component';
 
 describe('CanDeactivateImpuritiesFormComponent', () => {
-  let component: CanDeactivateImpuritiesFormComponent;
-  let fixture: ComponentFixture<CanDeactivateImpuritiesFormComponent>;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CanDeactivateImpuritiesFormComponent ]
-    })
-    .compileComponents();
-  }));
-
   beforeEach(() => {
-    fixture = TestBed.createComponent(CanDeactivateImpuritiesFormComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      providers: [
+        CanDeactivateImpuritiesFormComponent,
+        { provide: ImpuritiesService, useValue: {} }
+      ]
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create', inject([CanDeactivateImpuritiesFormComponent], (guard: CanDeactivateImpuritiesFormComponent) => {
+    expect(guard).toBeTruthy();
+  }));
 });

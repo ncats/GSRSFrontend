@@ -1,7 +1,8 @@
 import { Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
@@ -36,6 +37,8 @@ export class AdverseEventTextSearchComponent implements OnInit, AfterViewInit, O
   @Input() source?: string;
   private CasDisplay = 'CAS';
   codeSystemVocab?: any;
+  private deactivateSearchTimer?: ReturnType<typeof setTimeout>;
+  private destroy$ = new Subject<void>();
 
   constructor(
     public adverseEventService: AdverseEventService,
@@ -56,7 +59,8 @@ export class AdverseEventTextSearchComponent implements OnInit, AfterViewInit, O
         const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         this.gaService.sendEvent(eventCategory, 'search:enter-term', eventLabel);
         return this.adverseEventService.getAdverseEventSearchSuggestions(searchValue.toUpperCase(), this.eventCategory);
-      })
+      }),
+      takeUntil(this.destroy$)
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
       let showTypes = [];
@@ -136,7 +140,11 @@ export class AdverseEventTextSearchComponent implements OnInit, AfterViewInit, O
     return this.privateErrorMessage;
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    clearTimeout(this.deactivateSearchTimer);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   autoCompleteClosed(): void {
     this.matOpen = false;
@@ -208,7 +216,11 @@ export class AdverseEventTextSearchComponent implements OnInit, AfterViewInit, O
 
   deactivateSearch(): void {
     this.searchContainerElement.classList.add('deactivate-search');
-    setTimeout(() => {
+    clearTimeout(this.deactivateSearchTimer);
+    this.deactivateSearchTimer = setTimeout(() => {
+      if (!this.searchContainerElement) {
+        return;
+      }
       if (this.source) {
 
         this.searchContainerElement.classList.remove('active-' + this.source);

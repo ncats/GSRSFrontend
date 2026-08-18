@@ -1,4 +1,4 @@
-import { SubstanceSuggestionsGroup } from '../app/utils/substance-suggestions-group.model';
+import { SubstanceSuggestionsGroup } from '../app/core/utils/substance-suggestions-group.model';
 
 /* eslint-disable max-len */
 export const SubstanceData: SubstanceSuggestionsGroup = {

@@ -21,6 +21,9 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     monitor: boolean;
     quickLoad = false;
     mess: any;
+    private refreshTimeout?: ReturnType<typeof setTimeout>;
+    private executeRetryTimeout?: ReturnType<typeof setTimeout>;
+    private destroyed = false;
 
     occasionalApiBasePath = '';
 
@@ -30,14 +33,17 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.destroyed = false;
     this.monitor = this.pollIn;
      this.refresh(true);
      this.occasionalApiBasePath = (this.configService.configData && this.configService.configData.occasionalApiBasePath) || '';
   }
 
   ngOnDestroy() {
+    this.destroyed = true;
     this.monitor = false;
-    this.refresh(false);
+    clearTimeout(this.refreshTimeout);
+    clearTimeout(this.executeRetryTimeout);
     this.stopMonitor();
   }
 
@@ -81,12 +87,13 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
         this.quickLoad = false;
         if (this.monitor && spawn) {
           this.mess = 'Polling ... ' + response.status;
+          clearTimeout(this.refreshTimeout);
           if (this.job.running) {
-            setTimeout(() => {
+            this.refreshTimeout = setTimeout(() => {
               this.refresh(true);
             }, Math.min(this.untilNextRun(), 200));
           } else {
-            setTimeout(() => {
+            this.refreshTimeout = setTimeout(() => {
               this.refresh(true);
             }, Math.min(this.untilNextRun(), 10000));
           }
@@ -131,8 +138,18 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     const url = job['@execute'];
     const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
     this.adminService.runJob(url2).pipe(take(1)).subscribe({
-      next: () => this.refresh(true),
-      error: () => setTimeout(() => this.refresh())
+      next: () => {
+        if (!this.destroyed) {
+          this.refresh(true);
+        }
+      },
+      error: () => {
+        if (this.destroyed) {
+          return;
+        }
+        clearTimeout(this.executeRetryTimeout);
+        this.executeRetryTimeout = setTimeout(() => this.refresh());
+      }
     });
   }
 

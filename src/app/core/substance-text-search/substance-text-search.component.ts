@@ -18,7 +18,9 @@ import {
   distinctUntilChanged,
   switchMap,
   take,
+  takeUntil,
 } from "rxjs/operators";
+import { Subject } from "rxjs";
 import { SubstanceSuggestionsGroup } from "../utils/substance-suggestions-group.model";
 import { UtilsService } from "../utils/utils.service";
 import { GoogleAnalyticsService } from "../google-analytics/google-analytics.service";
@@ -53,6 +55,8 @@ export class SubstanceTextSearchComponent
   @Input() source?: string;
   private CasDisplay = "CAS";
   codeSystemVocab?: any;
+  private deactivateSearchTimer?: ReturnType<typeof setTimeout>;
+  private destroy$ = new Subject<void>();
 
   get formFieldClasses(): string[] {
     return [this.source, this.styling].filter((c): c is string => !!c);
@@ -102,6 +106,7 @@ export class SubstanceTextSearchComponent
             searchValue.toUpperCase(),
           );
         }),
+        takeUntil(this.destroy$),
       )
       .subscribe(
         (response: SubstanceSuggestionsGroup) => {
@@ -213,7 +218,11 @@ export class SubstanceTextSearchComponent
     return this.privateErrorMessage;
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    clearTimeout(this.deactivateSearchTimer);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   autoCompleteClosed(): void {
     this.matOpen = false;
@@ -292,7 +301,11 @@ export class SubstanceTextSearchComponent
 
   deactivateSearch(): void {
     this.searchContainerElement.classList.add("deactivate-search");
-    setTimeout(() => {
+    clearTimeout(this.deactivateSearchTimer);
+    this.deactivateSearchTimer = setTimeout(() => {
+      if (!this.searchContainerElement) {
+        return;
+      }
       if (this.source) {
         this.searchContainerElement.classList.remove("active-" + this.source);
         this.searchContainerElement.classList.remove("deactivate-search");

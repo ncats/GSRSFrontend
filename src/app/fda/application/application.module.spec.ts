@@ -1,13 +1,15 @@
-import { ApplicationsModule } from './applications.module';
+import { ApplicationModule } from './application.module';
+import { Router } from '@angular/router';
 
-describe('ApplicationsModule', () => {
-  let applicationsModule: ApplicationsModule;
+describe('ApplicationModule', () => {
+  let applicationModule: ApplicationModule;
 
   beforeEach(() => {
-    applicationsModule = new ApplicationsModule();
+    const routerStub = { config: [{ children: [] }] } as unknown as Router;
+    applicationModule = new ApplicationModule(routerStub);
   });
 
   it('should create an instance', () => {
-    expect(applicationsModule).toBeTruthy();
+    expect(applicationModule).toBeTruthy();
   });
 });

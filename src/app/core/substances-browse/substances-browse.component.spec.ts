@@ -1,4 +1,7 @@
-import { waitForAsync, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { vi } from 'vitest';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -9,39 +12,42 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
-import { ActivatedRouteStub } from '../../testing/activated-route-stub';
+import { ActivatedRouteStub } from '../../../testing/activated-route-stub';
 import { SubstanceService } from '../substance/substance.service';
 import { ConfigService } from '../config/config.service';
 import { LoadingService } from '../loading/loading.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SubstanceDetailsListData } from '../../testing/substance-details-list-test-data';
-import { throwError } from 'rxjs';
-import { asyncData } from '../../testing/async-observable-helpers';
+import { SubstanceDetailsListData } from '../../../testing/substance-details-list-test-data';
+import { throwError, of } from 'rxjs';
+import { asyncData } from '../../../testing/async-observable-helpers';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { decodeHtml } from '../utils/decode-html';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatPaginatorHarness } from '@angular/material/paginator/testing';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { TakePipe } from '../utils/take.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
-import { MatDialogStub } from '../../testing/mat-dialog-stub';
+import { MatDialogStub } from '../../../testing/mat-dialog-stub';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconMock } from '../../testing/mat-icon-mock.component';
+import { MatIconMock } from '../../../testing/mat-icon-mock.component';
 import { UtilsService } from '../utils/utils.service';
-import { UtilsServiceStub } from '../../testing/utils-service-stub';
+import { UtilsServiceStub } from '../../../testing/utils-service-stub';
+import { FacetParam } from '@gsrs-core/facets-manager';
+import { AuthService } from '@gsrs-core/auth';
+import { DYNAMIC_COMPONENT_MANIFESTS } from '@gsrs-core/dynamic-component-loader';
 
 describe('SubstancesBrowseComponent', () => {
   let component: SubstancesBrowseComponent;
   let fixture: ComponentFixture<SubstancesBrowseComponent>;
   let activatedRouteStub: Partial<ActivatedRoute>;
-  let getSubtanceDetailsSpy: jasmine.Spy;
-  let setNotificationSpy: jasmine.Spy;
+  let getSubstancesSummariesSpy: ReturnType<typeof vi.fn>;
+  let setNotificationSpy: ReturnType<typeof vi.fn>;
   let matDialog: MatDialogStub;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     activatedRouteStub = new ActivatedRouteStub(
       {
         'search': 'test_search_term',
@@ -51,22 +57,41 @@ describe('SubstancesBrowseComponent', () => {
       }
     );
 
-    const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['getSubtanceDetails']);
-    getSubtanceDetailsSpy = substanceServiceSpy.getSubtanceDetails.and.returnValue(asyncData(SubstanceDetailsListData));
+    getSubstancesSummariesSpy = vi.fn().mockReturnValue(asyncData(SubstanceDetailsListData));
+    // component calls several other substanceService methods across its lifecycle
+    // (ngOnInit/ngOnDestroy and various user-triggered handlers); stub all of them as
+    // harmless no-ops since only getSubstancesSummaries is actually asserted on.
+    const substanceServiceSpy = {
+      getSubstancesSummaries: getSubstancesSummariesSpy,
+      unpauseAsyncSubject: vi.fn(),
+      pauseAsyncSearch: vi.fn(),
+      clearSearchKey: vi.fn(),
+      getConfigByID: vi.fn(),
+      getExportOptions: vi.fn(),
+      getFasta: vi.fn(),
+      getSubstanceCodes: vi.fn(),
+      getSubstanceDetails: vi.fn(),
+      getSubstanceNames: vi.fn(),
+      resumeAsyncSearch: vi.fn(),
+      searchSubstances: vi.fn(),
+      setResult: vi.fn()
+    };
 
-    const notificationServiceSpy = jasmine.createSpyObj('MainNotificationService', ['setNotification']);
-    setNotificationSpy = notificationServiceSpy.setNotification.and.returnValue(null);
+    setNotificationSpy = vi.fn().mockReturnValue(null);
+    const notificationServiceSpy = { setNotification: setNotificationSpy };
 
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+    // loadFacetViewFromConfig() (called from ngOnInit) reads
+    // configData.facets.substances.facetView as a real array, unguarded.
+    const configServiceSpy = { configData: { facets: { substances: { facetView: [] } } } };
 
-    const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);
+    const loadingServiceSpy = { setLoading: vi.fn() };
 
-    const topSearchServiceSpy = jasmine.createSpyObj('TopSearchService', ['clearSearch']);
+    const topSearchServiceSpy = { clearSearch: vi.fn() };
 
     matDialog = new MatDialogStub();
     utilsServiceStub = new UtilsServiceStub();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
         MatExpansionModule,
         MatCheckboxModule,
@@ -87,6 +112,9 @@ describe('SubstancesBrowseComponent', () => {
         TakePipe,
         MatIconMock
       ],
+      // real <app-facets-manager> child isn't declared/imported here; NO_ERRORS_SCHEMA lets
+      // it render as a plain, unbound DOM element (still findable via querySelector).
+      schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: SubstanceService, useValue: substanceServiceSpy },
@@ -95,11 +123,24 @@ describe('SubstancesBrowseComponent', () => {
         { provide: MainNotificationService, useValue: notificationServiceSpy },
         { provide: SubstanceTextSearchService, useValue: topSearchServiceSpy },
         { provide: MatDialog, useValue: matDialog },
-        { provide: UtilsService, useValue: utilsServiceStub }
+        { provide: UtilsService, useValue: utilsServiceStub },
+        // ngOnInit calls authService.getAuth()/hasSpecificPrivilege() directly; the real
+        // (root-provided) AuthService's own constructor needs configService.afterLoad(),
+        // which this spec's ConfigService stub doesn't provide.
+        {
+          provide: AuthService,
+          useValue: {
+            getAuth: vi.fn().mockReturnValue(of(null)),
+            hasSpecificPrivilege: vi.fn().mockReturnValue(Promise.resolve(false)),
+            getUser: vi.fn().mockReturnValue(''),
+            startUserDownload: vi.fn()
+          }
+        },
+        { provide: DYNAMIC_COMPONENT_MANIFESTS, useValue: [] }
       ]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstancesBrowseComponent);
@@ -113,37 +154,47 @@ describe('SubstancesBrowseComponent', () => {
 
   it('before OnInit, component properties should not contain a value', () => {
     expect(component.substances).toBeUndefined('substances should not be initialized');
-    expect(component.facets).toBeUndefined('facets should not be initialized');
+    expect(component.rawFacets).toBeUndefined('facets should not be initialized');
     expect(component.searchTerm).toBeUndefined('searchTerm should not be initialized');
     expect(component.structureSearchTerm).toBeUndefined('searchTerm should not be initialized');
     expect(component.searchType).toBeUndefined('searchTerm should not be initialized');
     expect(component.searchCutoff).toBeUndefined('searchTerm should not be initialized');
-    expect(component.facetParams).toEqual({}, 'facetParams should be an empty object');
+    // facetParams is private state owned by facetsParamsUpdated(); peeking via `as any`
+    // is the only way to assert on it without changing the component's public API.
+    expect((component as any).privateFacetParams).toBeUndefined('facetParams should not be initialized');
   });
 
   it('OnInit, search variables should be initialized and getSubstanceDetails should be called', () => {
     fixture.detectChanges();
+    // loadComponent() only calls searchSubstances() once isFacetsParamsInit is true, which
+    // the real (unmocked) <app-facets-manager> would normally set via this same output event.
+    // The first call only flips isFacetsParamsInit (and defers loadComponent() via
+    // setTimeout); the second call (already-init branch) triggers searchSubstances() synchronously.
+    component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
+    component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
     expect(component.searchTerm).toBeDefined('searchTerm should be initialized');
     expect(component.structureSearchTerm).toBeDefined('searchTerm should be initialized');
     expect(component.searchType).toBeDefined('searchTerm should be initialized');
     expect(component.searchCutoff).toBeDefined('searchTerm should be initialized');
-    expect(getSubtanceDetailsSpy.calls.any()).toBe(true, 'should call getSubtanceDetails function');
+    expect(getSubstancesSummariesSpy.mock.calls.length > 0).toBe(true, 'should call getSubtanceDetails function');
   });
 
   it('OnInit, if search variables not null, getSubstanceDetails should be called with search variables as parameters', () => {
     fixture.detectChanges();
+    component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
+    component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
     expect(component.searchTerm).toBeTruthy('searchTerm should not be null');
 
-    expect(getSubtanceDetailsSpy.calls.mostRecent().args[0]['searchTerm'])
+    expect(getSubstancesSummariesSpy.mock.lastCall[0]['searchTerm'])
       .toBe('test_search_term', 'first parameter should be test_search_term');
 
-    expect(getSubtanceDetailsSpy.calls.mostRecent().args[0]['structureSearchTerm'])
+    expect(getSubstancesSummariesSpy.mock.lastCall[0]['structureSearchTerm'])
       .toBe('test_structure_search_term', 'firs parameter should be test_structure_search_term');
 
-    expect(getSubtanceDetailsSpy.calls.mostRecent().args[0]['type'])
+    expect(getSubstancesSummariesSpy.mock.lastCall[0]['type'])
       .toBe('test_structure_search_type', 'firs parameter should be test_structure_search_type');
 
-    expect(getSubtanceDetailsSpy.calls.mostRecent().args[0]['cutoff'])
+    expect(getSubstancesSummariesSpy.mock.lastCall[0]['cutoff'])
       .toBe(0.5, 'firs parameter should be test_search_term');
   });
 
@@ -153,80 +204,53 @@ describe('SubstancesBrowseComponent', () => {
       fixture.detectChanges(); // ngOnInit()
     });
 
-    it('should initialize substances and facets after getSubstanceDetails (async)', waitForAsync(() => {
-      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
-        fixture.detectChanges();
-        expect(component.substances).toBeDefined('substances should be initialized');
-        expect(component.facets).toBeDefined('facets should be initialized');
-      });
-    }));
+    it('should initialize substances and facets after getSubstanceDetails (async)', async () => {
+      await fixture.whenStable(); // wait for async getSubstanceDetails
+      fixture.detectChanges();
+      expect(component.substances).toBeDefined('substances should be initialized');
+      expect(component.rawFacets).toBeDefined('facets should be initialized');
+    });
 
-    it('if facets returned from API, only the top 10 should be displayed ordered by total count in a descending order', waitForAsync(() => {
-      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
-        fixture.detectChanges();
-        const facetElements: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('mat-expansion-panel');
-        if (component.facets && component.facets.length > 0) {
-          expect(facetElements.length).toBeGreaterThan(0, 'facets should be displayed');
-          expect(facetElements.length).toBeLessThanOrEqual(15, 'up to 10 facets should be displayed');
-          let isInOrder = true;
-          const valueTotals = [];
-          Array.from(facetElements).forEach((facetElement: HTMLElement, index: number) => {
-            valueTotals[index] = 0;
-            const valuesElements = facetElement.querySelectorAll('.facet-value-count');
-            Array.from(valuesElements).forEach((valueElement: HTMLElement) => {
-              valueTotals[index] += Number(valueElement.innerHTML);
-            });
-            if (index > 0 && valueTotals[index] > valueTotals[index - 1]) {
-              isInOrder = false;
-            }
-          });
-          expect(isInOrder).toBe(true, 'facets should be in order');
-        } else {
-          expect(facetElements.length).toEqual(0, 'facets should not be displayed');
+    // Facet rendering/ordering (top-10, sorted by count) is now owned by
+    // FacetsManagerComponent (<app-facets-manager>, driven by the [rawFacets] input) —
+    // it has its own dedicated spec (facets-manager.component.spec.ts). This component's
+    // remaining responsibility is just handing the raw API data down correctly.
+    it('rawFacets returned from the API should be passed down to the facets manager', async () => {
+      await fixture.whenStable();
+      fixture.detectChanges();
+      const facetsManagerEl: HTMLElement = fixture.nativeElement.querySelector('app-facets-manager');
+      expect(facetsManagerEl).toBeTruthy('facets manager should be rendered');
+      if (component.rawFacets && component.rawFacets.length > 0) {
+        expect(component.rawFacets).toEqual((SubstanceDetailsListData as any).facets);
+      }
+    });
+
+    // FacetsManagerComponent's own template renders the facet picker (checkboxes, apply
+    // button); simulating clicks through it would make this an integration test of a
+    // component it doesn't own. Instead, verify this component's actual contract with its
+    // child: reacting correctly to the (facetsParamsUpdated) output event.
+    it('when facetsParamsUpdated fires with a new facet selection, a new search should be made with those facets', () => {
+      const facetParam: FacetParam = {
+        'Code System': {
+          isAllMatch: false,
+          params: { 'PUBCHEM': true }
         }
-      });
-    }));
+      };
 
-    it('when facet value selected, a new API call for substances should be made passing value as query parameter', waitForAsync(() => {
-      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
-        fixture.detectChanges();
-        const facetElements: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('mat-expansion-panel');
-        if (facetElements && facetElements.length > 0) {
+      // first call just completes initial facets load (see facetsParamsUpdated's
+      // isFacetsParamsInit branch) and does not itself trigger a new search
+      component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
+      getSubstancesSummariesSpy.mockClear();
 
-          const maxFacetIndex = facetElements.length - 1;
-          const minFacetIndex = 0;
-          const randomFacetIndex = Math.floor(Math.random() * (maxFacetIndex - minFacetIndex + 1)) + 0;
+      component.facetsParamsUpdated({ facetParam, displayFacets: [] });
 
-          const facetValueElements = facetElements.item(randomFacetIndex).querySelectorAll('.facet-value');
-          const maxFacetValueIndex = facetValueElements.length - 1;
-          const minFacetValueIndex = 0;
-          const randomFacetValueIndex = Math.floor(Math.random() * (maxFacetValueIndex - minFacetValueIndex + 1)) + 0;
+      expect(getSubstancesSummariesSpy.mock.lastCall[0].facets)
+        .toEqual(facetParam, 'should call getSubstancesSummaries with the updated facet param');
+    });
 
-          const valueCheckbox: HTMLElement = facetValueElements.item(randomFacetValueIndex).querySelector('.mat-checkbox-inner-container');
-          valueCheckbox.click();
-
-          fixture.detectChanges();
-          const applyButtonElement: HTMLButtonElement = facetElements.item(randomFacetIndex).querySelector('.apply-button');
-          applyButtonElement.click();
-
-          fixture.detectChanges();
-          const facetName = decodeHtml(
-            facetElements.item(randomFacetIndex).querySelector('mat-panel-title').innerHTML.trim()
-          );
-          const facetValueLabel = decodeHtml(
-            facetValueElements.item(randomFacetValueIndex).querySelector('.facet-value-label').innerHTML.trim()
-          );
-          expect(component.facetParams[facetName].params[facetValueLabel])
-            .toBe(true, 'should add facet value as a parameter to getSubtanceDetails call');
-          expect(getSubtanceDetailsSpy.calls.mostRecent().args[0].facets[facetName].params[facetValueLabel])
-            .toBe(true, 'should call getSubtanceDetails with selected facet param set to true');
-        }
-      });
-    }));
-
-    it('if substances returned from API, they should be displayed along with properties in the main section of page', waitForAsync(() => {
-      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
-        fixture.detectChanges();
+    it('if substances returned from API, they should be displayed along with properties in the main section of page', async () => {
+      await fixture.whenStable(); // wait for async getSubstanceDetails
+      fixture.detectChanges();
 
         const substanceElements: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('mat-card');
 
@@ -269,12 +293,12 @@ describe('SubstancesBrowseComponent', () => {
               });
             }
 
-            if (component.substances[index].codeSystems != null && component.substances[index].codeSystems.length) {
+            if ((component.codes[component.substances[index].uuid] && component.codes[component.substances[index].uuid].codeSystems) != null && (component.codes[component.substances[index].uuid] && component.codes[component.substances[index].uuid].codeSystems).length) {
 
               const substanceCodeSystemsAreaElement: HTMLElement = substanceElement.querySelector('.substance-code-systems');
               expect(substanceCodeSystemsAreaElement).toBeTruthy('substance codeSystems area should exist');
 
-              const codeSystemsLength = Object.keys(component.substances[index].codeSystems).length;
+              const codeSystemsLength = Object.keys((component.codes[component.substances[index].uuid] && component.codes[component.substances[index].uuid].codeSystems)).length;
               const expectedCodeElements = codeSystemsLength <= 5 ? codeSystemsLength : 5;
 
               const substanceCodeSystemElements: NodeListOf<HTMLElement> =
@@ -293,8 +317,8 @@ describe('SubstancesBrowseComponent', () => {
                 substanceCodeSystemElement.querySelectorAll('.value');
                 expect(substanceCodeSystemValueElements.length)
                 .toBe(
-                  component.substances[index].codeSystems[label].length,
-                  'substance codeSystem should have ' + component.substances[index].codeSystems[label].length.toString() + 'codes'
+                  (component.codes[component.substances[index].uuid] && component.codes[component.substances[index].uuid].codeSystems)[label].length,
+                  'substance codeSystem should have ' + (component.codes[component.substances[index].uuid] && component.codes[component.substances[index].uuid].codeSystems)[label].length.toString() + 'codes'
                 );
 
                 Array.from(substanceCodeSystemValueElements).forEach((substanceCodeSystemValueElement: HTMLElement) => {
@@ -317,58 +341,37 @@ describe('SubstancesBrowseComponent', () => {
         } else {
           expect(substanceElements.length).toEqual(0, 'substances should not be displayed');
         }
-      });
-    }));
+    });
 
-    it('paginator should show the right information and change pages and page sizes', waitForAsync(() => {
-      fixture.whenStable().then(() => { // wait for async getSubstanceDetails
+    it('paginator should show the right information and change pages and page sizes', async () => {
+      await fixture.whenStable(); // wait for async getSubstanceDetails
+      fixture.detectChanges();
 
-        fixture.detectChanges();
+      const loader = TestbedHarnessEnvironment.loader(fixture);
+      const paginator = await loader.getHarness(MatPaginatorHarness);
 
-        const paginatorElement: HTMLElement = fixture.nativeElement.querySelector('mat-paginator');
+      expect(await paginator.getRangeLabel()).toBeTruthy('should have label for page and total items');
 
-        const paginatorRangeLabel: HTMLElement = paginatorElement.querySelector('.mat-paginator-range-label');
+      utilsServiceStub.setReturnHasCode(Math.random());
+      await paginator.goToNextPage();
+      fixture.detectChanges();
 
-        expect(paginatorRangeLabel.innerHTML).toBeTruthy('should have label for page and total items');
+      expect(getSubstancesSummariesSpy.mock.lastCall[0]['skip'])
+        .toBe(10, 'should make a get substances call with 10 as skip parameter');
 
-        const paginatorNext: HTMLButtonElement = paginatorElement.querySelector('.mat-paginator-navigation-next');
-        utilsServiceStub.setReturnHasCode(Math.random());
-        paginatorNext.click();
+      utilsServiceStub.setReturnHasCode(Math.random());
+      await paginator.setPageSize(5);
+      fixture.detectChanges();
 
-        fixture.detectChanges();
+      expect(getSubstancesSummariesSpy.mock.lastCall[0]['pageSize'])
+        .toBe(5, 'should make a get substances call with 5 as pageSize parameter');
+    });
 
-        expect(getSubtanceDetailsSpy.calls.mostRecent().args[0]['skip'])
-          .toBe(10, 'should make a get substances call with 10 as skip parameter');
-
-        const pageSizeSelectTriggerElement: HTMLButtonElement = paginatorElement.querySelector('.mat-select-trigger');
-
-        pageSizeSelectTriggerElement.click();
-
-        fixture.detectChanges();
-
-        inject([OverlayContainer], (oc: OverlayContainer) => {
-
-          const overlayContainerElement = oc.getContainerElement();
-
-          const pageSizeSelectOptionElement: HTMLButtonElement = overlayContainerElement.querySelector('mat-option');
-          utilsServiceStub.setReturnHasCode(Math.random());
-          pageSizeSelectOptionElement.click();
-
-          fixture.detectChanges();
-
-          expect(getSubtanceDetailsSpy.calls.mostRecent().args[0]['pageSize'])
-            .toBe(5, 'should make a get substances call with 5 as pageSize parameter');
-
-        })();
-      });
-    }));
-
-    it('should make the setNotification call when SubstanceService fails', waitForAsync(() => {
-      getSubtanceDetailsSpy.and
-        .returnValue(throwError('SubstanceService test failure'));
+    it('should make the setNotification call when SubstanceService fails', async () => {
+      getSubstancesSummariesSpy.mockReturnValue(throwError('SubstanceService test failure'));
       component.searchSubstances();
       fixture.detectChanges();
-      // expect(setNotificationSpy.calls.count()).toBe(1);
-    }));
+      // expect(setNotificationSpy.mock.calls.length).toBe(1);
+    });
   });
 });

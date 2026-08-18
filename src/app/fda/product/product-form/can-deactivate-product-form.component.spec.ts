@@ -1,25 +1,19 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
+import { ProductService } from '../service/product.service';
 
 import { CanDeactivateProductFormComponent } from './can-deactivate-product-form.component';
 
 describe('CanDeactivateProductFormComponent', () => {
-  let component: CanDeactivateProductFormComponent;
-  let fixture: ComponentFixture<CanDeactivateProductFormComponent>;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CanDeactivateProductFormComponent ]
-    })
-    .compileComponents();
-  }));
-
   beforeEach(() => {
-    fixture = TestBed.createComponent(CanDeactivateProductFormComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      providers: [
+        CanDeactivateProductFormComponent,
+        { provide: ProductService, useValue: {} }
+      ]
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create', inject([CanDeactivateProductFormComponent], (guard: CanDeactivateProductFormComponent) => {
+    expect(guard).toBeTruthy();
+  }));
 });

@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, take } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {SubstanceService} from '@gsrs-core/substance';
 import {LoadingService} from '@gsrs-core/loading';
 import { Title } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-sequence-search',
@@ -23,6 +24,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
   });
   errorMessage = '';
   id?: string;
+  private subscriptions: Subscription[] = [];
 
 
 
@@ -36,7 +38,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
 
 
   ) {
-    this.activatedRoute
+    this.subscriptions.push(this.activatedRoute
       .queryParamMap
       .subscribe(params => {
           if (params.has('source') && params.get('source') === 'edit') {
@@ -65,28 +67,30 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
           this.getSequence(params.get('substance'), params.get('subunit'), params.get('seq_type'));
         }
 
-      });
+      }));
   }
 
   ngOnInit() {
     this.titleService.setTitle('Sequence Search');
     this.gaService.sendPageView(`Sequence Search`);
-    this.sequenceSearchForm.controls.cutoff.valueChanges.pipe(
+    this.subscriptions.push(this.sequenceSearchForm.controls.cutoff.valueChanges.pipe(
       debounceTime(1000)
     ).subscribe(value => {
       this.gaService.sendEvent('sequenceSearch', 'input:cutoff', 'search identity', value);
-    });
-    this.sequenceSearchForm.controls.type.valueChanges.subscribe(value => {
+    }));
+    this.subscriptions.push(this.sequenceSearchForm.controls.type.valueChanges.subscribe(value => {
       const eventLabel = !environment.isAnalyticsPrivate && value || 'cutoff type';
       this.gaService.sendEvent('sequenceSearch', 'select:cutoff-type', eventLabel);
-    });
-    this.sequenceSearchForm.controls.sequenceType.valueChanges.subscribe(value => {
+    }));
+    this.subscriptions.push(this.sequenceSearchForm.controls.sequenceType.valueChanges.subscribe(value => {
       const eventLabel = !environment.isAnalyticsPrivate && value || 'cutoff type';
       this.gaService.sendEvent('sequenceSearch', 'select:sequence-type', eventLabel);
-    });
+    }));
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
 
   search(): void {
     if (this.sequenceSearchForm.valid) {
@@ -110,7 +114,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
 
   getSequence(substance: string, unit: string, type: string) {
     type = type.charAt(0).toLowerCase() + type.slice(1);
-    this.substanceService.getSequenceByID(substance, unit, type).subscribe(response => {
+    this.substanceService.getSequenceByID(substance, unit, type).pipe(take(1)).subscribe(response => {
         if (response && response.length > 0 && response[0].sequence) {
           this.sequenceSearchForm.controls.sequence.setValue(response[0].sequence);
         }

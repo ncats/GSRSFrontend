@@ -1,25 +1,19 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
+import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
 
 import { CanDeactivateInvitroAssayFormComponent } from './can-deactivate-invitro-assay-form.component';
 
 describe('CanDeactivateInvitroAssayFormComponent', () => {
-  let component: CanDeactivateInvitroAssayFormComponent;
-  let fixture: ComponentFixture<CanDeactivateInvitroAssayFormComponent>;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ CanDeactivateInvitroAssayFormComponent ]
-    })
-    .compileComponents();
-  }));
-
   beforeEach(() => {
-    fixture = TestBed.createComponent(CanDeactivateInvitroAssayFormComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      providers: [
+        CanDeactivateInvitroAssayFormComponent,
+        { provide: InvitroPharmacologyService, useValue: {} }
+      ]
+    });
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create', inject([CanDeactivateInvitroAssayFormComponent], (guard: CanDeactivateInvitroAssayFormComponent) => {
+    expect(guard).toBeTruthy();
+  }));
 });

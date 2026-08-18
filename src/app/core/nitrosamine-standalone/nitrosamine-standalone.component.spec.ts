@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { NitrosamineStandaloneComponent } from './nitrosamine-standalone.component';
 
@@ -8,7 +9,8 @@ describe('NitrosamineStandaloneComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NitrosamineStandaloneComponent ]
+      declarations: [ NitrosamineStandaloneComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   });

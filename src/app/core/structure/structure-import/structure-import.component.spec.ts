@@ -1,15 +1,17 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StructureImportComponent } from './structure-import.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { StructurePostResponseData } from '../../../testing/structure-post-reponse-test-data';
-import { SubstanceService } from '../../substance/substance.service';
-import { asyncData } from '../../../testing/async-observable-helpers';
-import { MolFile } from '../../../testing/mol-file';
-import { MatDialogRefStub } from '../../../testing/mat-dialog-ref-stub';
+import { StructurePostResponseData } from '../../../../testing/structure-post-reponse-test-data';
+import { StructureService } from '../structure.service';
+import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { asyncData } from '../../../../testing/async-observable-helpers';
+import { MolFile } from '../../../../testing/mol-file';
+import { MatDialogRefStub } from '../../../../testing/mat-dialog-ref-stub';
 import { throwError } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -17,14 +19,15 @@ describe('StructureImportComponent', () => {
   let component: StructureImportComponent;
   let fixture: ComponentFixture<StructureImportComponent>;
   let matDialogRefStub: Partial<MatDialogRef<StructureImportComponent>>;
-  let postSubstanceStructureSpy: jasmine.Spy;
+  let interpretStructureSpy: ReturnType<typeof vi.fn>;
 
-  beforeEach(waitForAsync(() => {
-    const substanceServiceSpy = jasmine.createSpyObj('SubstanceService', ['postSubstanceStructure']);
-    postSubstanceStructureSpy = substanceServiceSpy.postSubstanceStructure.and.returnValue(asyncData(StructurePostResponseData));
+  beforeEach(async () => {
+    interpretStructureSpy = vi.fn().mockReturnValue(asyncData(StructurePostResponseData));
+    const structureServiceSpy = { interpretStructure: interpretStructureSpy };
+    const gaServiceSpy = { sendEvent: vi.fn(), sendException: vi.fn() };
     matDialogRefStub = new MatDialogRefStub();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
         MatProgressBarModule,
@@ -38,11 +41,12 @@ describe('StructureImportComponent', () => {
       providers: [
         { provide: MatDialogRef, useValue: matDialogRefStub },
         { provide: MAT_DIALOG_DATA, useValue: [] },
-        { provide: SubstanceService, useValue: substanceServiceSpy }
+        { provide: StructureService, useValue: structureServiceSpy },
+        { provide: GoogleAnalyticsService, useValue: gaServiceSpy }
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StructureImportComponent);
@@ -65,7 +69,7 @@ describe('StructureImportComponent', () => {
       importButtonElement = fixture.nativeElement.querySelector('.import-button');
     });
 
-    it('on import click, if text area is empty, it should show message', waitForAsync(() => {
+    it('on import click, if text area is empty, it should show message', async () => {
       textAreaElement.value = '';
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();
@@ -74,60 +78,58 @@ describe('StructureImportComponent', () => {
       expect(messageContainerElement).toBeTruthy('message should appear');
       expect(messageContainerElement.className.indexOf('error') > -1).toBe(true, 'should have error class');
       expect(messageContainerElement.innerHTML).toBeTruthy('should show an error message');
-    }));
+    });
 
-    it('on import click, a call to postSubstance should be made', waitForAsync(() => {
+    it('on import click, a call to postSubstance should be made', async () => {
       textAreaElement.value = MolFile;
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();
       fixture.detectChanges();
-      expect(postSubstanceStructureSpy.calls.count()).toBe(1, 'should have been called once');
-    }));
+      expect(interpretStructureSpy.mock.calls.length).toBe(1, 'should have been called once');
+    });
 
-    it('after import call, if response is empty object, an error message should be displayed', waitForAsync(() => {
-      postSubstanceStructureSpy.and.returnValue(asyncData({}));
+    it('after import call, if response is empty object, an error message should be displayed', async () => {
+      interpretStructureSpy.mockReturnValue(asyncData({}));
       textAreaElement.value = 'test for error';
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();
-      fixture.whenStable().then(() => {
-        fixture.detectChanges();
-        const messageContainerElement: HTMLElement = fixture.nativeElement.querySelector('.message-container');
-        expect(messageContainerElement).toBeTruthy('message should appear');
-        expect(messageContainerElement.className.indexOf('error') > -1).toBe(true, 'should have error class');
-        expect(messageContainerElement.innerHTML).toBeTruthy('should show an error message');
-      });
-    }));
+      await fixture.whenStable();
+      fixture.detectChanges();
+      const messageContainerElement: HTMLElement = fixture.nativeElement.querySelector('.message-container');
+      expect(messageContainerElement).toBeTruthy('message should appear');
+      expect(messageContainerElement.className.indexOf('error') > -1).toBe(true, 'should have error class');
+      expect(messageContainerElement.innerHTML).toBeTruthy('should show an error message');
+    });
 
-    it('after import call, if error, an error message should be displayed', waitForAsync(() => {
-      postSubstanceStructureSpy.and.returnValue(asyncData(throwError('test error')));
+    it('after import call, if error, an error message should be displayed', async () => {
+      interpretStructureSpy.mockReturnValue(asyncData(throwError('test error')));
       textAreaElement.value = 'test for error';
       textAreaElement.dispatchEvent(new Event('input'));
       importButtonElement.click();
-      fixture.whenStable().then(() => {
-        fixture.detectChanges();
-        const messageContainerElement: HTMLElement = fixture.nativeElement.querySelector('.message-container');
-        expect(messageContainerElement).toBeTruthy('message should appear');
-        expect(messageContainerElement.className.indexOf('error') > -1).toBe(true, 'should have error class');
-        expect(messageContainerElement.innerHTML).toBeTruthy('should show an error message');
-      });
-    }));
+      await fixture.whenStable();
+      fixture.detectChanges();
+      const messageContainerElement: HTMLElement = fixture.nativeElement.querySelector('.message-container');
+      expect(messageContainerElement).toBeTruthy('message should appear');
+      expect(messageContainerElement.className.indexOf('error') > -1).toBe(true, 'should have error class');
+      expect(messageContainerElement.innerHTML).toBeTruthy('should show an error message');
+    });
 
-    it('when on file select called, file should be read and value added to textarea', waitForAsync(() => {
-      const readAsTextSpy = jasmine.createSpy().and.callFake(() => {
+    it('when on file select called, file should be read and value added to textarea', async () => {
+      const readAsTextSpy = vi.fn(() => {
         fileReaderObject['onload']();
       });
       const fileReaderObject = {
         readAsText: readAsTextSpy,
         result: MolFile
       };
-      spyOn(<any>window, 'FileReader').and.returnValue(fileReaderObject);
+      const fileReaderSpy = vi.spyOn(<any>window, 'FileReader').mockImplementation(function () { return fileReaderObject as any; });
       const molefile = new File([MolFile], 'methandriol.mol', {type: 'text/plain'});
       component.fileSelected(molefile);
       fixture.detectChanges();
-      expect(FileReader).toHaveBeenCalled();
-      expect(readAsTextSpy).toHaveBeenCalled();
+      expect(fileReaderSpy.mock.calls.length > 0).toBe(true);
+      expect(readAsTextSpy.mock.calls.length > 0).toBe(true);
       expect(textAreaElement.value).toEqual(MolFile);
-    }));
+    });
 
   });
 

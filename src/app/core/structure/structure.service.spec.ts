@@ -21,7 +21,7 @@ describe('StructureService', () => {
     httpTestingController = TestBed.inject(HttpTestingController);
     domSanitizer = TestBed.inject(DomSanitizer);
     configService = new ConfigService(httpClient);
-    configService.configData = { apiBaseUrl: '' };
+    configService.configData = { apiBaseUrl: '', services: [], privacyStatement: '' };
     structureService = new StructureService(domSanitizer, configService, httpClient);
   });
 

@@ -19,7 +19,7 @@ import { GoogleAnalyticsService } from "../google-analytics/google-analytics.ser
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { StructureExportComponent } from "@gsrs-core/structure/structure-export/structure-export.component";
 import { Title } from "@angular/platform-browser";
-import { take } from "rxjs";
+import { Subscription, take } from "rxjs";
 import { StructureEditorComponent } from "@gsrs-core/structure-editor";
 
 @Component({
@@ -40,6 +40,8 @@ export class StructureSearchComponent
   @ViewChild(StructureEditorComponent)
   structureEditor!: StructureEditorComponent;
   private overlayContainer: HTMLElement;
+  private editorLoadTimer?: ReturnType<typeof setTimeout>;
+  private queryParamSubscription?: Subscription;
 
   constructor(
     public router: Router,
@@ -70,7 +72,10 @@ export class StructureSearchComponent
     );
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    clearTimeout(this.editorLoadTimer);
+    this.queryParamSubscription?.unsubscribe();
+  }
 
   molvecUpdate(mol: any) {
     this.editor.setMolecule(mol);
@@ -79,8 +84,10 @@ export class StructureSearchComponent
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);
     this.editor = editor;
-    setTimeout(() => {
-      this.activatedRoute.queryParamMap.subscribe((params) => {
+    clearTimeout(this.editorLoadTimer);
+    this.queryParamSubscription?.unsubscribe();
+    this.editorLoadTimer = setTimeout(() => {
+      this.queryParamSubscription = this.activatedRoute.queryParamMap.subscribe((params) => {
         if (params.has("structure")) {
           this.structureService
             .getMolfile(params.get("structure"))

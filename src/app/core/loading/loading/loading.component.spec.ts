@@ -1,7 +1,8 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { LoadingService } from '../loading.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LoadingComponent } from './loading.component';
 
 describe('LoadingComponent', () => {
@@ -9,7 +10,7 @@ describe('LoadingComponent', () => {
   let fixture: ComponentFixture<LoadingComponent>;
   let loadingServiceStub: Partial<LoadingService> | any;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     loadingServiceStub = {
       loadingEvent: new Subject(),
       fireLoadingEvent(event: boolean) {
@@ -17,9 +18,10 @@ describe('LoadingComponent', () => {
       }
     };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
-        MatProgressBarModule
+        MatProgressBarModule,
+        NoopAnimationsModule
       ],
       declarations: [
         LoadingComponent
@@ -29,7 +31,7 @@ describe('LoadingComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoadingComponent);
@@ -41,7 +43,7 @@ describe('LoadingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle loading component when event is recevied from loading service', waitForAsync(() => {
+  it('should toggle loading component when event is recevied from loading service', async () => {
     loadingServiceStub.fireLoadingEvent(true);
     fixture.detectChanges();
     let loadingElement: HTMLElement = fixture.nativeElement.querySelector('mat-progress-bar');
@@ -50,5 +52,5 @@ describe('LoadingComponent', () => {
     fixture.detectChanges();
     loadingElement = fixture.nativeElement.querySelector('mat-progress-bar');
     expect(loadingElement).toBeFalsy('should hide loading element');
-  }));
+  });
 });

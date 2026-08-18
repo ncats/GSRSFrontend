@@ -1,20 +1,37 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceAdverseeventcvmComponent } from './substance-adverseeventcvm.component';
+import { SubstanceAdverseEventCvmComponent } from './substance-adverseeventcvm.component';
+import { Router } from '@angular/router';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { AdverseEventService } from '../../../../adverse-event/service/adverseevent.service';
+import { AuthService } from '@gsrs-core/auth';
+import { LoadingService } from '@gsrs-core/loading/loading.service';
+import { MatDialog } from '@angular/material/dialog';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('SubstanceAdverseeventcvmComponent', () => {
-  let component: SubstanceAdverseeventcvmComponent;
-  let fixture: ComponentFixture<SubstanceAdverseeventcvmComponent>;
+describe('SubstanceAdverseEventCvmComponent', () => {
+  let component: SubstanceAdverseEventCvmComponent;
+  let fixture: ComponentFixture<SubstanceAdverseEventCvmComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SubstanceAdverseeventcvmComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ SubstanceAdverseEventCvmComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Router, useValue: {} },
+        { provide: GoogleAnalyticsService, useValue: {} },
+        { provide: AdverseEventService, useValue: {} },
+        // ngOnInit awaits this.
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: LoadingService, useValue: {} },
+        { provide: MatDialog, useValue: {} },
+      ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceAdverseeventcvmComponent);
+    fixture = TestBed.createComponent(SubstanceAdverseEventCvmComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
