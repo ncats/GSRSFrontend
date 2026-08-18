@@ -89,6 +89,8 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
+Run `npm run test:vitest` to execute the same spec suite via [Vitest](https://vitest.dev) instead (add `:watch` for watch mode). Nearly all specs run under both runners; a small, documented set are still Karma/Jasmine-only.
+
 ## Running end-to-end tests
 
 The `e2e` npm script remains, but no Angular end-to-end test target or tooling is currently configured for this project.

@@ -24,6 +24,8 @@
     "build:fda:pre-prod": "npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --configuration=fda.pre-prod --source-map=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist",
     "build:fda:prod": "npm run clear-libs-src && ng build --base-href=/ginas/app/ui/ --configuration=fda.prod && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist",
     "test": "ng test",
+    "test:vitest": "ng run gsrs-client:test-vitest",
+    "test:vitest:watch": "ng run gsrs-client:test-vitest --watch",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "precommit": "ng lint"
