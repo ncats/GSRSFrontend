@@ -44,7 +44,7 @@ describe('MainNotificationComponent', () => {
 
   it('should show notification on notification event and should hide it after set time', async () => {
     notificationServiceStub.fireNotificationEvent();
-    fixture.detectChanges();
+    fixture.detectChanges(false);
     let notificationElement: HTMLElement = fixture.nativeElement.querySelector('.main-notification');
     expect(notificationElement.classList).not.toContain('hidden', 'should have removed hidden css class');
     expect(notificationElement.classList).toContain('showing', 'should have added showing css class');
