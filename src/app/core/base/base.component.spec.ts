@@ -21,6 +21,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { UtilsService } from '../utils/utils.service';
 
 describe('BaseComponent', () => {
   let component: BaseComponent;
@@ -78,7 +79,10 @@ describe('BaseComponent', () => {
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: BreakpointObserver, useValue: { observe: vi.fn().mockReturnValue(NEVER) } },
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: OverlayContainer, useValue: { getContainerElement: vi.fn().mockReturnValue(document.createElement('div')) } }
+        { provide: OverlayContainer, useValue: { getContainerElement: vi.fn().mockReturnValue(document.createElement('div')) } },
+        { provide: UtilsService, useValue: {
+          getBuildInfo: vi.fn().mockReturnValue(of({ version: '1.0.0', commit: '', buildDate: '', buildTime: new Date().toISOString() }))
+        } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })

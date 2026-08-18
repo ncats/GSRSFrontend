@@ -4,7 +4,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SubstanceDetail, SubstanceRelated, SubstanceService} from '@gsrs-core/substance';
 import {take} from 'rxjs/operators';
-import lodashChain from 'lodash/chain';
+import { chain as lodashChain } from 'lodash';
 import lodashRemove from 'lodash/remove';
 import jp from 'jsonpath';
 
