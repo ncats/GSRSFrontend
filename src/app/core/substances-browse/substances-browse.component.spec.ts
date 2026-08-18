@@ -12,6 +12,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ActivatedRouteStub } from '../../../testing/activated-route-stub';
 import { SubstanceService } from '../substance/substance.service';
 import { ConfigService } from '../config/config.service';
@@ -67,13 +71,17 @@ describe('SubstancesBrowseComponent', () => {
       pauseAsyncSearch: vi.fn(),
       clearSearchKey: vi.fn(),
       getConfigByID: vi.fn(),
-      getExportOptions: vi.fn(),
+      // getExportOptions/getSubstanceNames/getSubstanceCodes are real Observable-returning
+      // calls the component always subscribes to once a search completes (see loadComponent's
+      // completion handler and setSubstanceNames/setSubstanceCodes); an empty array is a
+      // valid, harmless response shape for all three.
+      getExportOptions: vi.fn().mockReturnValue(of([])),
       getFasta: vi.fn(),
-      getSubstanceCodes: vi.fn(),
+      getSubstanceCodes: vi.fn().mockReturnValue(of([])),
       getSubstanceDetails: vi.fn(),
-      getSubstanceNames: vi.fn(),
+      getSubstanceNames: vi.fn().mockReturnValue(of([])),
       resumeAsyncSearch: vi.fn(),
-      searchSubstances: vi.fn(),
+      searchSubstances: vi.fn().mockReturnValue(of({ total: 0 })),
       setResult: vi.fn()
     };
 
@@ -99,6 +107,10 @@ describe('SubstancesBrowseComponent', () => {
         MatCardModule,
         MatChipsModule,
         MatBadgeModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatInputModule,
         HttpClientTestingModule,
         NoopAnimationsModule,
         MatPaginatorModule,
@@ -205,8 +217,16 @@ describe('SubstancesBrowseComponent', () => {
     });
 
     it('should initialize substances and facets after getSubstanceDetails (async)', async () => {
+      // loadComponent() only calls searchSubstances() once isFacetsParamsInit is true, which
+      // the real (unmocked) <app-facets-manager> would normally set via this same output event.
+      component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
+      component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
+      // facetsParamsUpdated's two calls each independently kick off a search (one deferred
+      // via setTimeout, one synchronous); rawFacets can legitimately still be settling across
+      // these two responses, so skip the checkNoChanges pass until both are done settling.
+      fixture.detectChanges(false);
       await fixture.whenStable(); // wait for async getSubstanceDetails
-      fixture.detectChanges();
+      fixture.detectChanges(false);
       expect(component.substances).toBeDefined('substances should be initialized');
       expect(component.rawFacets).toBeDefined('facets should be initialized');
     });
@@ -344,8 +364,19 @@ describe('SubstancesBrowseComponent', () => {
     });
 
     it('paginator should show the right information and change pages and page sizes', async () => {
+      // loadComponent() only calls searchSubstances() once isFacetsParamsInit is true, which
+      // the real (unmocked) <app-facets-manager> would normally set via this same output event.
+      component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
+      component.facetsParamsUpdated({ facetParam: {}, displayFacets: [] });
+      fixture.detectChanges(false);
       await fixture.whenStable(); // wait for async getSubstanceDetails
-      fixture.detectChanges();
+      // whenStable() alone isn't sufficient here: facetsParamsUpdated's first call defers
+      // loadComponent() via a real setTimeout, which can still be pending at this point.
+      // The CDK harness below runs its own internal (checked) detectChanges() after every
+      // interaction, so rawFacets must be fully settled before it ever touches the fixture.
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await fixture.whenStable();
+      fixture.detectChanges(false);
 
       const loader = TestbedHarnessEnvironment.loader(fixture);
       const paginator = await loader.getHarness(MatPaginatorHarness);
@@ -354,14 +385,18 @@ describe('SubstancesBrowseComponent', () => {
 
       utilsServiceStub.setReturnHasCode(Math.random());
       await paginator.goToNextPage();
-      fixture.detectChanges();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await fixture.whenStable();
+      fixture.detectChanges(false);
 
       expect(getSubstancesSummariesSpy.mock.lastCall[0]['skip'])
         .toBe(10, 'should make a get substances call with 10 as skip parameter');
 
       utilsServiceStub.setReturnHasCode(Math.random());
       await paginator.setPageSize(5);
-      fixture.detectChanges();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await fixture.whenStable();
+      fixture.detectChanges(false);
 
       expect(getSubstancesSummariesSpy.mock.lastCall[0]['pageSize'])
         .toBe(5, 'should make a get substances call with 5 as pageSize parameter');

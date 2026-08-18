@@ -13,7 +13,10 @@ export class UtilsServiceStub {
 
     constructor() {
         this.returnHash = Math.random();
-        this.hashCode = vi.fn().mockReturnValue(this.returnHash);
+        // mockImplementation (not mockReturnValue) so setReturnHasCode() below actually
+        // takes effect on later calls, instead of the return value being frozen at
+        // whatever this.returnHash was when the mock was first created.
+        this.hashCode = vi.fn().mockImplementation(() => this.returnHash);
     }
 
     setReturnHasCode(returnHash): void {
