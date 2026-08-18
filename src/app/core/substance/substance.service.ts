@@ -304,7 +304,7 @@ export class SubstanceService extends BaseHttpService {
       if (!sync && this.searchKeys[structureFacetsKey]) {
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
-        if(querySearchTerm.length > 0) {
+        if (querySearchTerm && querySearchTerm.length > 0) {
           params = params.appendDictionary({
             top: pageSize.toString(),
             skip: skip.toString(),
