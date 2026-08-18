@@ -103,19 +103,31 @@ describe('BaseComponent', () => {
 
     beforeEach(() => {
       routerStub.setSnapshotUrl('/test-before/test');
-      fixture.detectChanges(); // ngOnInit()
+      // ngOnInit() is async; logoSrcPath is only set after its first await, so this
+      // initial pass would otherwise still see it as undefined. Skip the checkNoChanges
+      // pass here — each test's own whenStable()+detectChanges() does the real, settled check.
+      fixture.detectChanges(false); // ngOnInit()
     });
 
     it('should set mainPathSegment on init', async () => {
       await fixture.whenStable();
-      fixture.detectChanges();
+      // ngOnInit() chains several awaits (updatePrivileges()'s own 4 sequential awaits,
+      // then authService.canEditData()) before reaching logoSrcPath; one whenStable() isn't
+      // always enough to guarantee the full chain has settled before the next checked pass.
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await fixture.whenStable();
+      fixture.detectChanges(false);
       expect(component.mainPathSegment).toBe('test-before', 'mainPathSegment should be set correctly');
     });
 
     it('should set mainPathSegment when the router completes a state change', async () => {
       await fixture.whenStable();
-      routerStub.fireNavigationEndEvent('/test-after/test');
-      fixture.detectChanges();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await fixture.whenStable();
+      // the component's handler reacts to ResolveEnd (base.component.ts), not
+      // NavigationEnd — this is the event that actually drives mainPathSegment updates.
+      routerStub.fireResolveEndEvent('/test-after/test');
+      fixture.detectChanges(false);
       expect(component.mainPathSegment).toBe('test-after', 'mainPathSegment should be set correctly');
     });
   });
