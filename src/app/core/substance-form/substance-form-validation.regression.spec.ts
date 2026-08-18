@@ -75,6 +75,11 @@ describe('Substance form validation regressions', () => {
     };
     (component as any).activatedRoute = { snapshot: { queryParams: {} } };
     (component as any).loadingService = { setLoading: vi.fn() };
+    // Object.create(prototype) skips class-field initializers, so the real
+    // `private validationAttempt = 0` never runs; without this, validate()'s
+    // ++this.validationAttempt starts from undefined (NaN), and NaN !== NaN is
+    // always true, so its stale-response guard would discard every response.
+    (component as any).validationAttempt = 0;
     component.validationMessages = [{ messageType: 'ERROR', message: 'old error' } as any];
     component.submissionMessage = 'stale valid message';
     component.showSubmissionMessages = true;
