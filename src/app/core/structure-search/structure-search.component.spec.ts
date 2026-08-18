@@ -1,8 +1,8 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { Component, Output, EventEmitter } from '@angular/core';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { NameResolverModule } from '../name-resolver/name-resolver.module';
 import { StructureSearchComponent } from './structure-search.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSelectHarness } from '@angular/material/select/testing';
@@ -43,26 +43,39 @@ class StructureEditorStubComponent {
   @Output() loadedMolfile = new EventEmitter<any>();
 }
 
+// real <app-name-resolver> (via NameResolverModule) fails NG0304 ('not a known
+// element') under the Vitest builder's per-spec AOT compilation, even though it
+// compiles and renders fine under Karma; none of this spec's tests interact with
+// it, so stub its DOM surface the same way as the structure editor above.
+@Component({
+  selector: 'app-name-resolver',
+  template: '',
+  standalone: false
+})
+class NameResolverStubComponent {
+  @Output() structureSelected = new EventEmitter<string>();
+}
+
 describe('StructureSearchComponent', () => {
   let component: StructureSearchComponent;
   let fixture: ComponentFixture<StructureSearchComponent>;
   let routerStub: RouterStub;
-  let setLoadingSpy: jasmine.Spy;
-  let interpretStructureSpy: jasmine.Spy;
+  let setLoadingSpy: ReturnType<typeof vi.fn>;
+  let interpretStructureSpy: ReturnType<typeof vi.fn>;
   let matDialog: MatDialogStub;
   let activatedRouteStub: Partial<ActivatedRoute>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     routerStub = new RouterStub();
-    const loadingServiceSpy = jasmine.createSpyObj('LoadingService', ['setLoading']);
-    setLoadingSpy = loadingServiceSpy.setLoading.and.returnValue(null);
-    const structureServiceSpy = jasmine.createSpyObj('StructureService', ['interpretStructure']);
-    interpretStructureSpy = structureServiceSpy.interpretStructure.and.returnValue(asyncData(StructurePostResponseData));
-    const gaServiceSpy = jasmine.createSpyObj('GoogleAnalyticsService', ['sendPageView', 'sendEvent']);
-    const titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
+    setLoadingSpy = vi.fn().mockReturnValue(null);
+    const loadingServiceSpy = { setLoading: setLoadingSpy };
+    interpretStructureSpy = vi.fn().mockReturnValue(asyncData(StructurePostResponseData));
+    const structureServiceSpy = { interpretStructure: interpretStructureSpy };
+    const gaServiceSpy = { sendPageView: vi.fn(), sendEvent: vi.fn() };
+    const titleServiceSpy = { setTitle: vi.fn() };
     matDialog = new MatDialogStub();
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData', 'afterLoad']);
-    configServiceSpy.afterLoad.and.returnValue(Promise.resolve(configServiceSpy.configData));
+    const configServiceSpy = { configData: vi.fn(), afterLoad: vi.fn() };
+    configServiceSpy.afterLoad.mockReturnValue(Promise.resolve(configServiceSpy.configData));
     activatedRouteStub = new ActivatedRouteStub(
       {
         'sequence': 'test_sequence_term',
@@ -74,7 +87,6 @@ describe('StructureSearchComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        NameResolverModule,
         MatSelectModule,
         MatSliderModule,
         MatCardModule,
@@ -86,7 +98,8 @@ describe('StructureSearchComponent', () => {
       ],
       declarations: [
         StructureSearchComponent,
-        StructureEditorStubComponent
+        StructureEditorStubComponent,
+        NameResolverStubComponent
       ],
       providers: [
         { provide: Router, useValue: routerStub },
@@ -104,7 +117,7 @@ describe('StructureSearchComponent', () => {
       ]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StructureSearchComponent);
@@ -117,8 +130,8 @@ describe('StructureSearchComponent', () => {
   });
 
   it('on Init, loading should be set to true', () => {
-    expect(setLoadingSpy).toHaveBeenCalledTimes(1);
-    expect(setLoadingSpy.calls.mostRecent().args[0]).toBe(true);
+    expect(setLoadingSpy.mock.calls.length).toBe(1);
+    expect(setLoadingSpy.mock.lastCall[0]).toBe(true);
   });
 
   describe('after editor load', () => {
@@ -131,26 +144,26 @@ describe('StructureSearchComponent', () => {
     });
 
     it('on edtiroOnLoad, loading should be set to false and editor should be set', () => {
-      expect(setLoadingSpy).toHaveBeenCalledTimes(2);
-      expect(setLoadingSpy.calls.mostRecent().args[0]).toBe(false);
+      expect(setLoadingSpy.mock.calls.length).toBe(2);
+      expect(setLoadingSpy.mock.lastCall[0]).toBe(false);
       expect(component._editor).toBe(editorStub);
     });
 
-    it('on search button clicked, getMolFile, postSubtance, and navigate should be called', waitForAsync(() => {
+    it('on search button clicked, getMolFile, postSubtance, and navigate should be called', async () => {
       const searchButtonElement: HTMLButtonElement = fixture.nativeElement.querySelector('.search-button');
       searchButtonElement.click();
       fixture.detectChanges();
-      expect(component._editor.getMolfile).toHaveBeenCalledTimes(1);
-      expect(interpretStructureSpy).toHaveBeenCalled();
-      expect(interpretStructureSpy.calls.mostRecent().args[0]).toBe(MolFile);
-      fixture.whenStable().then(() => {
+      expect((component._editor.getMolfile as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
+      expect(interpretStructureSpy.mock.calls.length).toBeGreaterThan(0);
+      expect(interpretStructureSpy.mock.lastCall[0]).toBe(MolFile);
+      await fixture.whenStable().then(() => {
         // routerStub.navigate is a vi.fn() (RouterStub is a shared helper, converted for
         // other consumers' Vitest compatibility); use its own .mock API, not jasmine matchers.
         expect(routerStub.navigate.mock.calls.length > 0).toBe(true);
         const navigationExtras = routerStub.navigate.mock.lastCall[1];
         expect(navigationExtras.queryParams['structure_search']).toEqual(StructurePostResponseData.structure.id);
       });
-    }));
+    });
 
     describe('search type selection', () => {
       let loader: HarnessLoader;
@@ -184,23 +197,23 @@ describe('StructureSearchComponent', () => {
 
     });
 
-    it('on import button click, dialop.open should be called, and editor.setMolecule should be called after close', waitForAsync(() => {
-      spyOn(matDialog, 'open').and.callThrough();
+    it('on import button click, dialop.open should be called, and editor.setMolecule should be called after close', async () => {
+      const openSpy = vi.spyOn(matDialog, 'open');
       // openStructureImportDialog() calls setMolecule on the @ViewChild(StructureEditorComponent)
       // instance, which the type-matched stub declared for this spec doesn't satisfy (it's a
       // different class), so the ViewChild query resolves to undefined; assign a spy directly,
       // same as editorOnLoad() above bypasses the real child to set component.editor.
-      const structureEditorSpy = jasmine.createSpyObj('StructureEditorComponent', ['setMolecule']);
-      component.structureEditor = structureEditorSpy;
+      const structureEditorSpy = { setMolecule: vi.fn() };
+      component.structureEditor = structureEditorSpy as any;
       const importButtonElement: HTMLButtonElement = fixture.nativeElement.querySelector('.import-button');
       importButtonElement.click();
       fixture.detectChanges();
-      expect(matDialog.open).toHaveBeenCalledTimes(1);
+      expect(openSpy.mock.calls.length).toBe(1);
       // openStructureImportDialog() reads structurePostResponse.structure.molfile.
       matDialog.closeDialogRef({ structure: { molfile: MolFile } });
       fixture.detectChanges();
-      expect(structureEditorSpy.setMolecule).toHaveBeenCalled();
-      expect(structureEditorSpy.setMolecule).toHaveBeenCalledWith(MolFile);
-    }));
+      expect(structureEditorSpy.setMolecule.mock.calls.length).toBeGreaterThan(0);
+      expect(structureEditorSpy.setMolecule.mock.lastCall[0]).toBe(MolFile);
+    });
   });
 });

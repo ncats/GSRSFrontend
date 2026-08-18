@@ -1,13 +1,14 @@
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 import { MolFile } from './mol-file';
 
 export class EditorStub {
 
-    getMolfile = jasmine.createSpy('getMolfile').and.returnValue(of(MolFile));
+    getMolfile = vi.fn().mockReturnValue(of(MolFile));
 
-    getSmiles = jasmine.createSpy('getSmiles').and.returnValue(of(''));
+    getSmiles = vi.fn().mockReturnValue(of(''));
 
-    setMolecule = jasmine.createSpy('setMolecule').and.returnValue(null);
+    setMolecule = vi.fn().mockReturnValue(null);
 
-    structureUpdated = jasmine.createSpy('structureUpdated').and.returnValue(of(''));
+    structureUpdated = vi.fn().mockReturnValue(of(''));
 }
