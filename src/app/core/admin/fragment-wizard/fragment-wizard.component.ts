@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, Inject } from '@angular/core';
 import { Editor } from '@gsrs-core/structure-editor';
-import lodashChain from 'lodash/chain';
+import { chain as lodashChain } from 'lodash';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
 import { EventEmitter } from '@angular/core';

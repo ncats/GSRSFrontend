@@ -20,7 +20,7 @@ import { MatExpansionPanel } from "@angular/material/expansion";
 import { MatDialog } from "@angular/material/dialog";
 import { take, map } from "rxjs/operators";
 import { Subscription, Observable } from "rxjs";
-import lodashChain from 'lodash/chain';
+import { chain as lodashChain } from 'lodash';
 import lodashRemove from 'lodash/remove';
 import moment from "moment";
 import { Title } from "@angular/platform-browser";

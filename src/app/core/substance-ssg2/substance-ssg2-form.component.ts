@@ -22,7 +22,7 @@ import { Subscription, Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import lodashChain from 'lodash/chain';
+import { chain as lodashChain } from 'lodash';
 import lodashRemove from 'lodash/remove';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';

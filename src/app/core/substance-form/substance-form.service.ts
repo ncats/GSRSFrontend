@@ -24,7 +24,7 @@ import {Observable, Subject, ReplaySubject, Subscription} from 'rxjs';
 import {SubstanceService} from '../substance/substance.service';
 import {UtilsService} from '../utils/utils.service';
 import {StructureService} from '@gsrs-core/structure';
-import lodashChain from 'lodash/chain';
+import { chain as lodashChain } from 'lodash';
 import lodashMap from 'lodash/map';
 import jp from 'jsonpath';
 
