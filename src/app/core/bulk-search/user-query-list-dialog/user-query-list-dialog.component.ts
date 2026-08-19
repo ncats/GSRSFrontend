@@ -41,7 +41,6 @@ export class UserQueryListDialogComponent implements OnInit {
   users = [];
   setUser: string;
   identifier: string;
-  canManageListsForOthers = false;
   etagIDs = [];
   uniqueRecords = [];
   disabled = false;
@@ -73,7 +72,12 @@ export class UserQueryListDialogComponent implements OnInit {
 
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canManageListsForOthers(): boolean {
+    return this.authService.hasPrivilege('Manage Others Lists');
+  }
+
+  ngOnInit() {
     this.substanceService.getAllByEtag(this.etag).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if(result.content) {
         result.content.forEach(record => {
@@ -89,9 +93,8 @@ export class UserQueryListDialogComponent implements OnInit {
     this.getUserLists();
     if (this.view === 'single') {
       this.useDraft(this.activeName);
-      
+
     }
-    this.canManageListsForOthers = await this.authService.hasSpecificPrivilege('Manage Others Lists');
   }
 
   

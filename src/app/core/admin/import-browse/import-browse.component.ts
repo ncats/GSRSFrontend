@@ -99,10 +99,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private argsHash?: number;
   public order: string;
   public sortValues = searchSortValues;
-  showAudit: boolean;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  canUserImportData = false;
   isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
@@ -173,6 +171,15 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
   ) {
+  }
+
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canUserImportData(): boolean {
+    return this.authService.hasPrivilege('Import Data');
+  }
+
+  get showAudit(): boolean {
+    return this.authService.hasPrivilege('Restore Previous Versions');
   }
 
   @HostListener('window:popstate', ['$event'])
@@ -312,7 +319,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.substances = [];
     this.records = [];
 
@@ -367,9 +374,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showDeprecated = true;
       }
     });
-    this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
-    this.showAudit = await this.authService.hasSpecificPrivilege('Restore Previous Versions');
-
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getStagingFacets );
 
     this.environment = this.configService.environment;

@@ -26,7 +26,7 @@ describe('UserQueryListDialogComponent', () => {
         { provide: AdminService, useValue: {} },
         { provide: SubstanceService, useValue: { getAllByEtag: () => NEVER } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
-        { provide: AuthService, useValue: { checkAuth: () => NEVER, hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { checkAuth: () => NEVER, hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: DomSanitizer, useValue: { bypassSecurityTrustHtml: (v: any) => v } },
         { provide: ConfigService, useValue: { configData: {} } },
         { provide: MAT_DIALOG_DATA, useValue: {} }

@@ -36,7 +36,6 @@ import { adverseEventCvmSearchSortValues } from './adverse-events-cvm-search-sor
 
 export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() countAdverseEventCvmOut: EventEmitter<number> = new EventEmitter<number>();
-  canUpdate: boolean = false;
   isLoggedIn = false;
   isLoading = true;
   isError = false;
@@ -108,7 +107,12 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
     }, 50);
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventCvmFacets);
     // this.gaService.sendPageView('Browse Adverse Event Cvm');
 
@@ -138,7 +142,6 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
       }
       
     });
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.subscriptions.push(authSubscription);
 
     this.isComponentInit = true;

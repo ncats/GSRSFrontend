@@ -40,7 +40,6 @@ export class ImportSummaryComponent implements OnInit {
   @Output() bulkSelect = new EventEmitter < any > ();
   privateDummyID: string;
   showAudit = false;
-  canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
  codeSystemNames?: Array<string> = [];
@@ -100,12 +99,15 @@ export class ImportSummaryComponent implements OnInit {
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.getMatchSummary();
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
       this.getAlignments();

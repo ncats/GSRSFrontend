@@ -41,7 +41,6 @@ export class NameFormComponent implements OnInit, OnDestroy {
   substanceType = "";
   viewFull = true;
   showStd = false;
-  canChangeDisplayName: boolean = false;
   substanceStatus: string = "";
 
   constructor(
@@ -54,16 +53,17 @@ export class NameFormComponent implements OnInit, OnDestroy {
     private authService: AuthService,
   ) {}
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canChangeDisplayName(): boolean {
+    return this.authService.hasPrivilege('Change Display Name for Approved');
+  }
+
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const definition = this.substanceFormService.definition.subscribe((def) => {
       this.substanceType = def.substanceClass;
     });
     definition.unsubscribe();
-
-    this.canChangeDisplayName = await this.authService.hasSpecificPrivilege(
-      "Change Display Name for Approved",
-    );
 
     this.substanceStatus = this.substanceFormService
       .getSubstanceStatus()

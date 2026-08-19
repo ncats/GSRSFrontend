@@ -44,7 +44,7 @@ describe('AdverseEventsCvmBrowseComponent', () => {
         { provide: LoadingService, useValue: {} },
         { provide: MainNotificationService, useValue: {} },
         // ngOnInit awaits this and subscribes to getAuth().
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), getAuth: () => of(null) } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getAuth: () => of(null) } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         // ngOnInit/ngOnDestroy call these directly.
         { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => null, unregisterFacetSearchHandler: () => null } },

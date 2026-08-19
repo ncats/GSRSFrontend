@@ -35,7 +35,6 @@ import { adverseEventPtSearchSortValues } from './adverse-events-pt-search-sort-
 
 export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() countAdverseEventPtOut: EventEmitter<number> = new EventEmitter<number>();
-  canExport: boolean = false;
   isLoggedIn = false;
   isLoading = true;
   isError = false;
@@ -122,7 +121,12 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     }, 50);
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventPtFacets);
     //  this.gaService.sendPageView('Browse Adverse Event');
 
@@ -158,7 +162,6 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
 
     // FAERS DASHBOARD
     this.getFaersDashboardUrl();
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
   }
 
   ngAfterViewInit() {

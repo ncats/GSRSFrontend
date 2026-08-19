@@ -58,7 +58,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // Config for Adverse Event on Shiny Server
   adverseEventShinyHomepageDisplay = false;
   adverseEventShinyHomepageURL: string;
-  canRegister: boolean = false;
 
   constructor(
     private gaService: GoogleAnalyticsService,
@@ -74,7 +73,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canRegister(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.environment = this.configService.environment;
     this.application = `${this.configService.environment.baseHref || ""}assets/icons/home/icon_application.png`;
     this.browseAll = `${this.configService.environment.baseHref || ""}assets/icons/home/icon_browseall.png`;
@@ -134,8 +138,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.getAdverseEventShinyConfig();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-
-    this.canRegister = await this.authService.canEditData();
   }
 
   ngAfterViewInit() {

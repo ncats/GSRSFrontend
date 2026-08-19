@@ -27,10 +27,10 @@ describe('NameFormComponent', () => {
         { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of(new Proxy({}, { get: () => ({ list: [], dictionary: {} }) })), getVocabularies: () => of({ content: [] }) } },
         { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
-        { provide: SubstanceFormService, useValue: {} },
+        { provide: SubstanceFormService, useValue: { definition: of({ substanceClass: 'chemical' }), getSubstanceStatus: () => 'draft' } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: SubstanceFormNamesService, useValue: {} },
-        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => null, logout: () => {} } },
+        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
       ]
     })
     .compileComponents();
