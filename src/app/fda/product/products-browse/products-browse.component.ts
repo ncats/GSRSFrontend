@@ -73,9 +73,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   disableExport = false;
   private overlayContainer: HTMLElement;
   isLoggedIn = false;
-  canUpdate: boolean = false;
-  canExport: boolean = false;
-  canCreate: boolean = false;
   etag = '';
   environment: any;
   narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
@@ -171,7 +168,20 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     }, 50);
   }
 
-  async ngOnInit() {
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
 
     // Get Daily Med Url from Configuration
@@ -226,9 +236,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.isComponentInit = true;
     this.loadComponent();
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
   }
 
   ngAfterViewInit() {

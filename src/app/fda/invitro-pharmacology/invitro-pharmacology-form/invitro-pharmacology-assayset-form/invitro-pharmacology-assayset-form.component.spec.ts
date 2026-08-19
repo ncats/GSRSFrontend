@@ -33,7 +33,7 @@ describe('InvitroPharmacologyAssaysetFormComponent', () => {
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => NEVER }) } },
         { provide: Title, useValue: { setTitle: () => null } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
-        { provide: AuthService, useValue: { getUser: () => '', hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { getUser: () => '', hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: ControlledVocabularyService, useValue: {} },
         { provide: UtilsService, useValue: {} },
         { provide: LoadingService, useValue: { setLoading: () => null } },

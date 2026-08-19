@@ -55,7 +55,6 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   iconSrcPath: string;
   dailyMedUrlConfig = '';
   message = '';
-  canUpdate: boolean = false;
   downloadJsonHref: any;
   jsonFilename: string;
   private overlayContainer: HTMLElement;
@@ -78,7 +77,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     public dialog: MatDialog,
     public sanitizer: DomSanitizer) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.loadingService.setLoading(true);

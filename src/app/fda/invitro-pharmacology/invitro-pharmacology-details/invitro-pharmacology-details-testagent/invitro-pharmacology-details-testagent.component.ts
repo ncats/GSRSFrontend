@@ -95,7 +95,6 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
   isLoading = true;
   isError = false;
-  canUpdate: boolean;
   isLoggedIn = false;
   dataSource = [];
   hasBackdrop = false;
@@ -179,7 +178,12 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
   public assays: Array<InvitroAssayInformation>;
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     // Check Login
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
@@ -197,7 +201,6 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     } else {
       this.getAllAssays();
     }
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
   }
 
   getAllAssays(): void {

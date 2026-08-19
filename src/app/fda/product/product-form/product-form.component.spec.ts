@@ -26,7 +26,7 @@ describe('ProductFormComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ProductService, useValue: {} },
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => '' } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => '' } },
         { provide: LoadingService, useValue: { setLoading: () => null } },
         { provide: MainNotificationService, useValue: { setNotification: () => null } },
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null } },

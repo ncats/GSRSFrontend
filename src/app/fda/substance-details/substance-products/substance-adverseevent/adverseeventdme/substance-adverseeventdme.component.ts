@@ -38,7 +38,6 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   loadingStatus = '';
   public sortValues = adverseEventDmeSearchSortValues;
   private subscriptions: Array<Subscription> = [];
-  canExport: boolean = false;
 
   displayedColumns: string[] = [
     'dmeReactions', 'ptTermMeddra', 'caseCount', 'dmeCount', 'dmeCountPercent', 'weightedAvgPrr'
@@ -55,9 +54,12 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
     super(gaService, adverseEventService);
   }
 
-  async ngOnInit() {
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
 
+  ngOnInit() {
     /* Commenting right now. Will remove later after everything works */
     /*
     if (this.bdnum) {

@@ -32,7 +32,7 @@ describe('InvitroPharmacologyScreeningDataImportComponent', () => {
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => NEVER }) } },
         { provide: Title, useValue: { setTitle: () => null } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: UtilsService, useValue: {} },
         { provide: LoadingService, useValue: { setLoading: () => null } },
         { provide: MainNotificationService, useValue: { setNotification: () => null } },

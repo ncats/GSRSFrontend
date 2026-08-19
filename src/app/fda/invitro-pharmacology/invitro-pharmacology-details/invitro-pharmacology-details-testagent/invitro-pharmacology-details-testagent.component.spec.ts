@@ -30,7 +30,7 @@ describe('InvitroPharmacologyDetailsTestagentComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { queryParams: {}, params: {} } } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
         { provide: ConfigService, useValue: { configData: {} } },
-        { provide: AuthService, useValue: { getAuth: () => NEVER, hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { getAuth: () => NEVER, hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: UtilsService, useValue: {} },
         { provide: LoadingService, useValue: { setLoading: () => null } },
         { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => null, unregisterFacetSearchHandler: () => null } },

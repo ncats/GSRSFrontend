@@ -76,7 +76,6 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit, OnDestr
   newSavedAssaySet: any;
   title: string;
   message: string;
-  canCreate = false;
   username = null;
   isLoading = false;
   isBuildFromExistingSet = false;
@@ -112,8 +111,12 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit, OnDestr
     private invitroPharmacologyService: InvitroPharmacologyService,
   ) {}
 
-  async ngOnInit() {
-    this.canCreate = await this.authService.hasSpecificPrivilege("Create");
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
+
+  ngOnInit() {
     // Get Username
     this.username = this.authService.getUser();
 

@@ -46,7 +46,6 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
   jsonFileName: string;
   flagIconSrcPath: string;
 
-  canUpdate: boolean = false;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
@@ -65,11 +64,15 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.loadingService.setLoading(true);
 
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
       this.getInvitroPharmacology();

@@ -88,7 +88,6 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
   disableImportButton = "true";
 
   isExcelDataLoaded = false;
-  canUpdate: boolean = false;
 
   /* Save Progress Bar variables */
   progressMessage: string = 'Initializing...';
@@ -114,13 +113,15 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, 
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.initializeRequiredFieldArray();
 
     this.titleService.setTitle("IVP Import Screening Data");
-
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-
   }
 
   ngAfterViewInit() {

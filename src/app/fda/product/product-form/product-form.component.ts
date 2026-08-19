@@ -72,8 +72,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   validationResult = false;
   disableMarketingCategoryCode = true;
   serverError: boolean;
-  canDelete: boolean = false;
-  canCreate: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -90,9 +88,16 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private titleService: Title,
     private sanitizer: DomSanitizer) { }
 
-  async ngOnInit() {
-    this.canDelete = await this.authService.hasSpecificPrivilege("Delete Lower Level Items");
-    this.canCreate = await this.authService.hasSpecificPrivilege("Create");
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canDelete(): boolean {
+    return this.authService.hasPrivilege('Delete Lower Level Items');
+  }
+
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
+
+  ngOnInit() {
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();

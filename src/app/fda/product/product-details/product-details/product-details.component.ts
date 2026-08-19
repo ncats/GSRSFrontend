@@ -24,7 +24,6 @@ import { ProductService } from '../../service/product.service';
 })
 export class ProductDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit {
 
-  canUpdate: boolean = false;
 
   constructor(
     public productService: ProductService,
@@ -47,9 +46,13 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
       router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     super.ngOnInit();
-    this.canUpdate = await this.authService.canEditData();
   }
 
   ngAfterViewInit() {

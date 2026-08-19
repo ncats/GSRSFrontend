@@ -22,7 +22,7 @@ describe('SubstanceAdverseEventCvmComponent', () => {
         { provide: GoogleAnalyticsService, useValue: {} },
         { provide: AdverseEventService, useValue: {} },
         // ngOnInit awaits this.
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: LoadingService, useValue: {} },
         { provide: MatDialog, useValue: {} },
       ]
