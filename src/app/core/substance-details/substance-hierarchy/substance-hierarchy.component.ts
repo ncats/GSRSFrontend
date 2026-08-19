@@ -29,10 +29,9 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
   dataSource = new MatTreeNestedDataSource<any>();
   selfNode!: HierarchyNode;
   activeNode!: any;
-  canEdit: boolean = false;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
 
-  async ngOnInit() {
+  ngOnInit() {
     this.uuid = this.substance.uuid!;
     this.name = this.substance._nameHTML!
     this.selfNode = {
@@ -52,7 +51,12 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
         next: resp => this.loadHierarchy(resp),
         error: () => this.loadHierarchy([this.selfNode])
       });
-      this.canEdit = await this.authService.hasSpecificPrivilege('Edit')
+  }
+
+  // A getter (not a field set once in ngOnInit) so it always reflects the current privilege
+  // state read from AuthService's signal, instead of a one-time async snapshot from init.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
   }
 
   loadHierarchy(orig: any): void {

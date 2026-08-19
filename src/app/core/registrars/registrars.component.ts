@@ -16,7 +16,6 @@ export class RegistrarsComponent implements OnInit {
 
   environment: Environment;
   baseDomain: string;
-  isAuthenticated = false;
   contactEmail: string;
   isClosedWelcomeMessage = true;
   imageLoc: any;
@@ -45,7 +44,13 @@ export class RegistrarsComponent implements OnInit {
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  async ngOnInit() {
+  // A getter (not a field set once in ngOnInit) so it always reflects the current privilege
+  // state read from AuthService's signal, instead of a one-time async snapshot from init.
+  get isAuthenticated(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.environment = this.configService.environment;
     this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
     this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
@@ -53,7 +58,6 @@ export class RegistrarsComponent implements OnInit {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
     this.appId = this.configService.environment.appId;
 
-    this.isAuthenticated = await this.authService.hasSpecificPrivilege('Edit');
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.customLinks1 = this.configService.configData.registrarDynamicLinks;

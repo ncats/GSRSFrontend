@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 // import { GeneralService } from '../../service/general.service';
@@ -18,12 +18,12 @@ import {SubstanceDetail, SubstanceRelationship} from '@gsrs-core/substance/subst
     selector: 'app-relationships-download-button',
     templateUrl: './relationships-download-button.component.html',
     styleUrls: ['./relationships-download-button.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];
   test: any;
-  canExportRelationships: boolean = false;
   privateExport = false;
   etag = '';
   etagDetails: any;
@@ -48,10 +48,16 @@ export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewIn
     @Input() substance: any;
 
 
-  async ngOnInit() {
-    this.canExportRelationships = await this.authService.hasSpecificPrivilege("Export Relationships");
-    
+  ngOnInit() {
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
+  }
+
+  // A plain method (not a field set once in ngOnInit) so it always reflects the current
+  // privilege state; reading authService.hasPrivilege() from the template registers this
+  // component to be re-checked automatically whenever that signal changes, working
+  // correctly under OnPush.
+  get canExportRelationships(): boolean {
+    return this.authService.hasPrivilege('Export Relationships');
   }
 
   ngAfterViewInit() {
