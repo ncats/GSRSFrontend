@@ -93,15 +93,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   private overlayContainer: HTMLElement;
   serverError: boolean;
   canApprove: boolean;
-  userCanApprove: boolean;
-  userCanMakePublic: boolean = false;
   approving: boolean;
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
   isPfdaVersion: boolean = false;
-  canUpdate: boolean;
-  canMakeAdvancedEdits: boolean;
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -130,7 +126,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   previousState: number;
   useApprovalAPI = false;
   featuresOnly = false;
-  userCanChangeDefinitionVisibility = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -155,6 +150,27 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     this.substanceService.imagePopupUnit.subscribe(data => {
       this.unit = data;
     })
+  }
+
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canMakeAdvancedEdits(): boolean {
+    return this.authService.hasPrivilege('Edit Public Data');
+  }
+
+  get userCanApprove(): boolean {
+    return this.authService.hasPrivilege('Approve Records');
+  }
+
+  get userCanMakePublic(): boolean {
+    return this.authService.hasPrivilege('Make Records Public');
+  }
+
+  get userCanChangeDefinitionVisibility(): boolean {
+    return this.authService.hasPrivilege('Change Definition Visibility');
   }
 
   // Angular 19 FIX: trackBy function for *ngFor stability
@@ -304,7 +320,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   }
 
 
-  async ngOnInit() {
+  ngOnInit() {
     if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
       this.featuresOnly = true;
     }
@@ -322,11 +338,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
     this.isPfdaVersion = this.configService.configData.isPfdaVersion;
-    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
-    this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
-    this.userCanApprove = await this.authService.hasSpecificPrivilege("Approve Records");
-    this.userCanMakePublic = await this.authService.hasSpecificPrivilege('Make Records Public');
-    this.userCanChangeDefinitionVisibility = await this.authService.hasSpecificPrivilege('Change Definition Visibility');
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
