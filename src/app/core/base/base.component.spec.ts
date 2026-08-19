@@ -48,6 +48,7 @@ describe('BaseComponent', () => {
       checkAuth: vi.fn().mockReturnValue(of(null)),
       canEditData: vi.fn().mockReturnValue(Promise.resolve(false)),
       hasSpecificPrivilege: vi.fn().mockReturnValue(Promise.resolve(false)),
+      hasPrivilege: vi.fn().mockReturnValue(false),
       logout: vi.fn()
     };
     activatedRouteStub = new ActivatedRouteStub(

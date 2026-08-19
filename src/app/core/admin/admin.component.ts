@@ -15,12 +15,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   activeTab: number;
   current: string;
   lastTab: number;
-  canManageCVs: boolean = false;
-  canRunJobs: boolean = false;
-  canImportData: boolean = false;
-  canManageUsers: boolean = false;
-  canViewServerFiles: boolean = false;
-  canViewServiceInfo: boolean = false;
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -30,8 +24,34 @@ export class AdminComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {}
 
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canManageCVs(): boolean {
+    return this.authService.hasPrivilege('Manage CVs');
+  }
+
+  get canRunJobs(): boolean {
+    return this.authService.hasPrivilege('Run Tasks');
+  }
+
+  get canImportData(): boolean {
+    return this.authService.hasPrivilege('Import Data');
+  }
+
+  get canManageUsers(): boolean {
+    return this.authService.hasPrivilege('Manage Users');
+  }
+
+  get canViewServerFiles(): boolean {
+    return this.authService.hasPrivilege('View Files');
+  }
+
+  get canViewServiceInfo(): boolean {
+    return this.authService.hasPrivilege('View Service Info');
+  }
+
   async ngOnInit() {
-    await this.checkPrivileges();
+    // Awaited (not the getters above) to guarantee privileges are loaded before the routing decision below, since an early wrong redirect would destroy this component with no chance to self-correct.
+    await this.authService.hasSpecificPrivilege('Manage CVs');
 
     const routeSub = this.activatedRoute.params.subscribe((routeParams) => {
       this.current = routeParams.function;
@@ -96,15 +116,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(routeSub);
     const tab = this.activatedRoute.snapshot.queryParams["function"] || "cache";
-  }
-
-  async checkPrivileges() {
-    this.canManageCVs = await this.authService.hasSpecificPrivilege("Manage CVs");
-    this.canRunJobs = await this.authService.hasSpecificPrivilege("Run Tasks");
-    this.canImportData = await this.authService.hasSpecificPrivilege("Import Data");
-    this.canManageUsers = await this.authService.hasSpecificPrivilege("Manage Users");
-    this.canViewServerFiles = await this.authService.hasSpecificPrivilege("View Files");
-    this.canViewServiceInfo = await this.authService.hasSpecificPrivilege("View Service Info");
   }
 
   onTabChanged(event: MatTabChangeEvent): void {

@@ -106,10 +106,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private argsHash?: number;
   public order: string;
   public sortValues = searchSortValues;
-  showAudit: boolean;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  canUpdate = false;
   isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
@@ -146,7 +144,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   facetViewControl = new FormControl();
   private wildCardText: string;
   bulkSearchPanelOpen = false;
-  showUserLists = false;
 
   //async substructure search and dialog
   structureSearchDialog: any;
@@ -193,6 +190,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
   ) {
+  }
+
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get showAudit(): boolean {
+    return this.authService.hasPrivilege('Restore Previous Versions');
+  }
+
+  // Derived purely from canUpdate, no side effects, so a live getter is safe here too.
+  get showUserLists(): boolean {
+    return this.canUpdate;
   }
 
   @HostListener('window:popstate', ['$event'])
@@ -296,13 +307,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
       
     });
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.showUserLists=this.canUpdate;
-    //todo: evaluate this!
-    this.showAudit =await this.authService.hasSpecificPrivilege('Restore Previous Versions');
-
-    
-    if (deprecated && deprecated === 'true' && this.showAudit) {
+    // Awaited (not showAudit) because showDeprecated is mutable state set elsewhere too, not a live template read, so a stale check here would be permanently lost.
+    if (deprecated && deprecated === 'true' && await this.authService.hasSpecificPrivilege('Restore Previous Versions')) {
       this.showDeprecated = true;
     }
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);

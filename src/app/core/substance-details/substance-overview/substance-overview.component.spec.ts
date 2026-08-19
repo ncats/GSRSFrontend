@@ -13,6 +13,8 @@ import { ConfigService } from '@gsrs-core/config';
 import { LoadingService } from '@gsrs-core/loading';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
 import { SubstanceOverviewComponent } from './substance-overview.component';
 
 describe('SubstanceOverviewComponent', () => {
@@ -21,17 +23,17 @@ describe('SubstanceOverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceOverviewComponent ],
+      imports: [ HttpClientTestingModule, MatMenuModule ],
+      declarations: [ SubstanceOverviewComponent, SubstanceClassPipe ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: DomSanitizer, useValue: { bypassSecurityTrustHtml: (v: any) => v, bypassSecurityTrustUrl: (v: any) => v, bypassSecurityTrustResourceUrl: (v: any) => v } },
         { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
-        { provide: SubstanceService, useValue: {} },
+        { provide: SubstanceService, useValue: { checkVersion: () => of(1), oldSiteRedirect: () => '' } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true), events: of({}), url: '', routerState: { snapshot: { url: '' } }, createUrlTree: () => ({}), serializeUrl: () => '', routeReuseStrategy: { shouldReuseRoute: () => false } } },
-        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => null, logout: () => {} } },
-        { provide: ControlledVocabularyService, useValue: {} },
+        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
+        { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of({ SUBSTANCE_CLASS: { list: [] } }) } },
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
@@ -44,6 +46,7 @@ describe('SubstanceOverviewComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceOverviewComponent);
     component = fixture.componentInstance;
+    component.substance = { uuid: 'test-uuid', version: '1', substanceClass: 'chemical', tags: [] } as any;
     fixture.detectChanges();
   });
 

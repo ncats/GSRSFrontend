@@ -20,8 +20,8 @@ describe('AdminComponent', () => {
         { provide: ActivatedRoute, useValue: { params: of({}) } },
         { provide: Router, useValue: { navigate: () => {} } },
         { provide: Location, useValue: {} },
-        // ngOnInit awaits checkPrivileges(), which calls hasSpecificPrivilege 6 times.
-        { provide: AuthService, useValue: { hasSpecificPrivilege: vi.fn().mockReturnValue(Promise.resolve(false)) } }
+        // ngOnInit awaits hasSpecificPrivilege() once before the routing decision.
+        { provide: AuthService, useValue: { hasSpecificPrivilege: vi.fn().mockReturnValue(Promise.resolve(false)), hasPrivilege: vi.fn().mockReturnValue(false) } }
       ]
     })
     .compileComponents();

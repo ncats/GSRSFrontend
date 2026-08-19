@@ -58,9 +58,6 @@ export class BaseComponent implements OnInit, OnDestroy {
   baseDomain: string;
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
-  canConfigureSystem: boolean = false;
-  canUserImportData: boolean = false;
-  canManageCVs: boolean = false;
   contactEmail: string;
   version?: string;
   versionTooltipMessage = "";
@@ -69,8 +66,6 @@ export class BaseComponent implements OnInit, OnDestroy {
   navItems: Array<NavItem>;
   isPfdaVersion: boolean = false;
   customToolbarComponent: string = "";
-  canRegister = false;
-  registerNav: Array<NavItem>;
   searchNav: Array<NavItem>;
   adverseEventShinyHomepageDisplay = false;
   loadedComponents: LoadedComponents;
@@ -146,7 +141,33 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  async ngOnInit() {
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canConfigureSystem(): boolean {
+    return this.authService.hasPrivilege('Configure System');
+  }
+
+  get canUserImportData(): boolean {
+    return this.authService.hasPrivilege('Import Data');
+  }
+
+  get canManageCVs(): boolean {
+    return this.authService.hasPrivilege('Manage CVs');
+  }
+
+  get canRegister(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  // Derived purely from canRegister + already-loaded navItems, no side effects, so a live getter is safe here too.
+  get registerNav(): Array<NavItem> {
+    if (!this.canRegister || !this.navItems) {
+      return [];
+    }
+    const registerItem = this.navItems.find((item) => item.display === 'Register');
+    return registerItem?.children || [];
+  }
+
+  ngOnInit() {
     const breakpointSub = this.breakpointObserver
       .observe(['(min-width: 1611px)', '(min-width: 1501px)'])
       .subscribe(result => {
@@ -163,19 +184,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.contactEmail = this.configService.configData.contactEmail || null;
     this.navItems = this.configService.configData.navItems || null;
 
-    // CRITICAL: Subscribe to auth FIRST, before any await calls that might fail
-    // This ensures UI updates reactively when auth state changes
     const authSubscription = this.authService.getAuth().subscribe((auth) => {
       this.auth = auth;
-      // Re-check privileges when auth changes
-      if (auth) {
-        this.updatePrivileges();
-      } else {
-        this.canConfigureSystem = false;
-        this.canUserImportData = false;
-        this.canRegister = false;
-        this.canManageCVs = false;
-      }
     });
     this.subscriptions.push(authSubscription);
 
@@ -200,8 +210,6 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Initial privilege check with error handling
-    await this.updatePrivileges();
     //not sure if we need this.
     //  TODO: remove it and test that the component works.
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -215,12 +223,7 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.versionTooltipMessage = `V${this.version}`;
         this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format("ddd MMM D YYYY HH:mm:ss z")}`;
       });
-    let okToRegister: boolean = await this.authService.canEditData();
-    
     this.navItems.forEach((item) => {
-      if (item.display === "Register" && okToRegister) {
-        this.registerNav = item.children;
-      }
       if (item.display === "Search") {
         this.searchNav = item.children;
       }
@@ -617,25 +620,4 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Updates privilege flags based on current auth state.
-   * Called on init and whenever auth changes.
-   */
-  private async updatePrivileges(): Promise<void> {
-    try {
-      this.canConfigureSystem =
-        await this.authService.hasSpecificPrivilege("Configure System");
-      this.canUserImportData =
-        await this.authService.hasSpecificPrivilege("Import Data");
-      this.canRegister = await this.authService.canEditData();
-      this.canManageCVs =
-        await this.authService.hasSpecificPrivilege("Manage CVs");
-    } catch (e) {
-      // Not authenticated or error - all privileges default to false
-      this.canConfigureSystem = false;
-      this.canUserImportData = false;
-      this.canRegister = false;
-      this.canManageCVs = false;
-    }
-  }
 }

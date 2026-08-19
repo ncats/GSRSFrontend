@@ -144,6 +144,7 @@ describe('SubstancesBrowseComponent', () => {
           useValue: {
             getAuth: vi.fn().mockReturnValue(of(null)),
             hasSpecificPrivilege: vi.fn().mockReturnValue(Promise.resolve(false)),
+            hasPrivilege: vi.fn().mockReturnValue(false),
             getUser: vi.fn().mockReturnValue(''),
             startUserDownload: vi.fn()
           }

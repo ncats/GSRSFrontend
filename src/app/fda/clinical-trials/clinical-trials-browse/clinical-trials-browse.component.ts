@@ -50,7 +50,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   // view = 'cards';
-  displayedColumns: string[];
   public smiles: string;
   private argsHash?: number;
   public auth?: Auth;
@@ -61,8 +60,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   toggle: Array<boolean> = [];
   private subscriptions: Array<Subscription> = [];
   dataSource = new MatTableDataSource<ClinicalTrial>([]);
-  canDelete: boolean = false;
-  canEdit: boolean = false;
   showExactMatches = false;
   private isComponentInit = false;
 
@@ -93,7 +90,25 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private titleService: Title
   ) {}
 
-  async ngOnInit() {
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canDelete(): boolean {
+    return this.authService.hasPrivilege('Delete Lower Level Items');
+  }
+
+  // Derived purely from canDelete, no side effects, so a live getter is safe here too.
+  get displayedColumns(): string[] {
+    const columns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
+    if (this.canDelete) {
+      columns.push('delete');
+    }
+    return columns;
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -114,13 +129,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     }
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
-    this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
-    const columns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
-    if (this.canDelete) {
- columns.push('delete'); 
-}
-    this.displayedColumns = columns;
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},
       {'title': 'Title', 'value': 'title'},

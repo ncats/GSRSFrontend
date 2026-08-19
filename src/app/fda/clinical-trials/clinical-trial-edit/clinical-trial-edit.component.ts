@@ -35,9 +35,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   defaultSubstanceKeyType = 'UUID';
   agencySubstanceKeyType = 'UUID';
 
-  canUpdate: boolean = false;
   isTesting  = false;
-  displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
   public  _trialNumber: string;
   bulkInputValue = '';
@@ -65,13 +63,19 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   ) {
   }
 
-  async ngOnInit() {
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    if (this.canUpdate) {
-      this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete'];
-    } else {
-      this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
-    }
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  // Derived purely from canUpdate, no side effects, so a live getter is safe here too rather than a one-time cached array.
+  get displayedColumns(): string[] {
+    return this.canUpdate
+      ? ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete']
+      : ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
+  }
+
+  ngOnInit() {
     this.pageSize = 10;
     this.pageIndex = 0;
     this.activatedRoute.paramMap.subscribe(params => {

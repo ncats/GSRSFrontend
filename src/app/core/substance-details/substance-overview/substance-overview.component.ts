@@ -32,12 +32,9 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   downloadJsonEuSmsFhirHref: any;
   defIcon = 'drop_down';
   latestVersion: number;
-  canEdit: boolean;
   defAccess: Array<string>;
   versionControl = new FormControl('', Validators.required);
   versions: string[] = [];
-  isEditable = false;
-  canRestoreVersions = false;
 
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
@@ -73,21 +70,29 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  async ngOnInit() {
-    // Synchronously seed versionControl with the current substance version BEFORE any
-    // async awaits below. Without this, canRestoreVersions can flip to true while
-    // versionControl still holds '' (its FormControl default), making the View button
-    // flash visible until the checkVersion() HTTP response arrives.
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canRestoreVersions(): boolean {
+    return this.authService.hasPrivilege('Restore Previous Versions');
+  }
+
+  // Derived purely from canEdit + already-loaded substance data, no side effects, so a live getter is safe here too.
+  get isEditable(): boolean {
+    return this.canEdit
+      && this.substance.substanceClass != null
+      && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
+  }
+
+  ngOnInit() {
+    // Seed versionControl synchronously here, before getVersion()'s async response, or the View button flashes visible until checkVersion() returns.
     if (this.substance?.version) {
       this.versionControl.setValue(this.substance.version.toString());
     }
     this.getSubtypeRefs(this.substance);
 
-    this.canEdit=await this.authService.canEditData();
-    this.canRestoreVersions = await this.authService.hasSpecificPrivilege("Restore Previous Versions");
-    this.isEditable =this.canEdit
-        && this.substance.substanceClass != null
-        && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;
