@@ -50,7 +50,6 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     'conditionsEU'
   ];
 
-  canExport: boolean = false;
 
   constructor(
     public gaService: GoogleAnalyticsService,
@@ -64,9 +63,13 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     super(gaService, clinicalTrialService);
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
     if (this.substanceUuid) {
      this.getSubstanceClinicalTrialsEurope(null, 'initial');
     }

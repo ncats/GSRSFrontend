@@ -77,8 +77,6 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   disableExport = false;
   etag = '';
   etagAllExport = '';
-  canExport: boolean = false;
-  canUpdate: boolean = false;
 
   public displayedColumns: string[] = [
     'view',
@@ -104,10 +102,17 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     super(gaService, productService);
   }
 
-  async ngOnInit() {
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     if (this.substance && this.substance.uuid) {
 
       // Get Substance UUID and Approval ID

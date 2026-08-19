@@ -22,7 +22,7 @@ describe('SubstanceClinicalTrialsEuropeComponent', () => {
         // ngOnInit reads configService.configData.loadedComponents directly.
         { provide: ConfigService, useValue: { configData: { loadedComponents: null } } },
         // ngOnInit awaits this.
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: LoadingService, useValue: {} },
         { provide: Router, useValue: {} },
         { provide: MatDialog, useValue: {} },

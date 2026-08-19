@@ -55,8 +55,6 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     'appStatus',
     'applicationSubType'
   ];
-  canExport: boolean = false;
-  canUpdate: boolean = false;
 
   constructor(
     private router: Router,
@@ -70,10 +68,16 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     super(gaService, applicationService);
   }
 
-  async ngOnInit() {
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit')
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
 
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     /* Commenting right now. Will remove later after everything works */
     /*
     if (this.bdnum) {

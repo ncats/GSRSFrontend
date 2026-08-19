@@ -92,13 +92,16 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
     super(gaService, invitroPharmService);
   }
 
-  canUpdate: boolean = false;
-  canExport: boolean = false;
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
 
-  async ngOnInit() {
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
 
+  ngOnInit() {
     if (this.substanceUuid) {
       this.privateSearch = this.privateSearchBase + '\"' + this.substanceUuid + '\"';
       this.getInvitroPharm();

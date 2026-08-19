@@ -44,7 +44,6 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
     'substanceReaction'
   ];
 
-  canUpdate: boolean = false;
 
   constructor(
     private router: Router,
@@ -58,9 +57,12 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
     super(gaService, ssg4mService);
   }
 
-  async ngOnInit() {
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-   
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     if (this.substanceUuid) {
       this.getSsg4mBySubstanceUuid();
     }

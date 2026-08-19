@@ -21,7 +21,7 @@ describe('SubstanceInvitroPharmacologySummaryComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: GoogleAnalyticsService, useValue: { sendEvent: () => null } },
         { provide: LoadingService, useValue: { setLoading: () => null } },
         { provide: InvitroPharmacologyService, useValue: {} },

@@ -25,7 +25,7 @@ describe('SubstanceAdverseEventPtComponent', () => {
         { provide: LoadingService, useValue: {} },
         { provide: ConfigService, useValue: {} },
         // ngOnInit awaits this.
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: MatDialog, useValue: {} },
       ]
     })

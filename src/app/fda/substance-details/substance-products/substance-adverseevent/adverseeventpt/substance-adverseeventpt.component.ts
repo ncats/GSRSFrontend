@@ -62,7 +62,6 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     'prr'
   ];
 
-  canExport: boolean = false;
 
   constructor(
     private router: Router,
@@ -76,9 +75,12 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     super(gaService, adverseEventService);
   }
 
-  async ngOnInit() {
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
 
+  ngOnInit() {
     /* Commenting right now. Will remove later after everything works */
     /*
     if (this.bdnum) {

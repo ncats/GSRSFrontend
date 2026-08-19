@@ -25,7 +25,7 @@ describe('SubstanceImpuritiesComponent', () => {
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
         { provide: ImpuritiesService, useValue: {} },
         { provide: GeneralService, useValue: {} },
-        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => null, logout: () => {} } },
+        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
       ]

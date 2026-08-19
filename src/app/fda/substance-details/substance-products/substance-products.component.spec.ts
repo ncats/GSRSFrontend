@@ -26,7 +26,7 @@ describe('SubstanceProductsComponent', () => {
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
         { provide: ProductService, useValue: {} },
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },
-        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => null, logout: () => {} } },
+        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },
         { provide: GeneralService, useValue: {} },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },

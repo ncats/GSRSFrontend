@@ -24,7 +24,7 @@ describe('SubstanceSsg4mComponent', () => {
         { provide: GoogleAnalyticsService, useValue: { sendEvent: () => null } },
         { provide: SubstanceSsg4mService, useValue: {} },
         { provide: GeneralService, useValue: {} },
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: LoadingService, useValue: { setLoading: () => null } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => NEVER }) } }
       ]
