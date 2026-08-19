@@ -61,7 +61,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   title = null;
   submitDateMessage = '';
   statusDateMessage = '';
-  canEdit: boolean = false;
   subRelationship: Array<SubRelationship> = [];
   substanceName: string;
   substanceNameHintMessage = '';
@@ -92,14 +91,17 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private sanitizer: DomSanitizer) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     // Get form field configuration to show on either simple or advanced form
     this.getConfigSettings();
 
     // Show Impurities Total Section only if at least one field is either simple or advanced
     this.showHideTotalImpuritiesSection();
-
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
 
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();

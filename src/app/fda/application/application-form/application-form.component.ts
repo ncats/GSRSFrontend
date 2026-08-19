@@ -55,7 +55,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   submitDateMessage = '';
   statusDateMessage = '';
   appForm: FormGroup;
-  canDelete: boolean = false;
   regAppCenterNotAllowedConfig: Array<string>;
 
   constructor(
@@ -72,10 +71,13 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     private generalService: GeneralService,
     private dialog: MatDialog) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canDelete(): boolean {
+    return this.authService.hasPrivilege('Delete Lower Level Items');
+  }
+
+  ngOnInit() {
     console.log(`applications form component ngOnInit`);
-    this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
-    console.log(`canDelete: ${this.canDelete}`);
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();

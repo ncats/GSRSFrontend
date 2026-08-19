@@ -31,7 +31,7 @@ describe('InvitroPharmacologyBrowseComponent', () => {
         { provide: Title, useValue: { setTitle: () => null } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: DomSanitizer, useValue: { bypassSecurityTrustHtml: (v: any) => v } },
-        { provide: AuthService, useValue: { getAuth: () => NEVER, hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { getAuth: () => NEVER, hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: UtilsService, useValue: { hashCode: () => 1 } },
         { provide: LoadingService, useValue: { setLoading: () => null } },
         { provide: MainNotificationService, useValue: { setNotification: () => null } },

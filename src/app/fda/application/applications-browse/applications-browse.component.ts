@@ -51,8 +51,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   totalApplications: number;
   isLoading = true;
   isError = false;
-  canUpdate: boolean = false;
-  canExport: boolean = false;
   isLoggedIn = false;
   dataSource = [];
   hasBackdrop = false;
@@ -145,7 +143,16 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     }, 50);
   }
 
-  async ngOnInit() {
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
 
@@ -201,8 +208,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     this.isComponentInit = true;
     this.loadComponent();
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
   }
 
   ngAfterViewInit() {

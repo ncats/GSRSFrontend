@@ -80,9 +80,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit, AfterViewInit
   skip: number;
   isLoading = true;
   isError = false;
-  canExport: boolean = false;
-  canUpdate: boolean = false;
-  canSaveJson: boolean = false;
   isLoggedIn = false;
   dataSource = [];
   appType: string;
@@ -199,7 +196,20 @@ export class InvitroPharmacologyBrowseComponent implements OnInit, AfterViewInit
     private dialog: MatDialog
   ) { }
 
-  async ngOnInit() {
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canSaveJson(): boolean {
+    return this.authService.hasPrivilege('Save Record JSON');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.invitroPharmacologyService.getInvitroPharmacologyFacets);
 
     this.titleService.setTitle(`In Vitro Pharmacology Browser`);
@@ -235,9 +245,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit, AfterViewInit
       this.searchValue = params.get('search');
     });
     this.subscriptions.push(paramsSubscription);
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.canSaveJson = await this.authService.hasSpecificPrivilege('Save Record JSON');
   }
 
   ngAfterViewInit() {

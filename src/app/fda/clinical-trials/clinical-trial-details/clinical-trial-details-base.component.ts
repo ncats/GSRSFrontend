@@ -23,7 +23,6 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
   src: string;
   clinicalTrial: any;
   flagIconSrcPath: string;
-  canUpdate: boolean = false;
 
   constructor(
     private clinicalTrialService: ClinicalTrialService,
@@ -36,7 +35,12 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     protected authService: AuthService
   ) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
    // this.loadingService.setLoading(true);
     this.trialNumber = this.activatedRoute.snapshot.params['trialNumber'];
 
@@ -45,7 +49,6 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     } else {
       this.handleSubstanceRetrivalError();
     }
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit'); 
   }
 
   getClinicalTrialDetails(): void {

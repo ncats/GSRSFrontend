@@ -29,7 +29,7 @@ describe('InvitroPharmacologyAssayDataImportComponent', () => {
         { provide: MatDialog, useValue: {} },
         { provide: Title, useValue: { setTitle: () => null } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
-        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false) } },
+        { provide: AuthService, useValue: { hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false } },
         { provide: UtilsService, useValue: {} },
         { provide: LoadingService, useValue: {} },
         { provide: MainNotificationService, useValue: {} },

@@ -31,7 +31,6 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   impurities: Impurities;
   substanceName = '';
   flagIconSrcPath: string;
-  canEdit: boolean = false;
   updateApplicationUrl: string;
   message = '';
   subRelationship: any;
@@ -51,10 +50,14 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
     private titleService: Title
   ) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.loadingService.setLoading(true);
 
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
       this.getImpurities();

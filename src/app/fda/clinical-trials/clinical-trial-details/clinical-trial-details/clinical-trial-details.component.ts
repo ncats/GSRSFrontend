@@ -19,8 +19,6 @@ import { take } from 'rxjs/operators';
 
 export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseComponent implements OnInit {
 
-  canEdit:boolean = false;
-
   constructor(
     clinicalTrialService: ClinicalTrialService,
     activatedRoute: ActivatedRoute,
@@ -36,9 +34,8 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     router, gaService, utilsService, authService);
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     super.ngOnInit();
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
   }
 
 }

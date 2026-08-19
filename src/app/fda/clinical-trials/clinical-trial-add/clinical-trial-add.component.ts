@@ -20,7 +20,6 @@ export class ClinicalTrialAddComponent implements OnInit {
   isTesting: Boolean = false;
   isLoading = true;
   isError = false;
-  canEdit: boolean;
   json: String = '';
 
   constructor(
@@ -32,8 +31,12 @@ export class ClinicalTrialAddComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  async ngOnInit() {
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
   }
 
  addClinicalTrial() {

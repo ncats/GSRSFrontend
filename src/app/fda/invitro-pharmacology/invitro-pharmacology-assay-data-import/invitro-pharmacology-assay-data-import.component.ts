@@ -65,7 +65,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit, Afte
   isAllRecordValidated = false;
   isAllRecordSaved = false;
   isLoading = false;
-  canCreate: boolean = false;
 
   targetNameCheckCompleted = false;
   humanHomologCheckCompleted = false;
@@ -100,8 +99,12 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit, Afte
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-  async ngOnInit() {
-    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
+
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.titleService.setTitle("IVP Import Assay Data");

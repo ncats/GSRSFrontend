@@ -28,10 +28,10 @@ describe('ImpuritiesFormComponent', () => {
       declarations: [ ImpuritiesFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: ImpuritiesService, useValue: {} },
-        { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },
+        { provide: ImpuritiesService, useValue: { loadImpurities: () => null, impurities: {} } },
+        { provide: ConfigService, useValue: { configData: { impuritiesForm: { settingsDisplay: { overview: {}, impuritiesTotal: {} } } }, environment: {}, afterLoad: () => Promise.resolve({}) } },
         { provide: SubstanceService, useValue: {} },
-        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => null, logout: () => {} } },
+        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },
         { provide: MainNotificationService, useValue: { setNotification: () => null } },
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
