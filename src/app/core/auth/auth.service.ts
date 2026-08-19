@@ -193,10 +193,21 @@ export class AuthService {
       this.isLoading = true;
       this._authLoading.set(true);
       this.fetchAuth()
-        .pipe(take(1))
+        .pipe(
+          take(1),
+          switchMap((auth) => {
+            if (auth?.computedToken) {
+              this.setAuthState(auth);
+              // Fetch privileges after a freshly-discovered auth, same as the constructor/login paths.
+              return this.fetchPrivs().pipe(catchError(() => of([])));
+            } else {
+              this.setAuthState(null);
+              return of([]);
+            }
+          }),
+        )
         .subscribe({
-          next: (auth) => {
-            this.setAuthState(auth?.computedToken ? auth : null);
+          next: () => {
             this.isLoading = false;
             this._authLoading.set(false);
           },

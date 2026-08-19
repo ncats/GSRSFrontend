@@ -269,4 +269,30 @@ describe('AuthService', () => {
       expect(received?.computedToken).toBe('test-token');
     });
   });
+
+  describe('getAuth() lazy re-fetch after an initially-unauthenticated session', () => {
+    it('loads privileges too, not just auth, so hasPrivilege() is not stuck fail-closed forever (e.g. after a pfdaLogin popup)', async () => {
+      const service = createService();
+      await flush();
+      // Initial constructor fetch: unauthenticated.
+      httpMock.expectOne(req => req.url.endsWith('whoami')).flush({});
+      await flush();
+      expect(service.authState()).toBeNull();
+
+      // Something (e.g. pfdaLogin(), after the SSO popup closes) calls getAuth() again to
+      // re-check, now that the user has authenticated out-of-band. _auth is still null and
+      // isLoading is false, so this hits getAuth()'s lazy re-fetch branch.
+      service.getAuth().subscribe();
+      await flush();
+      httpMock.expectOne(req => req.url.endsWith('whoami')).flush(mockAuth());
+      await flush();
+
+      const privsReq = httpMock.expectOne(req => req.url.endsWith('allmyprivs'));
+      privsReq.flush({ privileges: ['Edit'] });
+      await flush();
+
+      expect(service.authState()?.computedToken).toBe('test-token');
+      expect(service.hasPrivilege('Edit')).toBe(true);
+    });
+  });
 });
