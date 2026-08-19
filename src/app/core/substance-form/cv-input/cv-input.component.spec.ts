@@ -21,12 +21,12 @@ describe('CvInputComponent', () => {
       declarations: [ CvInputComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: ControlledVocabularyService, useValue: {} },
+        { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of({ testDomain: { list: [] } }) } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
         { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: DataDictionaryService, useValue: {} },
-        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => null, logout: () => {} } },
+        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },
       ]
     })
@@ -36,6 +36,10 @@ describe('CvInputComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CvInputComponent);
     component = fixture.componentInstance;
+    // no vocabulary/key set, so ngOnInit falls into the `else` branch, which reads
+    // this.domain and calls getDomainVocabulary(this.domain) — needs a real value so the
+    // stubbed response (keyed by domain name) can be looked up without throwing.
+    component.domain = 'testDomain';
     fixture.detectChanges();
   });
 

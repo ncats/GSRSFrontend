@@ -71,7 +71,6 @@ export class AuthService {
         .subscribe({
           next: (privs) => {
             this.setPrivileges(privs);
-            console.log("Privs", privs)
             this.isLoading = false;
             this._authLoading.set(false);
           },

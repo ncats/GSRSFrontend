@@ -50,8 +50,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
-  canCreate = false; //meant to allow creating new records
-  canUpdate = false;
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, { static: true })
   dynamicContentContainer: CardDynamicSectionDirective;
@@ -93,10 +91,16 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private dynamicContentItems: DynamicComponentManifest<any>[],
   ) {}
 
-  async ngOnInit() {
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canCreate(): boolean { //meant to allow creating new records
+    return this.authService.hasPrivilege('Create');
+  }
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.canCreate = await this.authService.hasSpecificPrivilege("Create");
-    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
       this.getAlignments();

@@ -52,10 +52,7 @@ export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewIn
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
   }
 
-  // A plain method (not a field set once in ngOnInit) so it always reflects the current
-  // privilege state; reading authService.hasPrivilege() from the template registers this
-  // component to be re-checked automatically whenever that signal changes, working
-  // correctly under OnPush.
+  // Getter, not a field, so template reads always reflect the current privilege signal.
   get canExportRelationships(): boolean {
     return this.authService.hasPrivilege('Export Relationships');
   }

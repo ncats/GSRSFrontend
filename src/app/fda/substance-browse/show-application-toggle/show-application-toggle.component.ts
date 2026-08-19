@@ -20,7 +20,6 @@ import { Subscription } from 'rxjs';
 export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];
   test: any;
-  canUpdate: boolean = false;
   privateExport = false;
   displayMatchApplicationConfig = false;
   displayMatchAppCheckBoxValue = false;
@@ -43,11 +42,15 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     public loadingService: LoadingService,
     private dialog: MatDialog) { }
 
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
   async ngOnInit() {
 
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-
-    if (this.canUpdate === true) {
+    // Awaited check (not canUpdate) since this gates a one-time side effect with no re-trigger.
+    if (await this.authService.hasSpecificPrivilege('Edit')) {
       this.isDisplayAppToMatchConfig();
     }
 

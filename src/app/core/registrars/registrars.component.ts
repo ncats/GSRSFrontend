@@ -44,8 +44,7 @@ export class RegistrarsComponent implements OnInit {
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  // A getter (not a field set once in ngOnInit) so it always reflects the current privilege
-  // state read from AuthService's signal, instead of a one-time async snapshot from init.
+  // Getter, not a field, so template reads always reflect the current privilege signal.
   get isAuthenticated(): boolean {
     return this.authService.hasPrivilege('Edit');
   }

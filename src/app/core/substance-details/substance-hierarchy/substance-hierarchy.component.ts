@@ -53,8 +53,7 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
       });
   }
 
-  // A getter (not a field set once in ngOnInit) so it always reflects the current privilege
-  // state read from AuthService's signal, instead of a one-time async snapshot from init.
+  // Getter, not a field, so template reads always reflect the current privilege signal.
   get canEdit(): boolean {
     return this.authService.hasPrivilege('Edit');
   }

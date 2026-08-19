@@ -33,7 +33,6 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   @ViewChild('tagsAuto', {static: true}) matAutocomplete: MatAutocomplete;
   optionsDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
   private overlayContainer: HTMLElement;
-  canUpdateCV: boolean = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -44,9 +43,13 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   ) {
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.canUpdateCV = await this.authService.hasSpecificPrivilege('Manage CVs');
+  }
+
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdateCV(): boolean {
+    return this.authService.hasPrivilege('Manage CVs');
   }
 
   ngAfterViewInit() {
