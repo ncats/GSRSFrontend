@@ -25,7 +25,6 @@ import { NarrowSearchSuggestion, PagingResponse, searchSortValues, UtilsService 
 import { FacetParam, Facet, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 // eslint-disable-next-line max-len
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
@@ -48,25 +47,18 @@ import { Subject } from 'rxjs';
 import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import {Environment} from "@environment/environment.model";
+import { ImportSearchStateService } from '@gsrs-core/admin/import-browse/import-search-state.service';
+import { FileDownloadService } from '@gsrs-core/utils/file-download.service';
+import { ClipboardService } from '@gsrs-core/utils/clipboard.service';
 
 @Component({
     selector: 'app-import-browse',
     templateUrl: './import-browse.component.html',
     styleUrls: ['./import-browse.component.scss'],
-    standalone: false
+    standalone: false,
+    providers: [ImportSearchStateService]
 })
 export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  private privateSearchTerm?: string;
-  private privateStructureSearchTerm?: string;
-  private privateSequenceSearchTerm?: string;
-  private privateBulkSearchQueryId?: number;
-  private privateBulkSearchStatusKey?: string;
-  private privateBulkSearchSummary?: any;
-  private privateSearchType?: string;
-  private privateSearchStrategy?: string;
-  private privateSearchCutoff?: number;
-  private privateSearchSeqType?: string;
-  private privateSequenceSearchKey?: string;
 
   public substances: Array<any> = [];
  records: Array<any> = [];
@@ -74,8 +66,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   public exactMatchSubstances: Array<SubstanceDetail>;
 
   environment: Environment;
-  searchOnIdentifiers: boolean;
-  searchEntity: string;
   pageIndex: number;
   pageSize: number;
   test: any;
@@ -95,7 +85,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   hasBackdrop = false;
   view = 'cards';
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes', 'actions'];
-  public smiles: string;
   private argsHash?: number;
   public order: string;
   public sortValues = searchSortValues;
@@ -114,8 +103,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   matchTypes?: Array<string> = [];
   narrowSearchSuggestionsCount = 0;
   private isComponentInit = false;
-  sequenceID?: string;
-  searchHashFromAdvanced: string;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -124,8 +111,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private isFacetsParamsInit = false;
   isCollapsed = true;
   exportOptions: Array<any>;
-  private searchTermHash: number;
-  isSearchEditable = false;
   showDeprecated = true;
   codeSystem: any;
   previousState: Array<string> = [];
@@ -163,12 +148,14 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     private location: Location,
     private facetManagerService: FacetsManagerService,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private substanceTextSearchService: SubstanceTextSearchService,
     private title: Title,
     private cvService: ControlledVocabularyService,
     private wildCardService: WildcardService,
     private adminService: AdminService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
+    public searchState: ImportSearchStateService,
+    private fileDownloadService: FileDownloadService,
+    private clipboardService: ClipboardService,
 
   ) {
   }
@@ -198,7 +185,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   wildCardSearch() {
     this.wildCardService.getWildCardText(this.wildCardText);
-    this.setUpPrivateSearchTerm();
+    this.searchState.setUpPrivateSearchTerm(this.wildCardText);
     this.searchSubstances();
   }
 
@@ -238,7 +225,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isLoading = true;
       this.loadingService.setLoading(true);
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances, 'selectable')
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.searchState.searchTerm, this.totalSubstances, 'selectable')
         .subscribe(pagingResponse => {
           let start = 0;
           let skipped = 0;
@@ -337,31 +324,12 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pageSize = 10;
     this.pageIndex = 0;
 
-    this.setUpPrivateSearchTerm();
+    this.searchState.setUpPrivateSearchTerm(this.wildCardText);
+    this.searchState.initFromRoute();
 
-    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
-    this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
-    this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
-    this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
-    this.searchOnIdentifiers = (this.activatedRoute.snapshot.queryParams['searchOnIdentifiers']==="true") || false;
-    this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
-
-    this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
-
-    this.setUpPrivateSearchStrategy();
-
-
-    if (this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
-      this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
-      this.privateSequenceSearchTerm = JSON.parse(sessionStorage.getItem('gsrs_search_sequence_' + this.sequenceID));
-    }
-    this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
-    this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
-    this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
-    this.searchHashFromAdvanced = this.activatedRoute.snapshot.queryParams['g-search-hash'];
     if (this.pageSize > 500) {
       this.pageSize = 500;
     }
@@ -398,37 +366,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
     });
-  }
-
-  setUpPrivateSearchTerm() {
-    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
-    if(this.wildCardText && this.wildCardText.length > 0) {
-      if(this.privateSearchTerm.length > 0) {
-        this.privateSearchTerm += ' AND "' + this.wildCardText + '"';
-      } else {
-        this.privateSearchTerm += '"' + this.wildCardText + '"';
-      }
-    }
-    if (this.privateSearchTerm) {
-      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
-      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
-    }
-  }
-
-  setUpPrivateSearchStrategy() {
-    // Setting privateSearchStrategy so we know what
-    // search strategy is used, for example so we can
-    // pass a value for use in cards.
-    // I think privateSearchType is used differently.
-    // I see searchType being used for 'similarity'
-    this.privateSearchStrategy = null;
-    if(this.privateStructureSearchTerm) {
-      this.privateSearchStrategy = 'structure';
-    } else if(this.privateSequenceSearchTerm) {
-      this.privateSearchStrategy = 'sequence';
-    } else if(this.privateBulkSearchQueryId) {
-      this.privateSearchStrategy = 'bulk';
-    }
   }
 
   ngAfterViewInit() {
@@ -486,7 +423,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // There should be a better way to do this.
       this.bulkSearchPanelOpen =
-      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
+      (this.searchState.searchTerm ===undefined || this.searchState.searchTerm ==='')
       && (this.displayFacets && this.displayFacets.length===0);
     }
   }
@@ -684,7 +621,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isLoading = true;
         this.loadingService.setLoading(true);
         const skip = this.pageIndex * this.pageSize;
-        const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
+        const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.searchState.searchTerm, this.totalSubstances)
           .subscribe(pagingResponse => {
  console.log(pagingResponse)
 });
@@ -693,13 +630,13 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   searchSubstances() {
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
-      this.privateSearchTerm,
-      this.privateStructureSearchTerm,
-      this.privateSequenceSearchTerm,
-      this.privateBulkSearchQueryId,
-      this.privateSearchCutoff,
-      this.privateSearchType,
-      this.privateSearchSeqType,
+      this.searchState.searchTerm,
+      this.searchState.structureSearchTerm,
+      this.searchState.sequenceSearchTerm,
+      this.searchState.bulkSearchQueryId,
+      this.searchState.searchCutoff,
+      this.searchState.searchType,
+      this.searchState.searchSeqType,
       this.pageSize,
       this.order,
       this.privateFacetParams,
@@ -711,7 +648,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.pageSize)
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.searchState.searchTerm, this.pageSize)
         .subscribe(pagingResponse => {
           this.substances = [];
           this.records = [];
@@ -803,18 +740,11 @@ sortMatchTypes(a:Array<string>) {
 }
 
 searchTermOkforBeginsWithSearch(): boolean {
-  return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
+  return this.searchState.searchTermOkforBeginsWithSearch();
 }
 
-
-
   restricSearh(searchTerm: string): void {
-    this.privateSearchTerm = searchTerm;
-    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
-    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
-    this.populateUrlQueryParameters();
- //   this.searchSubstances();
-    this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+    this.searchState.restricSearh(searchTerm);
   }
 
   export(url: string, extension: string) {
@@ -908,176 +838,40 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   editAdvancedSearch(): void {
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'advanced search term' :
-      `${this.privateSearchTerm}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
-    // ** BEGIN: Store in Local Storage for Advanced Search
-    // storage searchterm in local storage when going from Browse Substance to Advanced Search (NOT COMING FROM ADVANCED SEARCH)
-    if (!this.searchHashFromAdvanced) {
-      const advSearchTerm: Array<String> = [];
-      advSearchTerm[0] = this.privateSearchTerm;
-      const queryStatementHashes = [];
-      const queryStatement = {
-        condition: '',
-        queryableProperty: 'Manual Query Entry',
-        command: 'Manual Query Entry',
-        commandInputValues: advSearchTerm,
-        query: this.privateSearchTerm
-      };
-
-      // Store in cookies, Category tab (Substance, Application, etc)
-      const categoryHash = this.utilsService.hashCode('Substance');
-      localStorage.setItem(categoryHash.toString(), 'Substance');
-      queryStatementHashes.push(categoryHash);
-
-      const queryStatementString = JSON.stringify(queryStatement);
-      const hash = this.utilsService.hashCode(queryStatementString);
-
-      // Store in cookies, Each Query Statement is stored in separate hash
-      localStorage.setItem(hash.toString(), queryStatementString);
-
-      // Push Query Statements Hashes in Array
-      queryStatementHashes.push(hash);
-
-      // Store in cookies,  store in Query Hash - Query Statement Hashes Array
-      const queryStatementHashesString = JSON.stringify(queryStatementHashes);
-
-      localStorage.setItem(this.searchTermHash.toString(), queryStatementHashesString);
-     }
-    // ** END: Store in Local Storage for Advanced Search
-
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-        'g-search-hash': this.searchTermHash
-      }
-    };
-
-    navigationExtras.queryParams['structure'] = this.privateStructureSearchTerm || null;
-    navigationExtras.queryParams['type'] = this.privateSearchType || null;
-
-    if(this.privateSearchType === 'similarity') {
-      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
-    }
-    this.router.navigate(['/advanced-search'], navigationExtras);
+    this.searchState.editAdvancedSearch();
   }
 
   editStructureSearch(): void {
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'structure search term' :
-      `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
-
-    const navigationExtras: NavigationExtras = {
-      queryParams: {}
-    };
-
-    navigationExtras.queryParams['structure'] = this.privateStructureSearchTerm || null;
-    navigationExtras.queryParams['type'] = this.privateSearchType || null;
-
-    if (this.privateSearchType === 'similarity') {
-      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
-    }
-
-    this.router.navigate(['/structure-search'], navigationExtras);
+    this.searchState.editStructureSearch();
   }
 
   clearStructureSearch(): void {
-
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'structure search term' :
-      `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-structure-search', eventLabel);
-
-    this.privateStructureSearchTerm = '';
-    this.privateSearchType = '';
-    this.privateSearchCutoff = 0;
-    this.smiles = '';
+    this.searchState.clearStructureSearch();
     this.pageIndex = 0;
-
-    this.populateUrlQueryParameters();
-  //  this.searchSubstances();
   }
 
   editSequenceSearh(): void {
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'sequence search term' :
-      `${this.privateSequenceSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}-${this.privateSearchSeqType}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-sequence-search', eventLabel);
-
-    const navigationExtras: NavigationExtras = {
-      queryParams: {}
-    };
-
-    navigationExtras.queryParams['type'] = this.privateSearchType || null;
-    navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
-    navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType || null;
-    sessionStorage.setItem('gsrs_edit_sequence_' + this.sequenceID, JSON.stringify(this.privateSequenceSearchTerm));
-    navigationExtras.queryParams['source'] = 'edit';
-    navigationExtras.queryParams['source_id'] = this.sequenceID;
-
-    this.router.navigate(['/sequence-search'], navigationExtras);
+    this.searchState.editSequenceSearh();
   }
 
   clearSequenceSearch(): void {
-
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'sequence search term' :
-      `${this.privateSequenceSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}-${this.privateSearchSeqType}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-sequence-search', eventLabel);
-
-    this.privateSequenceSearchTerm = '';
-    this.privateSequenceSearchKey = '';
-    this.privateSearchType = '';
-    this.privateSearchCutoff = 0;
-    this.privateSearchSeqType = '';
+    this.searchState.clearSequenceSearch();
     this.pageIndex = 0;
-
-    this.populateUrlQueryParameters();
-  //  this.searchSubstances();
   }
 
   editBulkSearch(): void {
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'bulk search term' :
-      `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-bulk-search', eventLabel);
-
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-        bulkQID: this.privateBulkSearchQueryId,
-        searchOnIdentifiers: this.searchOnIdentifiers,
-        searchEntity: this.searchEntity
-      }
-    };
-    this.router.navigate(['/bulk-search'], navigationExtras);
+    this.searchState.editBulkSearch();
   }
 
   clearBulkSearch(): void {
-
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'bulk search term' :
-    `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
-
-    this.privateBulkSearchQueryId = null;
-    this.privateBulkSearchSummary = null;
-    this.searchEntity = '';
-    this.searchOnIdentifiers = null;
-    this.privateSearchType = '';
-    this.privateSearchCutoff = 0;
-    this.smiles = '';
+    this.searchState.clearBulkSearch();
     this.pageIndex = 0;
-
-    this.populateUrlQueryParameters();
-   // this.searchSubstances();
   }
 
   clearSearch(): void {
-
-    const eventLabel = this.environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
-
-    this.privateSearchTerm = '';
+    this.searchState.clearSearch();
     this.wildCardText = '';
-    this.searchTermHash = null;
     this.pageIndex = 0;
-
-    this.populateUrlQueryParameters();
-    this.substanceTextSearchService.setSearchValue('main-substance-search');
     this.searchSubstances();
   }
 
@@ -1088,12 +882,11 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
-    if (this.privateStructureSearchTerm != null && this.privateStructureSearchTerm !== '') {
+    if (this.searchState.structureSearchTerm != null && this.searchState.structureSearchTerm !== '') {
       this.clearStructureSearch();
-    } else if ((this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') ||
-      (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
+    } else if (this.searchState.hasSequenceSearch) {
       this.clearSequenceSearch();
-    } else if (this.privateBulkSearchQueryId != null && this.privateBulkSearchQueryId !== undefined) {
+    } else if (this.searchState.bulkSearchQueryId != null && this.searchState.bulkSearchQueryId !== undefined) {
         this.clearBulkSearch();
     } else {
       this.clearSearch();
@@ -1112,42 +905,50 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   get searchTerm(): string {
-    return this.privateSearchTerm;
+    return this.searchState.searchTerm;
   }
 
   get structureSearchTerm(): string {
-    return this.privateStructureSearchTerm;
+    return this.searchState.structureSearchTerm;
   }
 
   get sequenceSearchTerm(): string {
-    return this.privateSequenceSearchTerm;
+    return this.searchState.sequenceSearchTerm;
   }
 
   get bulkSearchSummary(): string {
-    return this.privateBulkSearchSummary;
+    return this.searchState.bulkSearchSummary;
   }
   get bulkSearchQueryId(): number {
-    return this.privateBulkSearchQueryId;
+    return this.searchState.bulkSearchQueryId;
   }
   get bulkSearchStatusKey(): string {
-    return this.privateBulkSearchStatusKey;
+    return this.searchState.bulkSearchStatusKey;
   }
 
   get searchType(): string {
-    return this.privateSearchType;
+    return this.searchState.searchType;
   }
 
   get searchStrategy(): string {
-    return this.privateSearchStrategy;
+    return this.searchState.searchStrategy;
   }
 
 
   get searchCutoff(): number {
-    return this.privateSearchCutoff;
+    return this.searchState.searchCutoff;
   }
 
   get searchSeqType(): string {
-    return this.privateSearchSeqType;
+    return this.searchState.searchSeqType;
+  }
+
+  get isSearchEditable(): boolean {
+    return this.searchState.isSearchEditable;
+  }
+
+  get smiles(): string {
+    return this.searchState.smiles;
   }
 
   private processResponsiveness = () => {
@@ -1225,7 +1026,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   getMol(id: string, filename: string): void {
     const subscription = this.structureService.downloadMolfile(id).subscribe(response => {
-      this.downloadFile(response, filename);
+      this.fileDownloadService.download(response, filename);
       subscription.unsubscribe();
     }, error => {
       subscription.unsubscribe();
@@ -1234,22 +1035,11 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   getFasta(id: string, filename: string): void {
     const subscription = this.substanceService.getFasta(id).subscribe(response => {
-      this.downloadFile(response, filename);
+      this.fileDownloadService.download(response, filename);
       subscription.unsubscribe();
     }, error => {
       subscription.unsubscribe();
     });
-  }
-
-  downloadFile(response: any, filename: string): void {
-    const dataType = response.type;
-    const binaryData = [];
-    binaryData.push(response);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
-    downloadLink.setAttribute('download', filename);
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
   }
 
   sortCodeSystems(codes: Array<string>): Array<string> {
@@ -1285,23 +1075,13 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   downloadJson(id: string) {
     this.substanceService.getSubstanceDetails(id).pipe(take(1)).subscribe(response => {
-      this.downloadFile(JSON.stringify(response), id + '.json');
+      this.fileDownloadService.download(JSON.stringify(response), id + '.json');
     });
 
   }
 
   copySmiles(val: string) {
-    const selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = val;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
+    this.clipboardService.copyText(val);
   }
 
 
