@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { HealthInfo } from '@gsrs-core/admin/admin-objects.model';
 import { AuthService } from '@gsrs-core/auth';
 import { AdminService } from '@gsrs-core/admin/admin.service';
@@ -9,7 +9,8 @@ import moment from 'moment';
     selector: 'app-cache-summary',
     templateUrl: './cache-summary.component.html',
     styleUrls: ['./cache-summary.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CacheSummaryComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['database', 'driver', 'product', 'latency', 'connected', 'max', 'active', 'usage'];
@@ -17,7 +18,8 @@ export class CacheSummaryComponent implements OnInit, OnDestroy {
   sub: Subscription;
   runtime = '';
   constructor(
-     private adminService: AdminService
+     private adminService: AdminService,
+     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -25,6 +27,7 @@ export class CacheSummaryComponent implements OnInit, OnDestroy {
           this.health = response;
 
           this.setStart();
+          this.cdr.markForCheck();
       });
   }
 

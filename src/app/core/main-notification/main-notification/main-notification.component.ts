@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MainNotificationService } from '../main-notification.service';
 import { AppNotification, NotificationType } from '../notification.model';
 import { Subscription } from 'rxjs';
@@ -7,7 +7,8 @@ import { Subscription } from 'rxjs';
     selector: 'app-main-notification',
     templateUrl: './main-notification.component.html',
     styleUrls: ['./main-notification.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainNotificationComponent implements OnInit, OnDestroy {
   @ViewChild('notification', { static: true }) appNotification: { nativeElement: HTMLElement };
@@ -17,7 +18,8 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private notificationService: MainNotificationService
+    private notificationService: MainNotificationService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -39,6 +41,7 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
   setNotification(notification: AppNotification): void {
     this.notifcationType = notification.type || NotificationType.default;
     this.notificationMessage = notification.message;
+    this.cdr.markForCheck();
     this.appNotification.nativeElement.classList.remove('hidden');
     this.appNotification.nativeElement.classList.add(NotificationType[this.notifcationType]);
     this.appNotification.nativeElement.classList.add('showing');

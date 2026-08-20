@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { LoadingService } from "../loading/loading.service";
 import { SubstanceSummary } from "../substance/substance.model";
@@ -18,6 +18,7 @@ import { MatDialog } from "@angular/material/dialog";
   templateUrl: "./name-resolver.component.html",
   styleUrls: ["./name-resolver.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NameResolverComponent implements OnInit {
   resolverControl = new FormControl();
@@ -38,6 +39,7 @@ export class NameResolverComponent implements OnInit {
     private structureService: StructureService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -88,10 +90,12 @@ export class NameResolverComponent implements OnInit {
         ) {
           this.errorMessage = "no results found for '" + name + "'";
         }
+        this.cdr.markForCheck();
       },
       error: () => {
         this.errorMessage = "there was a problem returning your query";
         this.loadingService.setLoading(false);
+        this.cdr.markForCheck();
       },
     });
   }

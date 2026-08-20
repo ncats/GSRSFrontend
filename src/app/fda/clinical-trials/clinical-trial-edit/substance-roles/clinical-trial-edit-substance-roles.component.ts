@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { SubstanceRole } from '../../clinical-trial/clinical-trial.model';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
 import lodashIntersection from 'lodash/intersection';
@@ -10,7 +10,8 @@ import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
     selector: 'app-clinical-trial-edit-substance-roles',
     templateUrl: './clinical-trial-edit-substance-roles.component.html',
     styleUrls: ['./clinical-trial-edit-substance-roles.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialEditSubstanceRolesComponent implements OnInit {
   @Input() tableRowIndex: number;
@@ -25,7 +26,8 @@ export class ClinicalTrialEditSubstanceRolesComponent implements OnInit {
   initialSelections: Array<string> = [];  
 
   constructor(
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -39,6 +41,7 @@ export class ClinicalTrialEditSubstanceRolesComponent implements OnInit {
         this.selectedRolesTitle = lodashMap(this.rolesList.filter(v => this.initialSelections.includes(v.value)), 'display').join(', ');
       }
       this.substanceRolesForm = new FormControl(this.initialSelections);
+      this.cdr.markForCheck();
     });
   }
   

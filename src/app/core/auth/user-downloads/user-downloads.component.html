@@ -9,15 +9,15 @@
   </div>
 }
 
-@if (downloads) {
+@if (downloads()) {
   <div class = "download-container" >
     <h2 class = "download-header">User Downloads</h2>
-    @for (download of downloads; track download) {
+    @for (download of downloads(); track download) {
       <mat-card class = "form-row">
         <app-download-monitor [id] = "download.id"></app-download-monitor>
       </mat-card>
     }
-    @if (!downloads.length) {
+    @if (!downloads().length) {
       <mat-card class ="no-jobs">
         <h3>No downloads found</h3>
       </mat-card>

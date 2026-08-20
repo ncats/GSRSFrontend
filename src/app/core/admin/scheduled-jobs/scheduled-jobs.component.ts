@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { ConfigService } from '@gsrs-core/config';
@@ -11,7 +11,8 @@ import lodashMap from 'lodash/map';
     selector: 'app-scheduled-jobs',
     templateUrl: './scheduled-jobs.component.html',
     styleUrls: ['./scheduled-jobs.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduledJobsComponent implements OnInit {
 
@@ -22,7 +23,8 @@ export class ScheduledJobsComponent implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   onServiceSelectionChange(event: MatSelectChange) {
@@ -30,15 +32,16 @@ export class ScheduledJobsComponent implements OnInit {
     this.reloadJobs();
   }
 
-  reloadJobs() { 
+  reloadJobs() {
     this.loading = true;
     this.adminService.fetchJobs(this.currentService).pipe(take(1)).subscribe( resp => {
       this.jobs = [];
       this.loading = false;
       this.jobs = resp.content;
+      this.cdr.markForCheck();
     });
   }
-  
+
   ngOnInit() {
     let activeAndHasEntitiesServices = lodashFilter(this.configService.configData?.services || [], {  'active': true, 'hasEntities': true });
     this.services = lodashMap(activeAndHasEntitiesServices, "name", ).sort();
@@ -47,6 +50,7 @@ export class ScheduledJobsComponent implements OnInit {
       this.adminService.fetchJobs(this.currentService).pipe(take(1)).subscribe( resp => {
         this.loading = false;
         this.jobs = resp.content;
+        this.cdr.markForCheck();
       });
     }, 1000);
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import moment from 'moment';
 import { take } from 'rxjs/operators';
@@ -26,7 +26,8 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   killed = false;
   private refreshTimeout?: ReturnType<typeof setTimeout>;
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -57,8 +58,10 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
             }, 1400);
           }
         }
+        this.cdr.markForCheck();
       }, error => {
         this.exists = false;
+        this.cdr.markForCheck();
       });
     }
   }
@@ -84,6 +87,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   deleteDownload() {
     this.authService.deleteDownload(this.download.removeUrl?.url || this.download.cancelUrl.url.replace('/@cancel', '')).pipe(take(1)).subscribe(response => {
       this.deleted = true;
+      this.cdr.markForCheck();
     });
   }
 

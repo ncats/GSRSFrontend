@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { SubstanceService } from "@gsrs-core/substance/substance.service";
 import { SubstanceSummary } from "@gsrs-core/substance/substance.model";
 import { ConfigService } from "@gsrs-core/config";
@@ -8,6 +8,7 @@ import { ConfigService } from "@gsrs-core/config";
   templateUrl: "./substance-search-selector.component.html",
   styleUrls: ["./substance-search-selector.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceSearchSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
@@ -30,6 +31,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   constructor(
     public substanceService: SubstanceService,
     public configService: ConfigService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -47,6 +49,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
       this.substanceService.getSubstanceSummary(uuid).subscribe(
         (response) => {
           this.selectedSubstance = response;
+          this.cdr.markForCheck();
         },
         (error) => {
           console.log(error);
@@ -56,6 +59,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
             this.selectedSubstance = { _name: "" };
           }
           this.errorMessage = "Not in database";
+          this.cdr.markForCheck();
         },
       );
     } else {
@@ -92,6 +96,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
           this.showMessage.emit("No substances found for " + this.searchValue);
         }
         this.loadingStructure = false;
+        this.cdr.markForCheck();
       });
   }
 

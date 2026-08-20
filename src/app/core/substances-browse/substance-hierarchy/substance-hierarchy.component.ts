@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {SubstanceName, SubstanceRelated, SubstanceService, SubstanceSummary} from '@gsrs-core/substance';
@@ -9,7 +9,8 @@ import {AuthService} from '@gsrs-core/auth';
     selector: 'app-substance-hierarchy',
     templateUrl: './substance-hierarchy.component.html',
     styleUrls: ['./substance-hierarchy.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceHierarchyComponent implements OnInit {
   @Input() uuid: string;
@@ -24,7 +25,8 @@ export class SubstanceHierarchyComponent implements OnInit {
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
   constructor(
     private substanceService: SubstanceService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -71,6 +73,7 @@ export class SubstanceHierarchyComponent implements OnInit {
     const temp2 = this.list_to_tree(orig);
     this.dataSource.data = temp2;
     this.activeNode = this.dataSource.data[0];
+    this.cdr.markForCheck();
   }
 
     formatHierarchy(data: any): HierarchyNode {
