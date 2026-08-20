@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial } from '../clinical-trial/clinical-trial.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -13,7 +13,8 @@ import { FormsModule } from '@angular/forms';
     selector: 'app-clinical-add',
     templateUrl: './clinical-trial-add.component.html',
     styleUrls: ['./clinical-trial-add.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialAddComponent implements OnInit {
   public clinicalTrials: Array<ClinicalTrial>;

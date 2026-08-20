@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
   Input,
@@ -28,6 +29,7 @@ import { AuthService } from "@gsrs-core/auth";
   templateUrl: "./name-form.component.html",
   styleUrls: ["./name-form.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NameFormComponent implements OnInit, OnDestroy {
   private privateName: SubstanceName;
