@@ -2,8 +2,8 @@
 
 <div mat-dialog-content style = "height: 100%;overflow: unset;">
 
-  @if (molfile) {
-    <textarea [ngModel] = "molfile" style = "height: 100%"></textarea>
+  @if (molfile()) {
+    <textarea [ngModel] = "molfile()" style = "height: 100%"></textarea>
   }
 
 

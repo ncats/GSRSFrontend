@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
@@ -10,7 +10,8 @@ import { concatMap } from "rxjs"
     selector: 'app-session-expiration-dialog',
     templateUrl: './session-expiration-dialog.component.html',
     styleUrls: ['./session-expiration-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionExpirationDialogComponent implements OnInit, OnDestroy {
   sessionExpirationWarning: SessionExpirationWarning = null;
@@ -27,6 +28,7 @@ export class SessionExpirationDialogComponent implements OnInit, OnDestroy {
     private router: Router,
     private http: HttpClient,
     private authService: AuthService,
+    private cdr: ChangeDetectorRef,
     public configService: ConfigService
   ) {
     this.sessionExpirationWarning = data.sessionExpirationWarning;
@@ -62,6 +64,7 @@ export class SessionExpirationDialogComponent implements OnInit, OnDestroy {
       this.dialogTitle = "Session Ended"
       this.dialogMessage = "Your session has expired, please login again."
     }
+    this.cdr.markForCheck();
   }
 
   closeDialog() {

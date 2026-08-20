@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceReference } from '../../../substance/substance.model';
 import { ReuseReferencesDialogData } from './reuse-references-dialog-data.model';
@@ -10,7 +10,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
     selector: 'app-reuse-references-dialog',
     templateUrl: './reuse-references-dialog.component.html',
     styleUrls: ['./reuse-references-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReuseReferencesDialogComponent implements OnInit {
   domainReferenceUuids: Array<string> = [];
@@ -23,7 +24,8 @@ export class ReuseReferencesDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ReuseReferencesDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: ReuseReferencesDialogData,
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) {
     this.domainReferenceUuids = data.domainRefereceUuids.slice();
     this.substanceReferences = data.substanceReferences;
@@ -52,6 +54,7 @@ export class ReuseReferencesDialogComponent implements OnInit {
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
       this.documentTypes = response['DOCUMENT_TYPE'].dictionary;
+      this.cdr.markForCheck();
     });
   }
 

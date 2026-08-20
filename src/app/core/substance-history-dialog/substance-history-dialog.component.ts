@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { LoadingService } from '@gsrs-core/loading';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
@@ -10,7 +10,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
     selector: 'app-substance-history-dialog',
     templateUrl: './substance-history-dialog.component.html',
     styleUrls: ['./substance-history-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceHistoryDialogComponent implements OnInit {
   public substance: SubstanceDetail;
@@ -25,6 +26,7 @@ export class SubstanceHistoryDialogComponent implements OnInit {
     private loadingService: LoadingService,
     private substanceService: SubstanceService,
     public dialogRef: MatDialogRef<SubstanceHistoryDialogComponent>,
+    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any
 
   ) { }
@@ -58,18 +60,21 @@ export class SubstanceHistoryDialogComponent implements OnInit {
           this.substance = response;
           this.status = 'complete';
           this.loadingService.setLoading(false);
-        }, 
+          this.cdr.markForCheck();
+        },
           error: error => {
             this.status = 'failed';
             this.loadingService.setLoading(false);
             this.handleError(error);
+            this.cdr.markForCheck();
         }
       });
-    }, 
+    },
       error: error => {
         this.status = 'failed';
         this.loadingService.setLoading(false);
         this.handleError(error);
+        this.cdr.markForCheck();
       }
     });
   }

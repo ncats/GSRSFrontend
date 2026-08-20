@@ -1,31 +1,23 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StructureService } from '@gsrs-core/structure';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-show-molfile-dialog',
     templateUrl: './show-molfile-dialog.component.html',
     styleUrls: ['./show-molfile-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ShowMolfileDialogComponent implements OnInit {
-molfile: string;
-  constructor(
-    public dialogRef: MatDialogRef<SubstanceHistoryDialogComponent>,
-    private structureService: StructureService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+export class ShowMolfileDialogComponent {
 
-  ) {
-  }
+  private readonly structureService = inject(StructureService);
+  private readonly data = inject(MAT_DIALOG_DATA);
 
-  ngOnInit() {
-
-    this.structureService.getMolfile(this.data.uuid).subscribe( response => {
-      this.molfile = response;
-
-
-  });
+  readonly molfile = toSignal(
+    this.structureService.getMolfile(this.data.uuid),
+    { initialValue: '' }
+  );
 }
 
-}

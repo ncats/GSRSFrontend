@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 
@@ -6,7 +6,8 @@ import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.se
     selector: 'app-list-create-dialog',
     templateUrl: './list-create-dialog.component.html',
     styleUrls: ['./list-create-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListCreateDialogComponent implements OnInit {
   message: string;
@@ -14,7 +15,8 @@ export class ListCreateDialogComponent implements OnInit {
   listName: string;
   record: any;
   constructor( @Inject(MAT_DIALOG_DATA) public data: any,
-  private bulkSearchService: BulkSearchService
+  private bulkSearchService: BulkSearchService,
+  private cdr: ChangeDetectorRef
 ) {
   this.message = data.message;
   if (data.newList) {
@@ -33,11 +35,13 @@ export class ListCreateDialogComponent implements OnInit {
         this.bulkSearchService.getBulkSearchLists().subscribe(response2 => {
           this.bulkSearchService.listEmitter.next(response2.lists);
         });
+        this.cdr.markForCheck();
     }, error => {
       console.log(error);
       if(error.error) {
         this.message = 'Error:  ' + error.error;
       }
+      this.cdr.markForCheck();
     });
   }
 

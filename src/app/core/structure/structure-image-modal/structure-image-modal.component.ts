@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { UtilsService } from '../../utils/utils.service';
 import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 import { SafeUrl } from '@angular/platform-browser';
@@ -10,7 +10,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-structure-image-modal',
     templateUrl: './structure-image-modal.component.html',
     styleUrls: ['./structure-image-modal.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureImageModalComponent implements OnInit {
   structure: string;
@@ -33,6 +34,7 @@ export class StructureImageModalComponent implements OnInit {
     private structureService: StructureService,
     public dialogRef: MatDialogRef<StructureImageModalComponent>,
     private router: Router,
+    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
@@ -51,9 +53,11 @@ export class StructureImageModalComponent implements OnInit {
         } else {
           this.inchiNote = false;
         }
+        this.cdr.markForCheck();
       });
       this.structureService.getInchi(this.data.uuid).subscribe(inchiKey=> {
         this.inchiKey = inchiKey;
+        this.cdr.markForCheck();
       });
     }
     if (this.data && this.data.names && this.data.names.length) {
