@@ -39,8 +39,8 @@ export class SessionExpirationDialogComponent implements OnInit, OnDestroy {
     // If SessionExpirationWarning is not found in configData, the intervals are never set
     // and this component is inert
     this.updateDialogInterval = setInterval(() => {
- this.updateDialog(); 
-});
+      this.updateDialog();
+    }, 1000);
   }
 
   ngOnDestroy() {
