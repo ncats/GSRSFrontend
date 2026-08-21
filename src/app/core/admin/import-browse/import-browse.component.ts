@@ -43,20 +43,20 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AuthService } from '@gsrs-core/auth';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
 import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import {Environment} from "@environment/environment.model";
 import { ImportSearchStateService } from '@gsrs-core/admin/import-browse/import-search-state.service';
 import { FileDownloadService } from '@gsrs-core/utils/file-download.service';
 import { ClipboardService } from '@gsrs-core/utils/clipboard.service';
+import { ImportStagedRecordsService } from '@gsrs-core/admin/import-browse/import-staged-records.service';
 
 @Component({
     selector: 'app-import-browse',
     templateUrl: './import-browse.component.html',
     styleUrls: ['./import-browse.component.scss'],
     standalone: false,
-    providers: [ImportSearchStateService]
+    providers: [ImportSearchStateService, ImportStagedRecordsService]
 })
 export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -156,6 +156,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     public searchState: ImportSearchStateService,
     private fileDownloadService: FileDownloadService,
     private clipboardService: ClipboardService,
+    private stagedRecordsService: ImportStagedRecordsService,
 
   ) {
   }
@@ -541,79 +542,11 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getRecord(id: string): Observable<any> {
-    let subject = new Subject<string>();
-    let ids = [];
-    let sources = [];
-    this.adminService.GetStagedRecord(id).subscribe(response => {
-      this.idMapping[response.uuid] = id;
-      response._matches.matches.forEach(match => {
-        match.matchingRecords.forEach(matchRec => {
-          if (matchRec.sourceName == 'GSRS' || matchRec.sourceName == 'Staging Area') {
-            if (!ids[matchRec.recordId.idString]) {
-              ids[matchRec.recordId.idString] = [matchRec.matchedKey];
-              sources[matchRec.recordId.idString] = matchRec.sourceName;
-            } else {
-              ids[matchRec.recordId.idString].push(matchRec.matchedKey);
-              sources[matchRec.recordId.idString] = matchRec.sourceName;
-
-            }
-          }
-
-        });
-      });
-      let items = [];
-      Object.keys(ids).forEach(key => {
-        let temp = {'ID':key,
-                    'records':ids[key],
-                     'source':sources[key]
-                  };
-                    items.push(temp);
-      });
-      response.matchedRecords = items;
-      subject.next(response);
-
-    }, error => {
-      this.idMapping[this.demoResp.uuid] = id;
-      let response = JSON.parse(JSON.stringify(this.demoResp));
-      response._matches.matches.forEach(match => {
-        match.matchingRecords.forEach(matchRec => {
-          if (!ids[matchRec.recordId.idString]) {
-            ids[matchRec.recordId.idString] = [matchRec.matchedKey];
-          } else {
-            ids[matchRec.recordId.idString].push(matchRec.matchedKey);
-
-          }
-        });
-      });
-      let items = [];
-      Object.keys(ids).forEach(key => {
-        let temp = {'ID':key,
-                    'records':ids[key]};
-                    items.push(temp);
-      });
-
-      response.matchedRecords = items;
-      subject.next(response);
-
-    });
-    return subject.asObservable();
+    return this.stagedRecordsService.getRecord(id, this.idMapping, this.demoResp);
   }
 
   organizeMatches() {
-    this.matches = [];
-    this.records.forEach(record => {
-      let ids = [];
-      record._matches.matches.forEach(match => {
-        match.matchingRecords.forEach(matchRec => {
-          if (!ids[matchRec]) {
-            ids[matchRec] = [matchRec.matchedKey];
-          } else {
-            ids[matchRec].push(matchRec.matchedKey);
-          }
-        });
-      });
-      record.matchedRecords = ids;
-    });
+    this.matches = this.stagedRecordsService.organizeMatches(this.records);
   }
 
   searchforIDs() {
