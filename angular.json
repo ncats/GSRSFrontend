@@ -251,8 +251,7 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "gsrs-client:build",
-            "prebundle": false
+            "buildTarget": "gsrs-client:build"
           },
           "configurations": {
             "fda.dev": {
