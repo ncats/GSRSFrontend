@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Editor } from '@gsrs-core/structure-editor';
+import type { Editor } from '@gsrs-core/structure-editor';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';

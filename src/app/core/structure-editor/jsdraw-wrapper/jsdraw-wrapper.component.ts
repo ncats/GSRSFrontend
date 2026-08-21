@@ -10,7 +10,7 @@ import {
   HostListener,
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
-import { JSDraw } from "@gsrs-core/structure-editor";
+import type { JSDraw } from "@gsrs-core/structure-editor";
 
 @Component({
   selector: "ncats-jsdraw-wrapper",
