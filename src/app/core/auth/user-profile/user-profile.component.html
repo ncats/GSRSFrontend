@@ -1,10 +1,10 @@
 <div mat-dialog-title>
   <h2 >User Profile</h2>
   <div class = "username">
-    {{ user.user.username}}
+    {{ authService.authState().user.username}}
   </div>
 </div>
-@if (user) {
+@if (authService.authState(); as user) {
   <mat-dialog-content >
     <div class = "user-container">
       <div class = "left-side">
