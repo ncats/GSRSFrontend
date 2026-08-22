@@ -66,24 +66,22 @@
   </a>
 
   <div>
-    @if (!auth) {
+    @if (authService.authState(); as auth) {
+      <a class="pfda-user-button" [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip="user menu">
+        <div class="pfda-toolbar-button">
+          <mat-icon class="pfda-toolbar-button-icon" svgIcon="account_circle"></mat-icon>
+          @if (auth.identifier) {
+            <div class="pfda-toolbar-button-title">{{auth.identifier}}</div>
+          }
+        </div>
+      </a>
+    } @else {
       <span class="pfda-user-button" (click)="login()">
         <div class="pfda-toolbar-button">
           <mat-icon class="pfda-toolbar-button-icon" svgIcon="account_circle"></mat-icon>
           <div class="pfda-toolbar-button-title">Login</div>
         </div>
       </span>
-    }
-
-    @if (auth) {
-      <a class="pfda-user-button" [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip="user menu">
-        <div class="pfda-toolbar-button">
-          <mat-icon class="pfda-toolbar-button-icon" svgIcon="account_circle"></mat-icon>
-          @if (auth && auth.identifier) {
-            <div class="pfda-toolbar-button-title">{{auth.identifier}}</div>
-          }
-        </div>
-      </a>
     }
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
       <a mat-menu-item [href]="pfdaBaseUrl + 'profile'">

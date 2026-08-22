@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -46,8 +46,16 @@ describe('PfdaToolbarComponent', () => {
             setSearchComponentValueEvent: vi.fn().mockReturnValue(of(''))
           }
         },
-        // constructor subscribes to authService.getAuth() directly.
-        { provide: AuthService, useValue: { getAuth: vi.fn().mockReturnValue(of(null)) } }
+        // template reads authService.authState() directly.
+        {
+          provide: AuthService,
+          useValue: {
+            authState: signal(null),
+            pfdaLogin: vi.fn().mockReturnValue(of(true)),
+            getAuth: vi.fn().mockReturnValue(of(null)),
+            logout: vi.fn()
+          }
+        }
       ]
     })
     .compileComponents();
