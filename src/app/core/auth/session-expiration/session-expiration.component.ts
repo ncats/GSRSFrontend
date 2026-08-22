@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
 import { AuthService } from '../auth.service';
@@ -9,7 +9,8 @@ import { UtilsService } from "@gsrs-core/utils";
 @Component({
     selector: 'app-session-expiration',
     templateUrl: './session-expiration.component.html',
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionExpirationComponent implements OnInit {
   sessionExpirationWarning: SessionExpirationWarning = null;
