@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
   OnDestroy,
@@ -22,7 +23,8 @@ import { BulkSearch } from './bulk-search.model';
     selector: 'app-bulk-query',
     templateUrl: './bulk-query.component.html',
     styleUrls: ['./bulk-query.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
