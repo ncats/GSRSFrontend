@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 import { GeneralService } from '../../service/general.service';
@@ -15,7 +15,8 @@ import { Subscription } from 'rxjs';
   selector: 'app-show-application-toggle',
   templateUrl: './show-application-toggle.component.html',
   styleUrls: ['./show-application-toggle.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];
@@ -40,7 +41,8 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     private router: Router,
     public activatedRoute: ActivatedRoute,
     public loadingService: LoadingService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) { }
 
   // Getter, not a field, so template reads always reflect the current privilege signal.
   get canUpdate(): boolean {
@@ -52,6 +54,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     // Awaited check (not canUpdate) since this gates a one-time side effect with no re-trigger.
     if (await this.authService.hasSpecificPrivilege('Edit')) {
       this.isDisplayAppToMatchConfig();
+      this.cdr.markForCheck();
     }
 
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
@@ -175,6 +178,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
           }
         });
       }
+      this.cdr.markForCheck();
     });
   }
 
