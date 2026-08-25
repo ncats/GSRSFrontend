@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 
@@ -18,14 +18,16 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-privacy-statement',
     templateUrl: './privacy-statement.component.html',
     styleUrls: ['./privacy-statement.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PrivacyStatementComponent implements OnInit {
   htmlText;
   constructor(
     private http:HttpClient,
     private sanitizer:DomSanitizer,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private cdr: ChangeDetectorRef
   ){ }
   ngOnInit(){
     const privacyStatement = this.configService.configData.privacyStatement;
@@ -36,8 +38,10 @@ export class PrivacyStatementComponent implements OnInit {
       // if used overwrite this file with a simple html version of your privacy statement.
       this.http.get('assets/html/privacy-statement.html',{responseType:'text'}).subscribe(result=>{
             this.htmlText = this.sanitizer.bypassSecurityTrustHtml(result);
+            this.cdr.markForCheck();
       }, error => {
           this.htmlText = "Error fetching page content";
+          this.cdr.markForCheck();
       });
     }
   }

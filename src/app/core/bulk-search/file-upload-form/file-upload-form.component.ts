@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
@@ -11,7 +11,8 @@ import { LoadingService } from '@gsrs-core/loading';
     selector: 'app-file-upload-form',
     templateUrl: './file-upload-form.component.html',
     styleUrls: ['./file-upload-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadFormComponent implements OnInit {
   uploadForm: FormGroup;
@@ -25,8 +26,8 @@ export class FileUploadFormComponent implements OnInit {
     public adminService: AdminService,
     private router: Router,
     private route: ActivatedRoute,
-    private loadingService: LoadingService
-
+    private loadingService: LoadingService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -50,6 +51,7 @@ export class FileUploadFormComponent implements OnInit {
    }, error => {
     this.message = 'File could not be uploaded';
     this.loadingService.setLoading(false);
+    this.cdr.markForCheck();
    });
 }
 

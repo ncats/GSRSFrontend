@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -11,7 +11,8 @@ import { LoadingService } from '@gsrs-core/loading';
     selector: 'app-all-files',
     templateUrl: './all-files.component.html',
     styleUrls: ['./all-files.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllFilesComponent implements OnInit {
 
@@ -27,9 +28,11 @@ export class AllFilesComponent implements OnInit {
           const temp = this.listToTree(result);
          this.dataSource.data = temp;
          this.loadingService.setLoading(false);
+         this.cdr.markForCheck();
 
     }, () => {
       this.loadingService.setLoading(false);
+      this.cdr.markForCheck();
     });
 
   }
@@ -84,7 +87,8 @@ export class AllFilesComponent implements OnInit {
     logFiles: Array< DirectoryFile >;
   constructor(
     private adminService: AdminService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private cdr: ChangeDetectorRef
   ) {
   }
   hasChild = (_: number, node: FileTreeNode) => node.expandable;

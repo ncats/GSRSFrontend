@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { QueryableSubstanceDictionary } from './queryable-substance-dictionary.model';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
@@ -12,7 +12,8 @@ import { Title } from '@angular/platform-browser';
     selector: 'app-guided-search',
     templateUrl: './guided-search.component.html',
     styleUrls: ['./guided-search.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuidedSearchComponent implements OnInit {
   queryableSubstanceDict: QueryableSubstanceDictionary;
@@ -27,7 +28,8 @@ export class GuidedSearchComponent implements OnInit {
     private configService: ConfigService,
     private utilitiesService: UtilsService,
     private activatedRoute: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -70,6 +72,7 @@ export class GuidedSearchComponent implements OnInit {
         } else {
           this.queryStatements.push({});
         }
+        this.cdr.markForCheck();
     });
   }
 
@@ -80,6 +83,7 @@ export class GuidedSearchComponent implements OnInit {
       });
       this.query = '';
       this.query = this.queryStatements.map(statement => statement.query).join(' ').trim();
+      this.cdr.markForCheck();
     });
   }
 
