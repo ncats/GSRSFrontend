@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, Input, AfterViewInit, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild, Input, AfterViewInit, OnChanges } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { RecordOverview } from '@gsrs-core/bulk-search/bulk-search.model';
 import { AuthService } from '@gsrs-core/auth';
@@ -16,7 +17,8 @@ import { MatSort, Sort} from '@angular/material/sort';
     selector: 'app-bulk-search-results-summary[context][key]',
     templateUrl: './bulk-search-results-summary.component.html',
     styleUrls: ['./bulk-search-results-summary.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit, OnChanges {
@@ -61,6 +63,7 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   private displayCodeHeader: string;
   private defaultDisplayCodeHeader = 'Code';
   private defaultIdHeader = 'Id';
+  private destroyRef = inject(DestroyRef);
   
   
 
@@ -134,7 +137,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     private bulkSearchService: BulkSearchService,
     private configService: ConfigService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private cdr: ChangeDetectorRef
   ) {
     // const data:any = JSON.parse(``);
     // this._summary = data.summary;
@@ -159,6 +163,7 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       } else {
         this.showDeprecated = false;
       }
+      this.cdr.markForCheck();
     });
 
     this.qPageSize = 10;
@@ -228,18 +233,17 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
         switchMap(() =>this.bulkSearchService.getBulkSearchStatus(this.key, this.searchStatusUrl)),
         takeWhile(( response ) => {
           if (response?.finished === true) {
+            // Side effect lives here, not in the subscribe's complete callback, so it only
+            // fires on genuine completion — not when takeUntilDestroyed also ends the stream.
+            this.isPolling = false;
+            this.cdr.markForCheck();
+            this.getBulkSearchStatusResults();
             return false;
           }
           return true;
-        })
-      ).subscribe(
-        _ => {},
-        _ => {},
-        () => {
-          this.isPolling = false;
-          this.getBulkSearchStatusResults();
-        }
-      );
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe();
   }
 
   sortData(sort: Sort) {
@@ -306,6 +310,7 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
           this.table.renderRows();
         }
       }
+      this.cdr.markForCheck();
     }, error => {
         console.log('Error getting bulk search results in summary component.');
     }, () => {
