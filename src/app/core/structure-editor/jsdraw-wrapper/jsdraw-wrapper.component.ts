@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   AfterViewInit,
   Output,
@@ -17,6 +18,7 @@ import type { JSDraw } from "@gsrs-core/structure-editor";
   template: `<div [id]="randomId" dataformat="molfile"></div>`,
   styles: [":host { display: block; } :host([hidden]) { display: none; }"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsdrawWrapperComponent implements AfterViewInit {
   randomId: string;
