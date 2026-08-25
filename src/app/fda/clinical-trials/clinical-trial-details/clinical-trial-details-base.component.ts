@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -32,7 +32,8 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    protected cdr: ChangeDetectorRef
   ) { }
 
   // Getter, not a field, so it always reflects the current privilege signal.
@@ -55,6 +56,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     this.clinicalTrialService.getClinicalTrialDetails(this.trialNumber, this.src).subscribe(response => {
       this.clinicalTrial = response;
    //   this.loadingService.setLoading(false);
+      this.cdr.markForCheck();
     }, error => {
       this.handleSubstanceRetrivalError();
     });

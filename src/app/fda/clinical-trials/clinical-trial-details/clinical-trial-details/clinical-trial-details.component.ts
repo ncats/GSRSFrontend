@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ClinicalTrialService } from '../../clinical-trial/clinical-trial.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -14,7 +14,8 @@ import { take } from 'rxjs/operators';
     selector: 'app-clinical-trial-details',
     templateUrl: './clinical-trial-details.component.html',
     styleUrls: ['./clinical-trial-details.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseComponent implements OnInit {
@@ -28,10 +29,11 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
     public configService: ConfigService,
-    authService: AuthService
+    authService: AuthService,
+    cdr: ChangeDetectorRef
   ) {
  super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
-    router, gaService, utilsService, authService);
+    router, gaService, utilsService, authService, cdr);
   }
 
   ngOnInit() {
