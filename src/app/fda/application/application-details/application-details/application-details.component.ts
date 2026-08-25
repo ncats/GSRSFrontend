@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -15,7 +15,8 @@ import { GeneralService } from '../../../service/general.service';
     selector: 'app-application-details',
     templateUrl: './application-details.component.html',
     styleUrls: ['./application-details.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent implements OnInit {
@@ -30,9 +31,10 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
     public authService: AuthService,
-    titleService: Title
+    titleService: Title,
+    cdr: ChangeDetectorRef
   ) {
-    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService);
+    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService, cdr);
   }
 
   // Getter, not a field, so it always reflects the current privilege signal.
