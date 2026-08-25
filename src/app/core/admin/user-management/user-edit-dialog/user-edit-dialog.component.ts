@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AdminService } from '@gsrs-core/admin/admin.service';
@@ -14,7 +14,8 @@ import { ConfigService } from "../../../config/config.service";
     selector: 'app-user-edit-dialog',
     templateUrl: './user-edit-dialog.component.html',
     styleUrls: ['./user-edit-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserEditDialogComponent implements OnInit {
   userLoggedIn: any;
@@ -53,6 +54,7 @@ export class UserEditDialogComponent implements OnInit {
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private configService: ConfigService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.user = data.user;
     this.userID = data.userID;
@@ -60,9 +62,9 @@ export class UserEditDialogComponent implements OnInit {
     this.userLoggedIn = this.authService.getUser();
     }
 
-    async ngOnInit() {
+    ngOnInit() {
       if (this.user) {
-        if(!await this.authService.hasSpecificPrivilege('Manage Users')) {
+        if(!this.authService.hasPrivilege('Manage Users')) {
           alert("Sorry! Unable to verify that you have the privileges to access this page");
           this.router.navigateByUrl('/home');
        }
@@ -83,6 +85,7 @@ export class UserEditDialogComponent implements OnInit {
               });
               this.groups.push(temp);
             });
+            this.cdr.markForCheck();
           });
       } else if (this.userID) {
           this.adminService.getUserByID(this.userID).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe( resp => {
@@ -94,6 +97,7 @@ export class UserEditDialogComponent implements OnInit {
             this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
             
             this.setupAssignableRoles();
+            this.cdr.markForCheck();
 
             this.adminService.getGroups().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe( response => {
               this.groups = [];
@@ -106,6 +110,7 @@ export class UserEditDialogComponent implements OnInit {
                 });
                 this.groups.push(temp);
               });
+              this.cdr.markForCheck();
             });
           });
       } else {
@@ -121,6 +126,7 @@ export class UserEditDialogComponent implements OnInit {
             let newRole = {roleName: r, assigned: false };
             this.assignableRoles.push(newRole);
            })
+          this.cdr.markForCheck();
         });
 
         this.adminService.getGroups().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe( response => {
@@ -129,6 +135,7 @@ export class UserEditDialogComponent implements OnInit {
             const temp = {name: grp, hasGroup: false};
             this.groups.push(temp);
           });
+          this.cdr.markForCheck();
         });
       }
     }
@@ -231,6 +238,7 @@ export class UserEditDialogComponent implements OnInit {
         this.isError = true;
         this.message = 'Unable to edit user';
       }
+      this.cdr.markForCheck();
     }, error => {
       this.isError = true;
       this.message = 'Unable to edit user';
@@ -238,6 +246,7 @@ export class UserEditDialogComponent implements OnInit {
         this.isError = true;
         this.message = error.error.message || error.message || 'Unable to edit user';
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -279,6 +288,7 @@ export class UserEditDialogComponent implements OnInit {
         if (response && response.user) {
           this.successfulChange(response);
         }
+        this.cdr.markForCheck();
       }, error => {
         if (error.error) {
           this.isError = true;
@@ -295,9 +305,10 @@ export class UserEditDialogComponent implements OnInit {
           } else {
             this.message += '. This user is NOT active.';
           }
-
+          this.cdr.markForCheck();
         }, err => {
         });
+        this.cdr.markForCheck();
       });
     } else {
       this.isError = true;
@@ -330,6 +341,7 @@ export class UserEditDialogComponent implements OnInit {
         this.isError = false;
           this.changePassword = !this.changePassword;
           this.message = 'Password updated successfully';
+          this.cdr.markForCheck();
         }, error => {
           if (error.error) {
             this.isError = true;
@@ -341,12 +353,14 @@ export class UserEditDialogComponent implements OnInit {
             this.changePassword = !this.changePassword;
             this.message = 'Error:unknown server error';
           }
+          this.cdr.markForCheck();
         });
       } else {
         this.adminService.changePassword( this.newPassword, this.user.id).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           this.changePassword = !this.changePassword;
           this.isError = false;
           this.message = 'Password updated successfully';
+          this.cdr.markForCheck();
         }, error => {
           if (error.error) {
             this.isError = true;
@@ -358,6 +372,7 @@ export class UserEditDialogComponent implements OnInit {
             this.changePassword = !this.changePassword;
             this.message = 'Error: unknown server error';
           }
+          this.cdr.markForCheck();
         });
       }
     }
@@ -401,6 +416,7 @@ export class UserEditDialogComponent implements OnInit {
         return this.getRoleNumericValue(role2.roleName) - this.getRoleNumericValue(role1.roleName); 
       });
       this.selectedRole = this.getHighestPriorityRole();
+      this.cdr.markForCheck();
      });
    }
 
