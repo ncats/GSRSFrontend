@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,7 +30,8 @@ import { adverseEventPtSearchSortValues } from './adverse-events-pt-search-sort-
     selector: 'app-adverse-events-pt-browse',
     templateUrl: './adverse-events-pt-browse.component.html',
     styleUrls: ['./adverse-events-pt-browse.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -109,7 +110,8 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     private facetManagerService: FacetsManagerService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -269,6 +271,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
 
         // Loop through the AE PT search results and get the FAERS name from the database
         this.getFaersDashboardRecordByName();
+        this.cdr.markForCheck();
 
       }, error => {
         console.log('error');
@@ -515,6 +518,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
           if (results) {
             if (results.name) {
               element._faersDashboardUrl = this.FAERSDashboardAdverseEventUrl + results.name + this.FAERSDashboardReactionTerm;
+              this.cdr.markForCheck();
             }
           }
         });
