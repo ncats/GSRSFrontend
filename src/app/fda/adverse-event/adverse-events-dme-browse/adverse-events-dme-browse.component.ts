@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -31,7 +31,8 @@ import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sor
     selector: 'app-adverse-events-dme-browse',
     templateUrl: './adverse-events-dme-browse.component.html',
     styleUrls: ['./adverse-events-dme-browse.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -97,7 +98,8 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     private facetManagerService: FacetsManagerService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -222,6 +224,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
 
         //  this.getSubstanceBySubstanceKey();
         // this.applicationService.getClinicalTrialApplication(this.applications);
+        this.cdr.markForCheck();
       }, error => {
         console.log('error');
         const notification: AppNotification = {
