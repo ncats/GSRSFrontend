@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductService } from '../../service/product.service';
@@ -21,7 +21,8 @@ import { ProductElist } from '../../model/productelist/productelist.model';
     selector: 'app-product-elist-details',
     templateUrl: './product-elist-details.component.html',
     styleUrls: ['./product-elist-details.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ProductElistDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -44,10 +45,11 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
     titleService: Title,
     public overlayContainerService: OverlayContainer,
     dialog: MatDialog,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer,
+    cdr: ChangeDetectorRef
   ) {
     super(producService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
+      router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer, cdr);
   }
 
   async ngOnInit() {
@@ -69,8 +71,10 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
         this.getSubstanceByApprovalID();
         this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=' + this.product.productNDC;
       }
+      this.cdr.markForCheck();
     }, error => {
       this.message = 'No Product record found';
+      this.cdr.markForCheck();
     });
 
     this.loadingService.setLoading(false);
@@ -93,6 +97,7 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
                 if (response) {
                   elementActive._substanceUuid = response.uuid;
                 }
+                this.cdr.markForCheck();
               });
               this.subscriptions.push(subActiveSubscription);
             }
@@ -113,6 +118,7 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
                 if (response) {
                   elementInactive._substanceUuid = response.uuid;
                 }
+                this.cdr.markForCheck();
               });
               this.subscriptions.push(subInactiveSubscription);
             }

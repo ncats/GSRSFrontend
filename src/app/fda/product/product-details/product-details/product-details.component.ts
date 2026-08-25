@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -20,7 +20,8 @@ import { ProductService } from '../../service/product.service';
     selector: 'app-product-details',
     templateUrl: './product-details.component.html',
     styleUrls: ['./product-details.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit {
 
@@ -40,10 +41,11 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
     titleService: Title,
     overlayContainerService: OverlayContainer,
     dialog: MatDialog,
-    public sanitizer: DomSanitizer 
+    public sanitizer: DomSanitizer,
+    cdr: ChangeDetectorRef
   ) {
     super(productService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
+      router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer, cdr);
   }
 
   // Getter, not a field, so it always reflects the current privilege signal.

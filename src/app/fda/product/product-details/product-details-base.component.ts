@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -75,7 +75,8 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     public titleService: Title,
     public overlayContainerService: OverlayContainer,
     public dialog: MatDialog,
-    public sanitizer: DomSanitizer) { }
+    public sanitizer: DomSanitizer,
+    protected cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -131,6 +132,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           });
         }
       });
+      this.cdr.markForCheck();
     });  // getDomainVocabulary
   }
 
@@ -166,9 +168,11 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           this.sortProductCodes();
         }
       }
+      this.cdr.markForCheck();
     }, error => {
       this.message = 'No Product record found';
       // this.handleSubstanceRetrivalError();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(prodSubscription);
   }
@@ -248,6 +252,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                         }
 
                       } // if reponse
+                      this.cdr.markForCheck();
                     });
                     this.subscriptions.push(subSubscription);
                   }
@@ -275,6 +280,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                           } // if Substance is public
 
                         } // response
+                        this.cdr.markForCheck();
                       });
 
                     this.subscriptions.push(subBasisSubscription);
@@ -312,6 +318,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
             }
           }
         }
+        this.cdr.markForCheck();
       });
     }
   }
