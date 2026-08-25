@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
@@ -35,10 +35,11 @@ import { invitroPharmacologySearchSortValues } from '../../invitro-pharmacology-
     selector: 'app-invitro-pharmacology-details-testagent',
     templateUrl: './invitro-pharmacology-details-testagent.component.html',
     styleUrls: ['./invitro-pharmacology-details-testagent.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
+export class InvitroPharmacologyDetailsTestagentComponent implements OnInit, OnDestroy {
 
   allAssaysList: Array<InvitroAssayInformation> = [];
   allScreeningTestAgents: Array<any> = [];
@@ -173,8 +174,13 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     private location: Location,
     private locationStrategy: LocationStrategy,
     private sanitizer: DomSanitizer,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
 
   public assays: Array<InvitroAssayInformation>;
 
@@ -235,6 +241,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
         assay._totalSummaryRecords = this.totalSummaryRecords;
 
       }); // LOOP: assay
+      this.cdr.markForCheck();
 
     }, error => {
       this.loadingService.setLoading(false);
@@ -379,6 +386,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
         }  // if assay exists
 
       });  // LOOP: assays
+      this.cdr.markForCheck();
 
     }, error => {
       this.loadingService.setLoading(false);
