@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { debounceTime, distinctUntilChanged, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -14,7 +14,8 @@ import { ProductService } from '../service/product.service';
     selector: 'app-product-text-search',
     templateUrl: './product-text-search.component.html',
     styleUrls: ['./product-text-search.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ProductTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -45,7 +46,8 @@ export class ProductTextSearchComponent implements OnInit, AfterViewInit, OnDest
     private element: ElementRef,
     public gaService: GoogleAnalyticsService,
     public configService: ConfigService,
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -122,10 +124,12 @@ export class ProductTextSearchComponent implements OnInit, AfterViewInit, OnDest
         this.matOpen = true;
         this.opened.emit();
       }
+      this.cdr.markForCheck();
 
     }, error => {
       this.gaService.sendException('search suggestion error from API call');
       console.log(error);
+      this.cdr.markForCheck();
     });
 
   }

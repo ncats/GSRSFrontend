@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ElementRef, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
@@ -40,7 +40,8 @@ import { invitroPharmacologySearchSortValues } from '../invitro-pharmacology-bro
     selector: 'app-invitro-pharmacology-text-search',
     templateUrl: './invitro-pharmacology-text-search.component.html',
     styleUrls: ['./invitro-pharmacology-text-search.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -70,7 +71,8 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
     private element: ElementRef,
     private configService: ConfigService,
     private cvService: ControlledVocabularyService,
-    private invitroPharmacologyService: InvitroPharmacologyService
+    private invitroPharmacologyService: InvitroPharmacologyService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -124,9 +126,11 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
         this.matOpen = true;
         this.opened.emit();
       }
+      this.cdr.markForCheck();
 
     }, error => {
       console.log(error);
+      this.cdr.markForCheck();
     });
 
   }
