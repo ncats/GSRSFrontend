@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,8 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
   selector: 'app-impurities-test-form',
   templateUrl: './impurities-test-form.component.html',
   styleUrls: ['./impurities-test-form.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
 
@@ -47,7 +48,8 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     private generalService: GeneralService,
     private loadingService: LoadingService,
     private authService: AuthService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     // Load item in displayColumns based on Solution Letter
@@ -154,6 +156,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteImpuritiesSolution(solutionIndex);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -212,6 +215,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteImpuritiesSolutionTable(solutionTableIndex);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -263,6 +267,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteImpuritiesElutionSolvent(elutionIndex);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -287,6 +292,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
           }
         }
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(substanceSubscribe);
   }
