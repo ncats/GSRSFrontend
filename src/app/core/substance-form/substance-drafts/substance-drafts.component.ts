@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
@@ -27,7 +27,8 @@ enum FormState {
     selector: 'app-substance-drafts',
     templateUrl: './substance-drafts.component.html',
     styleUrls: ['./substance-drafts.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceDraftsComponent implements OnInit {
   draft: SubstanceDraft;
@@ -57,7 +58,8 @@ export class SubstanceDraftsComponent implements OnInit {
     private utilsService: UtilsService,
     private sanitizer: DomSanitizer,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private cdr: ChangeDetectorRef
   ) {
     this.view = data.view || null;
     this.data = data;
@@ -278,6 +280,7 @@ export class SubstanceDraftsComponent implements OnInit {
         if (this.validatedDrafts.length === this.selectedKeys.length) {
           this.isLoading = false;
         }
+        this.cdr.markForCheck();
       }, error => {
 
         validatedDraft.validationMessages.push({
@@ -290,6 +293,7 @@ export class SubstanceDraftsComponent implements OnInit {
         if (this.validatedDrafts.length === this.selectedKeys.length) {
           this.isLoading = false;
         }
+        this.cdr.markForCheck();
       });
     })
   }
@@ -316,6 +320,7 @@ export class SubstanceDraftsComponent implements OnInit {
           if (completedCount === submittableDrafts.length) {
             this.isLoading = false;
           }
+          this.cdr.markForCheck();
         }, error => {
           draft.submitStatus = SubmissionStatus.ERROR;
           result.isSuccessfull = false;
@@ -328,6 +333,7 @@ export class SubstanceDraftsComponent implements OnInit {
           if (completedCount === submittableDrafts.length) {
             this.isLoading = false;
           }
+          this.cdr.markForCheck();
         });
       }
     })
