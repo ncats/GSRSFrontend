@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApplicationIngredient } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
@@ -17,7 +17,8 @@ import { A } from '@angular/cdk/keycodes';
     selector: 'app-ingredient-form',
     templateUrl: './ingredient-form.component.html',
     styleUrls: ['./ingredient-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IngredientFormComponent implements OnInit, OnDestroy {
   @Input() ingredient: ApplicationIngredient;
@@ -50,7 +51,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     public cvService: ControlledVocabularyService,
     private applicationService: ApplicationService,
     private generalService: GeneralService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -75,6 +77,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
       //   this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
 
       this.getSubstanceBySubstanceKey();
+      this.cdr.markForCheck();
     }, 600);
   }
 
@@ -117,6 +120,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed().subscribe(result => {
         if (result && result === true) {
           this.reviewIngredient();
+          this.cdr.markForCheck();
         }
       });
     } else {
@@ -138,6 +142,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteIngredientName();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -167,6 +172,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteBasisOfStrength();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -230,6 +236,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
           }
         }
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(subCodesSubscription);
   }
@@ -248,6 +255,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
               this.getActiveMoiety(this.substanceUuid, 'ingredientname');
             }
           }
+          this.cdr.markForCheck();
         });
         this.subscriptions.push(subIdSubscription);
       }
@@ -264,6 +272,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
               this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
             }
           }
+          this.cdr.markForCheck();
         });
         this.subscriptions.push(subIdSubscription);
       }
@@ -292,6 +301,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
             }
           }
         }
+        this.cdr.markForCheck();
       });
     }
   }
