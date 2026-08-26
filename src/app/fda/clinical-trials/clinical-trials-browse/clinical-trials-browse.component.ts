@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial } from '../clinical-trial/clinical-trial.model';
@@ -32,7 +32,8 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analy
     selector: 'app-clinical-trials-browse',
     templateUrl: './clinical-trials-browse.component.html',
     styleUrls: ['./clinical-trials-browse.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -87,7 +88,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private location: Location,
     private facetManagerService: FacetsManagerService,
     public gaService: GoogleAnalyticsService,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) {}
 
   // Getter, not a field, so template reads always reflect the current privilege signal.
@@ -164,6 +166,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     clearTimeout(this.resizeTimeout);
     this.resizeTimeout = setTimeout(() => {
       this.processResponsiveness();
+      this.cdr.markForCheck();
     }, 150);
   }
 
@@ -260,6 +263,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
           }
+          this.cdr.markForCheck();
 /*
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
@@ -333,6 +337,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
         this.isError = false;
         const deletedClinicalTrials = this.clinicalTrials.splice(index, 1);
         this.dataSource.data = this.clinicalTrials;
+        this.cdr.markForCheck();
         const notification: AppNotification = {
           message: 'You deleted the clinical trial record for:' + deletedClinicalTrials[0].trialNumber,
           type: NotificationType.success,
