@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -21,7 +21,8 @@ import { ActivatedRoute } from '@angular/router';
     selector: 'app-substance-form-definition',
     templateUrl: './substance-form-definition.component.html',
     styleUrls: ['./substance-form-definition.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormDefinitionComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
   definitionTypes: Array<VocabularyTerm>;
@@ -54,6 +55,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
     private overlayContainerService: OverlayContainer,
     private configService: ConfigService,
     private activatedRoute: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
 
   ) {
     super();
@@ -68,6 +70,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       this.filteredSuggestedTags = tags;
       this.crossCheckTags();
       this.tagsCtrl.enable();
+      this.cdr.markForCheck();
     });
     const tagsSubscription = this.tagsCtrl.valueChanges.subscribe(value => {
       this.filteredSuggestedTags = this.suggestedTags.filter(tag => tag.toLowerCase().indexOf((value || '').toLowerCase()) > -1);
@@ -122,6 +125,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
               this.substanceService.getSubstanceSummary(primarySubstance.relatedSubstance.refuuid).subscribe(response => {
                 this.primarySubstance = response;
                 this.primarySubUuid = this.primarySubstance.uuid;
+                this.cdr.markForCheck();
               });
             }
           }
@@ -135,7 +139,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       } else {
         this.imported = false;
       }
-
+      this.cdr.markForCheck();
     });
 
     this.subscriptions.push(subscription);
@@ -160,6 +164,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
     this.cvService.getDomainVocabulary('DEFINITION_TYPE', 'DEFINITION_LEVEL').subscribe(response => {
       this.definitionTypes = response['DEFINITION_TYPE'].list;
       this.definitionLevels = response['DEFINITION_LEVEL'].list;
+      this.cdr.markForCheck();
     });
   }
 
@@ -208,6 +213,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       };
       this.definition.relationships.push(relationship);
       this.substanceFormService.updateDefinition(this.definition);
+      this.cdr.markForCheck();
     });
   }
 
