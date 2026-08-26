@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   Input,
@@ -45,6 +47,7 @@ import { ListCreateDialogComponent } from "@gsrs-core/substances-browse/list-cre
   templateUrl: "./substance-summary-card.component.html",
   styleUrls: ["./substance-summary-card.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;
@@ -89,6 +92,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private bulkSearchService: BulkSearchService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS)
     private dynamicContentItems: DynamicComponentManifest<any>[],
+    private cdr: ChangeDetectorRef,
   ) {}
 
   // Getters, not fields, so template reads always reflect the current privilege signal.
@@ -123,6 +127,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
             this.inxightUrl =
               "https://drugs.ncats.io/drug/" + this.substance.approvalID;
           }
+          this.cdr.markForCheck();
         },
         (error) => {},
       );
