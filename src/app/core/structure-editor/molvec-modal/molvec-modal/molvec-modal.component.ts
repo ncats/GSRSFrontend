@@ -1,11 +1,12 @@
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, OnInit } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-molvec-modal',
     templateUrl: './molvec-modal.component.html',
     styleUrls: ['./molvec-modal.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MolvecModalComponent implements OnInit {
 
@@ -14,9 +15,10 @@ export class MolvecModalComponent implements OnInit {
   invalidFlag = false;
   message: string;
 
-  constructor(   
+  constructor(
     public dialogRef: MatDialogRef<MolvecModalComponent>,
-     @Inject(MAT_DIALOG_DATA) public data: any
+     @Inject(MAT_DIALOG_DATA) public data: any,
+     private cdr: ChangeDetectorRef
 ) { }
 
   ngOnInit(): void {
@@ -88,6 +90,9 @@ export class MolvecModalComponent implements OnInit {
 
    catchPaste(event: ClipboardEvent): void {
     this.message = null;
+    // Also reachable via a raw window.addEventListener('paste', ...), which doesn't
+    // auto-mark this OnPush component dirty the way a template/host event binding does.
+    this.cdr.markForCheck();
 
     console.log('paste intercept');
     const send: any = {};
