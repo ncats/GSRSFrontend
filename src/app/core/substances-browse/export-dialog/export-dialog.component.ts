@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import moment from 'moment';
 import lodashIsEqual from 'lodash/isEqual';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -8,7 +8,8 @@ import { SubstanceService } from '@gsrs-core/substance/substance.service';
     selector: 'app-export-dialog',
     templateUrl: './export-dialog.component.html',
     styleUrls: ['./export-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExportDialogComponent implements OnInit {
   name: string;
@@ -38,7 +39,8 @@ export class ExportDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ExportDialogComponent>,
     public substanceService: SubstanceService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private cdr: ChangeDetectorRef
   ) {
     if(data.entity) {
       this.entity = data.entity;
@@ -63,7 +65,7 @@ export class ExportDialogComponent implements OnInit {
         }
         })
         this.scrubberSchema = response;
-        
+        this.cdr.markForCheck();
     });
     this.substanceService.getSchema('expander', this.entity).subscribe(response => {
       Object.keys(response.properties).forEach(val => {
@@ -78,7 +80,7 @@ export class ExportDialogComponent implements OnInit {
         }
       });
       this.expanderSchema = response;
-
+      this.cdr.markForCheck();
   });
   this.substanceService.getExportOptions(this.data.extension, this.entity).subscribe(response => {
     Object.keys(response.properties).forEach(val => {
@@ -93,7 +95,7 @@ export class ExportDialogComponent implements OnInit {
       }
     });
     this.exporterSchema = response;
-
+    this.cdr.markForCheck();
 });
     const date = new Date();
     if (this.data.type && this.data.type !== null && this.data.type !== '') {
@@ -191,6 +193,7 @@ export class ExportDialogComponent implements OnInit {
           }
         })
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -218,6 +221,7 @@ export class ExportDialogComponent implements OnInit {
         this.loadedConfig.configurationId = response['Newly created configuration'];
         this.unsaved = false;
       }
+      this.cdr.markForCheck();
     });
   } else {
     alert('Cannot Save: config name "' + this.configName + "' already exists");
@@ -235,6 +239,7 @@ export class ExportDialogComponent implements OnInit {
         this.message = response.Result;
         this.unsaved = false;
       }
+      this.cdr.markForCheck();
     })
   }
 
@@ -249,11 +254,13 @@ export class ExportDialogComponent implements OnInit {
     this.substanceService.deleteConfig(id, this.entity).subscribe(response => {
       this.substanceService.getConfigs(this.entity).subscribe(response2 => {
         this.options = response2;
+        this.cdr.markForCheck();
       });
       this.loadedConfig = null;
       if (response.Result) {
         this.message = response.Result;
       }
+      this.cdr.markForCheck();
     });
   }
   }
@@ -333,6 +340,7 @@ export class ExportDialogComponent implements OnInit {
     this.configName = event.exporterKey;
     setTimeout(()=> {
       this.scrubberModel = testing;
+      this.cdr.markForCheck();
     }, 100);
     if (!preload) {
       this.message = "Export Configuration " + this.configName + " Loaded";
