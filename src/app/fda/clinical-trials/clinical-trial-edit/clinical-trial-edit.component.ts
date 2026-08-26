@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Router} from '@angular/router';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial, OutcomeResultNote } from '../clinical-trial/clinical-trial.model';
@@ -26,7 +26,8 @@ import { Observable } from 'rxjs';
     selector: 'app-clinical-trial-edit',
     templateUrl: './clinical-trial-edit.component.html',
     styleUrls: ['./clinical-trial-edit.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDestroy {
   clinicalTrial: ClinicalTrial;
@@ -59,7 +60,8 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
@@ -102,8 +104,10 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
           this.dataSource.data[data.myIndex].orgSubstanceKey = this.getOrgSubstanceKeyFromSubstance(substance);
         }
         }
+        this.cdr.markForCheck();
     }, () => {
       this.dataSource.data[data.myIndex].substanceKey = null;
+      this.cdr.markForCheck();
     });
     this.dataSource.data = this.dataSource.data;
   }
@@ -195,9 +199,11 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
+        this.cdr.markForCheck();
       }, () => {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
+        this.cdr.markForCheck();
     });
     this.subscriptions.push(subscription);
   }
