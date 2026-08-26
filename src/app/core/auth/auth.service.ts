@@ -1,6 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from "@angular/core";
 import { ConfigService } from "../config/config.service";
 import { Auth, Privilege, Role, UserGroup } from "./auth.model";
+
 import {
   interval,
   from,
@@ -27,6 +28,7 @@ import {
   UserDownload,
   AllUserDownloads,
 } from "@gsrs-core/auth/user-downloads/download.model";
+import { UtilsService } from "@gsrs-core/utils/utils.service";
 
 @Injectable({
   providedIn: "root",
@@ -41,6 +43,7 @@ export class AuthService {
     public configService: ConfigService,
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: any,
+    private utilsService: UtilsService
   ) {
     this.isLoading = true;
     configService.afterLoad().then((cs) => {
@@ -380,7 +383,9 @@ export class AuthService {
 
   getUpdateStatus(id: string): Observable<UserDownload> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || "/"}api/v1/`;
-    return this.http.get<any>(`${url}profile/downloads/${id}`);
+    const restApiPrefix = this.configService.configData.restApiPrefix || '';
+    const adjustedUrl  = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, url);
+    return this.http.get<any>(`${adjustedUrl}profile/downloads/${id}`);
   }
 
   changeDownload(url: string): Observable<UserDownload> {
@@ -393,7 +398,9 @@ export class AuthService {
 
   getAllDownloads(): Observable<AllUserDownloads> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || "/"}api/v1/`;
-    return this.http.get<any>(`${url}profile/downloads`);
+    const restApiPrefix = this.configService.configData.restApiPrefix || '';
+    const adjustedUrl  = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, url);
+    return this.http.get<any>(`${adjustedUrl}profile/downloads`);
   }
 
   private fetchAuth(): Observable<Auth> {

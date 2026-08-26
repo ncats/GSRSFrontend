@@ -297,4 +297,22 @@ export class UtilsService {
     const lq  =targetField + ':"^' + s +'"';
     return lq;
   }
+
+  adjustBackendUrlWithRestApiPrefix(searchFragment: string, restPrefix: string, url: string) {
+    // Consider instead to decompose and recompose the url in case search
+    // terms appear in query params, etc.
+    // Consider making global function that can be used 
+    // in lots of places
+    if (!restPrefix) { return url; }
+    if (!searchFragment) { return url; }
+    if (!url) { return url; }
+    const _restPrefix = restPrefix.trim();
+    const _searchFragment = searchFragment.trim();
+    if( _restPrefix.trim().length == 0) { return url; }
+    if( _searchFragment.trim().length == 0) { return url; }
+    if (url.indexOf(_restPrefix) > -1) { return  url; }
+    if (!(url.indexOf(_searchFragment) > -1)) { return  url; }
+    url = url.replace(_searchFragment, _restPrefix + _searchFragment);
+    return url;
+  }
 }
