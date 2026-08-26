@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -12,7 +12,8 @@ import jp from 'jsonpath';
     selector: 'app-merge-concept-dialog',
     templateUrl: './merge-concept-dialog.component.html',
     styleUrls: ['./merge-concept-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MergeConceptDialogComponent implements OnInit {
   public dialogRef: MatDialogRef<MergeConceptDialogComponent>;
@@ -32,7 +33,8 @@ export class MergeConceptDialogComponent implements OnInit {
     private substanceFormService: SubstanceFormService,
     private substanceService: SubstanceService,
     private sanitizer: DomSanitizer,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
@@ -55,6 +57,7 @@ export class MergeConceptDialogComponent implements OnInit {
       }).map(relationship => {
         this.substanceService.getBDNUM(relationship).subscribe(resp => {
           relationship['$$bdnum'] = resp;
+          this.cdr.markForCheck();
         });
 
 
@@ -68,7 +71,7 @@ export class MergeConceptDialogComponent implements OnInit {
         this.text = 'No sub-concepts were found for this record';
       }
 
-
+      this.cdr.markForCheck();
     });
     this.loading = true;
   }
@@ -157,6 +160,7 @@ export class MergeConceptDialogComponent implements OnInit {
       this.addmergebutton = true;
       this.text = 'Fields merged. Click \'Confirm Deprecate old record\' to to prevent duplicate collision';
       this.oldBdnum = oldBdnum;
+      this.cdr.markForCheck();
     });
   }
 
@@ -210,10 +214,12 @@ export class MergeConceptDialogComponent implements OnInit {
     this.loading = false;
     this.text = 'Old record deprecated, please save this record to complete the merge.';
     this.subconcepts = undefined;
-    this.addmergebutton = false; 
+    this.addmergebutton = false;
+    this.cdr.markForCheck();
   }, error => {
     this.loading = false;
     this.text = 'There was a problem deprecating the old record. Refresh the page to undo the changes to the parent record.';
+    this.cdr.markForCheck();
   });
 }
 
