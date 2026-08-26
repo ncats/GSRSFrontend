@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, Inject } from '@angular/core';
 import type { Editor } from '@gsrs-core/structure-editor';
 import { chain as lodashChain } from 'lodash';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
@@ -14,7 +14,8 @@ import { take } from 'rxjs';
     selector: 'app-fragment-wizard',
     templateUrl: './fragment-wizard.component.html',
     styleUrls: ['./fragment-wizard.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FragmentWizardComponent implements OnInit {
   @Output() termUpdated = new EventEmitter();
@@ -42,6 +43,7 @@ private overlayContainer: HTMLElement;
     private structureService: StructureService,
     public dialogRef: MatDialogRef<FragmentWizardComponent>,
     private overlayContainerService: OverlayContainer,
+    private cdr: ChangeDetectorRef,
 
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -86,8 +88,9 @@ private overlayContainer: HTMLElement;
           this.CVService.addVocabTerm( this.vocabulary).subscribe (response => {
             if (response.terms && response.terms.length === this.vocabulary.terms.length) {
               this.message = 'Term ' + this.privateTerm.value + ' Added to ' + this.vocabulary.domain + '';
+              this.cdr.markForCheck();
               setTimeout(() => {
-this.dialogRef.close(this.privateTerm); 
+this.dialogRef.close(this.privateTerm);
 }, 3000);
             }
           }, error => {
@@ -95,12 +98,12 @@ this.dialogRef.close(this.privateTerm);
             let str = 'Server Error';
           if (error.error && error.error.message) {
             str += ' - ' + error.error.message;
-    
+
           } else if(error.message) {
             str += ' - ' + error.message;
           }
           this.message = str;
-    
+          this.cdr.markForCheck();
           });
 
         } else {
@@ -110,6 +113,7 @@ this.dialogRef.close(this.privateTerm);
             });
           }
           this.vocabulary.terms.pop();
+          this.cdr.markForCheck();
         }
       },error => {
         console.log(error);
@@ -122,13 +126,14 @@ this.dialogRef.close(this.privateTerm);
         str += ' - ' + error.message;
       }
       this.message = str;
-
+      this.cdr.markForCheck();
       });
       
     } else {
       this.message = 'Term already exists';
       setTimeout(() => {
         this.message = '';
+        this.cdr.markForCheck();
       }, 1000);
     }
   }
@@ -368,6 +373,7 @@ this.dialogRef.close(this.privateTerm);
       let temp = {'value':form, 'url':this.CVService.getStructureUrl(form)};
       this.forms.push(temp);
     });
+    this.cdr.markForCheck();
 
     });
   });
@@ -380,14 +386,15 @@ this.dialogRef.close(this.privateTerm);
         if(!this.vocabulary) {
           this.CVService.getFragmentCV().subscribe(data => {
             this.dat = {};
-      
+
            this.domains = data.content;
-      
+           this.cdr.markForCheck();
+
            if (this.vocab) {
             this.fragmentType(this.vocab);
            }
-      
-          
+
+
           });
         } else {
           if (this.vocab) {
@@ -396,8 +403,10 @@ this.dialogRef.close(this.privateTerm);
         }
       } else {
         this.message = "No Structure Detected in editor";
+        this.cdr.markForCheck();
         setTimeout(() => {
           this.message = null;
+          this.cdr.markForCheck();
         }, 4000);
       }
       });
