@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, OnDestroy, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { QueryableSubstanceDictionary, CommandInput, Command } from '../queryable-substance-dictionary.model';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,8 @@ import { QueryStatement } from './query-statement.model';
     selector: 'app-query-statement',
     templateUrl: './query-statement.component.html',
     styleUrls: ['./query-statement.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() queryStatementHash?: number;
@@ -47,7 +48,8 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
 
   constructor(
     private overlayContainerService: OverlayContainer,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -223,6 +225,7 @@ export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy
   setCvOptions(cvDomain: string): void {
     this.cvService.getDomainVocabulary(cvDomain).subscribe(response => {
       this.cvOptions = response[cvDomain].list;
+      this.cdr.markForCheck();
     });
   }
 
