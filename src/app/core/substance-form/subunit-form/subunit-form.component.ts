@@ -1,5 +1,7 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -26,7 +28,8 @@ import { Router } from '@angular/router';
     selector: 'app-subunit-form',
     templateUrl: './subunit-form.component.html',
     styleUrls: ['./subunit-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
@@ -62,6 +65,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {
 
   }
@@ -95,10 +99,12 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
               if (this.allSites) {
                 this.addStyle();
               }
+              this.cdr.markForCheck();
             });
           } else {
             this.subunitSequence = newSubunits;
           }
+          this.cdr.markForCheck();
         }
       });
       this.subscriptions.push(displaySequenceSubscription);
@@ -118,6 +124,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
           if (this.subunitSequence) {
             this.addStyle();
           }
+          this.cdr.markForCheck();
         });
       } else if (!this.allSites) {
         this.allSites = tempSitelist;
@@ -155,6 +162,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
         for (const key in this.vocabulary) {
           this.validArray.push(this.vocabulary[key].value);
         }
+        this.cdr.markForCheck();
       }, error => {
       });
     } else {
@@ -165,7 +173,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
         for (const key in this.vocabulary) {
           this.validArray.push(this.vocabulary[key].value);
         }
-
+        this.cdr.markForCheck();
       }, error => {
       });
 
