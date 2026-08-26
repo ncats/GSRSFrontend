@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   ElementRef,
@@ -32,6 +34,7 @@ import { ControlledVocabularyService } from "@gsrs-core/controlled-vocabulary";
   templateUrl: "./substance-text-search.component.html",
   styleUrls: ["./substance-text-search.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceTextSearchComponent
   implements OnInit, AfterViewInit, OnDestroy {
@@ -68,6 +71,7 @@ export class SubstanceTextSearchComponent
     public gaService: GoogleAnalyticsService,
     public configService: ConfigService,
     private cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -173,7 +177,7 @@ export class SubstanceTextSearchComponent
                 value: "CAS",
                 display: this.CasDisplay,
               };
-            } else if (this.codeSystemVocab[value]) {
+            } else if (this.codeSystemVocab && this.codeSystemVocab[value]) {
               let disp = this.codeSystemVocab[value].display;
               this.suggestionsFields[index] = { value: value, display: disp };
             } else {
@@ -188,10 +192,12 @@ export class SubstanceTextSearchComponent
             this.matOpen = true;
             this.opened.emit();
           }
+          this.cdr.markForCheck();
         },
         (error) => {
           this.gaService.sendException("search suggestion error from API call");
           console.log(error);
+          this.cdr.markForCheck();
         },
       );
   }
