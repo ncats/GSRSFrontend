@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   AfterViewInit,
@@ -27,6 +29,7 @@ import { StructureEditorComponent } from "@gsrs-core/structure-editor";
   templateUrl: "./structure-search.component.html",
   styleUrls: ["./structure-search.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StructureSearchComponent
   implements OnInit, AfterViewInit, OnDestroy {
@@ -53,6 +56,7 @@ export class StructureSearchComponent
     private gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private titleService: Title,
+    private cdr: ChangeDetectorRef,
   ) {
     this.searchType = "substructure";
     this._searchtype = "substructure";
@@ -107,6 +111,7 @@ export class StructureSearchComponent
         }
 
         this.searchTypeControl.setValue(this.searchType);
+        this.cdr.markForCheck();
       });
     });
   }
