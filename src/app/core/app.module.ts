@@ -39,6 +39,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
 import { PfdaToolbarComponent } from './base/pfda-toolbar/pfda-toolbar.component';
+import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { RegistrarsComponent } from './registrars/registrars.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
@@ -121,11 +122,19 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
+
+// ncats branch begin 
+import { TopContentSpacerComponent } from './spacers/top-content-spacer.component';
+import { FooterComponent } from './footer/footer.component';
+
+// ncats branch end 
+
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
 import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
 import { FileSelectModule } from './file-select/file-select.module';
 import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamine-standalone.module';
 import { MatDividerModule } from '@angular/material/divider';
+import { TopBannerComponent } from './misc/top-banner.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -165,11 +174,13 @@ import { MatDividerModule } from '@angular/material/divider';
     MergeActionDialogComponent,
     UserQueryListDialogComponent,
     ListCreateDialogComponent,
-    ImportScrubberComponent
-
+    ImportScrubberComponent,
+    TopBannerComponent,
+    TopContentSpacerComponent,
   ],
   imports: [
     BrowserModule,
+    FooterComponent,
     RouterModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -241,7 +252,8 @@ import { MatDividerModule } from '@angular/material/divider';
     PrivacyStatementModule,
     CrossEntitySearchModule,
     NitrosamineStandaloneModule,
-    MatDividerModule
+    MatDividerModule,
+    HeaderComponent,
   ],
   providers: [
     {

@@ -4,6 +4,8 @@
   margin: auto;
   /*height: 200px; */
   /*margin: 0 auto;*/
+
+  margin-bottom: 400px; /* ncats branch begin/end */
 }
 
 .div-flex {
@@ -54,20 +56,20 @@
   height: 30px;
 
   .condition-column {
-      width: 100px;
+    width: 100px;
   }
 
   .queryable-property-column {
-      width: 400px;
+    width: 400px;
   }
 
   .command-column {
-      width: 190px
+    width: 190px;
   }
 
   .query-column {
-      flex-grow: 1;
-      padding-left: 10px;
+    flex-grow: 1;
+    padding-left: 10px;
   }
 }
 
@@ -86,7 +88,7 @@
 
 .query-value {
   padding: 10px 15px;
-  background-color:  var(--query-bg-color);
+  background-color: var(--query-bg-color);
   border: solid 1px var(--query-border-color);
   border-radius: 2px;
   min-height: 40px;
@@ -97,7 +99,7 @@
   display: flex;
 
   .button-container {
-      width: 35px;
+    width: 35px;
   }
 }
 
@@ -145,7 +147,7 @@
 }
 
 .colormaroon {
-  color: rgb(151, 87, 87)
+  color: rgb(151, 87, 87);
 }
 
 .colororange {
@@ -192,9 +194,9 @@
   margin-top: 30px;
 }
 
-.margintop50px {
-  margin-top: 50px;
-}
+// .margintop50px {
+//   margin-top: 50px;
+// }
 
 .margintop70px {
   margin-top: 70px;
@@ -349,11 +351,10 @@
 }
 
 /* label style */
-.mat-tab-label{
+.mat-tab-label {
   background: var(--pale-border-color-rgb-3);
-  color:  var(--red-label-color);
-  min-width: 60px!important;
-
+  color: var(--red-label-color);
+  min-width: 60px !important;
 }
 
 :host ::ng-deep .mat-tab-label-active {
@@ -367,75 +368,77 @@
   height: 2px;
 }
 
-@media(max-width: 1175px) {
+@media (max-width: 1175px) {
   .structure-editor-actions-container {
-      flex-direction: column;
-      width: 100%;
+    flex-direction: column;
+    width: 100%;
   }
 
   .editor-container {
-      width: 100%;
-      height: 390px;
+    width: 100%;
+    height: 390px;
   }
 
   .search-actions {
-      flex-direction: row;
-      border-left: none;
-      padding-top: 10px;
-      padding-left: 0;
-      margin-left: 0;
+    flex-direction: row;
+    border-left: none;
+    padding-top: 10px;
+    padding-left: 0;
+    margin-left: 0;
 
-      .one {
-          order: 1;
+    .one {
+      order: 1;
+    }
+
+    .export-button {
+      margin-left: 7px;
+    }
+
+    .two {
+      order: 2;
+      margin-left: auto;
+      display: flex;
+      padding-right: 10px;
+
+      .similarity-cutoff {
+        margin: 0;
+        margin-top: 1px;
       }
+    }
 
-      .export-button {
-          margin-left: 7px;
-      }
-
-      .two {
-          order: 2;
-          margin-left: auto;
-          display: flex;
-          padding-right: 10px;
-
-          .similarity-cutoff {
-              margin: 0;
-              margin-top: 1px;
-          }
-      }
-
-      .three {
-          order: 3;
-      }
+    .three {
+      order: 3;
+    }
   }
 
   .action-button-container {
-      width: auto;
-      margin-top: 0;
-      align-self: flex-start;
+    width: auto;
+    margin-top: 0;
+    align-self: flex-start;
 
-      button {
-          width: auto;
-          border: 1px solid var(--regular-green-color);
-      }
+    button {
+      width: auto;
+      border: 1px solid var(--regular-green-color);
+    }
   }
 }
 
-@media(max-width: 970px) {
+@media (max-width: 970px) {
   .structure-editor-actions-container {
-      width: 100%;
-      overflow-x: auto;
+    width: 100%;
+    overflow-x: auto;
   }
 
-  .editor-container, .search-actions {
-      min-width: 633px;
+  .editor-container,
+  .search-actions {
+    min-width: 633px;
   }
 
   .jsdraw {
-      .editor-container, .search-actions {
-          min-width: 710px;
-      }
+    .editor-container,
+    .search-actions {
+      min-width: 710px;
+    }
   }
 }
 
@@ -471,7 +474,7 @@
   margin-right: 22px;
 }
 
-::ng-deep .col:nth-child(3n+1) {
+::ng-deep .col:nth-child(3n + 1) {
   clear: left;
 }
 
@@ -571,7 +574,7 @@ panel-style {
   }
 }
 
-@media(max-width: 1175px) {
+@media (max-width: 1175px) {
   .structure-editor-actions-container {
     flex-direction: column;
     width: 100%;
@@ -600,18 +603,20 @@ panel-style {
   }
 }
 
-@media(max-width: 970px) {
+@media (max-width: 970px) {
   .structure-editor-actions-container {
     width: 100%;
     overflow-x: auto;
   }
 
-  .editor-container, .search-actions {
+  .editor-container,
+  .search-actions {
     min-width: 633px;
   }
 
   .jsdraw {
-    .editor-container, .search-actions {
+    .editor-container,
+    .search-actions {
       min-width: 710px;
     }
   }

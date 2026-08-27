@@ -129,6 +129,7 @@ export class SubstanceSsg4ManufactureFormComponent
   configSettingReferences = false;
   private submitSubscription: any = null;
   ssg4mExportSvg: boolean;
+  
 
   private jsLibScriptUrls = [
     `${environment.baseHref || ""}assets/pathway/cola.min.js`,
@@ -170,6 +171,8 @@ export class SubstanceSsg4ManufactureFormComponent
       // Get 'showRegisterEditTitle' value from config
       this.showRegisterEditTitle = this.configSsg4Form.showRegisterEditTitle;
     }
+
+
 
     this.substanceClass = "specifiedSubstanceG4m";
 

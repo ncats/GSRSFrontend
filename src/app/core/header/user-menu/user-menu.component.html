@@ -1,0 +1,62 @@
+<div class="user-section">
+  @if (showLoginButton) {
+    <div>
+      @if (!auth() && !isLoginPage()) {
+        <button mat-button class="login-link" (click)="routeToLogin()">Login</button>
+      }
+    </div>
+  }
+  @if (auth()) {
+    <div class="logged-in">
+      <div class="user-actions">
+        <button
+          aria-label="User Account"
+          class="user-button main-button"
+          mat-icon-button
+          [matMenuTriggerFor]="accountMenu"
+          (click)="increaseMenuZindex()"
+        >
+          <mat-icon class="user-icon" svgIcon="account_circle"></mat-icon>
+        </button>
+        <button
+          aria-label="User Account dropdown"
+          class="user-button arrow-button test-class"
+          mat-icon-button
+          [matMenuTriggerFor]="accountMenu"
+          (click)="increaseMenuZindex()"
+        >
+          <mat-icon class="user-icon icon-two" svgIcon="chevron_down"></mat-icon>
+        </button>
+      </div>
+      @if (auth()?.identifier) {
+        <span class="user" [matTooltip]="auth()!.identifier">{{
+          auth()!.identifier.length > 9
+            ? (auth()!.identifier | slice: 0 : 9) + "…"
+            : auth()!.identifier
+        }}</span>
+      }
+    </div>
+  }
+  <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
+    <a mat-menu-item (click)="openProfile()"><span>Profile</span></a>
+    <a mat-menu-item routerLink="/user-downloads"><span>User Downloads</span></a>
+    <a mat-menu-item (click)="viewLists()"><span>User Saved Lists</span></a>
+    <a mat-menu-item (click)="viewDrafts()"><span>Saved Edit Drafts</span></a>
+    @if (canUserImportData() && !canConfigureSystem()) {
+      <a routerLink="/admin/import" mat-menu-item><span>Import Data</span></a>
+      <a routerLink="/admin/data" mat-menu-item><span>Legacy Data Import</span></a>
+    }
+    @if (canManageCVs() && !canConfigureSystem()) {
+      <a routerLink="/admin/cv" mat-menu-item><span>CV Management</span></a>
+    }
+    @if (canConfigureSystem()) {
+      <a routerLink="/admin" mat-menu-item><span>Admin Panel</span></a>
+    }
+    @if (canRegister() && !showRegistrars()) {
+      <a [routerLink]="['/registrars']" class="add-at-low-res" mat-menu-item>
+        <span>Registrar Dashboard</span>
+      </a>
+    }
+    <button mat-menu-item (click)="logout()"><span>Logout</span></button>
+  </mat-menu>
+</div>

@@ -19,6 +19,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+
 import jp from 'jsonpath';
 import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 
@@ -96,6 +97,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
+
 
     const routeSubscription = this.activatedRoute
       .params
@@ -330,7 +332,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.product != null) {
       if (this.product.productManufactureItems && this.product.productManufactureItems.length > 0) {
         this.product.productManufactureItems.forEach((elementComp, indexComp) => {
-          if (elementComp != null) {
+        if (elementComp != null) {
 
             // Validate 'Amount' field. The value should be numbers and not any characters
             if (elementComp.amount) {
@@ -340,12 +342,12 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
             elementComp.productLots.forEach((elementLot, indexLot) => {
-              if (elementLot != null) {
+            if (elementLot != null) {
 
-                // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
+              // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
                 if (elementLot.productIngredients && elementLot.productIngredients.length > 0) {
                   elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
-                    if (elementIngred != null) {
+                if (elementIngred != null) {
 
                       if (!elementIngred.substanceKey) {
                         this.setValidationMessage('Ingredient Name is required in Manufacture Item Details ' + (indexComp + 1) + ' in Lot Details ' + (indexLot + 1) + ' in Ingredient Details ' + (indexIngred + 1));
@@ -355,38 +357,38 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.setValidationMessage('Ingredient Type is required in Manufacture Item Details ' + (indexComp + 1) + ' in Lot Details ' + (indexLot + 1) + ' in Ingredient Details ' + (indexIngred + 1));
                       }
 
-                      if (elementIngred.average) {
-                        if (this.isNumber(elementIngred.average) === false) {
+                  if (elementIngred.average) {
+                    if (this.isNumber(elementIngred.average) === false) {
                           this.setValidationMessage('Average must be a number in Ingredient Details ' + (indexIngred + 1));
-                        }
-                      }
-                      if (elementIngred.low) {
-                        if (this.isNumber(elementIngred.low) === false) {
-                          this.setValidationMessage('Low must be a number in Ingredient Details ' + (indexIngred + 1));
-                        }
-                      }
-                      if (elementIngred.high) {
-                        if (this.isNumber(elementIngred.high) === false) {
-                          this.setValidationMessage('High must be a number in Ingredient Details ' + (indexIngred + 1));
-                        }
-                      }
-                      // Ingredient Name Validation
-                      if (elementIngred.$$ingredientNameValidation) {
-                        this.setValidationMessage(elementIngred.$$ingredientNameValidation);
-                      }
-                      // Basis of Strength Validation
-                      if (elementIngred.$$basisOfStrengthValidation) {
-                        this.setValidationMessage(elementIngred.$$basisOfStrengthValidation);
-                      }
                     }
-                  });
+                  }
+                  if (elementIngred.low) {
+                    if (this.isNumber(elementIngred.low) === false) {
+                          this.setValidationMessage('Low must be a number in Ingredient Details ' + (indexIngred + 1));
+                    }
+                  }
+                  if (elementIngred.high) {
+                    if (this.isNumber(elementIngred.high) === false) {
+                          this.setValidationMessage('High must be a number in Ingredient Details ' + (indexIngred + 1));
+                    }
+                  }
+                  // Ingredient Name Validation
+                  if (elementIngred.$$ingredientNameValidation) {
+                    this.setValidationMessage(elementIngred.$$ingredientNameValidation);
+                  }
+                  // Basis of Strength Validation
+                  if (elementIngred.$$basisOfStrengthValidation) {
+                    this.setValidationMessage(elementIngred.$$basisOfStrengthValidation);
+                  }
+                }
+              });
                 } // if Product Ingredients length > 0
                 else {
                   this.setValidationMessage('At least one Ingredient Details section is required in Manufacture Item Details ' + (indexComp + 1) + ' in Lot Details ' + (indexLot + 1));
-                }
-              }
-            });
-          }
+            }
+        }
+      });
+    }
         }); // productManufactureItems For each 
       } // if productManufactureItems length > 0
       else {
@@ -738,7 +740,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let cleanProduct = this.cleanProduct();
 
-    let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };
+    let data = {jsonData: cleanProduct, jsonFilename: jsonFilename};
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -1104,7 +1106,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   scrub(oldraw: any): any {
     const old = oldraw;
-    const idHolders = jp.query(old, '$..[?(@.id)]');
+    const idHolders = defiant.json.search(old, '//*[id]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;

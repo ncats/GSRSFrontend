@@ -1,5 +1,8 @@
-<div class="main-container">
-  <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true', zindex2000 : saveDelayedMessage}">
+<!-- ncats branch change begin --> 
+<div class="main-container top-fixed">
+    <!-- is syntax on showHeaderBar correct? --> 
+    <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true', zindex2000 : saveDelayedMessage}">
+<!-- ncats branch change end --> 
     <div class="actions-container">
 
       <!-- SAVING DELAY: Display Cancel button if it is taking too long to save -->
@@ -81,8 +84,10 @@
       </div>
     </div> <!-- Validation Message -->
   </div>
+  <!-- ncats branch change begin --> 
+  <div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}"  style="width: 100%; scroll: auto;">
+  <!-- ncats branch change end --> 
 
-  <div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}">
     <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
       <!-- Only show the title when passed parameter header=true in the Url -->
       <div *ngIf="showHeaderBar === 'true'">

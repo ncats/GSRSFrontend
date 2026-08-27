@@ -1,19 +1,18 @@
 .top-fixed {
-  position: fixed;
+  position: sticky;
   display: flex;
   flex-direction: column;
-  /*top: 64px; */
+  top: 0;
   width: 100%;
   background-color: var(--regular-white-color);
   align-items: center;
   /*justify-content: center;*/
-  box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
+  box-shadow:
+    0px 3px 3px -2px var(--box-shadow-color),
+    0px 3px 4px 0px var(--box-shadow-color-2),
+    0px 1px 8px 0px var(--box-shadow-color-3);
   z-index: 1001;
   justify-content: flex-end;
-}
-
-.top-fixed-top {
-  top: 64px;
 }
 
 .zindex2000 {
@@ -51,7 +50,7 @@
 }
 
 .form-header-title-top {
-  padding-top: 150px;
+  padding-top: 30px;
 }
 
 .form-header-no-title-top {
@@ -84,7 +83,6 @@ mat-select-panel {
   margin-right: 5px;
   margin-top: -10px;
   color: var(--primary-color);
-
 
   ::ng-deep .mat-form-field-wrapper {
     padding-bottom: 20px !important;
@@ -164,14 +162,12 @@ mat-select-panel {
   .warning-message {
     color: var(--warning-dialog-color);
     background-color: var(--warning-dialog-bg-color);
-
   }
 
   .error-message {
     color: var(--error-dialog-color);
     background-color: var(--error-dialog-bg-color);
   }
-
 }
 
 .validate-button {
@@ -246,7 +242,7 @@ mat-select-panel {
 }
 
 .borderblue {
-  border: 1px solid #007CBA;
+  border: 1px solid #007cba;
 }
 
 .fontbold {
@@ -255,7 +251,7 @@ mat-select-panel {
 
 /* FDA COLOR BLUE CODE Hex: #007CBA */
 .colorbluefda {
-  color: #007CBA;
+  color: #007cba;
 }
 
 .colorred {
@@ -272,7 +268,7 @@ mat-select-panel {
 }
 
 .mat-menu-item {
-  color: #007CBA !important;
+  color: #007cba !important;
 }
 
 /*
@@ -287,7 +283,7 @@ button.mat-menu-item:hover {
 */
 
 /* tyler added as quick fix */
-app-substance-form-ssg4m-process-card button[color=primary] {
+app-substance-form-ssg4m-process-card button[color="primary"] {
   float: right;
 }
 

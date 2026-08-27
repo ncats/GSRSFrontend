@@ -100,7 +100,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   feature: string;
   isPfdaVersion: boolean = false;
   canUpdate: boolean;
-  canMakeAdvancedEdits: boolean;
+  canMakeAdvancedEdits: boolean;  
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -128,7 +128,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   approvalType = 'lastEditedBy';
   previousState: number;
   useApprovalAPI = false;
-  featuresOnly = false;
+    featuresOnly = false;
   userCanChangeDefinitionVisibility = false;
 
   constructor(
@@ -240,7 +240,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         if (keys[i].startsWith('gsrs-draft-')) {
           const entry = JSON.parse(localStorage.getItem(keys[i]));
           entry.key = keys[i];
-          this.draftCount++;
+            this.draftCount++;
           this.drafts.push(entry);
 
         }
@@ -249,40 +249,40 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   }
 
   processImportedSubstance(response?: string): void {
-    if (response) {
-      //   this.overlayContainer.style.zIndex = null;
-      this.loadingService.setLoading(true);
+      if (response) {
+        //   this.overlayContainer.style.zIndex = null;
+        this.loadingService.setLoading(true);
 
-      // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
-      // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
 
-      const read = JSON.parse(response);
+        const read = JSON.parse(response);
 
       if (read.substanceClass === 'specifiedSubstanceG4m') {
         this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + true, { state: { record: response } });
         return;
       }
 
-      if (this.id && read.uuid && this.id === read.uuid) {
-        this.substanceFormService.importSubstance(read, 'update');
-        this.submissionMessage = null;
-        this.validationMessages = [];
-        this.showSubmissionMessages = false;
-        setTimeout(() => {
-          this.loadingService.setLoading(false);
-          this.isLoading = false;
-          this.overlayContainer.style.zIndex = null;
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          this.overlayContainer.style.zIndex = null;
-          this.router.onSameUrlNavigation = 'reload';
-          this.loadingService.setLoading(false);
-          this.router.navigateByUrl('/substances/register?action=import', {state: {record: response}});
+        if (this.id && read.uuid && this.id === read.uuid) {
+          this.substanceFormService.importSubstance(read, 'update');
+          this.submissionMessage = null;
+          this.validationMessages = [];
+          this.showSubmissionMessages = false;
+          setTimeout(() => {
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
+            this.overlayContainer.style.zIndex = null;
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = null;
+            this.router.onSameUrlNavigation = 'reload';
+            this.loadingService.setLoading(false);
+            this.router.navigateByUrl('/substances/register?action=import', {state: {record: response}});
 
-        }, 1000);
+          }, 1000);
+        }
       }
-    }
   }
 
   importDialog(): void {
@@ -319,7 +319,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     }
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
-    }
+    }  
+
+
+    
     this.isPfdaVersion = this.configService.configData.isPfdaVersion;
     this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
@@ -528,7 +531,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       if (keys[i].startsWith('gsrs-draft-')) {
         const entry = JSON.parse(localStorage.getItem(keys[i]));
         entry.key = keys[i];
-        temp++;
+          temp++;
         this.drafts.push(entry);
 
       }

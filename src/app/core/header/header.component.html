@@ -1,0 +1,117 @@
+@if (showHeaderBar === "true" && (!customToolbarComponent || customToolbarComponent.length === 0)) {
+  <mat-toolbar class="mat-elevation-z3" color="primary">
+    <div class="logo-container">
+      <span class="logo">
+        <a routerLink="/home" aria-label="home">
+          <img [src]="logoSrcPath" alt="gsrs-logo" />
+        </a>
+      </span>
+      @if (version() && version() !== "") {
+        <span class="version" [matTooltip]="versionTooltipMessage()" matTooltipPosition="below"
+          >Ver. {{ version() }}</span
+        >
+      }
+    </div>
+
+    <app-nav-menu
+      [navItems]="navItems()"
+      [canRegister]="canRegister()"
+      [canConfigureSystem]="canConfigureSystem()"
+    />
+
+    <div>
+      <button
+        class="top-button menu-button extra-item"
+        mat-button
+        [routerLink]="['/browse-substance']"
+        aria-label="browse substances"
+      >
+        Browse Substances
+      </button>
+    </div>
+
+    <app-browse-other-menu />
+
+    <div>
+      @if (canRegister()) {
+        <button
+          class="top-button extra-item"
+          mat-button
+          mat-primary-button
+          style="color: white; font-size: 16px; padding-top: 10px; padding-bottom: 10px"
+          [matMenuTriggerFor]="reg"
+          (click)="increaseMenuZindex()"
+          aria-label="main menu"
+        >
+          <span style="font-size: 16px">Register</span>
+          <mat-icon svgIcon="chevron_down"></mat-icon>
+        </button>
+      }
+      <button
+        class="top-button extra-item"
+        mat-button
+        mat-primary-button
+        style="color: white; font-size: 16px; padding-top: 10px; padding-bottom: 10px"
+        [matMenuTriggerFor]="search"
+        (click)="increaseMenuZindex()"
+        aria-label="search menu"
+      >
+        <span style="font-size: 16px">Search</span>
+        <mat-icon svgIcon="chevron_down"></mat-icon>
+      </button>
+    </div>
+
+    <mat-menu #reg="matMenu" (closed)="removeZindex()">
+      @for (navItem of registerNav(); track navItem.display) {
+        @if (navItem.path) {
+          <a mat-menu-item [routerLink]="['/' + navItem.path]">{{ navItem.display }}</a>
+        }
+        @if (navItem.externalPath) {
+          <a mat-menu-item [href]="navItem.externalPath" target="_blank">{{ navItem.display }}</a>
+        }
+      }
+      <a mat-menu-item (click)="importDialog()">Import Substance</a>
+    </mat-menu>
+
+    <mat-menu #search="matMenu" (closed)="removeZindex()">
+      @for (navItem of searchNav(); track navItem.display) {
+        @if (navItem.path) {
+          <a mat-menu-item [routerLink]="['/' + navItem.path]">{{ navItem.display }}</a>
+        }
+        @if (navItem.externalPath) {
+          <a mat-menu-item [href]="navItem.externalPath" target="_blank">{{ navItem.display }}</a>
+        }
+      }
+    </mat-menu>
+
+    <span class="middle-fill"></span>
+    <app-substance-text-search
+      styling="header"
+      class="top-search"
+      [searchValue]="searchValue()"
+      placeholder="Search Substances"
+      (searchPerformed)="processSubstanceSearch($event)"
+      eventCategory="topSearch"
+      (opened)="increaseMenuZindex()"
+      (closed)="removeZindex()"
+    />
+
+    <app-user-menu [showRegistrars]="showRegistrars()" />
+
+    @if (auth()?.identifier && showRegistrars()) {
+      <div class="classic-view-container">
+        @if (canRegister()) {
+          <a
+            class="top-button hide-at-low-res"
+            mat-button
+            mat-primary-button
+            style="color: white; font-size: 16px; padding-top: 10px; padding-bottom: 10px"
+            [routerLink]="['/registrars']"
+          >
+            <span class="registrar-dashboard-label">Registrar<br />Dashboard</span>
+          </a>
+        }
+      </div>
+    }
+  </mat-toolbar>
+}

@@ -4,12 +4,12 @@
 }
 
 .mat-drawer-container.mat-sidenav-container {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--regular-transparent-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--regular-transparent-color);
 }
 
 mat-sidenav {
@@ -18,12 +18,12 @@ mat-sidenav {
   width: var(--gsrs-sidenav-width);
   min-width: var(--gsrs-sidenav-width);
   max-width: var(--gsrs-sidenav-width);
-  padding: 15px 10px;
+    padding: 15px 10px;
   box-sizing: border-box; // CRITICAL: Include padding in width calculation
 }
 
 .mat-drawer-content {
-  background-color: var(--regular-transparent-color);
+    background-color: var(--regular-transparent-color);
 }
 
 // On viewports where the sidenav is always open, lock the content margin to the
@@ -43,37 +43,38 @@ mat-sidenav {
 }
 
 .expand-sidenav {
-  position: fixed;
-  left: 0;
-  top: 80px;
-  z-index: 10000;
-  background-color: var(--regular-white-color);
-  border: none;
-  border-top-right-radius: 25%;
-  border-bottom-right-radius: 25%;
-  transition: all 800ms;
-  padding: 5px 0;
-
-  .mat-icon {
-    width: 30px;
-    height: 30px;
-  }
-}
-
-@media (max-width: 1100px) {
-  .expand-sidenav {
+    position: sticky;
+    top: 16px;
+    z-index: 10000;
     display: block;
-    opacity: 1;
-  }
+    width: fit-content;
+    background-color: var(--regular-white-color);
+    border: none;
+    border-top-right-radius: 25%;
+    border-bottom-right-radius: 25%;
+    transition: all 800ms;
+    padding: 5px 0;
+
+    .mat-icon {
+        width: 30px;
+        height: 30px;
+    }
 }
 
-@media (min-width: 1100px) {
-  .expand-sidenav {
-    display: none;
-    opacity: 0;
-  }
+@media(max-width: 1100px) {
+    .expand-sidenav {
+        display: block;
+        opacity: 1;
+    }
+}
 
-  mat-sidenav.mat-drawer {
-    background-color: var(--regular-transparent-color);
-  }
+@media(min-width: 1100px) {
+    .expand-sidenav {
+        display: none;
+        opacity: 0;
+    }
+
+    mat-sidenav.mat-drawer {
+        background-color: var(--regular-transparent-color);
+    }
 }
