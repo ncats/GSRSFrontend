@@ -1,4 +1,4 @@
-import { Component, OnInit,  ViewChild, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,  ViewChild, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User, Auth, AuthService } from '@gsrs-core/auth';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,7 +17,8 @@ import {MatPaginator} from '@angular/material/paginator';
     selector: 'app-user-management',
     templateUrl: './user-management.component.html',
     styleUrls: ['./user-management.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserManagementComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -45,7 +46,8 @@ constructor(
     private overlayContainerService: OverlayContainer,
     private adminService: AdminService,
     private utilsService: UtilsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
 
   ) { }
 
@@ -137,7 +139,7 @@ showAllUsers(): void {
     this.filtered.data = response;
     this.showInactiveUsers();
     this.loading = false;
-
+    this.cdr.markForCheck();
 
   });
 
@@ -215,6 +217,7 @@ showInactiveUsers(): void {
         this.filtered.data = backup;
         this.pageChange();
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -252,6 +255,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
           this.filtered.data = backup;
           this.pageChange();
         }
+        this.cdr.markForCheck();
       });
     });
   }
@@ -277,6 +281,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
           backup[index] = response;
           this.filtered.data = backup;
         }
+        this.cdr.markForCheck();
       });
     });
   }
@@ -297,6 +302,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
         this.sortData(this.lastSort);
         this.searchControl.setValue('');
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -339,6 +345,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
         clearTimeout(this.searchTimer);
         this.pageChange();
         this.searchTimer = null;
+        this.cdr.markForCheck();
     }, 700);
   }
 
