@@ -17,7 +17,7 @@
       matTooltip=" Copy this Resulting Material to Starting Material in next Step"
       (click)="copyResultingToStarting()"
     >
-      <mat-icon class="colorbluefda" svgIcon="file_copy"></mat-icon>
+      <mat-icon class="text-brand" svgIcon="file_copy"></mat-icon>
     </button>
 
     <!-- Delete Resulting Material Button -->
@@ -26,7 +26,7 @@
       matTooltip="Delete Resulting Material {{ resultingMaterialIndex + 1 }}"
       (click)="confirmDeleteResultingMaterial()"
     >
-      <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
+      <mat-icon class="text-danger" svgIcon="delete_forever"></mat-icon>
     </button>
   </div>
 
@@ -210,7 +210,7 @@
                   (click)="confirmDeleteAcceptanceCriteria(acceptanceIndex)"
                 >
                   <mat-icon
-                    class="colorred"
+                    class="text-danger"
                     svgIcon="delete_forever"
                   ></mat-icon>
                 </button>

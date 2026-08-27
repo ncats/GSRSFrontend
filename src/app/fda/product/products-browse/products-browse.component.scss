@@ -10,7 +10,7 @@
   padding: 10px;
 
   &:not(:last-child) {
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid var(--query-border-color);
   }
 }
 
@@ -100,7 +100,7 @@
 
   .selected-parameter {
     padding-right: 5px;
-    background-color: var(--regular-white-color);
+    background-color: var(--surface-card);
     font-size: 14px;
   }
 }
@@ -155,7 +155,7 @@
 }
 
 .export-button {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
   border-radius: 4px;
 }
 
@@ -195,7 +195,7 @@
 }
 
 .bad-page {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 .full-paginator {
@@ -260,7 +260,7 @@
 
   .full-paginator {
     min-width: 500px !important;
-    border: 1px solid var(--regular-grey-color);
+    border: 1px solid var(--text-tertiary);
   }
 
   .substance-data {
@@ -292,7 +292,7 @@
 }
 
 .lock-icon {
-  color: #f0ad4e;
+  color: var(--icon-locked);
 }
 
 .narrow-search-suggestions-container {
@@ -361,7 +361,7 @@
 @media (max-width: 505px) {
   .full-paginator {
     min-width: 0px !important;
-    border: 1px solid var(--regular-grey-color);
+    border: 1px solid var(--text-tertiary);
   }
 
   .controls-container {
@@ -383,7 +383,7 @@
 }
 
 .ext-link {
-  color: #448aff;
+  color: var(--link-primary-color);
   text-decoration-style: unset;
 }
 
@@ -394,7 +394,7 @@
 
 .advanced {
   padding-left: 20px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .middle-fill {
@@ -494,12 +494,12 @@
 
   .approval-id {
     font-size: 16px;
-    color: var(--pink-span-color);
+    color: var(--feedback-error-text);
   }
 
   .center {
     font-size: 15px;
-    color: var(--regular-blue-color);
+    color: var(--accent-info);
     display: inline-block;
   }
 }
@@ -638,7 +638,7 @@
 .facet-advanced-options-link {
   margin-top: 7px;
   margin-left: 10px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .facet-search-container {
@@ -776,7 +776,7 @@
 }
 
 .ext-link {
-  color: #448aff;
+  color: var(--link-primary-color);
   text-decoration-style: unset;
 }
 
@@ -805,7 +805,7 @@
 }
 
 .lock-icon {
-  color: #f0ad4e;
+  color: var(--icon-locked);
 }
 
 .search-text {
@@ -896,40 +896,40 @@
   font-size: 18px;
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .colorgreen {
-  color: var(--green-color);
+  color: var(--accent-positive);
 }
 
 .colororange {
-  color: var(--regular-orange-color);
+  color: var(--accent-attention);
 }
 
 .colorlightblue {
-  color: var(--blue-color);
+  color: var(--accent-primary-strong);
 }
 
 .colormaroon {
-  color: var(--regular-maroon-color);
+  color: var(--accent-deep-warm);
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .borderlightorange-bottom {
-  border-bottom: 1px solid var(--light-orange-color);
+  border-bottom: 1px solid var(--accent-warm-soft);
 }
 
 .borderlightgray {
-  border: 1px solid var(--light-green-color);
+  border: 1px solid var(--accent-positive-soft);
 }
 
 .margintopneg5 {
@@ -1051,9 +1051,9 @@
 
 .totalstyle {
   display: inline-block;
-  color: var(--white-color);
-  border: 1px solid var(--grey-border-color);
-  background: var(--dark-grey-bg-color);
+  color: var(--surface-base);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-dark-overlay);
   box-shadow: 0 0 5px -1px var(--box-shadow-color);
   vertical-align: middle;
   max-width: 100px;
@@ -1068,7 +1068,7 @@
   width: 50px;
   height: 50px;
   padding: 0px;
-  border: 10px solid var(--regular-blue-color);
+  border: 10px solid var(--accent-info);
 }
 
 .olstyle {
@@ -1119,7 +1119,7 @@
   max-width: 250px;
   height: 35px;
   padding-top: 3px;
-  color: #007cba;
+  color: var(--legend-info-border-2);
   opacity: 1 !important;
   border-radius: 10px 10px 0px 0px;
 }
@@ -1132,17 +1132,17 @@
 :host ::ng-deep .mat-mdc-tab-header,
 :host ::ng-deep .mat-tab-header {
   margin-top: -10px; /* tab margin*/
-  border-bottom: 1px solid rgb(205, 201, 201);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 :host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab.mdc-tab--active,
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  background-color: var(--tabstyle-bg-color-5);
-  color: #ffffff;
+  background-color: var(--tab-muted-bg);
+  color: var(--surface-base);
 }
 
 :host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-  color: #ffffff;
+  color: var(--surface-base);
 }
 
 :host ::ng-deep .mdc-tab-indicator,
@@ -1155,7 +1155,7 @@ mat-card.style {
 }
 
 .fieldset-crosssearch {
-  border: 1px solid --var(--regular-lightgray-color);
+  border: 1px solid --var(--surface-muted);
   display: inline-block;
   padding-left: 0px;
   margin-left: 2px;
@@ -1167,7 +1167,7 @@ mat-card.style {
 
 .selected-parameter-crosssearch {
   padding: 10px;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   font-size: 14px;
   height: 35px;
 }

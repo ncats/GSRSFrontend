@@ -18,7 +18,7 @@
   width: 50%;
 }
 .approval {
-  color: var(--regular-maroon-color);
+  color: var(--accent-deep-warm);
   flex: 0 0 100%;
 }
 
@@ -103,7 +103,7 @@ margin-bottom: 5px;
   border-top:0px;
 }
 .primary {
-  background-color: var(--sub-hierarchy-bg-color) !important;
+  background-color: var(--tree-child-bg) !important;
 }
 
 .hierarchy-link {
@@ -112,7 +112,7 @@ margin-bottom: 5px;
   max-lines: 2;
 }
 .odd {
-  background-color: var(--sub-hierarchy-odd-bg-color);
+  background-color: var(--tree-child-bg-odd);
 }
 .node-container {
   display:flex;

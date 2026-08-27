@@ -134,7 +134,7 @@
   color: var(--primary-color);
 }
 .trial-button {
-  color: var(--regular-white-color);
+  color: var(--surface-card);
   font-size: 18px;
 }
 
@@ -178,7 +178,7 @@ a.mat-list-item {
 
 .big-button {
   font-size: 19px !important;
-  color: var(--regular-white-color) !important;
+  color: var(--surface-card) !important;
   background-color: var(--primary-color) !important;
   padding: 3px 14px !important;
 }
@@ -190,7 +190,7 @@ a.mat-list-item {
 
   .big-button {
     font-size: 19px !important;
-    color: var(--regular-white-color) !important;
+    color: var(--surface-card) !important;
     background-color: var(--primary-color) !important;
     padding: 3px 14px !important;
   }
@@ -333,7 +333,7 @@ mat-list-item {
 
 .custom-wrap:hover {
   text-decoration: underline;
-  background-color: var(--hover-bg-color);
+  background-color: var(--row-hover-bg);
   cursor: pointer;
 }
 
@@ -396,13 +396,13 @@ mat-list-item {
 
 .entry:hover {
   text-decoration: underline;
-  background-color: var(--hover-bg-color);
+  background-color: var(--row-hover-bg);
   cursor: pointer;
 }
 
 .entry:hover div {
   text-decoration: underline;
-  /*background-color: var(--hover-bg-color);*/
+  /*background-color: var(--row-hover-bg);*/
 }
 
 .half-column {
@@ -467,7 +467,7 @@ mat-list-item {
   padding: 10px;
 
   &:not(:last-child) {
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid var(--query-border-color);
   }
 }
 
@@ -496,7 +496,7 @@ mat-list-item {
   }
   .selected-parameter {
     padding-right: 5px;
-    background-color: var(--regular-white-color);
+    background-color: var(--surface-card);
     font-size: 14px;
   }
 }
@@ -576,17 +576,17 @@ mat-list-item {
   white-space: normal;
 
   .substance-name {
-    color: #448aff;
+    color: var(--link-primary-color);
     padding-right: 10px;
   }
 
   .approval-id {
     font-size: 16px;
-    color: var(--regular-red-color);
+    color: var(--accent-warning);
   }
 }
 .table-view-name {
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .tile-title {
@@ -719,7 +719,7 @@ mat-list-item {
 
 .facet-advanced-options-link {
   margin-top: 7px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .facet-search-container {
@@ -746,12 +746,12 @@ mat-list-item {
 }
 
 .export-button {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
   border-radius: 4px;
 }
 
 .menu-checkbox:hover {
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
 }
 @media (max-width: 1615px) {
   .full-paginator {
@@ -836,7 +836,7 @@ mat-list-item {
 }
 
 .lock-icon {
-  color: #f0ad4e;
+  color: var(--icon-locked);
 }
 
 .narrow-search-suggestions-container {
@@ -925,7 +925,7 @@ mat-list-item {
 }
 
 .ext-link {
-  color: #448aff;
+  color: var(--link-primary-color);
   text-decoration-style: unset;
 }
 
@@ -936,7 +936,7 @@ mat-list-item {
 
 .advanced {
   padding-left: 20px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .facet-options {
@@ -1024,7 +1024,7 @@ mat-paginator {
 }
 
 .bad-page {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 .full-paginator {
@@ -1039,7 +1039,7 @@ mat-paginator {
 
 .button-link-img {
   line-height: 40px;
-  color: var(--regular-black-color);
+  color: var(--text-strong);
 }
 
 @media (max-width: 1099px) {
@@ -1053,7 +1053,7 @@ mat-paginator {
   .close-button,
   .activate-search-button {
     mat-icon svg {
-      fill: black !important;
+      fill: var(--feedback-neutral-text) !important;
     }
   }
 }

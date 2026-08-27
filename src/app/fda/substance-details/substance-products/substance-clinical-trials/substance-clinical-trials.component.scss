@@ -27,8 +27,8 @@
   font-size: 15px;
 }
 
-.colorgray {
-	color: var(--regular-grey-color);
+.text-muted {
+	color: var(--text-tertiary);
 }
 
 .padleft25px {
@@ -39,17 +39,17 @@
   padding-top: 5px;
 }
 
-.colorblue {
-  color: var(--deep-purple-color);
+.text-info {
+  color: var(--accent-mystical-strong);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .btn1 {
-  color : var(--maroon-color);
-  background-color: var(--light-yellow-color-3);
+  color : var(--accent-deep-warm);
+  background-color: var(--highlight-soft-attention-3);
   border-radius: 10px 0 0 10px;
   font-size: 16px;
 }

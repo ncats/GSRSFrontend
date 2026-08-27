@@ -36,11 +36,11 @@
   .help-icon {
     height: 18px;
     cursor: pointer;
-    color: #4793d1;
+    color: var(--primary-color);
   }
 
   .row-layout {
-    color: black;
+    color: var(--feedback-neutral-text);
     width: 100%;
 display: flex;
 flex-wrap: wrap;

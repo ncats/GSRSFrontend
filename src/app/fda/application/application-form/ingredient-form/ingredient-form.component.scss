@@ -1,7 +1,7 @@
 .actions-container {
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   padding: 10px;
   display: flex;
 }
@@ -114,23 +114,23 @@
 }
 
 .backgroundgray {
-  background-color: var(--regular-grey-color);
+  background-color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .colororange {
-  color: var(--orange-color-2);
+  color: var(--accent-warm-2);
 }
 
 .colormaroon {
-  color: var(--regular-maroon-color);
+  color: var(--accent-deep-warm);
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
 .font11px {
@@ -197,22 +197,22 @@
 }
 
 .title1 {
-  color: var(--regular-orangered-color);
+  color: var(--accent-alert);
   font-size: 17px;
   font-weight: 500;
 }
 
 hr {
   border: none;
-  border-top: 3px dotted var(--regular-orangered-color);
-  color: var(--hr-color);
+  border-top: 3px dotted var(--accent-alert);
+  color: var(--divider-strong);
   overflow: visible;
   text-align: center;
   height: 5px;
 }
 
 fieldset.border {
-  border: solid 1px var(--orange-color-rgb-2) !important;
+  border: solid 1px var(--accent-warm-rgb-2) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   min-width: 0; /* override the default value of min-content */
@@ -223,7 +223,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 13px;
-  color: var(--legend-blue-border-color);
+  color: var(--legend-info-border);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;

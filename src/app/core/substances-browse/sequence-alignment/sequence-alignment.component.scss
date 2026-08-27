@@ -1,6 +1,6 @@
 .alignment-input {
   border-radius: 4px;
-  border: 1px solid var(--sub-hierarchy-odd-bg-color);
+  border: 1px solid var(--tree-child-bg-odd);
   margin-top: 8px;
   padding: 5px;
   padding-bottom: 10px;
@@ -33,7 +33,7 @@
 
   padding-left: 10px;
   font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
-  color: var(--pink-span-color);
+  color: var(--feedback-error-text);
 
 }
 

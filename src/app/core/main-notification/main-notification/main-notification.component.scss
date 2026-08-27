@@ -19,22 +19,22 @@
 
     &.showing {
         height: auto;
-        box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14);
+        box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2);
     }
 
     &.default {
         background-color: var(--link-primary-color);
-        color: var(--regular-white-color);
+        color: var(--surface-card);
     }
 
     &.success {
-        background-color: var(--notif-success-bg-color);
+        background-color: var(--toast-success-bg);
         color: var(dark-grey-color);
     }
 
     &.error {
-        background-color: var(--notif-error-bg-color);
-        color: var(--regular-black-color);
+        background-color: var(--toast-error-bg);
+        color: var(--text-strong);
     }
 
     >.close-link {

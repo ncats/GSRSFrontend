@@ -29,7 +29,7 @@
   >
     <mat-icon>check_circle</mat-icon>
   </button>
-  <span *ngIf="ingredient.reviewDate" class="colorgray font12px"
+  <span *ngIf="ingredient.reviewDate" class="text-muted font12px"
     >Reviewed By:&nbsp;{{ ingredient.reviewedBy }}&nbsp;{{
       ingredient.reviewDate | date: "MM/dd/yyyy hh:mm:ss a"
     }}
@@ -38,11 +38,11 @@
   &nbsp;&nbsp;&nbsp;
   <span class="font11px" *ngIf="ingredient">
     <span *ngIf="ingredient.id">
-      <span class="colorgray">Created By:</span>
+      <span class="text-muted">Created By:</span>
       {{ ingredient.createdBy }}&nbsp;&nbsp;&nbsp;
       {{
         ingredient.creationDate | date: "MM/dd/yyyy hh:mm:ss a"
-      }}&nbsp;&nbsp;&nbsp; <span class="colorgray">Modified By:</span>
+      }}&nbsp;&nbsp;&nbsp; <span class="text-muted">Modified By:</span>
       {{ ingredient.modifiedBy }}&nbsp;&nbsp;&nbsp;
       {{ ingredient.lastModifiedDate | date: "MM/dd/yyyy hh:mm:ss a" }}
     </span>
@@ -81,7 +81,7 @@
         >
         </app-substance-search-selector>
 
-        <div *ngIf="ingredientNameMessage" class="colorred font12px">
+        <div *ngIf="ingredientNameMessage" class="text-danger font12px">
           {{ ingredientNameMessage }}
         </div>
 
@@ -100,12 +100,12 @@
               "
             >
               {{ active }}
-              <span class="colorgray font11px">(Active Moiety)</span>
+              <span class="text-muted font11px">(Active Moiety)</span>
             </div>
           </div>
           <div *ngIf="ingredient.substanceKey || ingredientName">
             <span class="colororange">{{ ingredient.substanceKey }}</span>
-            <span class="colorgray font11px">
+            <span class="text-muted font11px">
               <span *ngIf="ingredient.substanceKeyType">
                 ({{ ingredient.substanceKeyType }})</span
               >
@@ -138,7 +138,7 @@
         >
         </app-substance-search-selector>
 
-        <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
+        <div *ngIf="basisOfStrengthMessage" class="text-danger font12px">
           {{ basisOfStrengthMessage }}
         </div>
 
@@ -156,7 +156,7 @@
               "
             >
               {{ active }}
-              <span class="colorgray font11px">(Active Moiety)</span>
+              <span class="text-muted font11px">(Active Moiety)</span>
             </div>
           </div>
 
@@ -169,7 +169,7 @@
             <span class="colororange">{{
               ingredient.basisOfStrengthSubstanceKey
             }}</span>
-            <span class="colorgray font11px">
+            <span class="text-muted font11px">
               <span *ngIf="ingredient.basisOfStrengthSubstanceKeyType">
                 ({{ ingredient.basisOfStrengthSubstanceKeyType }})
               </span>

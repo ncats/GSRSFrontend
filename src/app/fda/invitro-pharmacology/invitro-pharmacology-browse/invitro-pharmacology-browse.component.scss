@@ -59,61 +59,61 @@
 }
 
 .coloroffwhite {
-  color: var(--regular-offwhite-color);
+  color: var(--surface-subtle);
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .colorgreen {
-  color: var(--regular-green-color);
+  color: var(--accent-positive);
 }
 
 .colororange {
-  color: var(--regular-orange-color);
+  color: var(--accent-attention);
 }
 
 .colororangered {
-  color: var(--regular-orangered-color);
+  color: var(--accent-alert);
 }
 
 .colorlightpurple {
-  color: var(--purple-color);
+  color: var(--accent-mystical-soft);
 }
 
-.colorblue {
-  /* FDA COLOR BLUE CODE Hex: #007CBA */
-  color: #007CBA;
+.text-info {
+  /* FDA COLOR BLUE CODE Hex: var(--legend-info-border-2) */
+  color: var(--legend-info-border-2);
   /*color: var(--link-primary-color); */
 }
 
 .colornavy {
-  color: var(--regular-navy-color);
+  color: var(--accent-deepest);
 }
 
 .colorbrown {
-  color: var(--regular-brown-color);
+  color: var(--accent-earth);
 }
 
 .colordarkgrey {
-  color: var(--darkgrey-color);
+  color: var(--text-muted-strong);
 }
 
 .bordergray {
-  border:1px solid var(--regular-grey-color);
+  border:1px solid var(--text-tertiary);
 }
 
 .borderlightorange-bottom {
-  border-bottom:1px solid var(--light-orange-color);
+  border-bottom:1px solid var(--accent-warm-soft);
 }
 
 .borderlightgray {
-  border:1px solid var(--light-green-color);
+  border:1px solid var(--accent-positive-soft);
 }
 
 .padtop5px {
@@ -272,7 +272,7 @@
   padding: 10px;
 
   &:not(:last-child) {
-      border-bottom: 1px solid #d9d9d9;
+      border-bottom: 1px solid var(--query-border-color);
   }
 }
 
@@ -363,7 +363,7 @@
 
 .selected-parameter {
   padding-right:5px;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   font-size:14px;
 }
 }
@@ -473,7 +473,7 @@
 }
 
 .export-button {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
   border-radius: 4px;
 }
 
@@ -513,7 +513,7 @@
 }
 
 .bad-page {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 .full-paginator {
@@ -577,7 +577,7 @@
 
   .full-paginator {
     min-width: 500px !important;
-    border: 1px solid var(--regular-grey-color);
+    border: 1px solid var(--text-tertiary);
   }
 
   .substance-data {
@@ -608,7 +608,7 @@
 }
 
 .lock-icon {
-  color: #f0ad4e;
+  color: var(--icon-locked);
 }
 
 .narrow-search-dropdown {
@@ -682,7 +682,7 @@
 @media(max-width: 505px) {
   .full-paginator {
     min-width: 0px !important;
-    border: 1px solid var(--regular-grey-color);
+    border: 1px solid var(--text-tertiary);
   }
 
   .controls-container {
@@ -704,7 +704,7 @@
 }
 
 .ext-link{
-  color: #448aff;
+  color: var(--link-primary-color);
   text-decoration-style: unset;
 }
 
@@ -715,7 +715,7 @@
 
 .advanced {
   padding-left:20px;
-  color:#448aff;
+  color:var(--link-primary-color);
 
 }
 
@@ -844,12 +844,12 @@
 
   .approval-id {
     font-size: 16px;
-    color: var(--pink-span-color);
+    color: var(--feedback-error-text);
   }
 
   .center {
     font-size: 15px;
-    color: var(--regular-blue-color);
+    color: var(--accent-info);
     display: inline-block;
 }
 }
@@ -964,7 +964,7 @@ height:175px;
 }
 
 .structure-style {
-  border:1px solid var(--regular-grey-color);
+  border:1px solid var(--text-tertiary);
   width: 500px;
   height: 500px
 }
@@ -994,7 +994,7 @@ width:150px;
 
 .facet-advanced-options-link {
   margin-top: 7px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .facet-search-container {
@@ -1089,7 +1089,7 @@ width:150px;
 }
 
 .ext-link{
-  color: #448aff;
+  color: var(--link-primary-color);
   text-decoration-style: unset;
 }
 
@@ -1117,7 +1117,7 @@ width:150px;
 }
 
 .lock-icon {
-  color: #f0ad4e;
+  color: var(--icon-locked);
 }
 
 .search-text {
@@ -1254,7 +1254,7 @@ vertical-align: bottom;
 }
 
 .ext-link{
-color: #448aff;
+color: var(--link-primary-color);
 text-decoration-style: unset;
 }
 
@@ -1392,9 +1392,9 @@ margin:auto;
 
 .totalApp {
   display:inline-block;
-  color:var(--white-color);
-  border:1px solid var(--grey-border-color);
-  background:var(--dark-grey-bg-color);
+  color:var(--surface-base);
+  border:1px solid var(--border-subtle);
+  background:var(--surface-dark-overlay);
   box-shadow: 0 0 5px -1px var(--box-shadow-color);
   vertical-align:middle;
   max-width: 100px;
@@ -1409,7 +1409,7 @@ margin:auto;
   width: 50px;
   height: 50px;
   padding: 0px;
-  border: 10px solid var(--regular-blue-color);
+  border: 10px solid var(--accent-info);
 }
 
 .divflex {
@@ -1470,7 +1470,7 @@ margin:auto;
   min-width: 180px;
   max-width: 180px;
   text-align: top;
-  color: #007CBA;
+  color: var(--legend-info-border-2);
   opacity: 1 !important;
 }
 
@@ -1479,8 +1479,8 @@ margin:auto;
 }
 
 ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  color: red;
-  background-color: green;
+  color: var(--accent-warning);
+  background-color: var(--accent-positive);
 }
 
 :host ::ng-deep .mat-tab-header {
@@ -1490,7 +1490,7 @@ margin:auto;
 
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
   background-color: rgb(40, 35, 124);
-  color: #FFFFFF;
+  color: var(--surface-base);
   padding-top: -10px;
   border-radius: 10px 10px 0px 0px;
 }
@@ -1505,7 +1505,7 @@ margin:auto;
 .tab-style {
   border-width: 9px;
   border-style: solid;
-  border-color: red;
+  border-color: var(--accent-warning);
 }
 
 /* TAB STYLE BEGIN */
@@ -1531,18 +1531,18 @@ margin:auto;
 :host ::ng-deep .mat-mdc-tab-header,
 :host ::ng-deep .mat-tab-header {
   margin-top: -10px; /* tab margin*/
-  border-bottom: 1px solid rgb(205, 201, 201);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 :host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab.mdc-tab--active,
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  background-color: var(--tabstyle-bg-color-7);
-  color: #FFFFFF;
+  background-color: var(--tab-link-bg-strong);
+  color: var(--surface-base);
   font-weight: bold;
 }
 
 :host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-  color: #FFFFFF;
+  color: var(--surface-base);
 }
 
 :host ::ng-deep .mdc-tab-indicator,

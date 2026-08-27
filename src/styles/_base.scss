@@ -24,6 +24,33 @@ textarea {
   padding: 15px 10px;
 }
 
+// All plain <a> tags inherit the themed link color (overrides the browser
+// default blue #0000EE so links like .substance-name and .name pick up the
+// brand teal). Specific component rules still take precedence.
+a {
+  color: var(--link-color);
+  text-decoration: inherit;
+}
+
+// Server-rendered HTML returned via [innerHTML] (e.g. substance._nameHTML)
+// contains <a class="substance-name"> and <span class="name"> elements.
+// The class names are reused across the app, so we declare them globally
+// here to ensure they get themed regardless of Angular's view encapsulation
+// or any inline style coming from the API.
+// The `!important` defeats inline `style="color:..."` and any other
+// competing selector of equal or lower specificity.
+a.substance-name,
+span.name,
+a.substance-name span,
+a.substance-name span.name {
+  color: var(--link-color) !important;
+}
+
+// Catch any other named-color class that might slip through innerHTML.
+a[href].substance-name {
+  color: var(--link-color) !important;
+}
+
 a:hover,
 button:hover {
   cursor: pointer;

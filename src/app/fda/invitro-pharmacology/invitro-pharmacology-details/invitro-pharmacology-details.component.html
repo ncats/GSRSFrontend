@@ -37,11 +37,11 @@
 
           <!-- Show Audit Information -->
           <div class="width30percent font11px margintop10px">
-            <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Create
+            <span class="text-muted">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
+            <span class="text-muted">Create
               Date:</span>{{assay.createdDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modify Date:</span> {{assay.modifiedDate|date: 'MM/dd/yyyy hh:mm:ss
+            <span class="text-muted">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
+            <span class="text-muted">Modify Date:</span> {{assay.modifiedDate|date: 'MM/dd/yyyy hh:mm:ss
             a'}}
           </div>
 
@@ -59,7 +59,7 @@
 
       <mat-card-content>
         <div class="margintop10px marginbottom30px">
-          <span class="colorblue font20px"><b>Assay Information</b></span>
+          <span class="text-info font20px"><b>Assay Information</b></span>
 
           <table class="tableStyle margintop15px">
             <tbody>
@@ -243,11 +243,11 @@
         <!-- Display Assay Details End -->
 
         <div *ngIf="assay._resultInformationList.length > 0; else noResults">
-          <div class="colorblue font20px"><b>Screening Results ({{assay.invitroAssayScreenings.length}}), Controls, and
+          <div class="text-info font20px"><b>Screening Results ({{assay.invitroAssayScreenings.length}}), Controls, and
               Summaries</b></div>
         </div>
         <ng-template #noResults>
-          <div class="colorblue font20px"><b>NO Results and Summaries</b></div>
+          <div class="text-info font20px"><b>NO Results and Summaries</b></div>
         </ng-template>
         <br>
 

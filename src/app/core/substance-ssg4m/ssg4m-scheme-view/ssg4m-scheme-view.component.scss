@@ -20,7 +20,7 @@
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .bordergreen {
@@ -83,8 +83,8 @@
   padding-right: -10px;
 }
 
-.colorblue {
-  color: #007CBA;
+.text-info {
+  color: var(--legend-info-border-2);
 }
 
 .fontsize14px {
@@ -122,20 +122,20 @@
   position: relative;
   top: -36px;
   margin-right: 20px;
-  background-color: #FFFFFF;
-  border: 1px solid #007CBA;
+  background-color: var(--surface-base);
+  border: 1px solid var(--legend-info-border-2);
 }
 
 fieldset.border {
-  border: solid 2px var(--fieldset-blue-border-color) !important;
+  border: solid 2px var(--fieldset-info-border) !important;
   padding: 0 10px 0px 10px;
   border-bottom: none;
   margin-bottom: 10px;
   /*border-radius: 8px;*/
   min-width: 0;  /* override the default value of min-content */
-/*  -webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
-  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
-  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);*/
+/*  -webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-shadow);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-shadow);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-shadow);*/
 
 }
 
@@ -144,7 +144,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: var(--legend-blue-border-color);
+  color: var(--legend-info-border);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
@@ -158,9 +158,9 @@ fieldset.border-step {
   margin-bottom: 30px;
   /*border-radius: 8px;*/
   min-width: 0;  /* override the default value of min-content */
-  /*-webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
-  -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
-  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);*/
+  /*-webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-shadow);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-shadow);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-shadow);*/
 }
 
 legend.border-step {
@@ -168,7 +168,7 @@ legend.border-step {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: #007CBA;
+  color: var(--legend-info-border-2);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
@@ -196,5 +196,5 @@ a {
 
 /*
 .hyperlink-color a:link {
-  color: red;
+  color: var(--accent-warning);
 }*/

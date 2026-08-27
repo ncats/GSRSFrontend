@@ -39,7 +39,7 @@
   padding: 10px;
 
   &:not(:last-child) {
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid var(--query-border-color);
   }
 }
 
@@ -57,7 +57,7 @@
   border-right-style: hidden;
   border-left-style: hidden;
   border-bottom-style: groove;
-  border-color: var(--pale-border-color-rgb-3);
+  border-color: var(--border-soft-rgb-3);
 }
 
 .search-parameters {
@@ -86,7 +86,7 @@
 
   .selected-parameter {
     padding-right: 5px;
-    background-color: var(--regular-white-color);
+    background-color: var(--surface-card);
     font-size: 14px;
   }
 
@@ -192,7 +192,7 @@
 
   .approval-id {
     font-size: 16px;
-    color: var(--regular-red-color);
+    color: var(--accent-warning);
   }
 }
 
@@ -215,7 +215,7 @@
 
   .approval-id {
     font-size: 16px;
-    color: var(--regular-red-color);
+    color: var(--accent-warning);
   }
 }
 .table-view-name {
@@ -373,7 +373,7 @@
 
 .facet-advanced-options-link {
   margin-top: 7px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .facet-search-container {
@@ -406,8 +406,8 @@
 }
 
 .export-button {
-  color: var(--regular-black-color);
-  background-color: white;
+  color: var(--text-strong);
+  background-color: var(--surface-card);
   border-radius: 4px;
   box-shadow:
     0 3px 1px -2px #0003,
@@ -419,7 +419,7 @@
 .similarity {
   padding-left: 10px;
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  color: var(--pink-span-color);
+  color: var(--feedback-error-text);
 }
 
 .similarity-label {
@@ -427,7 +427,7 @@
 }
 
 .menu-checkbox:hover {
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
 }
 @media (max-width: $breakpoint-desktop-lg) {
   .full-paginator {
@@ -513,7 +513,7 @@
 }
 
 .lock-icon {
-  color: var(--lock-icon-color);
+  color: var(--icon-locked);
 }
 
 .narrow-search-suggestions-container {
@@ -685,7 +685,7 @@
 
 .advanced {
   padding-left: 20px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .facet-options {
@@ -714,7 +714,7 @@
 }
 
 .mat-elevation-z2 {
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
 }
 
 .more-content {
@@ -793,7 +793,7 @@ mat-paginator {
 }
 
 .bad-page {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 .full-paginator {
@@ -809,14 +809,14 @@ mat-paginator {
 
 .button-link-img {
   line-height: 40px;
-  color: var(--regular-black-color);
+  color: var(--text-strong);
 }
 .red-text {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
   font-style: italic;
 }
 .orange-text {
-  color: var(--regular-orange-color);
+  color: var(--accent-attention);
   font-style: italic;
 }
 .sub-search-div {
@@ -825,17 +825,17 @@ mat-paginator {
 .sub-search-ref-btn {
   padding: 10px;
   margin: 0 5px;
-  background-color: var(--regular-white-color);
-  box-shadow: 2px 2px var(--regular-lightgray-color);
-  border: 0.4px solid var(--regular-white-color);
+  background-color: var(--surface-card);
+  box-shadow: 2px 2px var(--surface-muted);
+  border: 0.4px solid var(--surface-card);
   border-radius: 5px;
 }
 .sub-search-cancel-btn {
   padding: 10px;
-  color: var(--regular-white-color);
-  background-color: var(--regular-red-color);
-  box-shadow: 2px 2px var(--regular-lightgray-color);
-  border: 0.4px solid var(--regular-red-color);
+  color: var(--surface-card);
+  background-color: var(--accent-warning);
+  box-shadow: 2px 2px var(--surface-muted);
+  border: 0.4px solid var(--accent-warning);
   border-radius: 5px;
 }
 .sub-search-text {
@@ -856,11 +856,11 @@ mat-paginator {
   margin: auto;
 }
 // .mat-progress-spinner circle, .mat-spinner circle {
-//     stroke: grey;
+//     stroke: var(--text-tertiary);
 // }
 .search-spinner ::ng-deep .mat-progress-spinner circle,
 .mat-spinner circle {
-  stroke: var(--regular-grey-color);
+  stroke: var(--text-tertiary);
   width: 10px !important;
   height: 10px !important;
   display: inline;
@@ -906,7 +906,7 @@ mat-paginator {
 
 .selected-parameter-crosssearch {
   padding: 10px;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   font-size: 14px;
   height: 35px;
 }
@@ -917,7 +917,7 @@ mat-paginator {
 }
 
 .fieldset-crosssearch {
-  border: 1px solid --var(--regular-lightgray-color);
+  border: 1px solid --var(--surface-muted);
   display: inline-block;
   padding-left: 0px;
   margin-left: 2px;

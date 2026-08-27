@@ -34,7 +34,7 @@
   align-items: flex-start;
   padding-left: 15px;
   margin-left: 10px;
-  border-left: 1px solid #b3b3b3;
+  border-left: 1px solid var(--input-border-soft);
   min-width: 235px;
 
   .mat-slider-horizontal {
@@ -65,17 +65,17 @@
   white-space: normal;
 
   .substance-name {
-    color: #448aff;
+    color: var(--link-primary-color);
     padding-right: 10px;
   }
 
   .approval-id {
     font-size: 16px;
-    color: red;
+    color: var(--accent-warning);
   }
 }
 .table-view-name {
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .tile-title {
@@ -83,7 +83,7 @@
   margin-bottom: 8px;
   font-size: 16px;
   font-weight: 500;
-  color: red;
+  color: var(--accent-warning);
 }
 
 ::ng-deep .mat-paginator-range-label {
@@ -96,7 +96,7 @@
   padding-right: 25px;
   font-weight: 550;
   padding-top: 10px;
-  color: #4793d1;
+  color: var(--primary-color);
   width: 285px;
 }
 
@@ -165,7 +165,7 @@
 
 .expand-button {
   align-content: flex-end;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 .mat-expansion-panel {
   box-shadow: none !important;
@@ -239,7 +239,7 @@
 
 .facet-advanced-options-link {
   margin-top: 7px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .facet-search-container {
@@ -266,14 +266,14 @@
 }
 
 .export-button {
-  color: white;
+  color: var(--surface-card);
   border-radius: 4px;
 }
 
 .similarity {
   padding-left: 10px;
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  color: #c7254e;
+  color: var(--feedback-error-text);
 }
 
 .similarity-label {
@@ -281,7 +281,7 @@
 }
 
 .menu-checkbox:hover {
-  background-color: white;
+  background-color: var(--surface-card);
 }
 @media (max-width: 1750px) {
   .full-paginator {
@@ -366,7 +366,7 @@
 }
 
 .lock-icon {
-  color: #f0ad4e;
+  color: var(--icon-locked);
 }
 
 .narrow-search-suggestions-container {
@@ -474,7 +474,7 @@
 }
 
 .ext-link {
-  color: #448aff;
+  color: var(--link-primary-color);
   text-decoration-style: unset;
 }
 
@@ -485,7 +485,7 @@
 
 .advanced {
   padding-left: 20px;
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .facet-options {
@@ -500,7 +500,7 @@
 }
 
 .mat-elevation-z2 {
-  background-color: white;
+  background-color: var(--surface-card);
 }
 
 .more-content {
@@ -563,7 +563,7 @@
 }
 
 // Page label and page selector styles moved to global _material-overrides.scss
-// Note: This component previously used color: rgba(0, 0, 0, 0.54) for .page-label,
+// Note: This component previously used color: var(--dark-label-color) for .page-label,
 // now uses var(--dark-label-color) from global styles
 
 :host ::ng-deep .mat-paginator-range-label {
@@ -580,7 +580,7 @@ mat-paginator {
 }
 
 .bad-page {
-  color: red;
+  color: var(--accent-warning);
 }
 
 .full-paginator {
@@ -595,14 +595,14 @@ mat-paginator {
 
 .button-link-img {
   line-height: 40px;
-  color: black;
+  color: var(--feedback-neutral-text);
 }
 .red-text {
-  color: red;
+  color: var(--accent-warning);
   font-style: italic;
 }
 .orange-text {
-  color: orange;
+  color: var(--accent-attention);
   font-style: italic;
 }
 .sub-search-div {
@@ -611,17 +611,17 @@ mat-paginator {
 .sub-search-ref-btn {
   padding: 10px;
   margin: 0 5px;
-  background-color: white;
+  background-color: var(--surface-card);
   box-shadow: 2px 2px lightgrey;
-  border: 0.4px solid white;
+  border: 0.4px solid var(--surface-card);
   border-radius: 5px;
 }
 .sub-search-cancel-btn {
   padding: 10px;
-  color: white;
-  background-color: red;
+  color: var(--surface-card);
+  background-color: var(--accent-warning);
   box-shadow: 2px 2px lightgrey;
-  border: 0.4px solid red;
+  border: 0.4px solid var(--accent-warning);
   border-radius: 5px;
 }
 .sub-search-text {
@@ -642,11 +642,11 @@ mat-paginator {
   margin: auto;
 }
 // .mat-progress-spinner circle, .mat-spinner circle {
-//     stroke: grey;
+//     stroke: var(--text-tertiary);
 // }
 .search-spinner ::ng-deep .mat-progress-spinner circle,
 .mat-spinner circle {
-  stroke: grey;
+  stroke: var(--text-tertiary);
   width: 10px !important;
   height: 10px !important;
   display: inline;

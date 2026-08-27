@@ -6,7 +6,7 @@
 }
 
 .bordergray {
-  border:1px solid var(--regular-grey-color);
+  border:1px solid var(--text-tertiary);
 }
 
 .font10px {
@@ -21,24 +21,24 @@
   font-size: 15px;
 }
 
-.colorgray {
-	color: var(--regular-grey-color);
+.text-muted {
+	color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .colorgreen {
-  color: var(--regular-green-color);
+  color: var(--accent-positive);
 }
 
 .colorpurple {
-  color: var(--regular-purple-color);
+  color: var(--accent-mystical);
 }
 
-.colorblue {
-  color: var(--deep-purple-color);
+.text-info {
+  color: var(--accent-mystical-strong);
 }
 
 .padleft25px {

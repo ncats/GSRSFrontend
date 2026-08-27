@@ -27,7 +27,7 @@
 }
 
 .white-background {
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
 }
 
 // Target the actual mat-drawer element that Material measures
@@ -57,7 +57,7 @@ mat-sidenav.substance-sidenav.mat-drawer {
 :host ::ng-deep .substance-nav-list
   .mat-mdc-list-item
   .mdc-list-item__primary-text {
-  color: #000;
+  color: var(--text-shadow-color);
 }
 
 .list-content {
@@ -82,19 +82,19 @@ mat-sidenav.substance-sidenav.mat-drawer {
 
 .approvalID {
   font-size: 20px;
-  color: var(--pink-span-color);
+  color: var(--feedback-error-text);
   font-weight: 500;
 }
 
 .approvalIDColor {
-  color: var(--pink-span-color);
+  color: var(--feedback-error-text);
   margin-bottom: 0 !important;
   margin-top: 0 !important;
 }
 
 .chip {
   display: inline-block;
-  background-color: var(--pale-border-color);
+  background-color: var(--border-soft);
   border-radius: 50%;
   padding: 0 5px;
   margin-left: 15px;

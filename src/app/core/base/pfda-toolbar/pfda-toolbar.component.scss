@@ -11,7 +11,7 @@ $screenMedium: 1045px;
 
 .pfda-toolbar {
 	background-color: $pfda-navbar-blue !important;
-	color: white;
+	color: var(--surface-card);
 	font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 13px;
 	font-weight: 400;
@@ -54,7 +54,7 @@ $screenMedium: 1045px;
 	}
 
 	&.active {
-		color: white;
+		color: var(--surface-card);
 		background-color: $pfda-navbar-active-blue;
 	}
 

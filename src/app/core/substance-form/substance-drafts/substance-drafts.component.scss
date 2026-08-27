@@ -90,8 +90,8 @@
 }
 
 .notice-message {
-  color: var(--notice-dialog-color);
-  background-color: var(--notice-dialog-bg-color);
+  color: var(--feedback-neutral-text);
+  background-color: var(--feedback-neutral-bg);
 
 }
 
@@ -101,7 +101,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.6); /* Light dim background */
+  background: var(--surface-base); /* Light dim background */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,7 +111,7 @@
 .draft-block {
   margin-bottom: 20px;
   padding-left: 8px;
-  border-left: 4px solid #ccc;
+  border-left: 4px solid var(--border-subtle);
 }
 
 .draft-block strong {
@@ -142,7 +142,7 @@
   color: #c62828;
 }
 .label-warning {
-  background-color: #fff8e1;
+  background-color: var(--warning-dialog-bg-color);
   color: #f9a825;
 }
 .label-success {

@@ -95,16 +95,16 @@
 
           <div class="font11px" *ngIf="application.id">
             <div class="textalignright">
-              <span *ngIf="isDisableData" class="font11px colorred">
+              <span *ngIf="isDisableData" class="font11px text-danger">
                 Provenance: DARRTS (some fields are non-editable)
               </span>
             </div>
             <br>
             <div>
-              <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Create Date:</span> {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{application.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+              <span class="text-muted">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
+              <span class="text-muted">Create Date:</span> {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              <span class="text-muted">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
+              <span class="text-muted">Modify Date:</span> {{application.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@
                 <mat-label>Submit Date</mat-label>
                 <input matInput [disabled]="isDisableData" placeholder="(mm/dd/yyyy)"
                   [(ngModel)]="application.submitDate" name="submitDate" (change)="validateSubmitDate()" />
-                <mat-hint *ngIf="submitDateMessage"><span class="colorred">{{submitDateMessage}}</span></mat-hint>
+                <mat-hint *ngIf="submitDateMessage"><span class="text-danger">{{submitDateMessage}}</span></mat-hint>
               </mat-form-field>
 
               <!--
@@ -179,7 +179,7 @@
                 <mat-label>Status Date</mat-label>
                 <input matInput [disabled]="isDisableData" placeholder="(mm/dd/yyyy)"
                   [(ngModel)]="application.statusDate" name="statusDate" (change)="validateStatusDate()" />
-                <mat-hint *ngIf="statusDateMessage"><span class="colorred">{{statusDateMessage}}</span></mat-hint>
+                <mat-hint *ngIf="statusDateMessage"><span class="text-danger">{{statusDateMessage}}</span></mat-hint>
               </mat-form-field>
             </div>
 

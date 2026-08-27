@@ -1,6 +1,6 @@
 
 .testing {
-  border: 1px solid green;
+  border: 1px solid var(--accent-positive);
 }
 
 .divflex {
@@ -55,40 +55,40 @@
   font-size: 22px;
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .colorgreen {
-  color: var(--green-color);
+  color: var(--accent-positive);
 }
 
 .colororange {
-  color: var(--regular-orange-color);
+  color: var(--accent-attention);
 }
 
 .colorlightblue {
-  color: var(--blue-color);
+  color: var(--accent-primary-strong);
 }
 
 .colormaroon {
-  color: var(--regular-maroon-color);
+  color: var(--accent-deep-warm);
 }
 
 .bordergray {
-  border:1px solid var(--regular-grey-color);
+  border:1px solid var(--text-tertiary);
 }
 
 .borderlightgray {
-  border: 1px solid var(--regular-lightgray-color);
+  border: 1px solid var(--surface-muted);
 }
 
 .borderbottomgray {
-  border-bottom :1px solid var(--regular-grey-color);
+  border-bottom :1px solid var(--text-tertiary);
 }
 
 .margintopneg5 {
@@ -253,7 +253,7 @@
 
   .selected-parameter {
     padding-right:5px;
-    background-color: var(--regular-white-color);
+    background-color: var(--surface-card);
     font-size:14px;
     height: 45px;
   }
@@ -263,7 +263,7 @@
 .progress-bar-container {
   width: 100%;
   height: 13px;
-  background-color: #eee;
+  background-color: var(--query-bg-color);
   border-radius: 10px;
 }
 
@@ -279,7 +279,7 @@
 }
 
 .progress-text {
-  color: blue;
+  color: var(--accent-info);
   font-weight: bold;
   margin-top: 5px;
 }

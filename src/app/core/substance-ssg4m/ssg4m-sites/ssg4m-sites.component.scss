@@ -12,12 +12,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--overlay-modal-bg);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--overlay-modal-text);
 }
 
 .form-row {
@@ -83,24 +83,24 @@
 
 hr {
   border: none;
-  border-top: 3px dotted var(--regular-orangered-color);
-  color: var(--hr-color);
+  border-top: 3px dotted var(--accent-alert);
+  color: var(--divider-strong);
   overflow: visible;
   text-align: center;
   height: 5px;
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .buttonstyle {
-  border: 2px solid var(--deep-purple-border-color-rgb);
-  background-color: var(--pale-border-color-rgb-3);
+  border: 2px solid var(--border-accent-rgb);
+  background-color: var(--border-soft-rgb-3);
 }
 
 .bordergreen {
-  border: 1px solid var(--regular-green-color);
+  border: 1px solid var(--accent-positive);
 }
 
 .margintop10px {
@@ -128,8 +128,8 @@ hr {
   position: relative;
   top: -10px;
   margin-right: 25px;
-  background-color: #ffffff;
-  border: 1px solid #007cba;
+  background-color: var(--surface-base);
+  border: 1px solid var(--legend-info-border-2);
 }
 
 .button-add {
@@ -137,8 +137,8 @@ hr {
   position: relative;
   top: 30px;
   margin-right: 25px;
-  background-color: #ffffff;
-  border: 1px solid #007cba;
+  background-color: var(--surface-base);
+  border: 1px solid var(--legend-info-border-2);
 }
 
 .button-delete {
@@ -146,20 +146,20 @@ hr {
   position: absolute;
   top: -40px;
   margin-right: 20px;
-  color: red;
-  background-color: #ffffff;
-  border: 1px solid red;
+  color: var(--accent-warning);
+  background-color: var(--surface-base);
+  border: 1px solid var(--accent-warning);
 }
 
 fieldset.border {
-  border: solid 2px var(--fieldset-green-border-color) !important;
+  border: solid 2px var(--fieldset-success-border) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   /*border-radius: 8px;*/
   min-width: 0; /* override the default value of min-content */
-  /*-webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
-  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
-  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);*/
+  /*-webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-shadow);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-shadow);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-shadow);*/
 }
 
 legend.border {
@@ -167,7 +167,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: var(--legend-blue-border-color-2);
+  color: var(--legend-info-border-2);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 20px;

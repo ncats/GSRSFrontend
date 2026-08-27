@@ -160,8 +160,8 @@
     font-size: 20px;
   }
 
-  .colorgray {
-      color: var(--regular-grey-color);
+  .text-muted {
+      color: var(--text-tertiary);
   }
 
 .fontbold {
@@ -169,20 +169,20 @@
 }
 
 .colororange {
-  color: var(--orange-color);
+  color: var(--accent-warm);
 }
 
-.colorblue {
+.text-info {
   color: var(--primary-title-color);
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 table.blueTable {
     font-family: Roboto, "Helvetica Neue", sans-serif;
-    border: 1px solid var(--secondary-blue-color);
+    border: 1px solid var(--accent-secondary);
     background-color: var(--table-bg-color);
     width: 100%;
     text-align: left;
@@ -224,7 +224,7 @@ table.blueTable {
   table.blueTable tfoot {
     font-size: 14px;
     font-weight: bold;
-    color: var(--white-color);
+    color: var(--surface-base);
     background: var(--table-th-border-color-2);
     border-top: 2px solid var(--table-thead-border-color);
   }
@@ -239,8 +239,8 @@ table.blueTable {
 
   table.blueTable tfoot .links a{
     display: inline-block;
-    background: var(--secondary-blue-color);
-    color: var(--white-color);
+    background: var(--accent-secondary);
+    color: var(--surface-base);
     padding: 2px 8px;
     border-radius: 5px;
   }
@@ -259,7 +259,7 @@ table.blueTable {
   @media(max-width: 918px) {
     .product-property {
           width: 100%;
-          border:1px solid var(--regular-red-color);
+          border:1px solid var(--accent-warning);
     }
 
     .row {
