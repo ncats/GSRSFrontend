@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { domainKeys } from '../domain-references/domain-keys.constant';
 import { DomainsWithReferences } from '../domain-references/domain.references.model';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -10,7 +10,8 @@ import { take } from 'rxjs/operators';
     selector: 'app-apply-reference',
     templateUrl: './apply-reference.component.html',
     styleUrls: ['./apply-reference.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplyReferenceComponent implements OnInit, OnDestroy {
   domainKeys = domainKeys;
@@ -20,7 +21,8 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
   open = false;
 
   constructor(
-    private substanceFormReferencesService: SubstanceFormReferencesService
+    private substanceFormReferencesService: SubstanceFormReferencesService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
     const subscription = this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
       this.domainsWithReferences = domainsWithReferences;
       this.setChecked();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(subscription);
   }
