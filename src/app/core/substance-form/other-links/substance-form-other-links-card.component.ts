@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {Link} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -10,7 +10,8 @@ import { SubstanceFormOtherLinksService } from './substance-form-other-links.ser
     selector: 'app-substance-form-other-links-card',
     templateUrl: './substance-form-other-links-card.component.html',
     styleUrls: ['./substance-form-other-links-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilteredList<Link>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -20,6 +21,7 @@ export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilte
     private substanceFormOtherLinksService: SubstanceFormOtherLinksService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
+    private cdr: ChangeDetectorRef,
 
   ) {
     super(gaService);
@@ -34,6 +36,7 @@ export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilte
   ngAfterViewInit() {
     const otherLinksSubscription = this.substanceFormOtherLinksService.substanceOtherLinks.subscribe(otherLinks => {
       this.otherLinks = otherLinks;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(otherLinksSubscription);
   }
