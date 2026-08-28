@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {StructurallyDiverse} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
@@ -12,7 +12,8 @@ import { SubstanceFormStructurallyDiverseService } from '../substance-form-struc
     selector: 'app-substance-form-structurally-diverse-organism',
     templateUrl: './substance-form-structurally-diverse-organism.component.html',
     styleUrls: ['./substance-form-structurally-diverse-organism.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructurallyDiverseOrganismComponent extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {
@@ -27,7 +28,8 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
   constructor(
     private substanceFormStructurallyDiverseService: SubstanceFormStructurallyDiverseService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
     this.analyticsEventCategory = 'substance form structural modification structurally diverse organism';
@@ -61,6 +63,7 @@ export class SubstanceFormStructurallyDiverseOrganismComponent extends Substance
         this.parentUuid = this.structurallyDiverse.parentSubstance
           && this.structurallyDiverse.parentSubstance.refuuid || '';
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(structurallyDiverseSubscription);
   }
