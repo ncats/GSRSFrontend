@@ -22,9 +22,9 @@ export class SubstanceFormPhysicalModificationsCardComponent extends SubstanceCa
     private substanceFormPhysicalModificationsService: SubstanceFormPhysicalModificationsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form agent modifications';
   }
 
@@ -36,7 +36,7 @@ export class SubstanceFormPhysicalModificationsCardComponent extends SubstanceCa
   ngAfterViewInit() {
     const physicalSubscription = this.substanceFormPhysicalModificationsService.substancePhysicalModifications.subscribe(modifications => {
       this.modifications = modifications;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(physicalSubscription);
   }

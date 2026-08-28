@@ -24,9 +24,9 @@ private subscriptions: Array<Subscription> = [];
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
     public cvService: ControlledVocabularyService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
 ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form Nucleic Acid Details';
   }
 
@@ -34,7 +34,7 @@ private subscriptions: Array<Subscription> = [];
     this.menuLabelUpdate.emit('Nucleic Acid Classification');
     const nucleicAcidSubscription = this.substanceFormService.substanceNucleicAcid.subscribe(nucleicAcid => {
       this.nucleicAcid = nucleicAcid;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(nucleicAcidSubscription);
     this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',

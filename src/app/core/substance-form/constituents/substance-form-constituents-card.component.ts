@@ -27,9 +27,9 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
     private substanceFormConstituentsService: SubstanceFormConstituentsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form constituents';
   }
 
@@ -41,7 +41,7 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
   ngAfterViewInit() {
     const agentSubscription = this.substanceFormConstituentsService.substanceConstituents.subscribe(constituents => {
       this.constituents = constituents;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(agentSubscription);
   }

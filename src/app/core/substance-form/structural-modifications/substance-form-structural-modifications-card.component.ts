@@ -23,9 +23,9 @@ export class SubstanceFormStructuralModificationsCardComponent extends Substance
     private substanceFormStructuralModificationsService: SubstanceFormStructuralModificationsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form structural modifications';
   }
 
@@ -40,7 +40,7 @@ export class SubstanceFormStructuralModificationsCardComponent extends Substance
       .subscribe(modifications => {
 
       this.modifications = modifications;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(structuralSubscription);
   }

@@ -22,9 +22,9 @@ export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBase
     private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form structural units';
   }
 
@@ -35,7 +35,7 @@ export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBase
   ngAfterViewInit() {
     const structuralSubscription = this.substanceFormStructuralUnitsService.substanceSRUs.subscribe(structuralUnits => {
       this.structuralUnits = structuralUnits;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(structuralSubscription);
   }

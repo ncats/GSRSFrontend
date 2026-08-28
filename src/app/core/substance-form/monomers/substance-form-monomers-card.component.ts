@@ -22,9 +22,9 @@ export class SubstanceFormMonomersCardComponent extends SubstanceCardBaseFiltere
     private substanceFormMonomersService: SubstanceFormMonomersService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form monomers';
   }
 
@@ -36,7 +36,7 @@ export class SubstanceFormMonomersCardComponent extends SubstanceCardBaseFiltere
   ngAfterViewInit() {
     const monomersSubscription = this.substanceFormMonomersService.substanceMonomers.subscribe(monomers => {
       this.monomers = monomers;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(monomersSubscription);
   }

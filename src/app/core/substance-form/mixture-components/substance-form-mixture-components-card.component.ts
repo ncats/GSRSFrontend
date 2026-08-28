@@ -21,9 +21,9 @@ export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBa
     private substanceFormMixtureComponentsService: SubstanceFormMixtureComponentsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
   }
 
   ngOnInit() {
@@ -35,7 +35,7 @@ export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBa
   ngAfterViewInit() {
     const relationshipsSubscription = this.substanceFormMixtureComponentsService.substanceMixtureComponents.subscribe(components => {
       this.relationships = components;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(relationshipsSubscription);
   }

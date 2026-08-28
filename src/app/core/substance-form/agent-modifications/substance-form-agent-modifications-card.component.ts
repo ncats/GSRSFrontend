@@ -25,9 +25,9 @@ export class SubstanceFormAgentModificationsCardComponent
     private substanceFormAgentModificationsService: SubstanceFormAgentModificationsService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private cdr: ChangeDetectorRef
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form agent modifications';
   }
 
@@ -39,7 +39,7 @@ export class SubstanceFormAgentModificationsCardComponent
     this.canAddItemUpdate.emit(true);
     const agentSubscription = this.substanceFormAgentModificationsService.substanceAgentModifications.subscribe(modifications => {
       this.modifications = modifications;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(agentSubscription);
   }

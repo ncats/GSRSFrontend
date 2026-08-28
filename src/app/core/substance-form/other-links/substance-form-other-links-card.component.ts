@@ -21,10 +21,10 @@ export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilte
     private substanceFormOtherLinksService: SubstanceFormOtherLinksService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private cdr: ChangeDetectorRef,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form otherLinks';
   }
 
@@ -36,7 +36,7 @@ export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilte
   ngAfterViewInit() {
     const otherLinksSubscription = this.substanceFormOtherLinksService.substanceOtherLinks.subscribe(otherLinks => {
       this.otherLinks = otherLinks;
-      this.cdr.markForCheck();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(otherLinksSubscription);
   }
