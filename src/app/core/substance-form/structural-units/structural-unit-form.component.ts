@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AmountFormDialogComponent } from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import { Subscription } from 'rxjs';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
@@ -13,7 +13,8 @@ import { SafeUrl } from '@angular/platform-browser';
     selector: 'app-structural-unit-form',
     templateUrl: './structural-unit-form.component.html',
     styleUrls: ['./structural-unit-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructuralUnitFormComponent implements OnInit {
   @Input() unit: StructuralUnit;
@@ -31,10 +32,12 @@ export class StructuralUnitFormComponent implements OnInit {
     private utilsService: UtilsService,
     private substanceService: SubstanceService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
-  ) { 
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.substanceService.showImagePopup.subscribe (data => {
       this.hidePopup = data;
+      this.cdr.markForCheck();
     })
   }
 
@@ -69,6 +72,7 @@ export class StructuralUnitFormComponent implements OnInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
       this.overlayContainer.style.zIndex = null;
       this.unit.amount = newAmount;
+      this.cdr.markForCheck();
 
     });
     this.subscriptions.push(dialogSubscription);
