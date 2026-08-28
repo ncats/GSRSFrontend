@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -10,7 +10,8 @@ import {Subscription} from 'rxjs';
     selector: 'app-structure-form',
     templateUrl: './structure-form.component.html',
     styleUrls: ['./structure-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureFormComponent implements OnInit, OnDestroy {
   private privateStructure: SubstanceStructure | SubstanceMoiety = {};
@@ -27,7 +28,8 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -65,6 +67,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
       this.stereoChemistryTypeList = response['STEREOCHEMISTRY_TYPE'].list;
       this.opticalActivityList = response['OPTICAL_ACTIVITY'].list;
       this.atropisomerismList = response['ATROPISOMERISM'].list;
+      this.cdr.markForCheck();
     });
   }
 
