@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceRelationship } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -11,7 +11,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-substance-form-relationships-card',
     templateUrl: './substance-form-relationships-card.component.html',
     styleUrls: ['./substance-form-relationships-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -27,9 +28,10 @@ export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFi
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private configService: ConfigService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
   }
 
   ngOnInit() {
@@ -59,6 +61,7 @@ export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFi
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(relationshipsSubscription);
   }
