@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GeneralService } from '../service/general.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
@@ -6,7 +6,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
     selector: 'app-user-manual',
     templateUrl: './user-manual.component.html',
     styleUrls: ['./user-manual.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserManualComponent implements OnInit {
 
@@ -14,7 +15,8 @@ export class UserManualComponent implements OnInit {
 
   constructor(
     private generalService: GeneralService,
-    private sanitizer: DomSanitizer) { }
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.getUserManual();
@@ -40,6 +42,7 @@ export class UserManualComponent implements OnInit {
     document.body.appendChild(downloadLink);
     downloadLink.click();
     this.message = 'The User Manual has been downloaded to your local download directory';
+    this.cdr.markForCheck();
   }
 
 }
