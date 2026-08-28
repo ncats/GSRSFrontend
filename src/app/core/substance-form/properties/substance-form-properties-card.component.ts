@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceProperty } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -10,7 +10,8 @@ import { SubstanceFormPropertiesService } from './substance-form-properties.serv
     selector: 'app-substance-form-properties-card',
     templateUrl: './substance-form-properties-card.component.html',
     styleUrls: ['./substance-form-properties-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormPropertiesCardComponent extends SubstanceCardBaseFilteredList<SubstanceProperty>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -20,9 +21,10 @@ export class SubstanceFormPropertiesCardComponent extends SubstanceCardBaseFilte
   constructor(
     private substanceFormPropertiesService: SubstanceFormPropertiesService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form properties';
   }
 
@@ -43,6 +45,7 @@ export class SubstanceFormPropertiesCardComponent extends SubstanceCardBaseFilte
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(propertiesSubscription);
   }
