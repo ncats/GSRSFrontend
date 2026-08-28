@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {NucleicAcid, Protein} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -11,7 +11,8 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
     selector: 'app-nucleic-acid-details-form',
     templateUrl: './nucleic-acid-details-form.component.html',
     styleUrls: ['./nucleic-acid-details-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len
 export class NucleicAcidDetailsFormComponent extends SubstanceCardBaseFilteredList<NucleicAcid> implements OnInit, AfterViewInit, OnDestroy {
@@ -22,7 +23,8 @@ private subscriptions: Array<Subscription> = [];
   constructor(
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
 ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form Nucleic Acid Details';
@@ -32,6 +34,7 @@ private subscriptions: Array<Subscription> = [];
     this.menuLabelUpdate.emit('Nucleic Acid Classification');
     const nucleicAcidSubscription = this.substanceFormService.substanceNucleicAcid.subscribe(nucleicAcid => {
       this.nucleicAcid = nucleicAcid;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(nucleicAcidSubscription);
     this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',
