@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {AgentModification, Constituent} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
@@ -11,7 +11,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
     selector: 'app-substance-form-constituents-card',
     templateUrl: './substance-form-constituents-card.component.html',
     styleUrls: ['./substance-form-constituents-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFilteredList<Constituent>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -25,7 +26,8 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
   constructor(
     private substanceFormConstituentsService: SubstanceFormConstituentsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private cdr: ChangeDetectorRef
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form constituents';
@@ -39,6 +41,7 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
   ngAfterViewInit() {
     const agentSubscription = this.substanceFormConstituentsService.substanceConstituents.subscribe(constituents => {
       this.constituents = constituents;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(agentSubscription);
   }
