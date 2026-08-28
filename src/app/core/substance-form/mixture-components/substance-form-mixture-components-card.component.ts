@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {MixtureComponents, SubstanceRelationship} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -10,7 +10,8 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
     selector: 'app-substance-form-mixture-components-card',
     templateUrl: './substance-form-mixture-components-card.component.html',
     styleUrls: ['./substance-form-mixture-components-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -19,7 +20,8 @@ export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBa
   constructor(
     private substanceFormMixtureComponentsService: SubstanceFormMixtureComponentsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private cdr: ChangeDetectorRef
   ) {
     super(gaService);
   }
@@ -33,6 +35,7 @@ export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBa
   ngAfterViewInit() {
     const relationshipsSubscription = this.substanceFormMixtureComponentsService.substanceMixtureComponents.subscribe(components => {
       this.relationships = components;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(relationshipsSubscription);
   }
