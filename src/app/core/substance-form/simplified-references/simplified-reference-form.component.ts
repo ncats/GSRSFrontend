@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '@gsrs-core/substance';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { UtilsService } from '@gsrs-core/utils';
@@ -13,7 +13,8 @@ import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/referenc
     selector: 'app-simplified-reference-form',
     templateUrl: './simplified-reference-form.component.html',
     styleUrls: ['./simplified-reference-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reference: SubstanceReference;
@@ -30,7 +31,8 @@ export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, 
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -111,10 +113,12 @@ export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, 
       this.utilsService.uploadFile(file).subscribe(response => {
         this.reference.uploadedFile = response;
         this.loading = false;
+        this.cdr.markForCheck();
 
       }, error => {
         this.loading = false;
         this.error = true;
+        this.cdr.markForCheck();
 
       });
     }
