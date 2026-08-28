@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {StructurallyDiverse} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
@@ -11,7 +11,8 @@ import { SubstanceFormStructurallyDiverseService } from '../substance-form-struc
     selector: 'app-substance-form-structurally-diverse-source',
     templateUrl: './substance-form-structurally-diverse-source.component.html',
     styleUrls: ['./substance-form-structurally-diverse-source.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {
@@ -23,7 +24,8 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
   constructor(
     private substanceFormStructurallyDiverseService: SubstanceFormStructurallyDiverseService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
     this.analyticsEventCategory = 'substance form Source Material';
@@ -63,6 +65,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
           }
         }
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(structurallyDiverseSubscription);
   }
