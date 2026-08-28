@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { SubstanceCode } from '@gsrs-core/substance';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
@@ -8,7 +8,8 @@ import { UtilsService } from '@gsrs-core/utils';
     selector: 'app-simplified-code-form',
     templateUrl: './simplified-code-form.component.html',
     styleUrls: ['./simplified-code-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SimplifiedCodeFormComponent implements OnInit {
   private privateCode: SubstanceCode;
@@ -21,7 +22,8 @@ export class SimplifiedCodeFormComponent implements OnInit {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -46,6 +48,7 @@ export class SimplifiedCodeFormComponent implements OnInit {
       this.codeSystemDictionary = response['CODE_SYSTEM'].dictionary;
       this.setCodeSystemType();
       this.codeTypeList = response['CODE_TYPE'].list;
+      this.cdr.markForCheck();
     });
   }
 
