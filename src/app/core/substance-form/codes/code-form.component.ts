@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { SubstanceCode } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -10,7 +10,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-code-form',
     templateUrl: './code-form.component.html',
     styleUrls: ['./code-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeFormComponent implements OnInit {
   private privateCode: SubstanceCode;
@@ -26,7 +27,8 @@ export class CodeFormComponent implements OnInit {
   constructor(
     private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private cdr: ChangeDetectorRef
 
   ) { }
 
@@ -60,6 +62,7 @@ export class CodeFormComponent implements OnInit {
       this.codeSystemDictionary = response['CODE_SYSTEM'].dictionary;
       this.setCodeSystemType();
       this.codeTypeList = response['CODE_TYPE'].list;
+      this.cdr.markForCheck();
     });
     if (this.configService.configData && this.configService.configData.codeSystemMapping) {
       //This config object is meant to map certain code system values with an automatically filled out code value on selection.
