@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, AfterViewInit, Output, EventEmitter, ElementRef } from '@angular/core';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -8,7 +8,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
     selector: 'app-access-manager',
     templateUrl: './access-manager.component.html',
     styleUrls: ['./access-manager.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccessManagerComponent implements OnInit, AfterViewInit {
   accessOptions: Array<VocabularyTerm>;
@@ -20,7 +21,8 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private element: ElementRef
+    private element: ElementRef,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() { }
@@ -48,6 +50,7 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
       this.createAccessFromGroup(accessOptions);
       this.accessOptions = accessOptions;
       this.crosscheckAccesses();
+      this.cdr.markForCheck();
     });
   }
 
