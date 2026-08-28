@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AgentModification, Constituent, SubstanceAmount, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {Subscription} from 'rxjs';
@@ -11,7 +11,8 @@ import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-d
     selector: 'app-constituent-form',
     templateUrl: './constituent-form.component.html',
     styleUrls: ['./constituent-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConstituentFormComponent implements OnInit {
    privateConstituent: Constituent;
@@ -27,7 +28,8 @@ export class ConstituentFormComponent implements OnInit {
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private cdr: ChangeDetectorRef
   ) { }
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -76,6 +78,7 @@ export class ConstituentFormComponent implements OnInit {
         this.privateConstituent.amount = newAmount;
         this.amountUpdated.emit(this.privateConstituent.amount);
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }
