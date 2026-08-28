@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {PhysicalModification, StructuralModification} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -11,7 +11,8 @@ import { SubstanceFormStructuralModificationsService } from './substance-form-st
     selector: 'app-substance-form-structural-modifications-card',
     templateUrl: './substance-form-structural-modifications-card.component.html',
     styleUrls: ['./substance-form-structural-modifications-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructuralModificationsCardComponent extends SubstanceCardBaseFilteredList<StructuralModification>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -21,7 +22,8 @@ export class SubstanceFormStructuralModificationsCardComponent extends Substance
   constructor(
     private substanceFormStructuralModificationsService: SubstanceFormStructuralModificationsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private cdr: ChangeDetectorRef
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form structural modifications';
@@ -38,6 +40,7 @@ export class SubstanceFormStructuralModificationsCardComponent extends Substance
       .subscribe(modifications => {
 
       this.modifications = modifications;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(structuralSubscription);
   }
