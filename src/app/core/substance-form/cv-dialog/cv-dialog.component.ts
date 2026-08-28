@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {SubstanceAmount} from '@gsrs-core/substance';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ControlledVocabularyService, Vocabulary, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
@@ -8,7 +8,8 @@ import {UtilsService} from '@gsrs-core/utils';
     selector: 'app-cv-dialog',
     templateUrl: './cv-dialog.component.html',
     styleUrls: ['./cv-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvDialogComponent implements OnInit {
   isNew: boolean;
@@ -21,6 +22,7 @@ export class CvDialogComponent implements OnInit {
     public cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
     public dialogRef: MatDialogRef<CvDialogComponent>,
+    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.vocabulary = data.vocabulary;
@@ -50,8 +52,9 @@ export class CvDialogComponent implements OnInit {
           this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
             if (response.terms && response.terms.length === this.vocabulary.terms.length) {
               this.message = 'Term ' + this.term.value + ' Added to ' + this.vocabulary.domain + '';
+              this.cdr.markForCheck();
               setTimeout(() => {
-this.dialogRef.close(this.term); 
+this.dialogRef.close(this.term);
 }, 3000);
             }
           }, error => {
@@ -60,12 +63,12 @@ this.dialogRef.close(this.term);
             let str = 'Server Error';
           if (error.error && error.error.message) {
             str += ' - ' + error.error.message;
-    
+
           } else if(error.message) {
             str += ' - ' + error.message;
           }
           this.message = str;
-    
+          this.cdr.markForCheck();
           });
 
         } else {
@@ -75,6 +78,7 @@ this.dialogRef.close(this.term);
             });
           }
           this.vocabulary.terms.pop();
+          this.cdr.markForCheck();
         }
       },error => {
         console.log(error);
@@ -87,7 +91,7 @@ this.dialogRef.close(this.term);
         str += ' - ' + error.message;
       }
       this.message = str;
-
+      this.cdr.markForCheck();
       });
       
     } else {
@@ -95,6 +99,7 @@ this.dialogRef.close(this.term);
       this.message = 'Term already exists';
       setTimeout(() => {
         this.message = '';
+        this.cdr.markForCheck();
       }, 3000);
     }
   }
