@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {StructuralUnit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -10,7 +10,8 @@ import { SubstanceFormStructuralUnitsService } from './substance-form-structural
     selector: 'app-substance-form-structural-units-card',
     templateUrl: './substance-form-structural-units-card.component.html',
     styleUrls: ['./substance-form-structural-units-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBaseFilteredList<StructuralUnit>
   implements OnInit, AfterViewInit, OnDestroy {
@@ -20,7 +21,8 @@ export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBase
   constructor(
     private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private cdr: ChangeDetectorRef
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form structural units';
@@ -33,6 +35,7 @@ export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBase
   ngAfterViewInit() {
     const structuralSubscription = this.substanceFormStructuralUnitsService.substanceSRUs.subscribe(structuralUnits => {
       this.structuralUnits = structuralUnits;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(structuralSubscription);
   }
