@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, ElementRef } from '@angular/core';
 import { SubstanceNameOrg } from '../../substance/substance.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
@@ -10,7 +10,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
     selector: 'app-name-orgs',
     templateUrl: './name-orgs.component.html',
     styleUrls: ['./name-orgs.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NameOrgsComponent implements OnInit {
   private privateNameOrgs: Array<SubstanceNameOrg>;
@@ -21,7 +22,8 @@ export class NameOrgsComponent implements OnInit {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private element: ElementRef
+    private element: ElementRef,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -31,6 +33,7 @@ export class NameOrgsComponent implements OnInit {
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('NAME_ORG').subscribe(response => {
       this.nameOrgOptions = response['NAME_ORG'].list;
+      this.cdr.markForCheck();
     });
   }
 
