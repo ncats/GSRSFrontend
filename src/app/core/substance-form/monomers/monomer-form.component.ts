@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Monomer, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {Subscription} from 'rxjs';
@@ -11,7 +11,8 @@ import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-d
     selector: 'app-monomer-form',
     templateUrl: './monomer-form.component.html',
     styleUrls: ['./monomer-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonomerFormComponent implements OnInit, AfterViewInit {
   privateMonomer: Monomer;
@@ -26,7 +27,8 @@ export class MonomerFormComponent implements OnInit, AfterViewInit {
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private cdr: ChangeDetectorRef
   ) { }
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -107,6 +109,7 @@ export class MonomerFormComponent implements OnInit, AfterViewInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
       this.overlayContainer.style.zIndex = null;
       this.privateMonomer.amount = newAmount;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }
