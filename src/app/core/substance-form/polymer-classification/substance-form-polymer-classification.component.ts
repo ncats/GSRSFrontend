@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {
   Polymer,
   PolymerClassification,
@@ -18,7 +18,8 @@ import { SubstanceFormPolymerClassificationService } from './substance-form-poly
     selector: 'app-substance-form-polymer-classification',
     templateUrl: './substance-form-polymer-classification.component.html',
     styleUrls: ['./substance-form-polymer-classification.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len
 export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBase
@@ -32,7 +33,8 @@ export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBa
   constructor(
     private substanceFormPolymerClassificationService: SubstanceFormPolymerClassificationService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
     this.analyticsEventCategory = 'substance form Polymer Classification';
@@ -43,6 +45,7 @@ export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBa
     const proteinSubscription = this.substanceFormPolymerClassificationService.substancePolymerClassification.subscribe(classification => {
       this.classification = classification;
       this.relatedSubstanceUuid = this.classification.parentSubstance && this.classification.parentSubstance.refuuid || '';
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(proteinSubscription);
 
