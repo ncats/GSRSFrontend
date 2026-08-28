@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceNote } from '@gsrs-core/substance/substance.model';
@@ -11,7 +11,8 @@ import { SubstanceFormNotesService } from './substance-form-notes.service';
     selector: 'app-substance-form-notes-card',
     templateUrl: './substance-form-notes-card.component.html',
     styleUrls: ['./substance-form-notes-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormNotesCardComponent extends SubstanceCardBaseFilteredList<SubstanceNote>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -22,9 +23,10 @@ export class SubstanceFormNotesCardComponent extends SubstanceCardBaseFilteredLi
   constructor(
     private substanceFormNotesService: SubstanceFormNotesService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form notes';
   }
 
@@ -45,6 +47,7 @@ export class SubstanceFormNotesCardComponent extends SubstanceCardBaseFilteredLi
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(notesSubscription);
   }
