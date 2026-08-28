@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
@@ -12,7 +12,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-substance-form-names-card',
     templateUrl: './substance-form-names-card.component.html',
     styleUrls: ['./substance-form-names-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormNamesCardComponent
   extends SubstanceCardBaseFilteredList<SubstanceName>
@@ -33,9 +34,10 @@ export class SubstanceFormNamesCardComponent
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private configService: ConfigService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form names';
   }
 
@@ -84,6 +86,7 @@ export class SubstanceFormNamesCardComponent
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(namesSubscription);
   }
