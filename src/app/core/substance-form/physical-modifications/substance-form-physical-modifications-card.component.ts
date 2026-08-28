@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {PhysicalModification} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -10,7 +10,8 @@ import { SubstanceFormPhysicalModificationsService } from './substance-form-phys
     selector: 'app-substance-form-physical-modifications-card',
     templateUrl: './substance-form-physical-modifications-card.component.html',
     styleUrls: ['./substance-form-physical-modifications-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormPhysicalModificationsCardComponent extends SubstanceCardBaseFilteredList<PhysicalModification>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -20,7 +21,8 @@ export class SubstanceFormPhysicalModificationsCardComponent extends SubstanceCa
   constructor(
     private substanceFormPhysicalModificationsService: SubstanceFormPhysicalModificationsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private cdr: ChangeDetectorRef
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form agent modifications';
@@ -34,6 +36,7 @@ export class SubstanceFormPhysicalModificationsCardComponent extends SubstanceCa
   ngAfterViewInit() {
     const physicalSubscription = this.substanceFormPhysicalModificationsService.substancePhysicalModifications.subscribe(modifications => {
       this.modifications = modifications;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(physicalSubscription);
   }
