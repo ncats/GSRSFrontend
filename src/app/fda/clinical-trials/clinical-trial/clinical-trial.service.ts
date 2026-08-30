@@ -65,9 +65,9 @@ export class ClinicalTrialService extends BaseHttpService {
       if (type !== null && type !== '') {
         if (type === 'trialNumber' ) {
           // having an issue with this locally
-          params = params.append('q', 'root_trialNumber:\"^' + searchTerm + '$\"');
+          params = params.append('q', 'root_trialNumber:\"%5E' + searchTerm + '$\"');
         } else if (type === 'substanceKey' ) {
-          params = params.append('q', 'root_clinicalTrialUSDrug_substanceKey:\"^' + searchTerm + '$\"');
+          params = params.append('q', 'root_clinicalTrialUSDrug_substanceKey:\"%5E' + searchTerm + '$\"');
         } else if (type === 'title') {
           params = params.append('q', 'root_title:\"' + searchTerm + '\"');
         } else {
@@ -191,7 +191,7 @@ export class ClinicalTrialService extends BaseHttpService {
       params: params
     };
 
-    const url = this.baseUrl + 'api/v1/clinicaltrialseurope/search?q=root_clinicalTrialEuropeProductList_clinicalTrialEuropeDrugList_substanceKey:"^'+ uuid +'$"' + '&top=' + pageSize + '&skip=' + skip;
+    const url = this.baseUrl + 'api/v1/clinicaltrialseurope/search?q=root_clinicalTrialEuropeProductList_clinicalTrialEuropeDrugList_substanceKey:"%5E'+ uuid +'$"' + '&top=' + pageSize + '&skip=' + skip;
     return this.http.get<Array<any>>(url, options).pipe(
     map(results => {
         this.totalRecords = results['total'];
