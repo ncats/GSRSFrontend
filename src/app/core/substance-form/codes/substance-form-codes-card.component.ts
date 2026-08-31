@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceCode } from '@gsrs-core/substance/substance.model';
@@ -12,7 +12,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-substance-form-codes-card',
     templateUrl: './substance-form-codes-card.component.html',
     styleUrls: ['./substance-form-codes-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredList<SubstanceCode>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -31,9 +32,10 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private configService: ConfigService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form codes';
   }
 
@@ -77,6 +79,7 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(codesSubscription);
   }
