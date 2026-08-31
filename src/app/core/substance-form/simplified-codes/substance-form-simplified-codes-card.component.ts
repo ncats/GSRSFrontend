@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceCode } from '@gsrs-core/substance/substance.model';
@@ -11,7 +11,8 @@ import { SubstanceFormCodesService } from '../codes/substance-form-codes.service
     selector: 'app-simplified-substance-form-codes-card',
     templateUrl: './substance-form-simplified-codes-card.component.html',
     styleUrls: ['./substance-form-simplified-codes-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormSimplifiedCodesCardComponent extends SubstanceCardBaseFilteredList<SubstanceCode>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -26,9 +27,10 @@ export class SubstanceFormSimplifiedCodesCardComponent extends SubstanceCardBase
     private substanceFormCodesService: SubstanceFormCodesService,
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form codes';
   }
 
@@ -62,6 +64,7 @@ export class SubstanceFormSimplifiedCodesCardComponent extends SubstanceCardBase
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(codesSubscription);
 
