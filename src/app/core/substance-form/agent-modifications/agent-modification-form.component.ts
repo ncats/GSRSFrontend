@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import {AgentModification, StructuralModification, SubstanceAmount, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
@@ -12,7 +12,8 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
     selector: 'app-agent-modification-form',
     templateUrl: './agent-modification-form.component.html',
     styleUrls: ['./agent-modification-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgentModificationFormComponent implements OnInit {
   private privateMod: AgentModification;
@@ -31,7 +32,8 @@ export class AgentModificationFormComponent implements OnInit {
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
   ngOnInit() {
     this.getVocabularies();
@@ -60,6 +62,7 @@ export class AgentModificationFormComponent implements OnInit {
       this.modTypeList = response['AGENT_MODIFICATION_TYPE'].list;
       this.modProcessList = response['AGENT_MODIFICATION_PROCESS'].list;
       this.modRoleList = response['ROLE'].list;
+      this.cdr.markForCheck();
     });
   }
 
@@ -91,6 +94,7 @@ export class AgentModificationFormComponent implements OnInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
       this.overlayContainer.style.zIndex = null;
       this.mod.amount = newAmount;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }
