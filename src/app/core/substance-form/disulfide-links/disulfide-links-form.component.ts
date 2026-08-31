@@ -1,5 +1,7 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -23,6 +25,7 @@ import { SubunitSelectorDialogComponent } from "@gsrs-core/substance-form/subuni
   templateUrl: "./disulfide-links-form.component.html",
   styleUrls: ["./disulfide-links-form.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisulfideLinksFormComponent
   implements OnInit, AfterViewInit, OnDestroy {
@@ -44,6 +47,7 @@ export class DisulfideLinksFormComponent
     private overlayContainerService: OverlayContainer,
     private substanceFormService: SubstanceFormService,
     private substanceFormDisulfideLinksService: SubstanceFormDisulfideLinksService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -61,6 +65,7 @@ export class DisulfideLinksFormComponent
         this.substanceFormDisulfideLinksService.substanceCysteineSites.subscribe(
           (cysteine) => {
             this.cysteine = cysteine;
+            this.cdr.markForCheck();
           },
         );
       this.subscriptions.push(cysteineSubscription);
@@ -153,6 +158,7 @@ export class DisulfideLinksFormComponent
         }
       }
       this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }
