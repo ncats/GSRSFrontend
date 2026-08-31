@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { ConfigService } from '../../config/config.service'
@@ -14,7 +14,8 @@ import { Subscription } from 'rxjs';
     selector: 'app-reference-form',
     templateUrl: './reference-form.component.html',
     styleUrls: ['./reference-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reference: SubstanceReference;
@@ -35,7 +36,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -100,10 +102,12 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.utilsService.uploadFile(file).subscribe(response => {
         this.reference.uploadedFile = response;
         this.loading = false;
+        this.cdr.markForCheck();
 
       }, error => {
         this.loading = false;
         this.error = true;
+        this.cdr.markForCheck();
 
       });
     }
@@ -122,6 +126,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           this.fillReference(ref);
         }
        }
+        this.cdr.markForCheck();
       });
       this.subscriptions.push(dialogSubscription);
     }
