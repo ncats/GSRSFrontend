@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
@@ -15,7 +15,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-substance-form-references-card',
     templateUrl: './substance-form-references-card.component.html',
     styleUrls: ['./substance-form-references-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilteredList<SubstanceReference>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -33,8 +34,9 @@ export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilte
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private configService: ConfigService,
+    cdr: ChangeDetectorRef,
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form references';
   }
 
@@ -65,6 +67,7 @@ export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilte
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(referencesSubscription);
   }
