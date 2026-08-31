@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '../base-classes/substance-form-base-filtered-list';
 import {SubstanceReference} from '@gsrs-core/substance/substance.model';
 import {MatDialog} from '@angular/material/dialog';
@@ -19,7 +19,8 @@ import {SubstanceFormStructureService} from "@gsrs-core/substance-form/structure
     selector: 'app-simplified-substance-form-references-card',
     templateUrl: './substance-form-simplified-references-card.component.html',
     styleUrls: ['./substance-form-simplified-references-card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCardBaseFilteredList<SubstanceReference>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -38,9 +39,10 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
     private dialog: MatDialog,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form references';
   }
 
@@ -65,6 +67,7 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
 
     // Ensure all simplified references are added to all elements.
