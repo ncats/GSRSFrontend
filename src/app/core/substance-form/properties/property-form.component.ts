@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceProperty, SubstanceSummary, SubstanceRelated, SubstanceParameter } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -15,7 +15,8 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
     selector: 'app-property-form',
     templateUrl: './property-form.component.html',
     styleUrls: ['./property-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyFormComponent implements OnInit {
   deleteTimer: any;
@@ -32,7 +33,8 @@ export class PropertyFormComponent implements OnInit {
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -125,6 +127,7 @@ export class PropertyFormComponent implements OnInit {
           });
         }
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -142,6 +145,7 @@ export class PropertyFormComponent implements OnInit {
       this.property.name = features.name || '';
       this.property.value.nonNumericValue = features.siteRange;
       this._nonNumeric = features.siteRange;
+      this.cdr.markForCheck();
     });
   }
 
