@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Output, Input, EventEmitter, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { NavigationExtras, Router, Event, NavigationEnd } from '@angular/router';
@@ -11,7 +11,8 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
     selector: 'app-mini-search',
     templateUrl: './mini-search.component.html',
     styleUrls: ['./mini-search.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MiniSearchComponent implements OnInit, AfterViewInit {
 
@@ -43,7 +44,8 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
   suggestions: Array<any> = [];
   constructor(
     private utilsService: UtilsService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -57,6 +59,7 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
       this.substanceSuggestionsGroup = response;
       this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup);
       this.suggestions = response['Name'];
+      this.cdr.markForCheck();
     }, error => {
     });
 
@@ -65,6 +68,7 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
+        this.cdr.markForCheck();
       }
     });
   }

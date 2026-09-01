@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, HostListener} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, HostListener} from '@angular/core';
 import {PhysicalModification, SubstanceAmount, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {Subscription} from 'rxjs';
@@ -13,7 +13,8 @@ import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/ph
     selector: 'app-physical-modification-form',
     templateUrl: './physical-modification-form.component.html',
     styleUrls: ['./physical-modification-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PhysicalModificationFormComponent implements OnInit {
   private privateMod: PhysicalModification;
@@ -76,7 +77,8 @@ export class PhysicalModificationFormComponent implements OnInit {
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
   ngOnInit() {
     this.getVocabularies();
@@ -96,6 +98,7 @@ export class PhysicalModificationFormComponent implements OnInit {
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('PHYSICAL_MODIFICATION_ROLE').subscribe(response => {
       this.modRoleList = response['PHYSICAL_MODIFICATION_ROLE'].list;
+      this.cdr.markForCheck();
     });
   }
 
@@ -156,6 +159,7 @@ export class PhysicalModificationFormComponent implements OnInit {
       if (newParams) {
         this.mod.parameters = newParams;
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }
@@ -196,6 +200,7 @@ export class PhysicalModificationFormComponent implements OnInit {
         }
         this.updateRequired();
       }
+      this.cdr.markForCheck();
     });
   }
 

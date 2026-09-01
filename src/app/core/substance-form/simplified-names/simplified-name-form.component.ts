@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {SubstanceName, SubstanceNameOrg} from '../../substance/substance.model';
 import {ControlledVocabularyService} from '../../controlled-vocabulary/controlled-vocabulary.service';
 import {FormControl} from '@angular/forms';
@@ -15,7 +15,8 @@ import {SubstanceFormNamesService} from '@gsrs-core/substance-form/names/substan
     selector: 'app-simplified-name-form',
     templateUrl: './simplified-name-form.component.html',
     styleUrls: ['./simplified-name-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SimplifiedNameFormComponent implements OnInit, OnDestroy {
   private privateName: SubstanceName;

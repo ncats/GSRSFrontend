@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { AuthService } from '@gsrs-core/auth';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
@@ -8,7 +8,8 @@ import { PageEvent } from '@angular/material/paginator';
     selector: 'app-previous-references',
     templateUrl: './previous-references.component.html',
     styleUrls: ['./previous-references.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviousReferencesComponent implements OnInit {
   user: string;
@@ -23,7 +24,8 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
 @Output() selectedReference = new EventEmitter<SubstanceReference>();
   constructor(
     private substanceService: SubstanceService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.user =  this.authService.getUser();
@@ -34,6 +36,7 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
         this.refCount = 0;
       }
       this.getPreviousReferences();
+      this.cdr.markForCheck();
     });
   }
 
@@ -68,6 +71,7 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
       } else {
         this.loading = false;
       }
+      this.cdr.markForCheck();
     });
   }
 

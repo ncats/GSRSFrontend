@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Link, Linkage, Site, Sugar} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
@@ -13,7 +13,8 @@ import { take } from 'rxjs/operators';
     selector: 'app-sugar-form',
     templateUrl: './sugar-form.component.html',
     styleUrls: ['./sugar-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -35,7 +36,8 @@ export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -93,6 +95,7 @@ export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!found) {
           this.structure = null;
         }
+        this.cdr.markForCheck();
       });
     }
   }
@@ -127,6 +130,7 @@ export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
       this.vocabulary = response['NUCLEIC_ACID_SUGAR'].dictionary;
       this.smiles = this.vocabulary[this.privateSugar.sugar];
       this.getStructure();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(subscription);
   }
@@ -151,6 +155,7 @@ export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       this.updateDisplay();
       this.substanceFormService.emitSugarUpdate();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }

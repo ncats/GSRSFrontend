@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
@@ -10,7 +10,8 @@ import { take } from 'rxjs/operators';
     selector: 'app-registrars',
     templateUrl: './registrars.component.html',
     styleUrls: ['./registrars.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistrarsComponent implements OnInit {
 
@@ -38,7 +39,8 @@ export class RegistrarsComponent implements OnInit {
     private configService: ConfigService,
     private authService: AuthService,
     private substanceService: SubstanceService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -74,6 +76,7 @@ export class RegistrarsComponent implements OnInit {
       }
       this.substanceService.searchFromString(str).pipe(take(1)).subscribe( response => {
         link.total = response.total;
+        this.cdr.markForCheck();
       });
     });
     this.customLinks2.forEach (link => {
@@ -88,6 +91,7 @@ export class RegistrarsComponent implements OnInit {
       }
       this.substanceService.searchFromString(str).pipe(take(1)).subscribe( response => {
         link.total =  Number(response.total);
+        this.cdr.markForCheck();
       });
     });
     this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';

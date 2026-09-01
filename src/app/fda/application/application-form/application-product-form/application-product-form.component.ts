@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Application } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
@@ -12,7 +12,8 @@ import { GeneralService } from 'src/app/fda/service/general.service';
     selector: 'app-application-product-form',
     templateUrl: './application-product-form.component.html',
     styleUrls: ['./application-product-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationProductFormComponent implements OnInit {
   @Input() application: Application;
@@ -25,7 +26,8 @@ export class ApplicationProductFormComponent implements OnInit {
     public cvService: ControlledVocabularyService,
     private authService: AuthService,
     private generalService: GeneralService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.username = this.authService.getUser();
@@ -47,6 +49,7 @@ export class ApplicationProductFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteProduct(prodIndex);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -63,6 +66,7 @@ export class ApplicationProductFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteProductName(prodIndex, prodNameIndex);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -84,6 +88,7 @@ export class ApplicationProductFormComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if (result && result === true) {
           this.reviewProduct(prodIndex);
+          this.cdr.markForCheck();
         }
       });
     } else {

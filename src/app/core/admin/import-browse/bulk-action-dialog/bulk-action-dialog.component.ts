@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LoadingService } from '@gsrs-core/loading';
@@ -9,7 +9,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-bulk-action-dialog',
     templateUrl: './bulk-action-dialog.component.html',
     styleUrls: ['./bulk-action-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BulkActionDialogComponent implements OnInit {
   records: any;
@@ -30,7 +31,7 @@ export class BulkActionDialogComponent implements OnInit {
     public loadingService: LoadingService,
     private adminService: AdminService,
     private configService: ConfigService,
-
+    private cdr: ChangeDetectorRef,
 
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -82,10 +83,12 @@ export class BulkActionDialogComponent implements OnInit {
       this.successful = true;
         this.loading = false;
       console.log(response);
+      this.cdr.markForCheck();
     }, error => {
       console.log(error);
       this.successful = true;
         this.loading = false;
+      this.cdr.markForCheck();
     })
   }
 
@@ -120,12 +123,12 @@ export class BulkActionDialogComponent implements OnInit {
           this.processingstatus(result.id);
         }, 200);
       }
-      
+      this.cdr.markForCheck();
 
     }, error => {
       alert("Error - see console for details");
       this.loading = false;
-      
+      this.cdr.markForCheck();
     });
   }
 
@@ -167,7 +170,7 @@ export class BulkActionDialogComponent implements OnInit {
           this.processingstatus(id);
         }, 200);
       }
-     
+      this.cdr.markForCheck();
 
     });
   }

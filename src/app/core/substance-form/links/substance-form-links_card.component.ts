@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList,  SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {Link, Linkage, Site, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -11,7 +11,8 @@ import { SubstanceFormLinksService } from './substance-form-links.service';
     selector: 'app-substance-form-links',
     templateUrl: './substance-form-links_card.component.html',
     styleUrls: ['./substance-form-links_card.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredList<Linkage>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -26,9 +27,10 @@ export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredLi
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form links';
   }
 
@@ -41,11 +43,13 @@ export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredLi
     const linksSubscription = this.substanceFormLinksService.substanceLinks.subscribe(links => {
       this.links = links;
       this.getRemainingSites();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(linksSubscription);
     const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
       this.subunits = subunits;
       this.getRemainingSites();
+      this.cdr?.markForCheck();
     });
    this.subscriptions.push(subunitsSubscription);
 

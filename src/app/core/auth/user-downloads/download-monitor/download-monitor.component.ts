@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import moment from 'moment';
 import { take } from 'rxjs/operators';
@@ -9,7 +9,8 @@ import { NavigationExtras } from '@angular/router';
     selector: 'app-download-monitor',
     templateUrl: './download-monitor.component.html',
     styleUrls: ['./download-monitor.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DownloadMonitorComponent implements OnInit, OnDestroy {
   @Input() id: string;

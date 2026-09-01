@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Link, Linkage, Site} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
@@ -13,7 +13,8 @@ import { take } from 'rxjs/operators';
     selector: 'app-link-form',
     templateUrl: './link-form.component.html',
     styleUrls: ['./link-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkFormComponent implements OnInit, OnDestroy {
 
@@ -33,7 +34,8 @@ export class LinkFormComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -66,6 +68,7 @@ export class LinkFormComponent implements OnInit, OnDestroy {
         if (!found) {
           this.structure = null;
         }
+        this.cdr.markForCheck();
       });
     }
   //  this.structure = this.cvService.getStructureUrlFragment(term.fragmentStructure);
@@ -134,6 +137,7 @@ export class LinkFormComponent implements OnInit, OnDestroy {
       this.vocabulary = response['NUCLEIC_ACID_LINKAGE'].dictionary;
       this.smiles = this.vocabulary[this.privateLink.linkage];
       this.getStructure();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(subscription);
   }
@@ -153,6 +157,7 @@ export class LinkFormComponent implements OnInit, OnDestroy {
       }
       this.updateDisplay();
       this.substanceFormService.emitLinkUpdate();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }

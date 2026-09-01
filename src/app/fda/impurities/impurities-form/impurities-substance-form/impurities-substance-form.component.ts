@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -15,7 +15,8 @@ import { Impurities, ImpuritiesSubstance, ImpuritiesTesting, ImpuritiesDetails, 
     selector: 'app-impurities-substance-form',
     templateUrl: './impurities-substance-form.component.html',
     styleUrls: ['./impurities-substance-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesSubstanceFormComponent implements OnInit {
 
@@ -41,7 +42,8 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     private generalService: GeneralService,
     private loadingService: LoadingService,
     private authService: AuthService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
@@ -115,6 +117,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
             this.errorMessage = 'No Impurities found';
           }
         }
+        this.cdr.markForCheck();
       });
       this.subscriptions.push(getRelImpuritySubscribe);
     } else {
@@ -153,6 +156,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
       if (substance) {
         this.searchValue = substance._name;
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(getSubDetailsSubscribe);
   }

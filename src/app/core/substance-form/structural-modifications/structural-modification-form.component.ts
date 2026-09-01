@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {StructuralModification, SubstanceCode, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {UtilsService} from '@gsrs-core/utils';
@@ -13,7 +13,8 @@ import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-d
     selector: 'app-structural-modification-form',
     templateUrl: './structural-modification-form.component.html',
     styleUrls: ['./structural-modification-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructuralModificationFormComponent implements OnInit, AfterViewInit {
   private privateMod: StructuralModification;
@@ -40,7 +41,8 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -90,6 +92,7 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
       this.modTypeList = response['STRUCTURAL_MODIFICATION_TYPE'].list;
       this.modLocationList = response['LOCATION_TYPE'].list;
       this.modExtentList = response['EXTENT_TYPE'].list;
+      this.cdr.markForCheck();
     });
   }
 
@@ -142,6 +145,7 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
       this.mod.sites = newLinks;
       this.updateDisplay();
       this.substanceFormService.emitStructuralModificationsUpdate();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }
@@ -159,6 +163,7 @@ export class StructuralModificationFormComponent implements OnInit, AfterViewIni
     const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
       this.overlayContainer.style.zIndex = null;
       this.mod.extentAmount = newAmount;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }

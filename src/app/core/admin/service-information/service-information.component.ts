@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSelectChange } from '@angular/material/select';
 import { AdminService } from '@gsrs-core/admin/admin.service';
@@ -11,7 +11,8 @@ import lodashMap from 'lodash/map';
     selector: 'app-service-information',
     templateUrl: './service-information.component.html',
     styleUrls: ['./service-information.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServiceInformationComponent implements OnInit {
 
@@ -28,7 +29,8 @@ export class ServiceInformationComponent implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private cdr: ChangeDetectorRef
   ) { }
      onServiceSelectionChange(event: MatSelectChange) {
       this.currentService=event.value;
@@ -39,6 +41,7 @@ export class ServiceInformationComponent implements OnInit {
       this.adminService.fetchServiceInfoEndpointPaths(this.currentService).pipe(take(1)).subscribe( resp => {
         this.loading = false;
         this.endpoints = resp.endpoints;
+        this.cdr.markForCheck();
       });
     }
 
@@ -72,6 +75,7 @@ export class ServiceInformationComponent implements OnInit {
             this.content = resp.body;
           }
         }
+        this.cdr.markForCheck();
       });
     }
 
@@ -98,6 +102,7 @@ export class ServiceInformationComponent implements OnInit {
           this.adminService.fetchServiceInfoEndpointPaths(this.currentService).pipe(take(1)).subscribe( resp => {
             this.loading = false;
             this.endpoints = resp.endpoints;
+            this.cdr.markForCheck();
           });
         }, 1000);
       }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
@@ -9,7 +9,8 @@ import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
     selector: 'app-monitor',
     templateUrl: './monitor.component.html',
     styleUrls: ['./monitor.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonitorComponent implements OnInit, OnDestroy {
   jobId: any;
@@ -31,7 +32,8 @@ export class MonitorComponent implements OnInit, OnDestroy {
   constructor(
     private activeRoute: ActivatedRoute,
     public adminService: AdminService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -52,6 +54,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
       this.mixResultDisplay(response);
       this.changeEllipses();
       this.refresh(true);
+      this.cdr.markForCheck();
       });
     });
   }
@@ -93,9 +96,11 @@ export class MonitorComponent implements OnInit, OnDestroy {
           } else {
             this.monitor = false;
           }
+        this.cdr.markForCheck();
       }, error => {
         this.message = 'invalid Job ID';
         this.jobId = null;
+        this.cdr.markForCheck();
       });
   }
 
@@ -165,6 +170,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
     } else {
       this.ellipses = '';
     }
+    this.cdr.markForCheck();
   }
 
 }

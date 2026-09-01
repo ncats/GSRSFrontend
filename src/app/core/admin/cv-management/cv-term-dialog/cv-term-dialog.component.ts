@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { VocabularyTerm, Vocabulary, ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
@@ -9,7 +9,8 @@ import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragme
     selector: 'app-cv-term-dialog',
     templateUrl: './cv-term-dialog.component.html',
     styleUrls: ['./cv-term-dialog.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvTermDialogComponent implements OnInit, AfterViewInit{
   isNew: boolean;
@@ -28,7 +29,8 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
     public scrollToService: ScrollToService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private cdr: ChangeDetectorRef
   ) {
     this.vocabulary = data.vocabulary;
     this.terms = data.vocabulary.terms.sort(function(a, b) {
@@ -58,6 +60,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
           term.fragmentSrc = this.cvService.getStructureUrl(term.fragmentStructure);
       }
       });
+      this.cdr.markForCheck();
     }
   }
 
@@ -93,6 +96,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
      //   this.getVocab();
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -123,13 +127,14 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         console.log(`error.error: ${error.error}; error.message: ${error.message}`);
         if (error.error && error.error.message) {
           str += '\n\n' + error.error.message;
-  
+
         } else if(error.message) {
           str += '\n\n' + error.message;
         }
       alert(str);
         this.loading = false;
-  
+        this.cdr.markForCheck();
+
       });
         } else {
           if(response && response.validationMessages) {
@@ -138,6 +143,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
             });
           }
         }
+        this.cdr.markForCheck();
     },error => {
       let str = 'Invalid Vocabulary';
       if (error.error && error.error.message) {
@@ -148,6 +154,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
       }
       alert(str);
       this.loading = false;
+      this.cdr.markForCheck();
 
     });
     this.loading = false;
