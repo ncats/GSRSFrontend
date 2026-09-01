@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Link, SubstanceReference} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
@@ -13,7 +13,8 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
     selector: 'app-other-links-form',
     templateUrl: './other-links-form.component.html',
     styleUrls: ['./other-links-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OtherLinksFormComponent implements OnInit, OnDestroy {
 
@@ -30,7 +31,8 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   private dialog: MatDialog,
   private utilsService: UtilsService,
   private overlayContainerService: OverlayContainer,
-  private substanceFormService: SubstanceFormService
+  private substanceFormService: SubstanceFormService,
+  private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -72,6 +74,7 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   getVocabularies(): void {
     const subscription = this.cvService.getDomainVocabulary('OTHER_LINKAGE_TYPE').subscribe(response => {
       this.linkageTypes = response['OTHER_LINKAGE_TYPE'].list;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(subscription);
   }
@@ -92,6 +95,7 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
         this.substanceFormService.emitOtherLinkUpdate();
       }
       this.updateDisplay();
+      this.cdr.markForCheck();
     });
     const dialogSubscription2 = dialogRef.backdropClick().subscribe(sub => {     }
     );
