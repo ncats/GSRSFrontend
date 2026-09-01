@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input} from '@angular/core';
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormStructureService } from '../../substance-form/structure/substance-form-structure.service';
 import { StructureService } from '@gsrs-core/structure';
@@ -18,7 +18,8 @@ interface EvaluationResponse {
     selector: 'app-nitrosamine-display',
     templateUrl: './nitrosamine-display.component.html',
     styleUrls: ['./nitrosamine-display.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NitrosamineDisplayComponent implements OnInit {
   private privateStructure: SubstanceStructure | SubstanceMoiety = {};
@@ -37,7 +38,8 @@ export class NitrosamineDisplayComponent implements OnInit {
   responseData: EvaluationResponse;
 
   constructor(
-   private structureService: StructureService
+   private structureService: StructureService,
+   private cdr: ChangeDetectorRef
   ) {
     // Initialize fields that depend on structureService
     this.smilesFormula$ = this.structureService.smileObservable$;
@@ -74,6 +76,7 @@ export class NitrosamineDisplayComponent implements OnInit {
       if (res) {
         this.smilesInput = res;
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -153,6 +156,7 @@ export class NitrosamineDisplayComponent implements OnInit {
           console.log('Request completed');
           this.isLoading = false;
           this.buttonPressed = false;
+          this.cdr.markForCheck();
         })
       )
       .subscribe({
