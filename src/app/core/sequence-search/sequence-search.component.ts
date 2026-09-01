@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
@@ -13,7 +13,8 @@ import { Subscription } from 'rxjs';
     selector: 'app-sequence-search',
     templateUrl: './sequence-search.component.html',
     styleUrls: ['./sequence-search.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SequenceSearchComponent implements OnInit, OnDestroy {
   sequenceSearchForm = new FormGroup({
@@ -34,8 +35,8 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
     private substanceService: SubstanceService,
     private gaService: GoogleAnalyticsService,
     private loadingService: LoadingService,
-    private titleService: Title
-
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
 
   ) {
     this.subscriptions.push(this.activatedRoute
@@ -118,6 +119,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
         if (response && response.length > 0 && response[0].sequence) {
           this.sequenceSearchForm.controls.sequence.setValue(response[0].sequence);
         }
+        this.cdr.markForCheck();
     });
   }
 
@@ -176,6 +178,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
       } else {
         this.errorMessage = 'There was a problem processing your sequence search request';
       }
+      this.cdr.markForCheck();
     }, error => {
       console.log(error);
       if (parseInt(this.sequenceSearchForm.value.sequence) > 50000 ) {
@@ -184,6 +187,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
         this.errorMessage = 'There was a problem processing your sequence search request';
       }
       this.loadingService.setLoading(false);
+      this.cdr.markForCheck();
     });
   }
 

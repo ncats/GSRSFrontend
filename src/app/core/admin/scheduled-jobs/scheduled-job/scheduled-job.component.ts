@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import moment from 'moment';
 import cronstrue from 'cronstrue';
@@ -10,7 +10,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-scheduled-job',
     templateUrl: './scheduled-job.component.html',
     styleUrls: ['./scheduled-job.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduledJobComponent implements OnInit, OnDestroy {
 
@@ -29,7 +30,8 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
 
   constructor(
     private adminService: AdminService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -98,10 +100,12 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
             }, Math.min(this.untilNextRun(), 10000));
           }
         }
+        this.cdr.markForCheck();
       },
       error: error => {
         this.monitor = false;
         console.log(error);
+        this.cdr.markForCheck();
       }
     });
   }

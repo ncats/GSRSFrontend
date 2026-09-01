@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   ViewChild,
@@ -24,6 +26,7 @@ import { UsefulLink } from "../config/config.model";
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   environment: Environment;
@@ -68,6 +71,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
     public utilsService: UtilsService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -128,10 +132,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
             link.total = 0;
           }
+          this.cdr.markForCheck();
         });
     });
     this.substanceService.getRecordCount().subscribe((response) => {
       this.total = parseInt(response);
+      this.cdr.markForCheck();
     });
     // this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'false';
     this.isClosedWelcomeMessage = false;
@@ -160,6 +166,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     clearTimeout(this.resizeTimeout);
     this.resizeTimeout = setTimeout(() => {
       this.processResponsiveness();
+      this.cdr.markForCheck();
     }, 150);
   }
 

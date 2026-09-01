@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, ElementRef, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '../../../substance/substance.model';
 import { SubstanceFormService } from '../../substance-form.service';
 import { ControlledVocabularyService } from '../../../controlled-vocabulary/controlled-vocabulary.service';
@@ -17,7 +17,8 @@ import { SubstanceFormReferencesService } from '../substance-form-references.ser
     selector: 'app-domain-references',
     templateUrl: './domain-references.component.html',
     styleUrls: ['./domain-references.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DomainReferencesComponent implements OnInit, OnDestroy {
   @Input() card?: string;
@@ -40,7 +41,8 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -53,6 +55,7 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
       }
       this.canReuse = this.substanceReferences && this.substanceReferences.length > 0;
       this.loadReferences();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(referencesSubscription);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -77,6 +80,7 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
   getVocabularies(): void {
     const dictionarySubscription = this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
       this.documentTypesDictionary = response['DOCUMENT_TYPE'].dictionary;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dictionarySubscription);
   }
@@ -115,9 +119,11 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
         newReference = this.substanceFormReferencesService.addSubstanceReference(newReference);
         setTimeout(() => {
           this.addDomainReference(newReference.uuid);
+          this.cdr.markForCheck();
         });
         this.canReuse = true;
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }
@@ -169,6 +175,7 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
       if (domainRefereceUuids != null) {
         this.updateDomainReferences(domainRefereceUuids);
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }

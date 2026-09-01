@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit } from '@angular/core';
 import { GeneralService } from '../../service/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -12,7 +12,8 @@ import { Application, SubstanceApplicationMatch } from '../../application/model/
     selector: 'app-substance-application-match-list',
     templateUrl: './substance-application-match-list.component.html',
     styleUrls: ['./substance-application-match-list.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class SubstanceApplicationMatchListComponent implements OnInit, AfterViewInit {
@@ -39,7 +40,8 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
     private router: Router,
     public loadingService: LoadingService,
     private utilsService: UtilsService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
@@ -147,6 +149,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
                                     }
                                   }
                                 }
+                                this.cdr.markForCheck();
                               });
                             }
                           }
@@ -188,6 +191,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
 
           this.dataSource = this.substanceApplicationMatchList;
         }
+        this.cdr.markForCheck();
       });
   }
 

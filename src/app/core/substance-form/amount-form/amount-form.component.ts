@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
 import { SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
@@ -8,7 +8,8 @@ import { FormControl, Validators } from '@angular/forms';
     selector: 'app-amount-form',
     templateUrl: './amount-form.component.html',
     styleUrls: ['./amount-form.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AmountFormComponent implements OnInit {
   private privateSubstanceAmount: SubstanceAmount;
@@ -25,7 +26,8 @@ export class AmountFormComponent implements OnInit {
   subscriptionsSet = false;
 
   constructor(
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -48,6 +50,7 @@ export class AmountFormComponent implements OnInit {
     this.typeControl.setValue(this.privateSubstanceAmount.type);
     this.typeControl.valueChanges.subscribe(value => {
       this.privateSubstanceAmount.type = value;
+      this.cdr.markForCheck();
     });
     this.averageControl.setValue(this.privateSubstanceAmount.average?.toString() || '');
     this.averageControl.valueChanges.subscribe(value => {
@@ -114,6 +117,7 @@ export class AmountFormComponent implements OnInit {
     this.unitsControl.setValue(this.privateSubstanceAmount.units);
     this.unitsControl.valueChanges.subscribe(value => {
       this.privateSubstanceAmount.units = value;
+      this.cdr.markForCheck();
     });
     this.nonNumericValueControl.setValue(this.privateSubstanceAmount.nonNumericValue);
     this.nonNumericValueControl.valueChanges.subscribe(value => {
@@ -148,6 +152,7 @@ export class AmountFormComponent implements OnInit {
     this.cvService.getDomainVocabulary('AMOUNT_TYPE', 'AMOUNT_UNIT').subscribe(response => {
       this.amountTypeList = response['AMOUNT_TYPE'].list;
       this.amountUnitList = response['AMOUNT_UNIT'].list;
+      this.cdr.markForCheck();
     });
   }
 
