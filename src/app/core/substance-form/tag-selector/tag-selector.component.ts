@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
@@ -16,7 +16,8 @@ import { CvDialogComponent } from '@gsrs-core/substance-form/cv-dialog/cv-dialog
     selector: 'app-tag-selector',
     templateUrl: './tag-selector.component.html',
     styleUrls: ['./tag-selector.component.scss'],
-    standalone: false
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagSelectorComponent implements OnInit, AfterViewInit {
   @Input() cvDomain: string;
@@ -38,7 +39,8 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
 
   ) {
   }
@@ -78,6 +80,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
           startWith(<string>null),
           map((tag: string | null) => tag ? this._filter(tag)
             : this.allOptions.filter(option => this.privateTags.indexOf(option.value) === -1)));
+        this.cdr.markForCheck();
       });
     });
   }
