@@ -20,11 +20,11 @@
           <span>
             <button mat-flat-button color="primary" [routerLink]="['/browse-applications']" matTooltip='Browse Application'>
               Browse Application
-            </button>&nbsp;&nbsp;&nbsp;
+            </button>
             <button mat-flat-button color="primary" [routerLink]="['/application/register']"
               matTooltip='Register a New Application'>
               Register New Application
-            </button>&nbsp;&nbsp;&nbsp;
+            </button>
             <!--
             <button mat-flat-button color="primary" [routerLink]="['/application', application.id]"
               matTooltip='View this Application Record'>View Application
@@ -32,13 +32,12 @@
               <a mat-flat-button color="primary" routerLink="/application/{{application.id}}" target="_blank" matTooltip='Opens in a new window'>
                 <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
               View Application</a>
-              &nbsp;&nbsp;&nbsp;
               @if (canDelete) {
                 <span>
                   <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
                     matTooltip='Delete this Application'>
                     Delete
-                  </button>&nbsp;&nbsp;&nbsp;
+                  </button>
                 </span>
               }
             </span>
@@ -47,9 +46,7 @@
       }
 
       <!-- Validate and Submit Button -->
-      &nbsp;
       <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
     </div>
 

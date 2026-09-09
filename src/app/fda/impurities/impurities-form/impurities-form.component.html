@@ -4,7 +4,7 @@
       <div class="actions-container">
         <button mat-flat-button color="primary" (click)="showJSON()">
           Show JSON</button
-          >&nbsp;&nbsp;&nbsp;
+          >
           <a
             mat-flat-button
             color="primary"
@@ -13,7 +13,7 @@
             download="{{ jsonFileName }}.json"
             >
             <span>Export JSON</span> </a
-            >&nbsp;&nbsp;&nbsp;
+            >
             <!-- Do not show 'Import JSON' button when in Update Impurities page -->
             @if (impurities && !impurities.id) {
               <span>
@@ -48,7 +48,7 @@
                       matTooltip="Register Impurities"
                       >
                       Register New Impurities</button
-                      >&nbsp;&nbsp;&nbsp;
+                      >
                       <a
                         mat-flat-button
                         color="primary"
@@ -62,7 +62,7 @@
                           matTooltip="opens in new window"
                         ></mat-icon>
                         View Impurities </a
-                        >&nbsp;&nbsp;&nbsp;
+                        >
                         @if (canEdit) {
                           <span>
                             <button
@@ -72,7 +72,7 @@
                               matTooltip="Delete this Impurity"
                               >
                               Delete</button
-                              >&nbsp;&nbsp;&nbsp;
+                              >
                             </span>
                           }
                         </span>
@@ -80,11 +80,9 @@
                     </span>
                   }
                   <!-- Validate and Submit Button -->
-                  &nbsp;
                   <button mat-flat-button color="warn" (click)="validate()">
                     Validate and Submit
                   </button>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <button
                     mat-flat-button
                     color="primary"

@@ -267,6 +267,12 @@
   background-color: var(--regular-white-color);
   padding: 10px;
   display: flex;
+  align-items: center;
+
+  button,
+  a[mat-flat-button] {
+    margin-right: 12px;
+  }
 }
 
 .dismiss-container {

@@ -8,7 +8,7 @@
         >
         Show JSON</button
         >
-        }&nbsp;&nbsp;&nbsp;
+        }
 
         <span>
           <a
@@ -19,7 +19,7 @@
             download="{{ jsonFileName }}.json"
             >
             <mat-icon svgIcon="get_app"></mat-icon><span>Export JSON</span> </a
-            >&nbsp;&nbsp;&nbsp;
+            >
           </span>
 
           <!-- Do not show 'Import JSON' button when in Update Impurities page -->
@@ -58,7 +58,7 @@
                     matTooltip="Browse Product"
                     >
                     Browse Product</button
-                    >&nbsp;&nbsp;&nbsp;
+                    >
                     <button
                       mat-flat-button
                       color="primary"
@@ -66,7 +66,7 @@
                       matTooltip="Register a New Product"
                       >
                       Register New Product</button
-                      >&nbsp;&nbsp;&nbsp;
+                      >
                       <a
                         mat-flat-button
                         color="primary"
@@ -80,7 +80,7 @@
                           svgIcon="open_in_new"
                           matTooltip="opens in new window"
                         ></mat-icon> </a
-                        >&nbsp;&nbsp;&nbsp;
+                        >
                         @if (canDelete) {
                           <span>
                             <button
@@ -90,7 +90,7 @@
                               matTooltip="Delete this Product"
                               >
                               Delete</button
-                              >&nbsp;&nbsp;&nbsp;
+                              >
                             </span>
                           }
                         </span>
@@ -99,13 +99,11 @@
                   }
 
                   <!-- Validate and Submit Button -->
-                  &nbsp;
                   @if (!message) {
                     <button mat-flat-button color="warn" (click)="validate()">
                       Validate and Submit
                     </button>
                   }
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <button
                     mat-flat-button
                     color="primary"

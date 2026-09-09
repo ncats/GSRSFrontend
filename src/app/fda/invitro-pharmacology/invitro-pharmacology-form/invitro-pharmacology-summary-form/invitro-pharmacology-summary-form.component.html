@@ -3,7 +3,7 @@
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">
       Show JSON</button
-      >&nbsp;&nbsp;&nbsp;
+      >
 
       <a
         mat-flat-button
@@ -13,7 +13,7 @@
         download="{{ jsonFileName }}.json"
         >
         <span>Export JSON</span> </a
-        >&nbsp;&nbsp;&nbsp;
+        >
 
         @if (validationMessages && validationMessages.length > 0) {
           <button
@@ -31,11 +31,9 @@
         <span class="middle-fill"></span>
 
         <!-- Validate and Submit Button -->
-        &nbsp;
         <button mat-flat-button color="warn" (click)="validate()">
           Validate and Submit
         </button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button
           mat-flat-button
           color="primary"

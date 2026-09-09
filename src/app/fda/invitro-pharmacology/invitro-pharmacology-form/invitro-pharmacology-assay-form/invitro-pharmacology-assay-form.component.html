@@ -2,7 +2,7 @@
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">
       Show JSON</button
-      >&nbsp;&nbsp;&nbsp;
+      >
 
       <a
         mat-flat-button
@@ -12,7 +12,7 @@
         download="{{ jsonFileName }}.json"
         >
         <span>Export JSON</span> </a
-        >&nbsp;&nbsp;&nbsp;
+        >
 
         <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
         @if (assay && !assay.id) {
@@ -54,14 +54,12 @@
               matTooltip="opens in new window"
             ></mat-icon> </a
             >
-            }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            }
 
             <!-- Validate and Submit Button -->
-            &nbsp;
             <button mat-flat-button color="warn" (click)="validate()">
               Validate and Submit
             </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button
               mat-flat-button
               color="primary"
