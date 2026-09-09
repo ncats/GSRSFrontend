@@ -215,12 +215,12 @@ export class SubstanceSsg4ManufactureFormComponent
                     this.forceChange = true;
                     this.dynamicComponents.forEach((cRef, index) => {
                       this.dynamicComponentLoader
-                        .getComponentFactory<any>(
+                        .getDynamicComponent<any>(
                           this.formSections[index].dynamicComponentName,
                         )
-                        .subscribe((componentFactory) => {
+                        .subscribe((componentType) => {
                           this.formSections[index].dynamicComponentRef =
-                            cRef.createComponent(componentFactory);
+                            cRef.createComponent(componentType);
                           this.formSections[index].matExpansionPanel =
                             this.matExpansionPanels.find(
                               (item, panelIndex) => index === panelIndex,
@@ -357,13 +357,13 @@ export class SubstanceSsg4ManufactureFormComponent
         const startTime = new Date();
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
-            .getComponentFactory<any>(
+            .getDynamicComponent<any>(
               this.formSections[index].dynamicComponentName,
             )
-            .subscribe((componentFactory) => {
+            .subscribe((componentType) => {
               this.loadingService.setLoading(true);
               this.formSections[index].dynamicComponentRef =
-                cRef.createComponent(componentFactory);
+                cRef.createComponent(componentType);
               this.formSections[index].matExpansionPanel =
                 this.matExpansionPanels.find(
                   (item, panelIndex) => index === panelIndex,
@@ -973,12 +973,12 @@ export class SubstanceSsg4ManufactureFormComponent
                 this.forceChange = true;
                 this.dynamicComponents.forEach((cRef, index) => {
                   this.dynamicComponentLoader
-                    .getComponentFactory<any>(
+                    .getDynamicComponent<any>(
                       this.formSections[index].dynamicComponentName,
                     )
-                    .subscribe((componentFactory) => {
+                    .subscribe((componentType) => {
                       this.formSections[index].dynamicComponentRef =
-                        cRef.createComponent(componentFactory);
+                        cRef.createComponent(componentType);
                       this.formSections[index].matExpansionPanel =
                         this.matExpansionPanels.find(
                           (item, panelIndex) => index === panelIndex,

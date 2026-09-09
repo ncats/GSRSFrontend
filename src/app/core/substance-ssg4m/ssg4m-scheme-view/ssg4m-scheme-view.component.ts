@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
@@ -20,7 +21,7 @@ import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.di
     templateUrl: './ssg4m-scheme-view.component.html',
     styleUrls: ['./ssg4m-scheme-view.component.scss'],
     standalone: true,
-    imports: [MatCheckboxModule, MatButtonModule, MatTooltipModule, MatIconModule, SubstanceImageDirective]
+    imports: [MatCheckboxModule, MatButtonModule, MatTooltipModule, MatIconModule, RouterModule, SubstanceImageDirective]
 })
 export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();

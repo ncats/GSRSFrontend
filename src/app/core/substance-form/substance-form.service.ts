@@ -31,7 +31,9 @@ import jp from 'jsonpath';
 import {take} from 'rxjs/operators';
 import {AdminService} from '@gsrs-core/admin/admin.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormService implements OnDestroy {
    privateSubstance: SubstanceDetail;
    originalSubstanceSnapshot: SubstanceDetail | null = null;

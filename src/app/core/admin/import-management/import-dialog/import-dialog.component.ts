@@ -8,6 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/cv-import.component';
 
 @Component({
@@ -15,7 +16,7 @@ import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/
     templateUrl: './import-dialog.component.html',
     styleUrls: ['./import-dialog.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, MatDialogModule, MatCheckboxModule, MatFormFieldModule, MatOptionModule, MatSelectModule, CvImportComponent],
+    imports: [CommonModule, FormsModule, MatDialogModule, MatCheckboxModule, MatFormFieldModule, MatOptionModule, MatSelectModule, MatButtonModule, CvImportComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportDialogComponent implements OnInit {

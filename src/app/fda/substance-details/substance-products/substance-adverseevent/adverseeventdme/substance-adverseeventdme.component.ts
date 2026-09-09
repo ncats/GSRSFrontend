@@ -13,12 +13,21 @@ import { AuthService } from '@gsrs-core/auth';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { Subscription } from 'rxjs';
 import { adverseEventDmeSearchSortValues } from '../../../../adverse-event/adverse-events-dme-browse/adverse-events-dme-search-sort-values';
+import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-substance-adverseeventdme',
   templateUrl: './substance-adverseeventdme.component.html',
   styleUrls: ['./substance-adverseeventdme.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 
 export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {

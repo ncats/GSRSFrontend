@@ -9,6 +9,6 @@ environment.appId = 'fda';
 environment.isAnalyticsPrivate = true;
 environment.structureEditor = 'jsdraw';
 
-export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';
-
 export { FDA_ROUTES as EXTRA_ROUTES } from '../app/fda/fda.routes';
+
+export { FDA_ENVIRONMENT_PROVIDERS as ENVIRONMENT_PROVIDERS } from '../app/fda/fda.providers';

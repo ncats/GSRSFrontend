@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { BaseComponent } from './base/base.component';
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { EXTRA_ROUTES } from '../../environments/environment';
+import { SSG2_ROUTES } from './substance-ssg2/ssg2.routes';
+import { SSG4M_ROUTES } from './substance-ssg4m/ssg4m.routes';
 
 const childRoutes: Routes = [
   {
@@ -114,9 +115,14 @@ const childRoutes: Routes = [
     loadChildren: () => import('./nitrosamine-standalone/nitrosamine-standalone.routes').then(r => r.NITROSAMINE_STANDALONE_ROUTES)
   },
   ...EXTRA_ROUTES,
+  // Previously injected at runtime by SubstanceSsg2Module/SubstanceSsg4mModule constructors
+  // (router.config[0].children.push(...)), which ran after RouterModule.forRoot() had already
+  // processed EXTRA_ROUTES — kept after EXTRA_ROUTES here to preserve that same match order.
+  ...SSG2_ROUTES,
+  ...SSG4M_ROUTES,
 ];
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     children: childRoutes,
@@ -127,12 +133,3 @@ const routes: Routes = [
     loadComponent: () => import('./page-not-found/page-not-found.component').then(c => c.PageNotFoundComponent)
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    // onSameUrlNavigation: 'ignore',  // default behavior, ingnores same route reload
-    onSameUrlNavigation: 'reload'
-})],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }

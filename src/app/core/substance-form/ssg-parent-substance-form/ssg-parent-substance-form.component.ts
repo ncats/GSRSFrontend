@@ -10,6 +10,7 @@ import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormSsg4mStartingMaterialsModule } from '@gsrs-core/substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
@@ -17,7 +18,7 @@ import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substa
     templateUrl: './ssg-parent-substance-form.component.html',
     styleUrls: ['./ssg-parent-substance-form.component.scss'],
     standalone: true,
-    imports: [CommonModule, MatTooltipModule, SubstanceSelectorComponent],
+    imports: [CommonModule, MatTooltipModule, RouterModule, SubstanceSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

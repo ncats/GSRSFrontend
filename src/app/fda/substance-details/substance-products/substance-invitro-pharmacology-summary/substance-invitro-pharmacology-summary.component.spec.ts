@@ -17,7 +17,7 @@ describe('SubstanceInvitroPharmacologySummaryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceInvitroPharmacologySummaryComponent ],
+      imports: [ SubstanceInvitroPharmacologySummaryComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },

@@ -24,6 +24,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
   @Component({
     selector: 'app-bulk-query',
@@ -39,6 +40,7 @@ import { MatButtonModule } from '@angular/material/button';
       MatFormFieldModule,
       MatSelectModule,
       MatButtonModule,
+      MatInputModule,
       TextInputFormComponent
     ],
     changeDetection: ChangeDetectionStrategy.OnPush

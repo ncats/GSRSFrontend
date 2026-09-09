@@ -10,6 +10,7 @@ import jp from 'jsonpath';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RouterModule } from '@angular/router';
 import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component( {
@@ -17,7 +18,7 @@ import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.di
     templateUrl: './definition-switch-dialog.component.html',
     styleUrls: ['./definition-switch-dialog.component.scss'],
     standalone: true,
-    imports: [MatDialogModule, MatButtonModule, MatIconModule, MatProgressBarModule, SubstanceImageDirective]
+    imports: [MatDialogModule, MatButtonModule, MatIconModule, MatProgressBarModule, RouterModule, SubstanceImageDirective]
 })
 export class DefinitionSwitchDialogComponent implements OnInit {
   public dialogRef: MatDialogRef < DefinitionSwitchDialogComponent >;

@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 import { GeneralService } from '../../service/general.service';
 import { ConfigService } from '../../../core/config/config.service';
@@ -15,7 +19,8 @@ import { Subscription } from 'rxjs';
   selector: 'app-show-application-toggle',
   templateUrl: './show-application-toggle.component.html',
   styleUrls: ['./show-application-toggle.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [MatCheckboxModule, MatTooltipModule, MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {

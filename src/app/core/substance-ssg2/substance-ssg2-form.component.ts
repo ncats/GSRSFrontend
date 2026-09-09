@@ -398,10 +398,10 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
           const startTime = new Date();
           this.dynamicComponents.forEach((cRef, index) => {
             this.dynamicComponentLoader
-              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-              .subscribe(componentFactory => {
+              .getDynamicComponent<any>(this.formSections[index].dynamicComponentName)
+              .subscribe(componentType => {
                 this.loadingService.setLoading(true);
-                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentType);
                 this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
                 this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
                   this.formSections[index].menuLabel = label;
@@ -663,9 +663,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
             this.forceChange = true;
             this.dynamicComponents.forEach((cRef, index) => {
               this.dynamicComponentLoader
-                .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-                .subscribe(componentFactory => {
-                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                .getDynamicComponent<any>(this.formSections[index].dynamicComponentName)
+                .subscribe(componentType => {
+                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentType);
                   this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
                   this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
                     this.formSections[index].menuLabel = label;

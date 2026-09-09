@@ -4,7 +4,9 @@ import { SubstanceFormServiceBase } from '../base-classes/substance-form-service
 import { StructurallyDiverse } from '@gsrs-core/substance/substance.model';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormStructurallyDiverseService extends SubstanceFormServiceBase<StructurallyDiverse> {
 
   constructor(

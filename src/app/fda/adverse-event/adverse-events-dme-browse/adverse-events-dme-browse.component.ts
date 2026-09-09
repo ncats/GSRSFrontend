@@ -27,6 +27,7 @@ import { GeneralService } from '../../service/general.service';
 import { AdverseEventDme } from '../model/adverse-event.model';
 import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sort-values';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,6 +41,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { AdverseEventTextSearchComponent } from '../adverse-event-text-search/adverse-event-text-search.component';
 import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
 
@@ -50,6 +53,7 @@ import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager
     standalone: true,
     imports: [
       CommonModule,
+      FormsModule,
       RouterModule,
       MatSidenavModule,
       MatIconModule,
@@ -63,6 +67,8 @@ import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager
       MatTableModule,
       MatSortModule,
       MatCardModule,
+      MatSelectModule,
+      MatOptionModule,
       AdverseEventTextSearchComponent,
       FacetsManagerComponent
     ],

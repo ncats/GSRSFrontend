@@ -7,7 +7,7 @@ import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import {AuthService} from '@gsrs-core/auth/auth.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
     standalone: true,
     imports: [
       FormsModule,
+      ReactiveFormsModule,
       MatFormFieldModule,
       MatInputModule,
       MatButtonModule

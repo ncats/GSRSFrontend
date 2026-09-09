@@ -29,6 +29,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
 import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
 import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 @Component({
@@ -52,6 +53,7 @@ import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.di
       MatTabsModule,
       MatSliderModule,
       MatExpansionModule,
+      MatChipsModule,
       SubstanceTextSearchComponent,
       SubstanceImageDirective
     ]

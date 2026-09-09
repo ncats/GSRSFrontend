@@ -15,7 +15,7 @@ describe('SubstanceClinicalTrialsEuropeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceClinicalTrialsEuropeComponent ],
+      imports: [ SubstanceClinicalTrialsEuropeComponent ],
       providers: [
         { provide: GoogleAnalyticsService, useValue: {} },
         { provide: ClinicalTrialService, useValue: {} },

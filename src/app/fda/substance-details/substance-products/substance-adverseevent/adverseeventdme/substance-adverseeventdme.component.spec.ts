@@ -15,7 +15,7 @@ describe('SubstanceAdverseEventDmeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceAdverseEventDmeComponent ],
+      imports: [ SubstanceAdverseEventDmeComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useValue: {} },

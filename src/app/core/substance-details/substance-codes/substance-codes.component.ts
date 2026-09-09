@@ -12,6 +12,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatSortModule } from "@angular/material/sort";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { ReferencesManagerModule } from "../../references-manager/references-manager.module";
 import { CodeDisplayModule } from "@gsrs-core/utils/code-display.module";
 import { forwardSlash } from "./codeSearchPipe";
@@ -51,6 +52,7 @@ import { ConfigService } from "@gsrs-core/config";
     MatButtonModule,
     MatDialogModule,
     MatSortModule,
+    MatTooltipModule,
     ReferencesManagerModule,
     CodeDisplayModule,
     forwardSlash

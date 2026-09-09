@@ -14,8 +14,7 @@ describe('SubstanceCountsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceCountsComponent ],
+      imports: [ HttpClientTestingModule, SubstanceCountsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ApplicationService, useValue: {} },

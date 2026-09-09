@@ -17,8 +17,7 @@ describe('ShowApplicationToggleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ShowApplicationToggleComponent ],
+      imports: [ HttpClientTestingModule, ShowApplicationToggleComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GeneralService, useValue: {} },

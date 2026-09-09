@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { SubstanceFormConstituentsModule } from './substance-form-constituents.module';
 import { SubstanceFormService } from '../substance-form.service';
 import { Observable } from 'rxjs';
 import { Constituent } from '@gsrs-core/substance/substance.model';

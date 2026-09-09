@@ -17,7 +17,7 @@ describe('SubstanceSsg4mComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceSsg4mComponent ],
+      imports: [ SubstanceSsg4mComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },

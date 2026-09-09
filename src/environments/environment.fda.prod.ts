@@ -9,6 +9,6 @@ environment.appId = 'fda';
 /*environment.googleAnalyticsId = 'UA-136176848-3';*/
 environment.isAnalyticsPrivate = true;
 
-export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';
-
 export { FDA_ROUTES as EXTRA_ROUTES } from '../app/fda/fda.routes';
+
+export { FDA_ENVIRONMENT_PROVIDERS as ENVIRONMENT_PROVIDERS } from '../app/fda/fda.providers';

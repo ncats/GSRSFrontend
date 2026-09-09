@@ -5,8 +5,9 @@ import { Title, DomSanitizer } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
@@ -73,6 +74,8 @@ import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-sear
     MatSidenavModule,
     MatTabsModule,
     MatTableModule,
+    MatSortModule,
+    MatDialogModule,
     FacetsManagerComponent,
     InvitroPharmacologyTextSearchComponent
   ]

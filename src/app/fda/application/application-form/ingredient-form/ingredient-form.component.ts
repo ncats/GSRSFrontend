@@ -9,7 +9,6 @@ import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SubstanceSearchSelectorComponent } from '../../../substance-search-select/substance-search-selector.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
-import { GsrsModule } from '@gsrs-core/gsrs.module';
 import { GeneralService } from 'src/app/fda/service/general.service';
 import { A } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';

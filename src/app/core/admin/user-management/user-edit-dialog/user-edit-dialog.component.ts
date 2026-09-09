@@ -17,13 +17,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
     selector: 'app-user-edit-dialog',
     templateUrl: './user-edit-dialog.component.html',
     styleUrls: ['./user-edit-dialog.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, MatRadioModule],
+    imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, MatRadioModule, MatTableModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserEditDialogComponent implements OnInit {

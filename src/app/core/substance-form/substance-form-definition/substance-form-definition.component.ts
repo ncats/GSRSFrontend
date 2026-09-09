@@ -15,7 +15,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -38,7 +38,7 @@ import { ElementLabelDisplayPipe } from '@gsrs-core/utils/element-label-display.
     templateUrl: './substance-form-definition.component.html',
     styleUrls: ['./substance-form-definition.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatAutocompleteModule, MatCheckboxModule, MatChipsModule, MatFormFieldModule, MatIconModule, MatOptionModule, MatSelectModule, MatInputModule, MatTooltipModule, AccessManagerComponent, AuditInfoComponent, DomainReferencesComponent, SubstanceSelectorComponent, ElementLabelDisplayPipe],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, MatAutocompleteModule, MatCheckboxModule, MatChipsModule, MatFormFieldModule, MatIconModule, MatOptionModule, MatSelectModule, MatInputModule, MatTooltipModule, AccessManagerComponent, AuditInfoComponent, DomainReferencesComponent, SubstanceSelectorComponent, ElementLabelDisplayPipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormDefinitionComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {

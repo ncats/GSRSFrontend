@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
@@ -37,6 +37,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import { ApplicationProductFormComponent } from './application-product-form/application-product-form.component';
 
@@ -55,6 +57,9 @@ import { ApplicationProductFormComponent } from './application-product-form/appl
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatOptionModule,
     CvInputComponent,
     ApplicationProductFormComponent
   ]

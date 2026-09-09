@@ -53,27 +53,6 @@ import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-suc
 import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
-import { SubstanceFormService } from './substance-form.service';
-import { SubstanceFormStructureService } from './structure/substance-form-structure.service';
-import { SubstanceFormDisulfideLinksService } from './disulfide-links/substance-form-disulfide-links.service';
-import { SubstanceFormGlycosylationService } from './glycosylation/substance-form-glycosylation.service';
-import { SubstanceFormPropertiesService } from './properties/substance-form-properties.service';
-import { SubstanceFormReferencesService } from './references/substance-form-references.service';
-import { SubstanceFormStructuralUnitsService } from './structural-units/substance-form-structural-units.service';
-import { SubstanceFormStructurallyDiverseService } from './structurally-diverse/substance-form-structurally-diverse.service';
-import { SubstanceFormNamesService } from './names/substance-form-names.service';
-import { SubstanceFormLinksService } from './links/substance-form-links.service';
-import { SubstanceFormCodesService } from './codes/substance-form-codes.service';
-import { SubstanceFormAgentModificationsService } from './agent-modifications/substance-form-agent-modifications.service';
-import { SubstanceFormConstituentsService } from './constituents/substance-form-constituents.service';
-import { SubstanceFormMixtureComponentsService } from './mixture-components/substance-form-mixture-components.service';
-import { SubstanceFormMonomersService } from './monomers/substance-form-monomers.service';
-import { SubstanceFormNotesService } from './notes/substance-form-notes.service';
-import { SubstanceFormOtherLinksService } from './other-links/substance-form-other-links.service';
-import { SubstanceFormPhysicalModificationsService } from './physical-modifications/substance-form-physical-modifications.service';
-import { SubstanceFormPolymerClassificationService } from './polymer-classification/substance-form-polymer-classification.service';
-import { SubstanceFormRelationshipsService } from './relationships/substance-form-relationships.service';
-import { SubstanceFormStructuralModificationsService } from './structural-modifications/substance-form-structural-modifications.service';
 import { PreviousReferencesComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references.component';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -185,29 +164,7 @@ export class SubstanceFormModule {
     static forRoot(): ModuleWithProviders<any> {
       return {
         ngModule: SubstanceFormModule,
-        providers: [
-          SubstanceFormService,
-          SubstanceFormStructureService,
-          SubstanceFormDisulfideLinksService,
-          SubstanceFormGlycosylationService,
-          SubstanceFormPropertiesService,
-          SubstanceFormReferencesService,
-          SubstanceFormStructuralUnitsService,
-          SubstanceFormStructurallyDiverseService,
-          SubstanceFormNamesService,
-          SubstanceFormLinksService,
-          SubstanceFormCodesService,
-          SubstanceFormAgentModificationsService,
-          SubstanceFormConstituentsService,
-          SubstanceFormMixtureComponentsService,
-          SubstanceFormMonomersService,
-          SubstanceFormNotesService,
-          SubstanceFormOtherLinksService,
-          SubstanceFormPhysicalModificationsService,
-          SubstanceFormPolymerClassificationService,
-          SubstanceFormRelationshipsService,
-          SubstanceFormStructuralModificationsService
-        ]
+        providers: []
       };
     }
 }

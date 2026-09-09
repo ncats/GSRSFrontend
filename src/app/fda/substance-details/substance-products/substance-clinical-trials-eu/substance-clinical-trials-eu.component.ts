@@ -16,12 +16,20 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { take } from 'rxjs/operators';
 import lodashMap from 'lodash/map';
 import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-substance-clinical-trials-eu',
     templateUrl: './substance-clinical-trials-eu.component.html',
     styleUrls: ['./substance-clinical-trials-eu.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 
 export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {

@@ -53,12 +53,36 @@ import {MatButtonToggleChange} from "@angular/material/button-toggle";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
 import { Location } from '@angular/common';
 import jp from 'jsonpath';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @Component({
     selector: 'app-substance-form',
     templateUrl: './substance-form.component.html',
     styleUrls: ['./substance-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatButtonModule,
+      MatDialogModule,
+      MatExpansionModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatTooltipModule,
+      SubstanceImageModule
+    ]
 })
 export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
   private static simplifiedSuffix = '-simplified';
@@ -618,11 +642,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
 
     this.dynamicComponents.forEach((cRef, index) => {
       this.dynamicComponentLoader
-        .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-        .subscribe(componentFactory => {
+        .getDynamicComponent<any>(this.formSections[index].dynamicComponentName)
+        .subscribe(componentType => {
           this.loadingService.setLoading(true);
           cRef.clear();
-          this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+          this.formSections[index].dynamicComponentRef = cRef.createComponent(componentType);
           this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
 
           this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
@@ -947,10 +971,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
             this.forceChange = true;
             this.dynamicComponents.forEach((cRef, index) => {
               this.dynamicComponentLoader
-                .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-                .subscribe(componentFactory => {
+                .getDynamicComponent<any>(this.formSections[index].dynamicComponentName)
+                .subscribe(componentType => {
                   cRef.clear();
-                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentType);
                   this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
                   this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
                     this.formSections[index].menuLabel = label;

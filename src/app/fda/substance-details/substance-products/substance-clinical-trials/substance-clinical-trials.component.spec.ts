@@ -17,8 +17,7 @@ describe('SubstanceClinicalTrialsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceClinicalTrialsComponent ],
+      imports: [ HttpClientTestingModule, SubstanceClinicalTrialsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },

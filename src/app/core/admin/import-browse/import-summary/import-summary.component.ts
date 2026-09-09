@@ -18,7 +18,7 @@ import {Router, RouterModule} from '@angular/router';
 import {Alignment, UtilsService} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
 import join from 'lodash/join';
@@ -56,6 +56,7 @@ import { TrackLinkEventDirective } from '@gsrs-core/google-analytics/track-link-
       MatCardModule,
       MatCheckboxModule,
       MatChipsModule,
+      MatDialogModule,
       MatIconModule,
       MatMenuModule,
       MatPaginatorModule,

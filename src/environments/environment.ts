@@ -3,13 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 import { Routes } from '@angular/router';
+import { Provider, EnvironmentProviders } from '@angular/core';
 import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
 
-export { GsrsModule as EnvironmentModule } from '../app/core/gsrs.module';
-
 export const EXTRA_ROUTES: Routes = [];
+
+export const ENVIRONMENT_PROVIDERS: Array<Provider | EnvironmentProviders> = [];
 
 /*
  * In development mode, for easier debugging, you can ignore zone related error
