@@ -1,11 +1,12 @@
 import {
   ApplicationConfig,
   ErrorHandler,
-  APP_INITIALIZER,
+  inject,
   importProvidersFrom,
+  provideAppInitializer,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter, withRouterConfig } from '@angular/router';
+import { provideRouter, withRouterConfig, withPreloading, PreloadAllModules } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptorsFromDi, withJsonpSupport, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -28,7 +29,11 @@ import { ENVIRONMENT_PROVIDERS } from '../../environments/environment';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection(),
-    provideRouter(routes, withRouterConfig({ onSameUrlNavigation: 'reload' })),
+    provideRouter(
+      routes,
+      withRouterConfig({ onSameUrlNavigation: 'reload' }),
+      withPreloading(PreloadAllModules)
+    ),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi(), withJsonpSupport()),
     // was previously supplied at root by MatNativeDateModule (in AppModule.imports); components
@@ -37,12 +42,7 @@ export const appConfig: ApplicationConfig = {
 
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     ConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: configServiceFactory,
-      deps: [ConfigService],
-      multi: true,
-    },
+    provideAppInitializer(() => configServiceFactory(inject(ConfigService))()),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: CsrfTokenInterceptor, multi: true },
 
