@@ -9,12 +9,18 @@ import { GoogleAnalyticsService } from "../../google-analytics/google-analytics.
 import { ReadMoreComponent } from "@gsrs-core/substance-details/substance-notes/read-more/read-more.component";
 import { Subject } from "rxjs";
 import { OverlayContainer } from "@angular/cdk/overlay";
+import { CommonModule } from "@angular/common";
+import { MatTableModule } from "@angular/material/table";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatButtonModule } from "@angular/material/button";
+import { ReferencesManagerModule } from "../../references-manager/references-manager.module";
 
 @Component({
   selector: "app-substance-notes",
   templateUrl: "./substance-notes.component.html",
   styleUrls: ["./substance-notes.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, MatTableModule, MatDialogModule, MatButtonModule, ReferencesManagerModule, ReadMoreComponent],
 })
 export class SubstanceNotesComponent
   extends SubstanceCardBase

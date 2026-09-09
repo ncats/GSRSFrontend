@@ -5,12 +5,19 @@ import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
 import { SubstanceFormMonomersService } from './substance-form-monomers.service';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MonomerFormComponent } from './monomer-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-monomers-card',
     templateUrl: './substance-form-monomers-card.component.html',
     styleUrls: ['./substance-form-monomers-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, MonomerFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormMonomersCardComponent extends SubstanceCardBaseFilteredList<Monomer>

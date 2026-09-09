@@ -12,8 +12,7 @@ describe('SubstanceStructuralUnitsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceStructuralUnitsComponent ],
+      imports: [ HttpClientTestingModule, SubstanceStructuralUnitsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },

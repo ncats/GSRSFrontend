@@ -6,12 +6,28 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'app-mini-search',
     templateUrl: './mini-search.component.html',
     styleUrls: ['./mini-search.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      ReactiveFormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatAutocompleteModule,
+      MatOptionModule,
+      MatButtonModule,
+      MatIconModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MiniSearchComponent implements OnInit, AfterViewInit {

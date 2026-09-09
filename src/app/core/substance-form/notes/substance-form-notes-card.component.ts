@@ -6,12 +6,23 @@ import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
 import { SubstanceFormNotesService } from './substance-form-notes.service';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { NoteFormComponent } from './note-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-notes-card',
     templateUrl: './substance-form-notes-card.component.html',
     styleUrls: ['./substance-form-notes-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatInputModule, NoteFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormNotesCardComponent extends SubstanceCardBaseFilteredList<SubstanceNote>

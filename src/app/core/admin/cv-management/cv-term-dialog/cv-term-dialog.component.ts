@@ -1,15 +1,35 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { VocabularyTerm, Vocabulary, ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-cv-term-dialog',
     templateUrl: './cv-term-dialog.component.html',
     styleUrls: ['./cv-term-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatDialogModule,
+      MatCheckboxModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatIconModule,
+      MatButtonModule,
+      MatTooltipModule,
+      FragmentWizardComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvTermDialogComponent implements OnInit, AfterViewInit{

@@ -17,8 +17,7 @@ describe('SubstanceFormSubunitsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormSubunitsComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormSubunitsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { definition: NEVER, substanceSubunits: NEVER } },

@@ -8,13 +8,20 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { take } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-editor.module';
 
 
 @Component({
     selector: 'app-fragment-wizard',
     templateUrl: './fragment-wizard.component.html',
     styleUrls: ['./fragment-wizard.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, StructureEditorModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FragmentWizardComponent implements OnInit {

@@ -12,7 +12,7 @@ describe('HighlightedSearchActionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HighlightedSearchActionComponent ],
+      imports: [ HighlightedSearchActionComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         // constructor reads data.searchTerm directly.

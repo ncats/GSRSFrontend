@@ -8,12 +8,19 @@ import {Subscription} from 'rxjs';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
+import {CommonModule} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-other-links-form',
     templateUrl: './other-links-form.component.html',
     styleUrls: ['./other-links-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, AuditInfoComponent, CvInputComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OtherLinksFormComponent implements OnInit, OnDestroy {

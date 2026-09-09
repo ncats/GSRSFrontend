@@ -1,15 +1,23 @@
 import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { forkJoin, Subscription } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import moment from 'moment';
-import * as XLSX from 'xlsx';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -21,7 +29,6 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
@@ -35,7 +42,21 @@ import jp from 'jsonpath';
   selector: 'app-invitro-pharmacology-assay-form',
   templateUrl: './invitro-pharmacology-assay-form.component.html',
   styleUrls: ['./invitro-pharmacology-assay-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    CvInputComponent,
+    SubstanceTextSearchComponent
+  ]
 })
 
 export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy {

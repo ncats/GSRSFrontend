@@ -3,12 +3,20 @@ import {SubstanceAmount} from '@gsrs-core/substance';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ControlledVocabularyService, Vocabulary, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {UtilsService} from '@gsrs-core/utils';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {FragmentWizardComponent} from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 
 @Component({
     selector: 'app-cv-dialog',
     templateUrl: './cv-dialog.component.html',
     styleUrls: ['./cv-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, FragmentWizardComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvDialogComponent implements OnInit {

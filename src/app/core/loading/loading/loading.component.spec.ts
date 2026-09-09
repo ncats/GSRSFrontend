@@ -21,9 +21,7 @@ describe('LoadingComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MatProgressBarModule,
-        NoopAnimationsModule
-      ],
-      declarations: [
+        NoopAnimationsModule,
         LoadingComponent
       ],
       providers: [

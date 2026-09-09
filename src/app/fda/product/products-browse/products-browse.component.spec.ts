@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { of, NEVER, Subject } from 'rxjs';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { ProductService } from '../service/product.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -25,14 +25,13 @@ describe('ProductsBrowseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ProductsBrowseComponent ],
+      imports: [ HttpClientTestingModule, ProductsBrowseComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: BulkSearchService, useValue: {} },
-        { provide: ProductService, useValue: {} },
+        { provide: ProductService, useValue: { getProducts: () => NEVER } },
         { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
-        { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => {}, unregisterFacetSearchHandler: () => {}, getFacetParams: () => ({}), clearSelections: () => {} } },
+        { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => {}, unregisterFacetSearchHandler: () => {}, getFacetParams: () => ({}), clearSelections: () => {}, clearSelectionsEvent: new Subject<void>() } },
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },
         { provide: MainNotificationService, useValue: { setNotification: () => null } },

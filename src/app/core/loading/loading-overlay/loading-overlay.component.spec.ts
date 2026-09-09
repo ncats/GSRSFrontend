@@ -9,8 +9,7 @@ describe('LoadingOverlayComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ LoadingOverlayComponent ],
+      imports: [ HttpClientTestingModule, LoadingOverlayComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();

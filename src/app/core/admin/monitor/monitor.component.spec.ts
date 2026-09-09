@@ -34,7 +34,7 @@ describe('MonitorComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ MonitorComponent ],
+      imports: [ MonitorComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { params: of({ id: 'test-job-id' }) } },

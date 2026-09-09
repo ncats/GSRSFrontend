@@ -1,23 +1,37 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild, Input, AfterViewInit, OnChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTableModule, MatTable, MatTableDataSource } from '@angular/material/table';
 import { RecordOverview } from '@gsrs-core/bulk-search/bulk-search.model';
 import { AuthService } from '@gsrs-core/auth';
 import { LoadingService } from '@gsrs-core/loading';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { NavigationExtras, Router } from '@angular/router';
+import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NavigationExtras, Router, RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
 import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
-import { MatSort, Sort} from '@angular/material/sort';
+import { MatSortModule, MatSort, Sort} from '@angular/material/sort';
 
 @Component({
     selector: 'app-bulk-search-results-summary[context][key]',
     templateUrl: './bulk-search-results-summary.component.html',
     styleUrls: ['./bulk-search-results-summary.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatTableModule,
+      MatSortModule,
+      MatPaginatorModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTooltipModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

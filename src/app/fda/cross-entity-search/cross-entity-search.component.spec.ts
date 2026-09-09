@@ -15,6 +15,10 @@ import { GeneralService } from '../../fda/service/general.service';
 import { ProductService } from '../../fda/product/service/product.service';
 import { ApplicationService } from '../../fda/application/service/application.service';
 import { CrossEntitySearchService } from '../cross-entity-search/cross-entity-search.service';
+import { FacetsManagerService } from '@gsrs-core/facets-manager/facets-manager.service';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+import { of, Subject } from 'rxjs';
 
 import { CrossEntitySearchComponent } from './cross-entity-search.component';
 
@@ -24,7 +28,7 @@ describe('CrossEntitySearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CrossEntitySearchComponent ],
+      imports: [ CrossEntitySearchComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialog, useValue: {} },
@@ -42,7 +46,10 @@ describe('CrossEntitySearchComponent', () => {
         { provide: GeneralService, useValue: {} },
         { provide: ProductService, useValue: {} },
         { provide: ApplicationService, useValue: {} },
-        { provide: CrossEntitySearchService, useValue: {} }
+        { provide: CrossEntitySearchService, useValue: {} },
+        { provide: FacetsManagerService, useValue: { clearSelectionsEvent: new Subject<void>() } },
+        { provide: GoogleAnalyticsService, useValue: { sendEvent: () => null, sendPageView: () => null } },
+        { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of({}) } }
       ]
     })
     .compileComponents();

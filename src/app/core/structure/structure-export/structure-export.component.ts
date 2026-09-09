@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-structure-export',
     templateUrl: './structure-export.component.html',
     styleUrls: ['./structure-export.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatTabsModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureExportComponent implements OnInit {

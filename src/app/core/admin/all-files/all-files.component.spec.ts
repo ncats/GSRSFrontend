@@ -12,8 +12,7 @@ describe('AllFilesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ AllFilesComponent ],
+      imports: [ HttpClientTestingModule, AllFilesComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AdminService, useValue: { getFiles: () => of([]) } },

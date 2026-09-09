@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { NitrosamineDisplayComponent } from '@gsrs-core/nitrosamine-standalone/nitrosamine-display/nitrosamine-display.component';
 
 @Component({
     selector: 'app-nitrosamine-display-dialog',
     templateUrl: './nitrosamine-display-dialog.component.html',
     styleUrls: ['./nitrosamine-display-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, MatIconModule, NitrosamineDisplayComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NitrosamineDisplayDialogComponent implements OnInit {

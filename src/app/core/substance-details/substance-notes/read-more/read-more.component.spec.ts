@@ -10,8 +10,7 @@ describe('ReadMoreComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ReadMoreComponent ],
+      imports: [ HttpClientTestingModule, ReadMoreComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ElementRef, useValue: {} },

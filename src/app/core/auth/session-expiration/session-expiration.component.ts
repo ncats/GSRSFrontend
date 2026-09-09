@@ -9,7 +9,8 @@ import { UtilsService } from "@gsrs-core/utils";
 @Component({
     selector: 'app-session-expiration',
     templateUrl: './session-expiration.component.html',
-    standalone: false,
+    standalone: true,
+    imports: [],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionExpirationComponent implements OnInit {

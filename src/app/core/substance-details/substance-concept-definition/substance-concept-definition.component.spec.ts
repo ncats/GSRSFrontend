@@ -19,9 +19,7 @@ describe('SubstanceConceptDefinitionComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        HttpClientTestingModule
-      ],
-      declarations: [
+        HttpClientTestingModule,
         SubstanceConceptDefinitionComponent
       ],
       providers: [

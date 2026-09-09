@@ -13,12 +13,30 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ImpuritiesService } from '../service/impurities.service';
 import { GeneralService } from '../../service/general.service';
 import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-impurities-details',
     templateUrl: './impurities-details.component.html',
     styleUrls: ['./impurities-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatIconModule,
+      MatTooltipModule,
+      MatButtonModule,
+      MatTableModule,
+      SubstanceImageDirective
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {

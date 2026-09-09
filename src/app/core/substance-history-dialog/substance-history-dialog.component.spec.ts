@@ -13,8 +13,7 @@ describe('SubstanceHistoryDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceHistoryDialogComponent ],
+      imports: [ HttpClientTestingModule, SubstanceHistoryDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },

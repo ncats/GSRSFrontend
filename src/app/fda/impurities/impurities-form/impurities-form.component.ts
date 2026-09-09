@@ -29,12 +29,46 @@ import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.co
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
 import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ImpuritiesSubstanceFormComponent } from './impurities-substance-form/impurities-substance-form.component';
+import { ImpuritiesTotalFormComponent } from './impurities-total-form/impurities-total-form.component';
 
 @Component({
   selector: 'app-impurities-form',
   templateUrl: './impurities-form.component.html',
   styleUrls: ['./impurities-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatCheckboxModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatExpansionModule,
+    MatBadgeModule,
+    CvInputComponent,
+    ImpuritiesSubstanceFormComponent,
+    ImpuritiesTotalFormComponent
+  ]
 })
 export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 

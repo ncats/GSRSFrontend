@@ -19,11 +19,10 @@ describe('SubstanceFormSimplifiedReferencesCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormSimplifiedReferencesCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormSimplifiedReferencesCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: SubstanceFormService, useValue: { definition: NEVER } },
+        { provide: SubstanceFormService, useValue: { definition: NEVER, simplifiedForm: NEVER } },
         { provide: SubstanceFormReferencesService, useValue: { domainsWithReferences: NEVER, substanceReferences: NEVER } },
         { provide: SubstanceFormNamesService, useValue: { substanceNames: NEVER } },
         { provide: SubstanceFormCodesService, useValue: { substanceCodes: NEVER } },

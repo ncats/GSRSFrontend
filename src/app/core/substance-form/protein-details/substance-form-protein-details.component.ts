@@ -7,12 +7,17 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
+import { CommonModule } from '@angular/common';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { TagSelectorComponent } from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
 
 @Component({
     selector: 'app-substance-form-protein-details',
     templateUrl: './substance-form-protein-details.component.html',
     styleUrls: ['./substance-form-protein-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, AuditInfoComponent, CvInputComponent, TagSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len

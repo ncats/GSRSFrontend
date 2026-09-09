@@ -3,7 +3,7 @@ import { ConfigService } from '@gsrs-core/config';
 
 @Pipe({
     name: 'elementLabel',
-    standalone: false
+    standalone: true
 })
 export class ElementLabelDisplayPipe implements PipeTransform {
 

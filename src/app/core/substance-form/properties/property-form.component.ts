@@ -10,12 +10,26 @@ import { UtilsService } from '../../utils/utils.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import { AmountFormComponent } from '@gsrs-core/substance-form/amount-form/amount-form.component';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { DomainReferencesComponent } from '@gsrs-core/substance-form/references/domain-references/domain-references.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-property-form',
     templateUrl: './property-form.component.html',
     styleUrls: ['./property-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatCheckboxModule, MatIconModule, MatButtonModule, MatListModule, MatTooltipModule, AccessManagerComponent, AmountFormComponent, AuditInfoComponent, CvInputComponent, DomainReferencesComponent, SubstanceSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyFormComponent implements OnInit {

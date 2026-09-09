@@ -21,8 +21,7 @@ describe('AdvancedQueryStatementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ AdvancedQueryStatementComponent ],
+      imports: [ HttpClientTestingModule, AdvancedQueryStatementComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },

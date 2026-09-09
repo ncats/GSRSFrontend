@@ -10,12 +10,23 @@ import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormReferencesService } from './substance-form-references.service';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { ReferenceFormComponent } from './reference-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-references-card',
     templateUrl: './substance-form-references-card.component.html',
     styleUrls: ['./substance-form-references-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatInputModule, ReferenceFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilteredList<SubstanceReference>

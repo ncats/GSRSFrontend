@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of, NEVER } from 'rxjs';
+import { of, NEVER, Subject } from 'rxjs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,8 +32,7 @@ describe('ImportBrowseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImportBrowseComponent ],
-      imports: [ MatSidenavModule, NoopAnimationsModule ],
+      imports: [ MatSidenavModule, NoopAnimationsModule, ImportBrowseComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { queryParams: {}, params: {} } } },
@@ -50,7 +49,7 @@ describe('ImportBrowseComponent', () => {
         { provide: StructureService, useValue: { downloadMolfile: () => NEVER } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: Location, useValue: {} },
-        { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => null, unregisterFacetSearchHandler: () => null, clearSelections: () => null } },
+        { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => null, unregisterFacetSearchHandler: () => null, clearSelections: () => null, getFacetParams: () => ({}), clearSelectionsEvent: new Subject<void>() } },
         { provide: SubstanceTextSearchService, useValue: { setSearchValue: () => null } },
         { provide: Title, useValue: { setTitle: () => null } },
         { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of({ CODE_SYSTEM: { dictionary: {} } }) } },

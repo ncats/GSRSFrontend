@@ -17,7 +17,7 @@ describe('SubstanceFormGlycosylationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceFormGlycosylationComponent ],
+      imports: [ SubstanceFormGlycosylationComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         // ngAfterViewInit subscribes to substanceGlycosylation directly. Must NOT emit

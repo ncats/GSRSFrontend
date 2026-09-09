@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
 import {SubstanceDetail, SubstanceRelated} from '../../substance/substance.model';
 import {SubstanceCardBase} from '../substance-card-base';
 import {Subject} from 'rxjs';
@@ -7,7 +9,8 @@ import {Subject} from 'rxjs';
     selector: 'app-substance-mixture-source',
     templateUrl: './substance-mixture-source.component.html',
     styleUrls: ['./substance-mixture-source.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterModule, SubstanceImageDirective]
 })
 export class SubstanceMixtureSourceComponent extends SubstanceCardBase implements OnInit {
  parent: SubstanceRelated;

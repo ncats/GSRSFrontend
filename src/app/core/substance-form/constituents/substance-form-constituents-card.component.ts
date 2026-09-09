@@ -5,13 +5,21 @@ import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormConstituentsService } from './substance-form-constituents.service';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConstituentFormComponent } from './constituent-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-constituents-card',
     templateUrl: './substance-form-constituents-card.component.html',
     styleUrls: ['./substance-form-constituents-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatCheckboxModule, MatDividerModule, MatIconModule, MatButtonModule, MatTooltipModule, ConstituentFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFilteredList<Constituent>

@@ -30,9 +30,7 @@ describe('SubstanceNamesComponent', () => {
         ReactiveFormsModule,
         FormsModule,
         HttpClientTestingModule,
-        NoopAnimationsModule
-      ],
-      declarations: [
+        NoopAnimationsModule,
         SubstanceNamesComponent
       ],
       schemas: [ NO_ERRORS_SCHEMA ],

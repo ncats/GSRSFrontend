@@ -15,12 +15,34 @@ import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ProductLotFormComponent } from '../product-lot-form/product-lot-form.component';
 
 @Component({
     selector: 'app-product-component-form',
     templateUrl: './product-component-form.component.html',
     styleUrls: ['./product-component-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatButtonModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatBadgeModule,
+      MatTooltipModule,
+      CvInputComponent,
+      ProductLotFormComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductComponentFormComponent implements OnInit {

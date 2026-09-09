@@ -15,8 +15,7 @@ describe('ProductTextSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProductTextSearchComponent ],
-      imports: [ MatAutocompleteModule ],
+      imports: [ MatAutocompleteModule, ProductTextSearchComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ProductService, useValue: {} },

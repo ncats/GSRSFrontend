@@ -11,9 +11,7 @@ describe('SubstanceGlycosylationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MatTableModule,
-        CdkTableModule
-      ],
-      declarations: [
+        CdkTableModule,
         SubstanceGlycosylationComponent
       ]
     })

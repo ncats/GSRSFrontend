@@ -1,15 +1,33 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import moment from 'moment';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { NavigationExtras } from '@angular/router';
+import { DecodeUriPipe } from './decodeURI.pipe';
+import { FileSizePipe } from './fileSize.pipe';
 
 @Component({
     selector: 'app-download-monitor',
     templateUrl: './download-monitor.component.html',
     styleUrls: ['./download-monitor.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatProgressSpinnerModule,
+      MatIconModule,
+      MatButtonModule,
+      MatTooltipModule,
+      DecodeUriPipe,
+      FileSizePipe
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DownloadMonitorComponent implements OnInit, OnDestroy {

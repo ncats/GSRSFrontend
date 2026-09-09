@@ -11,8 +11,7 @@ describe('SubstanceRelationshipsVisualizationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceRelationshipsVisualizationComponent ],
+      imports: [ HttpClientTestingModule, SubstanceRelationshipsVisualizationComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: DomSanitizer, useValue: { bypassSecurityTrustHtml: (v: any) => v, bypassSecurityTrustUrl: (v: any) => v, bypassSecurityTrustResourceUrl: (v: any) => v } },

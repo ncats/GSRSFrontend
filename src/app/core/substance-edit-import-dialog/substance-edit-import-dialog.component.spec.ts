@@ -13,7 +13,7 @@ describe('SubstanceEditImportDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceEditImportDialogComponent ],
+      imports: [ SubstanceEditImportDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useValue: {} },

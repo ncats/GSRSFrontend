@@ -11,8 +11,7 @@ describe('SubstanceSearchSelectorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceSearchSelectorComponent ],
+      imports: [ HttpClientTestingModule, SubstanceSearchSelectorComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceService, useValue: {} },

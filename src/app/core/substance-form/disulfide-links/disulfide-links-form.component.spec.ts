@@ -22,8 +22,7 @@ describe('DisulfideLinksFormComponent', () => {
     await TestBed.configureTestingModule({
       // template binds [formControlName] on a real <mat-select>, so it needs a real
       // ControlValueAccessor - NO_ERRORS_SCHEMA doesn't substitute for that.
-      imports: [ ReactiveFormsModule, MatSelectModule, NoopAnimationsModule ],
-      declarations: [ DisulfideLinksFormComponent ],
+      imports: [ ReactiveFormsModule, MatSelectModule, NoopAnimationsModule, DisulfideLinksFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: {} },

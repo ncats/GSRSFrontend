@@ -17,8 +17,7 @@ describe('CvInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ CvInputComponent ],
+      imports: [ HttpClientTestingModule, CvInputComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of({ testDomain: { list: [] } }) } },

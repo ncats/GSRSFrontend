@@ -12,7 +12,7 @@ describe('SubstanceFormPropertiesCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceFormPropertiesCardComponent ],
+      imports: [ SubstanceFormPropertiesCardComponent ],
       providers: [
         // ngAfterViewInit subscribes to this directly, so it needs to actually emit.
         { provide: SubstanceFormPropertiesService, useValue: { substanceProperties: of([]) } },

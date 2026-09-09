@@ -12,12 +12,29 @@ import {UtilsService} from '@gsrs-core/utils';
 import { FormControl } from '@angular/forms';
 import { I } from '@angular/cdk/keycodes';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
+import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
 @Component({
     selector: 'app-substance-names',
     templateUrl: './substance-names.component.html',
     styleUrls: ['./substance-names.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatSortModule, MatPaginatorModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, MatSelectModule, MatOptionModule, MatRadioModule, ReferencesManagerModule, ElementLabelDisplayModule]
 })
 export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit {
   names: Array<SubstanceName>;

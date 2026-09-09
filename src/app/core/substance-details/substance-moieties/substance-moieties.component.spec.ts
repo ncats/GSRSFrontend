@@ -17,9 +17,7 @@ describe('SubstanceMoietiesComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
-      ],
-      declarations: [
+        HttpClientTestingModule,
         SubstanceMoietiesComponent
       ],
       providers: [

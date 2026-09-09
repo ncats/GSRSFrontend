@@ -9,11 +9,18 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
 import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import { SubstanceFormGlycosylationService } from './substance-form-glycosylation.service';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 @Component({
     selector: 'app-substance-form-glycosylation',
     templateUrl: './substance-form-glycosylation.component.html',
     styleUrls: ['./substance-form-glycosylation.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, AuditInfoComponent, CvInputComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len

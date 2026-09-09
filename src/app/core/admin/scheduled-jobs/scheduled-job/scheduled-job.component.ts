@@ -5,12 +5,18 @@ import cronstrue from 'cronstrue';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MomentModule } from 'ngx-moment';
 
 @Component({
     selector: 'app-scheduled-job',
     templateUrl: './scheduled-job.component.html',
     styleUrls: ['./scheduled-job.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule, MomentModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduledJobComponent implements OnInit, OnDestroy {

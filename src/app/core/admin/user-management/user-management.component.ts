@@ -10,14 +10,24 @@ import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-e
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { UtilsService } from '@gsrs-core/utils';
 import { DataSource } from '@angular/cdk/table';
-import { FormControl } from '@angular/forms';
-import {MatPaginator} from '@angular/material/paginator';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-user-management',
     templateUrl: './user-management.component.html',
     styleUrls: ['./user-management.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatTooltipModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserManagementComponent implements OnInit {

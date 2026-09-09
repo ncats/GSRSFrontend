@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { SchemaFormModule } from 'ngx-schema-form';
 
 @Component({
     selector: 'app-import-scrubber',
     templateUrl: './import-scrubber.component.html',
     styleUrls: ['./import-scrubber.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, SchemaFormModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportScrubberComponent implements OnInit {

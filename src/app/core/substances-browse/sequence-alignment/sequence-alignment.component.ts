@@ -5,7 +5,7 @@ import {Alignment} from '@gsrs-core/utils';
     selector: 'app-sequence-alignment',
     templateUrl: './sequence-alignment.component.html',
     styleUrls: ['./sequence-alignment.component.scss'],
-    standalone: false,
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SequenceAlignmentComponent implements OnInit {

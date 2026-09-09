@@ -5,20 +5,28 @@ import {
   ViewChildren,
   QueryList,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
+import { DomSanitizer } from "@angular/platform-browser";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { FormBuilder } from "@angular/forms";
-import { FormControl, Validators } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Title } from "@angular/platform-browser";
-import { DatePipe, formatDate } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { forkJoin, Subscription } from "rxjs";
-import { take, map, catchError } from "rxjs/operators";
+import { catchError } from "rxjs/operators";
 import lodashCloneDeep from 'lodash/cloneDeep';
-import moment from "moment";
-import * as XLSX from "xlsx";
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSelectModule } from "@angular/material/select";
+import { MatOptionModule } from "@angular/material/core";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 /* GSRS Core Imports */
 import { AuthService } from "@gsrs-core/auth/auth.service";
@@ -26,21 +34,12 @@ import { UtilsService } from "../../../../core/utils/utils.service";
 import { LoadingService } from "@gsrs-core/loading";
 import { MainNotificationService } from "@gsrs-core/main-notification";
 import { ControlledVocabularyService } from "../../../../core/controlled-vocabulary/controlled-vocabulary.service";
-import { SubstanceService } from "@gsrs-core/substance/substance.service";
 import { GeneralService } from "../../../service/general.service";
-import {
-  AppNotification,
-  NotificationType,
-} from "@gsrs-core/main-notification";
-import { StructureImageModalComponent } from "@gsrs-core/structure";
-import { SubstanceEditImportDialogComponent } from "@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component";
-import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from "../../service/invitro-pharmacology.service";
 import {
   InvitroAssayInformation,
-  InvitroAssaySet,
   ValidationMessage,
 } from "../../model/invitro-pharmacology.model";
 
@@ -48,7 +47,23 @@ import {
   selector: "app-invitro-pharmacology-assayset-form",
   templateUrl: "./invitro-pharmacology-assayset-form.component.html",
   styleUrls: ["./invitro-pharmacology-assayset-form.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatButtonModule,
+    MatTabsModule,
+    MatTooltipModule
+  ],
 })
 export class InvitroPharmacologyAssaysetFormComponent implements OnInit, OnDestroy {
   @ViewChildren("checkBox") checkBox: QueryList<any>;

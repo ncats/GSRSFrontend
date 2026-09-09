@@ -7,12 +7,24 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { ReferencesManagerModule } from '@gsrs-core/references-manager';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-substance-constituents',
     templateUrl: './substance-constituents.component.html',
     styleUrls: ['./substance-constituents.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, MatDialogModule, MatButtonModule, RouterModule, ReferencesManagerModule, SubstanceImageDirective]
 })
 export class SubstanceConstituentsComponent extends SubstanceCardBaseFilteredList<Constituent> implements OnInit {
   constituents: Array<Constituent>;

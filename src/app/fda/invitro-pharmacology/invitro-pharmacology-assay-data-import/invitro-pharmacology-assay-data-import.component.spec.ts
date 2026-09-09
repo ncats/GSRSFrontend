@@ -20,7 +20,7 @@ describe('InvitroPharmacologyAssayDataImportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InvitroPharmacologyAssayDataImportComponent ],
+      imports: [ InvitroPharmacologyAssayDataImportComponent ],
       providers: [
         { provide: HttpClient, useValue: {} },
         { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } },

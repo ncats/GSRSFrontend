@@ -24,7 +24,7 @@ describe('MainNotificationComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ MainNotificationComponent ],
+      imports: [ MainNotificationComponent ],
       providers: [
         { provide: MainNotificationService, useValue: notificationServiceStub }
       ]

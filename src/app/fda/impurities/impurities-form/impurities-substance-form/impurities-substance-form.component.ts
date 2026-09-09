@@ -9,13 +9,43 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 import { ImpuritiesService } from '../../service/impurities.service';
 import { GeneralService } from '../../../service/general.service';
 import { Impurities, ImpuritiesSubstance, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
+import { ImpuritiesTestFormComponent } from '../impurities-test-form/impurities-test-form.component';
+import { ImpuritiesResidualSolventsTestComponent } from '../impurities-residual-solvents-test-form/impurities-residual-solvents-test.component';
+import { ImpuritiesInorganicFormTestComponent } from '../impurities-inorganic-test-form/impurities-inorganic-form-test.component';
 
 
 @Component({
     selector: 'app-impurities-substance-form',
     templateUrl: './impurities-substance-form.component.html',
     styleUrls: ['./impurities-substance-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTooltipModule,
+      MatCardModule,
+      MatExpansionModule,
+      MatBadgeModule,
+      CvInputComponent,
+      SubstanceSelectorComponent,
+      ImpuritiesTestFormComponent,
+      ImpuritiesResidualSolventsTestComponent,
+      ImpuritiesInorganicFormTestComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesSubstanceFormComponent implements OnInit {

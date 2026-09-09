@@ -28,12 +28,36 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 import { ApplicationService } from '../service/application.service';
 import { GeneralService } from '../../service/general.service';
 import { Application, ValidationMessage } from '../model/application.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ApplicationProductFormComponent } from './application-product-form/application-product-form.component';
 
 @Component({
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
   styleUrls: ['./application-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    CvInputComponent,
+    ApplicationProductFormComponent
+  ]
 })
 
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -1,16 +1,21 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { domainKeys } from '../domain-references/domain-keys.constant';
 import { DomainsWithReferences } from '../domain-references/domain.references.model';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { Subscription } from 'rxjs';
 import { SubstanceFormReferencesService } from '../substance-form-references.service';
 import { take } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
     selector: 'app-apply-reference',
     templateUrl: './apply-reference.component.html',
     styleUrls: ['./apply-reference.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatButtonModule, MatCheckboxModule, MatIconModule, MatMenuModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplyReferenceComponent implements OnInit, OnDestroy {

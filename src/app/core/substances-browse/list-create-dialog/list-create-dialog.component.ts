@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 
 @Component({
     selector: 'app-list-create-dialog',
     templateUrl: './list-create-dialog.component.html',
     styleUrls: ['./list-create-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [FormsModule, MatDialogModule, MatInputModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListCreateDialogComponent implements OnInit {

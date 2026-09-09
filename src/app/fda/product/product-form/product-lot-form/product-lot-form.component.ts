@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepickerModule, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import moment from 'moment';
@@ -17,13 +17,35 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 /* GSRS Product Imports */
 import { ProductService } from '../../service/product.service';
 import { ProductLot, ValidationMessage } from '../../model/product.model';
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ProductIngredientFormComponent } from '../product-ingredient-form/product-ingredient-form.component';
 
 @Component({
     selector: 'app-product-lot-form',
     templateUrl: './product-lot-form.component.html',
     styleUrls: ['./product-lot-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatButtonModule,
+      MatDatepickerModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatBadgeModule,
+      MatTooltipModule,
+      CvInputComponent,
+      ProductIngredientFormComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductLotFormComponent implements OnInit {

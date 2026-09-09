@@ -1,31 +1,26 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormBuilder } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { forkJoin, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
-import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
@@ -35,7 +30,8 @@ import { InvitroAssayInformation, InvitroAssaySet, InvitroAssayAnalyte, Validati
   selector: 'app-invitro-pharmacology-assay-data-import',
   templateUrl: './invitro-pharmacology-assay-data-import.component.html',
   styleUrls: ['./invitro-pharmacology-assay-data-import.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatTooltipModule]
 })
 export class InvitroPharmacologyAssayDataImportComponent implements OnInit, AfterViewInit, OnDestroy {
 

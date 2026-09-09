@@ -13,12 +13,18 @@ import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled
 import { IDropdownSettings} from 'ng-multiselect-dropdown';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormPolymerClassificationService } from './substance-form-polymer-classification.service';
+import { CommonModule } from '@angular/common';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { TagSelectorComponent } from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-substance-form-polymer-classification',
     templateUrl: './substance-form-polymer-classification.component.html',
     styleUrls: ['./substance-form-polymer-classification.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, CvInputComponent, AuditInfoComponent, TagSelectorComponent, SubstanceSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len

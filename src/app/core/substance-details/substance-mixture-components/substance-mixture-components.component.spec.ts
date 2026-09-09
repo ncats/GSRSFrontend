@@ -3,7 +3,6 @@ import { SubstanceMixtureComponentsComponent } from './substance-mixture-compone
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
-import { RouterLinkDirectiveMock } from '../../../../testing/router-link-mock.directive';
 import { UtilsService } from '../../utils/utils.service';
 import { UtilsServiceStub } from '../../../../testing/utils-service-stub';
 import { vi } from 'vitest';
@@ -20,11 +19,8 @@ describe('SubstanceMixtureComponentsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        HttpClientTestingModule
-      ],
-      declarations: [
-        SubstanceMixtureComponentsComponent,
-        RouterLinkDirectiveMock
+        HttpClientTestingModule,
+        SubstanceMixtureComponentsComponent
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy },

@@ -23,12 +23,14 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 import {DataDictionary} from '@gsrs-core/utils/data-dictionary';
 import jsonpath from 'jsonpath';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-substance-history',
     templateUrl: './substance-history.component.html',
     styleUrls: ['./substance-history.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatTableModule, MatDialogModule, MatButtonModule]
 })
 export class SubstanceHistoryComponent extends SubstanceCardBase implements OnInit , AfterViewInit {
   versions: Array<SubstanceEdit>;

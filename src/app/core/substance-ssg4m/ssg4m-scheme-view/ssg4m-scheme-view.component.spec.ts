@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NEVER } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -16,8 +15,7 @@ describe('Ssg4mSchemeViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ Ssg4mSchemeViewComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ],
+      imports: [ Ssg4mSchemeViewComponent ],
       providers: [
         { provide: ConfigService, useValue: { configData: {}, environment: {} } },
         { provide: SubstanceFormSsg4mProcessService, useValue: { specifiedSubstanceG4mProcess: NEVER } },

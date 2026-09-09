@@ -1,12 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SchemaFormModule } from 'ngx-schema-form';
 
 @Component({
     selector: 'app-merge-action-dialog',
     templateUrl: './merge-action-dialog.component.html',
     styleUrls: ['./merge-action-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, MatRadioModule, MatProgressSpinnerModule, SchemaFormModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MergeActionDialogComponent implements OnInit {

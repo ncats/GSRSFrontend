@@ -8,7 +8,7 @@ describe('AuditInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AuditInfoComponent ]
+      imports: [ AuditInfoComponent ]
     })
     .compileComponents();
   });

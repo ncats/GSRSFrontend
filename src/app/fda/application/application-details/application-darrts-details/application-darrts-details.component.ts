@@ -9,12 +9,20 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 // import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationDetailsBaseComponent } from '../application-details-base.component';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
     selector: 'app-application-darrts-details',
     templateUrl: './application-darrts-details.component.html',
     styleUrls: ['./application-darrts-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

@@ -14,8 +14,7 @@ describe('MergeConceptDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ MergeConceptDialogComponent ],
+      imports: [ HttpClientTestingModule, MergeConceptDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: {} },

@@ -2,12 +2,19 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output,
 import {MixtureComponents, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import {CommonModule} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import {SubstanceSelectorComponent} from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-mixture-component-form',
     templateUrl: './mixture-component-form.component.html',
     styleUrls: ['./mixture-component-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, CvInputComponent, SubstanceSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MixtureComponentFormComponent implements OnInit {

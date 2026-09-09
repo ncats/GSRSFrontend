@@ -1,16 +1,20 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UserDownload } from '@gsrs-core/auth/user-downloads/download.model';
 import { of } from 'rxjs';
 import { take, map } from 'rxjs/operators';
+import { DownloadMonitorComponent } from './download-monitor/download-monitor.component';
 
 @Component({
     selector: 'app-user-downloads',
     templateUrl: './user-downloads.component.html',
     styleUrls: ['./user-downloads.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatCardModule, MatButtonModule, DownloadMonitorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDownloadsComponent {

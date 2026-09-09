@@ -16,8 +16,7 @@ describe('CvManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ CvManagementComponent ],
+      imports: [ HttpClientTestingModule, CvManagementComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: { getVocabularies: () => of({ content: [] }) } },

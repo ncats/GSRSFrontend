@@ -2,14 +2,17 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, DestroyRef, signal,
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormService } from '../substance-form.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-substance-form-change-reason',
   templateUrl: './substance-form-change-reason.component.html',
   styleUrls: ['./substance-form-change-reason.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormChangeReasonComponent extends SubstanceFormBase implements OnInit {

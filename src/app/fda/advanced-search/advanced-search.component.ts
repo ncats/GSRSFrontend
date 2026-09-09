@@ -11,11 +11,26 @@ import {
   ElementRef, AfterViewInit
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
-import { Location, formatNumber } from '@angular/common';
+import { NavigationExtras, Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { CommonModule, Location, formatNumber } from '@angular/common';
 import { Title } from '@angular/platform-browser';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-editor.module';
+import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
+import { AdvancedQueryStatementComponent } from './advanced-query-statement/advanced-query-statement.component';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription, take } from 'rxjs';
@@ -48,7 +63,28 @@ import { AdvancedSearchService } from './service/advanced-search.service';
     selector: 'app-advanced-search',
     templateUrl: './advanced-search.component.html',
     styleUrls: ['./advanced-search.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatSliderModule,
+        MatTabsModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        StructureEditorModule,
+        NameResolverModule,
+        FacetsManagerComponent,
+        AdvancedQueryStatementComponent
+    ]
 })
 
 export class AdvancedSearchComponent implements OnInit, OnDestroy {

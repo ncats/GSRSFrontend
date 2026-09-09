@@ -9,8 +9,7 @@ describe('SubstanceDisulfideLinksComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceDisulfideLinksComponent ],
+      imports: [ HttpClientTestingModule, SubstanceDisulfideLinksComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();

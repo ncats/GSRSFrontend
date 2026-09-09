@@ -14,7 +14,7 @@ describe('CvTermDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CvTermDialogComponent ],
+      imports: [ CvTermDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: vi.fn() } },

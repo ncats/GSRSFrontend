@@ -15,7 +15,7 @@ describe('ImpuritiesResidualSolventsTestComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImpuritiesResidualSolventsTestComponent ],
+      imports: [ ImpuritiesResidualSolventsTestComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ImpuritiesService, useValue: {} },

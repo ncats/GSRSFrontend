@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { LoadingService } from "../loading/loading.service";
 import { SubstanceSummary } from "../substance/substance.model";
 import { PagingResponse } from "../utils/paging-response.model";
@@ -12,12 +12,27 @@ import { ConfigService, ExternalSiteWarning } from "@gsrs-core/config";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { ExternalSiteWarningDialogComponent } from "./external-site-warning-dialog/external-site-warning-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { RouterLink } from "@angular/router";
+import { SubstanceImageDirective } from "../substance/substance-image.directive";
 
 @Component({
   selector: "app-name-resolver",
   templateUrl: "./name-resolver.component.html",
   styleUrls: ["./name-resolver.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterLink,
+    SubstanceImageDirective
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NameResolverComponent implements OnInit {

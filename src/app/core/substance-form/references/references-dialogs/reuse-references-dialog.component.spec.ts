@@ -12,8 +12,7 @@ describe('ReuseReferencesDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ReuseReferencesDialogComponent ],
+      imports: [ HttpClientTestingModule, ReuseReferencesDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: () => {}, afterClosed: () => of(null), backdropClick: () => NEVER, beforeClosed: () => NEVER } },

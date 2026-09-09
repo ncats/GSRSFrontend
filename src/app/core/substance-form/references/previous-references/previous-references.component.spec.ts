@@ -12,8 +12,7 @@ describe('PreviousReferencesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ PreviousReferencesComponent ],
+      imports: [ HttpClientTestingModule, PreviousReferencesComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceService, useValue: { getSubstanceReferences: () => of({ content: [], total: 0 }) } },

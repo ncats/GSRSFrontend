@@ -11,8 +11,7 @@ describe('ApplyReferenceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, MatMenuModule ],
-      declarations: [ ApplyReferenceComponent ],
+      imports: [ HttpClientTestingModule, MatMenuModule, ApplyReferenceComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormReferencesService, useValue: {} },

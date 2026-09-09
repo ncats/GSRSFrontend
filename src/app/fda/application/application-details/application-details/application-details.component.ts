@@ -10,12 +10,24 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationDetailsBaseComponent } from '../application-details-base.component';
 import { ApplicationService } from '../../service/application.service';
 import { GeneralService } from '../../../service/general.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-application-details',
     templateUrl: './application-details.component.html',
     styleUrls: ['./application-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatIconModule,
+      MatTooltipModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

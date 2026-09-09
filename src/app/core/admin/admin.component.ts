@@ -1,15 +1,37 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { MatTabChangeEvent } from "@angular/material/tabs";
-import { Location } from "@angular/common";
+import { MatTabChangeEvent, MatTabsModule } from "@angular/material/tabs";
+import { CommonModule, Location } from "@angular/common";
 import { AuthService } from "@gsrs-core/auth/auth.service";
 import { Subscription } from "rxjs";
+import { MatCardModule } from "@angular/material/card";
+import { AllFilesComponent } from "@gsrs-core/admin/all-files/all-files.component";
+import { CacheSummaryComponent } from "@gsrs-core/admin/cache-summary/cache-summary.component";
+import { CvManagementComponent } from "@gsrs-core/admin/cv-management/cv-management.component";
+import { DataManagementComponent } from "@gsrs-core/admin/data-management/data-management.component";
+import { ImportManagementComponent } from "@gsrs-core/admin/import-management/import-management.component";
+import { ScheduledJobsComponent } from "@gsrs-core/admin/scheduled-jobs/scheduled-jobs.component";
+import { ServiceInformationComponent } from "@gsrs-core/admin/service-information/service-information.component";
+import { UserManagementComponent } from "@gsrs-core/admin/user-management/user-management.component";
 
 @Component({
   selector: "app-admin",
   templateUrl: "./admin.component.html",
   styleUrls: ["./admin.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatTabsModule,
+    AllFilesComponent,
+    CacheSummaryComponent,
+    CvManagementComponent,
+    DataManagementComponent,
+    ImportManagementComponent,
+    ScheduledJobsComponent,
+    ServiceInformationComponent,
+    UserManagementComponent
+  ],
 })
 export class AdminComponent implements OnInit, OnDestroy {
   // Deliberately plain fields, not live authService.hasPrivilege() getters: the getter version (commit e4c97fa0) caused refresh-on-any-admin-tab to always redirect to /admin/cache, confirmed by direct comparison against development_3.0 - re-test hard-refresh on every tab before changing this again.

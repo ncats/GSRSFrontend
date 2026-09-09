@@ -5,6 +5,14 @@ import {
   HostListener,
   OnDestroy,
 } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { BreakpointObserver } from "@angular/cdk/layout";
 import {
   Router,
@@ -22,6 +30,7 @@ import { SessionExpirationComponent } from "../auth/session-expiration/session-e
 import { ConfigService } from "../config/config.service";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { LoadingService } from "../loading/loading.service";
+import { LoadingModule } from "../loading/loading.module";
 import { HighlightedSearchActionComponent } from "../highlighted-search-action/highlighted-search-action.component";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -31,6 +40,7 @@ import {
 import { Observable, Subscription } from "rxjs";
 import { UserProfileComponent } from "@gsrs-core/auth/user-profile/user-profile.component";
 import { SubstanceTextSearchService } from "@gsrs-core/substance-text-search/substance-text-search.service";
+import { SubstanceTextSearchComponent } from "@gsrs-core/substance-text-search/substance-text-search.component";
 import { NavItem, LoadedComponents } from "../config/config.model";
 import { UtilsService } from "@gsrs-core/utils";
 import { take } from "rxjs/operators";
@@ -41,13 +51,28 @@ import { SubstanceDraftsComponent } from "@gsrs-core/substance-form/substance-dr
 import { sprintf } from "sprintf-js";
 import { BulkSearchService } from "@gsrs-core/bulk-search/service/bulk-search.service";
 import { UserQueryListDialogComponent } from "@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component";
+import { PfdaToolbarComponent } from "./pfda-toolbar/pfda-toolbar.component";
 
 @Component({
   selector: "app-base",
   templateUrl: "./base.component.html",
   styleUrls: ["./base.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatToolbarModule,
+    MatDividerModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatTooltipModule,
+    LoadingModule,
+    PfdaToolbarComponent,
+    SessionExpirationComponent,
+    SubstanceTextSearchComponent
+  ],
 })
 export class BaseComponent implements OnInit, OnDestroy {
   mainPathSegment = "";

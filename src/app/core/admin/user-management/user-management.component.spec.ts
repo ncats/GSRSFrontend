@@ -15,8 +15,7 @@ describe('UserManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ UserManagementComponent ],
+      imports: [ HttpClientTestingModule, UserManagementComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },

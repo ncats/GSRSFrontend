@@ -22,7 +22,7 @@ describe('ProductFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProductFormComponent ],
+      imports: [ ProductFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ProductService, useValue: {} },

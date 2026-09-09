@@ -13,8 +13,7 @@ describe('InvitroPharmacologyTextSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InvitroPharmacologyTextSearchComponent ],
-      imports: [ MatAutocompleteModule ],
+      imports: [ InvitroPharmacologyTextSearchComponent, MatAutocompleteModule ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ElementRef, useValue: { nativeElement: document.createElement('div') } },

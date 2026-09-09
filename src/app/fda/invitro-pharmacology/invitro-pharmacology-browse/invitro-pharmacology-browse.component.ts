@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { Location, LocationStrategy } from '@angular/common';
-import { Title, DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ActivatedRoute, Router, NavigationExtras, RouterModule } from '@angular/router';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
+import { Title, DomSanitizer } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -10,6 +10,23 @@ import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
+import { FormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
+import { InvitroPharmacologyTextSearchComponent } from '../invitro-pharmacology-text-search/invitro-pharmacology-text-search.component';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -17,7 +34,7 @@ import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+import { FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { FacetParam } from '@gsrs-core/facets-manager';
@@ -37,7 +54,28 @@ import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-sear
   selector: 'app-invitro-pharmacology-browse',
   templateUrl: './invitro-pharmacology-browse.component.html',
   styleUrls: ['./invitro-pharmacology-browse.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatOptionModule,
+    MatPaginatorModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatTableModule,
+    FacetsManagerComponent,
+    InvitroPharmacologyTextSearchComponent
+  ]
 })
 export class InvitroPharmacologyBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 

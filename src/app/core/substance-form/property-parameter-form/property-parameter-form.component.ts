@@ -2,13 +2,19 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input } 
 import { SubstanceParameter } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { AmountFormComponent } from '@gsrs-core/substance-form/amount-form/amount-form.component';
 
 @Component({
     selector: 'app-property-parameter-form',
     templateUrl: './property-parameter-form.component.html',
     styleUrls: ['./property-parameter-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, AmountFormComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyParameterFormComponent implements OnInit {

@@ -13,7 +13,7 @@ describe('CvDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CvDialogComponent ],
+      imports: [ CvDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: {} },

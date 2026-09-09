@@ -14,7 +14,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AuthService } from '@gsrs-core/auth';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { StructureService } from '@gsrs-core/structure';
-import {Router} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {Alignment, UtilsService} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -27,11 +27,50 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
 import { PageEvent } from '@angular/material/paginator';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NamesDisplayStagingPipe } from '@gsrs-core/admin/import-browse/name-display.pipe';
+import { TakeImportPipe } from '@gsrs-core/admin/import-browse/take-import.pipe';
+import { SequenceAlignmentComponent } from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
+import { TrackLinkEventDirective } from '@gsrs-core/google-analytics/track-link-event/track-link-event.directive';
 @Component({
     selector: 'app-import-summary',
     templateUrl: './import-summary.component.html',
     styleUrls: ['./import-summary.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatCheckboxModule,
+      MatChipsModule,
+      MatIconModule,
+      MatMenuModule,
+      MatPaginatorModule,
+      MatProgressSpinnerModule,
+      MatTabsModule,
+      MatTableModule,
+      MatButtonModule,
+      MatTooltipModule,
+      NamesDisplayStagingPipe,
+      TakeImportPipe,
+      SequenceAlignmentComponent,
+      ElementLabelDisplayModule,
+      SubstanceImageDirective,
+      TrackLinkEventDirective
+    ]
 })
 export class ImportSummaryComponent implements OnInit {
   private privateSubstance: any;

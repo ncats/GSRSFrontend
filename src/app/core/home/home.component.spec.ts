@@ -8,7 +8,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth';
 import { SubstanceService } from '@gsrs-core/substance';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { UtilsService } from '@gsrs-core/utils';
@@ -20,8 +20,7 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, MatSidenavModule, NoopAnimationsModule ],
-      declarations: [ HomeComponent ],
+      imports: [ HttpClientTestingModule, MatSidenavModule, NoopAnimationsModule, HomeComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
@@ -29,6 +28,7 @@ describe('HomeComponent', () => {
         { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
         { provide: SubstanceService, useValue: { getRecordCount: () => of(0) } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true), events: of({}), url: '', routerState: { snapshot: { url: '' } }, createUrlTree: () => ({}), serializeUrl: () => '', routeReuseStrategy: { shouldReuseRoute: () => false } } },
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null }, queryParamMap: { get: () => null } } } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },

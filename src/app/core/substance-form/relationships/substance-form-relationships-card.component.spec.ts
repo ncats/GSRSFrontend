@@ -14,8 +14,7 @@ describe('SubstanceFormRelationshipsCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormRelationshipsCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormRelationshipsCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormRelationshipsService, useValue: { substanceRelationships: NEVER } },

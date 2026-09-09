@@ -13,8 +13,7 @@ describe('NucleicAcidDetailsFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ NucleicAcidDetailsFormComponent ],
+      imports: [ HttpClientTestingModule, NucleicAcidDetailsFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { substanceNucleicAcid: NEVER } },

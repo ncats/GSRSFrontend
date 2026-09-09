@@ -18,6 +18,12 @@ import { Subject, Subscription } from 'rxjs';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import deepEqual from 'deep-equal';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { SubstanceFormLinksService } from '../links/substance-form-links.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -28,7 +34,8 @@ import { Router } from '@angular/router';
     selector: 'app-subunit-form',
     templateUrl: './subunit-form.component.html',
     styleUrls: ['./subunit-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatTooltipModule, AuditInfoComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

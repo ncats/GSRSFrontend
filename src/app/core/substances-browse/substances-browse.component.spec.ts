@@ -1,21 +1,37 @@
+import '../../../testing/local-storage-stub';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, EventEmitter, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { vi } from 'vitest';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SubstancesBrowseComponent } from './substances-browse.component';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowseHeaderDynamicSectionDirective } from './browse-header-dynamic-section/browse-header-dynamic-section.directive';
+import { SubstanceImageDirective } from '../substance/substance-image.directive';
+import { TrackLinkEventDirective } from '../google-analytics/track-link-event/track-link-event.directive';
+import { TakePipe } from '../utils/take.pipe';
+import { FacetDisplayPipe } from '../facets-manager/facet-display.pipe';
 import { ActivatedRouteStub } from '../../../testing/activated-route-stub';
 import { SubstanceService } from '../substance/substance.service';
 import { ConfigService } from '../config/config.service';
@@ -26,21 +42,85 @@ import { throwError, of } from 'rxjs';
 import { asyncData } from '../../../testing/async-observable-helpers';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { decodeHtml } from '../utils/decode-html';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatPaginatorHarness } from '@angular/material/paginator/testing';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { FormsModule } from '@angular/forms';
-import { TakePipe } from '../utils/take.pipe';
-import { MatTableModule } from '@angular/material/table';
 import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { MatDialogStub } from '../../../testing/mat-dialog-stub';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconMock } from '../../../testing/mat-icon-mock.component';
 import { UtilsService } from '../utils/utils.service';
 import { UtilsServiceStub } from '../../../testing/utils-service-stub';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { AuthService } from '@gsrs-core/auth';
 import { DYNAMIC_COMPONENT_MANIFESTS } from '@gsrs-core/dynamic-component-loader';
+
+// SubstancesBrowseComponent is standalone now, so its own @Component.imports (not
+// TestBed's) decide what these 4 child tags resolve to; stub them out so this spec
+// stays a test of SubstancesBrowseComponent's own contract, not an integration test
+// of components it doesn't own (matches the existing philosophy in the tests below).
+@Component({
+  selector: 'app-facets-manager',
+  template: '',
+  standalone: true
+})
+class FacetsManagerStubComponent {
+  @Input() rawFacets: any;
+  @Input() facetViewCategorySelected: any;
+  @Input() facetDisplayType: any;
+  @Input() configName: any;
+  @Input() includeFacetSearch: any;
+  @Output() facetsParamsUpdated = new EventEmitter<any>();
+  @Output() facetsLoaded = new EventEmitter<any>();
+}
+
+@Component({
+  selector: 'app-substance-summary-card',
+  template: '',
+  standalone: true
+})
+class SubstanceSummaryCardStubComponent {
+  @Input() substance: any;
+  @Input() showAudit: any;
+  @Input() names: any;
+  @Input() codeSystemNames: any;
+  @Input() codeSystems: any;
+  @Input() codeSystemVocab: any;
+  @Input() searchStrategy: any;
+  @Input() userLists: any;
+  @Output() openImage = new EventEmitter<any>();
+}
+
+@Component({
+  selector: 'app-cross-entity-search',
+  template: '',
+  standalone: true
+})
+class CrossEntitySearchStubComponent {
+  @Input() entity: any;
+  @Input() idLists: any;
+  @Input() searchTerm: any;
+  @Input() entitySmiles: any;
+  @Input() entityType: any;
+  @Input() entityCutoff: any;
+  @Input() entityStructureSearchTerm: any;
+  @Input() entitySequenceSearchTerm: any;
+  @Input() entityFacetParams: any;
+  @Input() entityDisplayFacets: any;
+  @Input() entityTotalRecords: any;
+  @Input() editSubEntitySearchHash: any;
+  @Output() getSearchIdsOnly = new EventEmitter<any>();
+}
+
+@Component({
+  selector: 'app-bulk-search-results-summary',
+  template: '',
+  standalone: true
+})
+class BulkSearchResultsSummaryStubComponent {
+  @Input() showTitle: any;
+  @Input() loadSummaries: any;
+  @Input() context: any;
+  @Input() key: any;
+  @Input() isCollapsed: any;
+}
 
 describe('SubstancesBrowseComponent', () => {
   let component: SubstancesBrowseComponent;
@@ -90,7 +170,9 @@ describe('SubstancesBrowseComponent', () => {
 
     // loadFacetViewFromConfig() (called from ngOnInit) reads
     // configData.facets.substances.facetView as a real array, unguarded.
-    const configServiceSpy = { configData: { facets: { substances: { facetView: [] } } } };
+    // SubstanceImageDirective's onerror handler (setNoImage()) reads
+    // configService.environment.baseHref directly when a structure image URL 404s.
+    const configServiceSpy = { configData: { facets: { substances: { facetView: [] } } }, environment: {} };
 
     const loadingServiceSpy = { setLoading: vi.fn() };
 
@@ -101,31 +183,14 @@ describe('SubstancesBrowseComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        MatExpansionModule,
-        MatCheckboxModule,
-        MatSidenavModule,
-        MatCardModule,
-        MatChipsModule,
-        MatBadgeModule,
-        MatMenuModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        MatInputModule,
         HttpClientTestingModule,
         NoopAnimationsModule,
-        MatPaginatorModule,
         RouterTestingModule,
-        MatButtonToggleModule,
-        FormsModule,
-        MatTableModule
+        SubstancesBrowseComponent
       ],
-      declarations: [
-        SubstancesBrowseComponent,
-        TakePipe,
-        MatIconMock
-      ],
-      // real <app-facets-manager> child isn't declared/imported here; NO_ERRORS_SCHEMA lets
-      // it render as a plain, unbound DOM element (still findable via querySelector).
+      // catches any remaining unmapped attribute/element edge cases in this large template;
+      // SubstancesBrowseComponent's own child-component resolution is locked in via its own
+      // @Component.imports (overridden below) regardless of this TestBed-level schema.
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
@@ -151,8 +216,46 @@ describe('SubstancesBrowseComponent', () => {
         },
         { provide: DYNAMIC_COMPONENT_MANIFESTS, useValue: [] }
       ]
-    })
-      .compileComponents();
+    });
+
+    TestBed.overrideComponent(SubstancesBrowseComponent, {
+      set: {
+        imports: [
+          CommonModule,
+          FormsModule,
+          ReactiveFormsModule,
+          RouterModule,
+          MatButtonModule,
+          MatButtonToggleModule,
+          MatCardModule,
+          MatChipsModule,
+          MatDialogModule,
+          MatExpansionModule,
+          MatFormFieldModule,
+          MatIconModule,
+          MatInputModule,
+          MatMenuModule,
+          MatOptionModule,
+          MatPaginatorModule,
+          MatProgressSpinnerModule,
+          MatSelectModule,
+          MatSidenavModule,
+          MatTableModule,
+          MatTooltipModule,
+          SubstanceSummaryCardStubComponent,
+          BulkSearchResultsSummaryStubComponent,
+          CrossEntitySearchStubComponent,
+          FacetsManagerStubComponent,
+          BrowseHeaderDynamicSectionDirective,
+          SubstanceImageDirective,
+          TrackLinkEventDirective,
+          TakePipe,
+          FacetDisplayPipe
+        ]
+      }
+    });
+
+    await TestBed.compileComponents();
   });
 
   beforeEach(() => {

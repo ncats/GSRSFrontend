@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { MatMenuModule } from '@angular/material/menu';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { of } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
@@ -17,10 +16,7 @@ describe('PfdaToolbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      // template resolves #nav="matMenu" / #accountMenu="matMenu" exportAs bindings, which
-      // NO_ERRORS_SCHEMA doesn't substitute for - needs the real MatMenu directive.
-      imports: [ MatMenuModule ],
-      declarations: [ PfdaToolbarComponent ],
+      imports: [ PfdaToolbarComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useValue: {} },

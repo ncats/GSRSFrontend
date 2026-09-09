@@ -13,8 +13,7 @@ describe('SubstanceFormPhysicalModificationsCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormPhysicalModificationsCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormPhysicalModificationsCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormPhysicalModificationsService, useValue: { substancePhysicalModifications: NEVER } },

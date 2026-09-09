@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import {SubstanceCardBase} from '../substance-card-base';
 import {Link, Site, SubstanceDetail} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
@@ -7,7 +8,8 @@ import {Subject} from 'rxjs';
     selector: 'app-substance-other-links',
     templateUrl: './substance-other-links.component.html',
     styleUrls: ['./substance-other-links.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatTableModule]
 })
 export class SubstanceOtherLinksComponent extends SubstanceCardBase implements OnInit {
   otherLinks: Array<Link> = [];

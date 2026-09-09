@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { NEVER } from 'rxjs';
+import { NEVER, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location, LocationStrategy } from '@angular/common';
 import { Title, DomSanitizer } from '@angular/platform-browser';
@@ -23,7 +23,7 @@ describe('InvitroPharmacologyBrowseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InvitroPharmacologyBrowseComponent ],
+      imports: [ InvitroPharmacologyBrowseComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { queryParams: {}, params: {} }, queryParamMap: NEVER } },
@@ -36,7 +36,7 @@ describe('InvitroPharmacologyBrowseComponent', () => {
         { provide: LoadingService, useValue: { setLoading: () => null } },
         { provide: MainNotificationService, useValue: { setNotification: () => null } },
         { provide: ConfigService, useValue: { configData: {} } },
-        { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => null, unregisterFacetSearchHandler: () => null } },
+        { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => null, unregisterFacetSearchHandler: () => null, getFacetParams: () => ({}), clearSelections: () => {}, clearSelectionsEvent: new Subject<void>() } },
         { provide: GeneralService, useValue: {} },
         { provide: InvitroPharmacologyService, useValue: { getInvitroPharmacologyFacets: () => null } },
         { provide: Location, useValue: {} },

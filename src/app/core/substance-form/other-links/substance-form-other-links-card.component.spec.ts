@@ -13,8 +13,7 @@ describe('SubstanceFormOtherLinksCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormOtherLinksCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormOtherLinksCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormOtherLinksService, useValue: { substanceOtherLinks: NEVER } },

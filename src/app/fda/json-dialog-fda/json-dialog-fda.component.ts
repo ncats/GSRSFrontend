@@ -1,13 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, OnInit, Input } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @Component({
     selector: 'app-json-fda-dialog',
     templateUrl: './json-dialog-fda.component.html',
     styleUrls: ['./json-dialog-fda.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+    NgxJsonViewerModule,
+    RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JsonDialogFdaComponent implements OnInit {

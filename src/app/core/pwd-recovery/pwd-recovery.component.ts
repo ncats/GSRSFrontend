@@ -1,12 +1,17 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit, Optional } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-pwd-recovery',
     templateUrl: './pwd-recovery.component.html',
     styleUrls: ['./pwd-recovery.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatCardModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PwdRecoveryComponent implements OnInit {

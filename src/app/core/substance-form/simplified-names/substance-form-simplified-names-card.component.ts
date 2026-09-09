@@ -8,12 +8,21 @@ import {combineLatest, first, last, Subscription} from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substance-form-names.service";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { SimplifiedNameFormComponent } from './simplified-name-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-simplified-substance-form-names-card',
     templateUrl: './substance-form-simplified-names-card.component.html',
     styleUrls: ['./substance-form-simplified-names-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatPaginatorModule, MatInputModule, SimplifiedNameFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormSimplifiedNamesCardComponent

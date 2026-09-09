@@ -5,12 +5,26 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { InterpretStructureResponse } from '../../structure/structure-post-response.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
 
 @Component({
     selector: 'app-structure-form',
     templateUrl: './structure-form.component.html',
     styleUrls: ['./structure-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatSelectModule,
+      MatOptionModule,
+      AuditInfoComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureFormComponent implements OnInit, OnDestroy {

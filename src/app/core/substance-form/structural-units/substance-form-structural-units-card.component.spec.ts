@@ -13,8 +13,7 @@ describe('SubstanceFormStructuralUnitsCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormStructuralUnitsCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormStructuralUnitsCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormStructuralUnitsService, useValue: { substanceSRUs: NEVER } },

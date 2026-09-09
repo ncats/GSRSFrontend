@@ -33,9 +33,7 @@ describe('StructureImportComponent', () => {
         MatProgressBarModule,
         MatDialogModule,
         HttpClientTestingModule,
-        NoopAnimationsModule
-      ],
-      declarations: [
+        NoopAnimationsModule,
         StructureImportComponent
       ],
       providers: [

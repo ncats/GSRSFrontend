@@ -14,7 +14,7 @@ import { AuthService } from '@gsrs-core/auth';
     selector: 'app-clinical-trial-details-base',
     template: '',
     styleUrls: ['./clinical-trial-details-base.component.scss'],
-    standalone: false
+    standalone: true
 })
 
 export class ClinicalTrialDetailsBaseComponent implements OnInit {

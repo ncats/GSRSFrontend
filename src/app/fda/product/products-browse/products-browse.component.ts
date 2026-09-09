@@ -1,18 +1,36 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute, Router, NavigationExtras, RouterModule } from '@angular/router';
+import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Location, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import moment from 'moment';
-import { Sort } from '@angular/material/sort';
+import { Sort, MatSortModule } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CrossEntitySearchComponent } from '../../cross-entity-search/cross-entity-search.component';
+import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
+import { ProductTextSearchComponent } from '../product-text-search/product-text-search.component';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -42,7 +60,32 @@ import jp from 'jsonpath';
     selector: 'app-products-browse',
     templateUrl: './products-browse.component.html',
     styleUrls: ['./products-browse.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatButtonModule,
+      MatButtonToggleModule,
+      MatCardModule,
+      MatExpansionModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatMenuModule,
+      MatOptionModule,
+      MatPaginatorModule,
+      MatSelectModule,
+      MatSidenavModule,
+      MatSortModule,
+      MatTableModule,
+      MatTabsModule,
+      MatTooltipModule,
+      CrossEntitySearchComponent,
+      BulkSearchResultsSummaryComponent,
+      FacetsManagerComponent,
+      ProductTextSearchComponent
+    ]
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {

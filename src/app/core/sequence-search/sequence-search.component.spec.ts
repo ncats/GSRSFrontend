@@ -38,9 +38,7 @@ describe('SequenceSearchComponent', () => {
         MatButtonModule,
         MatInputModule,
         NoopAnimationsModule,
-        MatIconModule
-      ],
-      declarations: [
+        MatIconModule,
         SequenceSearchComponent
       ],
       providers: [

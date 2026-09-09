@@ -5,9 +5,7 @@ import { MainNotificationComponent } from './main-notification/main-notification
 
 @NgModule({
   imports: [
-    CommonModule
-  ],
-  declarations: [
+    CommonModule,
     MainNotificationComponent
   ],
   providers: [

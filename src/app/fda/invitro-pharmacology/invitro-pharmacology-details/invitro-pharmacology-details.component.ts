@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -7,6 +8,11 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import moment from 'moment';
 import lodashCloneDeep from 'lodash/cloneDeep';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -26,7 +32,8 @@ import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
   selector: 'app-invitro-pharmacology-details',
   templateUrl: './invitro-pharmacology-details.component.html',
   styleUrls: ['./invitro-pharmacology-details.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatCardModule, MatExpansionModule, MatIconModule, MatButtonModule, MatTooltipModule]
 })
 export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 

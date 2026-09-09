@@ -15,7 +15,8 @@ import { GeneralService } from '../../service/general.service';
     selector: 'app-application-details-base',
     templateUrl: './application-details-base.component.html',
     styleUrls: ['./application-details-base.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationDetailsBaseComponent implements OnInit, OnDestroy {

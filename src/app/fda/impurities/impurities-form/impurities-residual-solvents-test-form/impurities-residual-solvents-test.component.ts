@@ -7,12 +7,34 @@ import { LoadingService } from '@gsrs-core/loading';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { Impurities, ImpuritiesResidualSolventsTest, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../model/impurities.model';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ImpuritiesResidualSolventsFormComponent } from '../impurities-residual-solvents-form/impurities-residual-solvents-form.component';
 
 @Component({
     selector: 'app-impurities-residual-solvents-test',
     templateUrl: './impurities-residual-solvents-test.component.html',
     styleUrls: ['./impurities-residual-solvents-test.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTooltipModule,
+      MatCardModule,
+      MatBadgeModule,
+      CvInputComponent,
+      ImpuritiesResidualSolventsFormComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesResidualSolventsTestComponent implements OnInit {

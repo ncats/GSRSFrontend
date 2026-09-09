@@ -50,12 +50,57 @@ import { ImportSearchStateService } from '@gsrs-core/admin/import-browse/import-
 import { FileDownloadService } from '@gsrs-core/utils/file-download.service';
 import { ClipboardService } from '@gsrs-core/utils/clipboard.service';
 import { ImportStagedRecordsService } from '@gsrs-core/admin/import-browse/import-staged-records.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
+import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
+import { ImportSummaryComponent } from '@gsrs-core/admin/import-browse/import-summary/import-summary.component';
+import { SubstanceSummaryCardComponent } from '@gsrs-core/substances-browse/substance-summary-card/substance-summary-card.component';
+import { FacetDisplayPipe } from '@gsrs-core/facets-manager/facet-display.pipe';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-import-browse',
     templateUrl: './import-browse.component.html',
     styleUrls: ['./import-browse.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatCardModule,
+      MatChipsModule,
+      MatExpansionModule,
+      MatButtonModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatMenuModule,
+      MatPaginatorModule,
+      MatSidenavModule,
+      MatProgressSpinnerModule,
+      MatTooltipModule,
+      FacetsManagerComponent,
+      BulkSearchResultsSummaryComponent,
+      BrowseHeaderDynamicSectionDirective,
+      ImportSummaryComponent,
+      SubstanceSummaryCardComponent,
+      FacetDisplayPipe,
+      SubstanceImageDirective
+    ],
     providers: [ImportSearchStateService, ImportStagedRecordsService]
 })
 export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {

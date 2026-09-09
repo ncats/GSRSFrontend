@@ -10,8 +10,7 @@ describe('ReferencesManagerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ReferencesManagerComponent ],
+      imports: [ HttpClientTestingModule, ReferencesManagerComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceService, useValue: {} },

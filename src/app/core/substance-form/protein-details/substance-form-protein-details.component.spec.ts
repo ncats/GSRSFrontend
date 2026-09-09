@@ -13,8 +13,7 @@ describe('SubstanceFormProteinDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormProteinDetailsComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormProteinDetailsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { substance: NEVER } },

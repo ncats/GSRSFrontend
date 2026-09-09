@@ -1,11 +1,14 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnInit} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'read-more',
     templateUrl: './read-more.component.html',
     styleUrls: ['./read-more.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatIconModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReadMoreComponent implements OnInit {

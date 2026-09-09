@@ -7,12 +7,36 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { GeneralService } from 'src/app/fda/service/general.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { TagSelectorComponent } from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
+import { IngredientFormComponent } from '../ingredient-form/ingredient-form.component';
 
 @Component({
     selector: 'app-application-product-form',
     templateUrl: './application-product-form.component.html',
     styleUrls: ['./application-product-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTooltipModule,
+      MatBadgeModule,
+      CvInputComponent,
+      TagSelectorComponent,
+      IngredientFormComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationProductFormComponent implements OnInit {

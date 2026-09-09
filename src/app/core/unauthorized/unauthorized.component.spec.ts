@@ -13,8 +13,7 @@ describe('UnauthorizedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ UnauthorizedComponent ],
+      imports: [ HttpClientTestingModule, UnauthorizedComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },

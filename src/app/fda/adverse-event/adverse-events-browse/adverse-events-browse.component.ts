@@ -3,12 +3,22 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { AdverseEventService } from '../service/adverseevent.service';
+import { MatTabsModule } from '@angular/material/tabs';
+import { AdverseEventsPtBrowseComponent } from '../adverse-events-pt-browse/adverse-events-pt-browse.component';
+import { AdverseEventsDmeBrowseComponent } from '../adverse-events-dme-browse/adverse-events-dme-browse.component';
+import { AdverseEventsCvmBrowseComponent } from '../adverse-events-cvm-browse/adverse-events-cvm-browse.component';
 
 @Component({
     selector: 'app-adverse-events-browse',
     templateUrl: './adverse-events-browse.component.html',
     styleUrls: ['./adverse-events-browse.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      MatTabsModule,
+      AdverseEventsPtBrowseComponent,
+      AdverseEventsDmeBrowseComponent,
+      AdverseEventsCvmBrowseComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdverseEventsBrowseComponent implements OnInit, AfterViewInit {

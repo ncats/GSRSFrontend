@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { debounceTime, distinctUntilChanged, switchMap, take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
@@ -9,12 +9,28 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analy
 import { ConfigService } from '@gsrs-core/config';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { ProductService } from '../service/product.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-product-text-search',
     templateUrl: './product-text-search.component.html',
     styleUrls: ['./product-text-search.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      MatAutocompleteModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatOptionModule,
+      MatButtonModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

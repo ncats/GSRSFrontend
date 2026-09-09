@@ -4,6 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SubstanceModificationsComponent', () => {
   let component: SubstanceModificationsComponent;
@@ -16,9 +17,8 @@ describe('SubstanceModificationsComponent', () => {
       imports: [
         MatTableModule,
         CdkTableModule,
-        HttpClientTestingModule
-      ],
-      declarations: [
+        HttpClientTestingModule,
+        RouterTestingModule,
         SubstanceModificationsComponent
       ],
       providers: [

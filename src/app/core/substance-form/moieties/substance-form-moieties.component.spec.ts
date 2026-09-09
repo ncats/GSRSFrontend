@@ -11,8 +11,7 @@ describe('SubstanceFormMoietiesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormMoietiesComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormMoietiesComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormStructureService, useValue: { substanceMoieties: NEVER } },

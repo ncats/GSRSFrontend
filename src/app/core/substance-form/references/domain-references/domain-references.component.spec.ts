@@ -17,8 +17,7 @@ describe('DomainReferencesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ DomainReferencesComponent ],
+      imports: [ HttpClientTestingModule, DomainReferencesComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of(new Proxy({}, { get: () => ({ list: [], dictionary: {} }) })), getVocabularies: () => of({ content: [] }) } },

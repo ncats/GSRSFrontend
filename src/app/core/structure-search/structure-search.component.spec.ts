@@ -21,6 +21,7 @@ import { MatDialogStub } from '../../../testing/mat-dialog-stub';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { MatOptionModule } from '@angular/material/core';
 import { StructurePostResponseData } from '../../../testing/structure-post-reponse-test-data';
 import { asyncData } from '../../../testing/async-observable-helpers';
 import { MolFile } from '../../../testing/mol-file';
@@ -36,7 +37,7 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 @Component({
   selector: 'app-structure-editor',
   template: '',
-  standalone: false
+  standalone: true
 })
 class StructureEditorStubComponent {
   @Output() editorOnLoad = new EventEmitter<Editor>();
@@ -50,7 +51,7 @@ class StructureEditorStubComponent {
 @Component({
   selector: 'app-name-resolver',
   template: '',
-  standalone: false
+  standalone: true
 })
 class NameResolverStubComponent {
   @Output() structureSelected = new EventEmitter<string>();
@@ -94,12 +95,8 @@ describe('StructureSearchComponent', () => {
         NoopAnimationsModule,
         MatFormFieldModule,
         MatButtonModule,
-        ReactiveFormsModule
-      ],
-      declarations: [
-        StructureSearchComponent,
-        StructureEditorStubComponent,
-        NameResolverStubComponent
+        ReactiveFormsModule,
+        StructureSearchComponent
       ],
       providers: [
         { provide: Router, useValue: routerStub },
@@ -115,8 +112,29 @@ describe('StructureSearchComponent', () => {
         // HTTP work we don't want running in this test.
         { provide: AuthService, useValue: {} }
       ]
-    })
-      .compileComponents();
+    });
+
+    // StructureSearchComponent is standalone now, so its own @Component.imports
+    // (not TestBed's) decides what <app-structure-editor>/<app-name-resolver>
+    // resolve to; swap in the stubs via overrideComponent instead of declaring
+    // them at the TestBed level.
+    TestBed.overrideComponent(StructureSearchComponent, {
+      set: {
+        imports: [
+          ReactiveFormsModule,
+          MatCardModule,
+          MatFormFieldModule,
+          MatSelectModule,
+          MatOptionModule,
+          MatSliderModule,
+          MatButtonModule,
+          StructureEditorStubComponent,
+          NameResolverStubComponent
+        ]
+      }
+    });
+
+    TestBed.compileComponents();
   });
 
   beforeEach(() => {

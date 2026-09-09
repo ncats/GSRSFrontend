@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { isString } from 'util';
 import { IfStmt } from '@angular/compiler';
@@ -9,12 +9,21 @@ import { take } from 'rxjs/operators';
 import { AssignableRole, UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 import { Router } from '@angular/router';
 import { ConfigService } from "../../../config/config.service";
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
     selector: 'app-user-edit-dialog',
     templateUrl: './user-edit-dialog.component.html',
     styleUrls: ['./user-edit-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, MatRadioModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserEditDialogComponent implements OnInit {

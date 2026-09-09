@@ -1,18 +1,32 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormControl, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { forkJoin, shareReplay, mergeMap, Subscription } from 'rxjs';
-import { take, map, catchError } from 'rxjs/operators';
+import { forkJoin, shareReplay, Subscription } from 'rxjs';
+import { take, catchError } from 'rxjs/operators';
 import moment from 'moment';
 import lodashCloneDeep from 'lodash/cloneDeep';
-import * as XLSX from 'xlsx';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceSelectorComponent } from '../../../core/substance-selector/substance-selector.component';
+import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -20,15 +34,12 @@ import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { SubstanceRelationship, SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
-import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
+import { SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
@@ -43,7 +54,28 @@ import { isJsonSame, scrubShowFieldsSingle, scrubShowFieldsMultiple, isNumber, s
   selector: 'app-invitro-pharmacology-form',
   templateUrl: './invitro-pharmacology-form.component.html',
   styleUrls: ['./invitro-pharmacology-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatRadioModule,
+    MatStepperModule,
+    MatExpansionModule,
+    MatCardModule,
+    CvInputComponent,
+    SubstanceSelectorComponent,
+    SubstanceTextSearchComponent
+  ]
 })
 export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, AfterViewInit {
 

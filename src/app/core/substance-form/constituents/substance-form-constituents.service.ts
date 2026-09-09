@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 import { Constituent } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<Array<Constituent>> {
 
   constructor(

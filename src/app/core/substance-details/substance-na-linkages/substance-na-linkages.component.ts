@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import {Linkage, Site, SubstanceDetail} from '../../substance/substance.model';
 import {SubstanceCardBase} from '../substance-card-base';
 import {Subject, Subscription} from 'rxjs';
@@ -9,7 +10,8 @@ import {ControlledVocabularyService, VocabularyDictionary, VocabularyTerm} from 
     selector: 'app-substance-na-linkages',
     templateUrl: './substance-na-linkages.component.html',
     styleUrls: ['./substance-na-linkages.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatTableModule]
 })
 export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements OnInit, OnDestroy {
   linkages: Array<Linkage>;

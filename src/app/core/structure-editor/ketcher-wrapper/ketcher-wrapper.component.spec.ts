@@ -11,8 +11,7 @@ describe('KetcherWrapperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ KetcherWrapperComponent ],
+      imports: [ HttpClientTestingModule, KetcherWrapperComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: DomSanitizer, useValue: { bypassSecurityTrustHtml: (v: any) => v, bypassSecurityTrustUrl: (v: any) => v, bypassSecurityTrustResourceUrl: (v: any) => v } },

@@ -1,13 +1,21 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { UtilsService } from '@gsrs-core/utils';
-import { Sort } from '@angular/material/sort';
+import { MatSortModule, Sort } from '@angular/material/sort';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import moment from 'moment';
 import { ValidationMessage } from '@gsrs-core/substance-form/substance-form.model'
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 enum SubmissionStatus {
   NONE,
@@ -27,7 +35,19 @@ enum FormState {
     selector: 'app-substance-drafts',
     templateUrl: './substance-drafts.component.html',
     styleUrls: ['./substance-drafts.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatDialogModule,
+      MatButtonModule,
+      MatCheckboxModule,
+      MatIconModule,
+      MatProgressSpinnerModule,
+      MatSortModule,
+      MatTableModule,
+      MatTooltipModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceDraftsComponent implements OnInit {

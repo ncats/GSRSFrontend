@@ -13,7 +13,7 @@ describe('CopyDisulfideDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CopyDisulfideDialogComponent ],
+      imports: [ CopyDisulfideDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         // constructor sets dialogRef.disableClose; ngOnInit reads data.full.sequence and

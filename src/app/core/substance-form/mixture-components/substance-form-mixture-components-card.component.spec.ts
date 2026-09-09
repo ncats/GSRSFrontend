@@ -13,8 +13,7 @@ describe('SubstanceFormMixtureComponentsCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormMixtureComponentsCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormMixtureComponentsCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormMixtureComponentsService, useValue: { substanceMixtureComponents: NEVER } },

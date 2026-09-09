@@ -18,8 +18,7 @@ describe('ClinicalTrialDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ClinicalTrialDetailsComponent ],
+      imports: [ HttpClientTestingModule, ClinicalTrialDetailsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ClinicalTrialService, useValue: {} },

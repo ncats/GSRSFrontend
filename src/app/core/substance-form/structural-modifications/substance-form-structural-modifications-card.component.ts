@@ -6,12 +6,19 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormStructuralModificationsService } from './substance-form-structural-modifications.service';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { StructuralModificationFormComponent } from './structural-modification-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-structural-modifications-card',
     templateUrl: './substance-form-structural-modifications-card.component.html',
     styleUrls: ['./substance-form-structural-modifications-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, StructuralModificationFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructuralModificationsCardComponent extends SubstanceCardBaseFilteredList<StructuralModification>

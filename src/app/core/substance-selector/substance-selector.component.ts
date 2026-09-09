@@ -10,12 +10,19 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { Router } from '@angular/router';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
+import { CommonModule } from '@angular/common';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
   selector: "app-substance-selector",
   templateUrl: "./substance-selector.component.html",
   styleUrls: ["./substance-selector.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, SubstanceTextSearchComponent, SubstanceImageDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceSelectorComponent implements OnInit {

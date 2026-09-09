@@ -13,8 +13,7 @@ describe('SubstanceFormPolymerClassificationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormPolymerClassificationComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormPolymerClassificationComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormPolymerClassificationService, useValue: { substancePolymerClassification: NEVER } },

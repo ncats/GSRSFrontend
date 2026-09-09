@@ -6,6 +6,16 @@ import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controll
 import { Subscription } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SubstanceFormLinksService } from '../links/substance-form-links.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-subunit-selector',
@@ -23,7 +33,19 @@ import { SubstanceFormLinksService } from '../links/substance-form-links.service
             transition('final=>initial', animate('500ms'))
         ]),
     ],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatInputModule,
+      MatTooltipModule,
+      MatDialogModule,
+      MatButtonModule
+    ]
 })
 export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() card: any;

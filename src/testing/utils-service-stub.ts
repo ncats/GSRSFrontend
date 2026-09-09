@@ -5,6 +5,8 @@ export class UtilsServiceStub {
 
     getSafeStructureImgUrl = vi.fn().mockReturnValue('/assets/images/noimage.svg');
 
+    getStructureImgUrl = vi.fn().mockReturnValue('/assets/images/noimage.svg');
+
     handleMatSidenavOpen = vi.fn().mockReturnValue(null);
 
     handleMatSidenavClose = vi.fn().mockReturnValue(null);

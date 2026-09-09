@@ -5,6 +5,7 @@ import { ConfigService } from '../../config/config.service';
 import { UtilsService } from '../../utils/utils.service';
 import { UtilsServiceStub } from '../../../../testing/utils-service-stub';
 import { vi } from 'vitest';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SubstancePolymerStructureComponent', () => {
   let component: SubstancePolymerStructureComponent;
@@ -17,9 +18,8 @@ describe('SubstancePolymerStructureComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
-      ],
-      declarations: [
+        HttpClientTestingModule,
+        RouterTestingModule,
         SubstancePolymerStructureComponent
       ],
       providers: [

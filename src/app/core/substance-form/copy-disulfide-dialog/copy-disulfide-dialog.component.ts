@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-copy-disulfide-dialog',
     templateUrl: './copy-disulfide-dialog.component.html',
     styleUrls: ['./copy-disulfide-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CopyDisulfideDialogComponent implements OnInit {

@@ -12,8 +12,7 @@ describe('RegisterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ ReactiveFormsModule ],
-      declarations: [ RegisterComponent ],
+      imports: [ ReactiveFormsModule, RegisterComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: vi.fn() } }

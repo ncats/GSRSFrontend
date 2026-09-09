@@ -10,7 +10,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormNamesService } from '@gsrs-core/substance-form/names/substance-form-names.service';
 import { AuthService } from '@gsrs-core/auth';
 import { ConfigService } from '@gsrs-core/config';
-import { ElementLabelDisplayPipe } from '@gsrs-core/utils/element-label-display.pipe';
+import { DataDictionaryService } from '@gsrs-core/utils/data-dictionary.service';
+import { SubstanceFormReferencesService } from '@gsrs-core/substance-form/references/substance-form-references.service';
 import { NameFormComponent } from './name-form.component';
 
 describe('NameFormComponent', () => {
@@ -19,8 +20,7 @@ describe('NameFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ NameFormComponent, ElementLabelDisplayPipe ],
+      imports: [ HttpClientTestingModule, NameFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ConfigService, useValue: { configData: {} } },
@@ -31,6 +31,10 @@ describe('NameFormComponent', () => {
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: SubstanceFormNamesService, useValue: {} },
         { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
+        // also injected by the real, standalone app-cv-input/app-domain-references
+        // children this component's template now renders for real.
+        { provide: DataDictionaryService, useValue: { getDictionaryRow: () => ({ fieldName: 'test', CVDomain: 'test' }) } },
+        { provide: SubstanceFormReferencesService, useValue: { substanceReferences: of([]) } },
       ]
     })
     .compileComponents();

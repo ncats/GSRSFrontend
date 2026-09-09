@@ -16,6 +16,19 @@ import { switchMap, map, concat, concatMap, delay, mergeMap } from 'rxjs/operato
 import { forkJoin } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MiniSearchComponent } from '../mini-search/mini-search.component';
+import { ClinicalTrialEditSubstanceRolesComponent } from './substance-roles/clinical-trial-edit-substance-roles.component';
+import { ClinicalTrialEditOutcomeResultNoteComponent } from './outcome-result-notes/clinical-trial-edit-outcome-result-note.component';
 
 
 /**
@@ -26,7 +39,22 @@ import { Observable } from 'rxjs';
     selector: 'app-clinical-trial-edit',
     templateUrl: './clinical-trial-edit.component.html',
     styleUrls: ['./clinical-trial-edit.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatCheckboxModule,
+      MatButtonModule,
+      MatExpansionModule,
+      MatIconModule,
+      MatTableModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MiniSearchComponent,
+      ClinicalTrialEditSubstanceRolesComponent,
+      ClinicalTrialEditOutcomeResultNoteComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDestroy {

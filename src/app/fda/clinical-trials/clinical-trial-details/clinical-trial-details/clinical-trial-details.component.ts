@@ -9,12 +9,26 @@ import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config';
 import { take } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-clinical-trial-details',
     templateUrl: './clinical-trial-details.component.html',
     styleUrls: ['./clinical-trial-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatIconModule,
+      MatTabsModule,
+      MatCardModule,
+      SubstanceImageDirective
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

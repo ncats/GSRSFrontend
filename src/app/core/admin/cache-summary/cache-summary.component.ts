@@ -4,12 +4,16 @@ import { AuthService } from '@gsrs-core/auth';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { Subscription } from 'rxjs';
 import moment from 'moment';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
     selector: 'app-cache-summary',
     templateUrl: './cache-summary.component.html',
     styleUrls: ['./cache-summary.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatCardModule, MatTableModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CacheSummaryComponent implements OnInit, OnDestroy {

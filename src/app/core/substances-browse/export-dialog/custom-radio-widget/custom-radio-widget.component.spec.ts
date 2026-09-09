@@ -13,7 +13,7 @@ describe('CustomRadioWidgetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CustomRadioWidgetComponent ],
+      imports: [ CustomRadioWidgetComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: {} },

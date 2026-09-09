@@ -12,8 +12,7 @@ describe('UserManualComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ UserManualComponent ],
+      imports: [ HttpClientTestingModule, UserManualComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GeneralService, useValue: { getManualFile: () => of({

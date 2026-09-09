@@ -17,7 +17,7 @@ import type { JSDraw } from "@gsrs-core/structure-editor";
   selector: "ncats-jsdraw-wrapper",
   template: `<div [id]="randomId" dataformat="molfile"></div>`,
   styles: [":host { display: block; } :host([hidden]) { display: none; }"],
-  standalone: false,
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsdrawWrapperComponent implements AfterViewInit {

@@ -1,22 +1,37 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { AuthService } from '@gsrs-core/auth';
 import { CvDialogComponent } from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-tag-selector',
     templateUrl: './tag-selector.component.html',
     styleUrls: ['./tag-selector.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      MatAutocompleteModule,
+      MatChipsModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatOptionModule,
+      MatInputModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagSelectorComponent implements OnInit, AfterViewInit {

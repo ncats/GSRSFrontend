@@ -17,7 +17,7 @@ describe('ImpuritiesDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImpuritiesDetailsComponent ],
+      imports: [ ImpuritiesDetailsComponent ],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },

@@ -27,12 +27,41 @@ import { Auth } from '@gsrs-core/auth/auth.model';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
 // import { environment } from '../../../../environments/environment';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
 
 @Component({
     selector: 'app-clinical-trials-browse',
     templateUrl: './clinical-trials-browse.component.html',
     styleUrls: ['./clinical-trials-browse.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatSidenavModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatButtonModule,
+      MatIconModule,
+      MatCardModule,
+      MatPaginatorModule,
+      MatTableModule,
+      FacetsManagerComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

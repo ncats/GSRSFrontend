@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { LoadingService } from '../loading/loading.service';
@@ -16,9 +16,7 @@ describe('NameResolverComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ NameResolverComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ],
+      imports: [ HttpClientTestingModule, RouterTestingModule, NameResolverComponent ],
       providers: [
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NEVER } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -24,8 +24,7 @@ describe('ImportSummaryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImportSummaryComponent, TakePipe ],
-      imports: [ MatMenuModule ],
+      imports: [ MatMenuModule, ImportSummaryComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: UtilsService, useValue: {} },
@@ -34,10 +33,11 @@ describe('ImportSummaryComponent', () => {
         { provide: SubstanceService, useValue: { getSubstanceSummary: () => NEVER } },
         { provide: StructureService, useValue: { formatFormula: () => '', interpretStructure: () => NEVER } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
+        { provide: ActivatedRoute, useValue: { snapshot: { params: {}, queryParams: {} } } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => NEVER }) } },
         { provide: AdminService, useValue: { GetStagedRecord: () => NEVER } },
-        { provide: ConfigService, useValue: { configData: {} } },
+        { provide: ConfigService, useValue: { configData: {}, environment: {} } },
         { provide: LoadingService, useValue: { setLoading: () => null } },
         { provide: DYNAMIC_COMPONENT_MANIFESTS, useValue: [] }
       ]

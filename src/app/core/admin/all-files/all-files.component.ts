@@ -6,12 +6,18 @@ import {MatTreeFlattener} from '@angular/material/tree';
 import {MatTreeFlatDataSource} from '@angular/material/tree';
 import { DirectoryFile } from '@gsrs-core/admin/admin-objects.model';
 import { LoadingService } from '@gsrs-core/loading';
+import { CommonModule } from '@angular/common';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-all-files',
     templateUrl: './all-files.component.html',
     styleUrls: ['./all-files.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatTreeModule, MatIconModule, MatButtonModule, MatTooltipModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllFilesComponent implements OnInit {

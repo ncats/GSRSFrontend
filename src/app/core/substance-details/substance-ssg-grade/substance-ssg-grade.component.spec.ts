@@ -13,8 +13,7 @@ describe('SubstanceSsgGradeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceSsgGradeComponent ],
+      imports: [ HttpClientTestingModule, SubstanceSsgGradeComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },

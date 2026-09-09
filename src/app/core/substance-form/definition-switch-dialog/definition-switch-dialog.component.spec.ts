@@ -16,8 +16,7 @@ describe('DefinitionSwitchDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ DefinitionSwitchDialogComponent ],
+      imports: [ HttpClientTestingModule, DefinitionSwitchDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { getJson: () => ({ version: '1', relationships: [] }) } },

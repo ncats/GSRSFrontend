@@ -23,8 +23,7 @@ describe('ProductDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ProductDetailsComponent ],
+      imports: [ HttpClientTestingModule, ProductDetailsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ProductService, useValue: {} },

@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { ConfigService } from '@gsrs-core/config';
@@ -14,7 +14,6 @@ import { LoadingService } from '@gsrs-core/loading';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
 import { SubstanceOverviewComponent } from './substance-overview.component';
 
 describe('SubstanceOverviewComponent', () => {
@@ -23,8 +22,7 @@ describe('SubstanceOverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, MatMenuModule ],
-      declarations: [ SubstanceOverviewComponent, SubstanceClassPipe ],
+      imports: [ HttpClientTestingModule, MatMenuModule, SubstanceOverviewComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: DomSanitizer, useValue: { bypassSecurityTrustHtml: (v: any) => v, bypassSecurityTrustUrl: (v: any) => v, bypassSecurityTrustResourceUrl: (v: any) => v } },
@@ -38,6 +36,7 @@ describe('SubstanceOverviewComponent', () => {
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null }, queryParamMap: { get: () => null } } } },
       ]
     })
     .compileComponents();

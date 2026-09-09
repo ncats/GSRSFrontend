@@ -21,9 +21,9 @@
         <div>
           @if (substance.structure.stereochemistry) {
             <div class="mat-chip-list-container">
-              <mat-chip-list selectable="false" multiple="false">
-                <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
-              </mat-chip-list>
+              <mat-chip-set>
+                <mat-chip color="primary" highlighted>{{substance.structure.stereochemistry}}</mat-chip>
+              </mat-chip-set>
             </div>
           }
         </div>
@@ -31,10 +31,10 @@
       @if (!substance.structure) {
         <div>
           <div class="mat-chip-list-container">
-            <mat-chip-list selectable="false" multiple="false">
-              <mat-chip color="primary" selected>{{substance.substanceClass}}
+            <mat-chip-set>
+              <mat-chip color="primary" highlighted>{{substance.substanceClass}}
               </mat-chip>
-            </mat-chip-list>
+            </mat-chip-set>
           </div>
         </div>
       }

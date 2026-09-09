@@ -11,9 +11,7 @@ describe('SubstanceOtherLinksComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MatTableModule,
-        CdkTableModule
-      ],
-      declarations: [
+        CdkTableModule,
         SubstanceOtherLinksComponent
       ]
     })

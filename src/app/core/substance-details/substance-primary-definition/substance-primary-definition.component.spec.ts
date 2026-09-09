@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstancePrimaryDefinitionComponent } from './substance-primary-definition.component';
-import { RouterLinkDirectiveMock } from '../../../../testing/router-link-mock.directive';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { UtilsService } from '../../utils/utils.service';
@@ -18,11 +18,9 @@ describe('SubstancePrimaryDefinitionComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
-      ],
-      declarations: [
-        SubstancePrimaryDefinitionComponent,
-        RouterLinkDirectiveMock
+        HttpClientTestingModule,
+        RouterTestingModule,
+        SubstancePrimaryDefinitionComponent
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy },

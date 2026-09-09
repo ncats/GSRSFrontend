@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject, 
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
-import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '@gsrs-core/auth';
 import { concatMap } from "rxjs"
 
@@ -10,7 +11,8 @@ import { concatMap } from "rxjs"
     selector: 'app-session-expiration-dialog',
     templateUrl: './session-expiration-dialog.component.html',
     styleUrls: ['./session-expiration-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionExpirationDialogComponent implements OnInit, OnDestroy {

@@ -5,12 +5,18 @@ import { SafeUrl } from '@angular/platform-browser';
 import { StructureService } from '../structure.service';
 import { Router } from '@angular/router';
 import { ConfigService } from '@gsrs-core/config';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-structure-image-modal',
     templateUrl: './structure-image-modal.component.html',
     styleUrls: ['./structure-image-modal.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatIconModule, MatTooltipModule, MatTabsModule, MatButtonModule, SubstanceImageDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureImageModalComponent implements OnInit {

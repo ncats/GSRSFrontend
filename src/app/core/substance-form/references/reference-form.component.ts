@@ -9,12 +9,30 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import { ApplyReferenceComponent } from '@gsrs-core/substance-form/references/apply-reference/apply-reference.component';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { PreviousReferencesComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references.component';
+import { TagSelectorComponent } from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
+import { FileSelectDirective } from '@gsrs-core/file-select/file-select.directive';
 
 @Component({
     selector: 'app-reference-form',
     templateUrl: './reference-form.component.html',
     styleUrls: ['./reference-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatMenuModule, MatProgressSpinnerModule, MatTooltipModule, MatInputModule, AccessManagerComponent, ApplyReferenceComponent, AuditInfoComponent, CvInputComponent, PreviousReferencesComponent, TagSelectorComponent, FileSelectDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {

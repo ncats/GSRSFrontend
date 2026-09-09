@@ -11,12 +11,20 @@ import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {DisplaySite, SubunitSequence} from '@gsrs-core/substance-form/substance-form.model';
 import { SubstanceFormPropertiesService } from '../properties/substance-form-properties.service';
+import { CommonModule } from '@angular/common';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { SubunitFormComponent } from '@gsrs-core/substance-form/subunit-form/subunit-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-subunits',
     templateUrl: './substance-form-subunits.component.html',
     styleUrls: ['./substance-form-subunits.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatButtonToggleModule, MatDividerModule, MatIconModule, MatButtonModule, SubunitFormComponent, ScrollToTargetDirective]
 })
 export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredList<Subunit> implements OnInit, AfterViewInit, OnDestroy {
   subunits: Array<Subunit> = [];

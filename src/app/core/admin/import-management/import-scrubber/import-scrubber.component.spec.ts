@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminService } from '@gsrs-core/admin/admin.service';
+import { SchemaFormModule } from 'ngx-schema-form';
 
 import { ImportScrubberComponent } from './import-scrubber.component';
 
@@ -11,12 +12,16 @@ describe('ImportScrubberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImportScrubberComponent ],
+      // sf-form (from SchemaFormModule) needs its full provider set
+      // (SchemaValidatorFactory, ExpressionCompilerFactory, etc.), which only
+      // forRoot() wires up; the isolated TestBed injector doesn't inherit
+      // AppModule's own forRoot() call.
+      imports: [ ImportScrubberComponent, SchemaFormModule.forRoot() ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AdminService, useValue: {} },
         { provide: MatDialogRef, useValue: { close: () => {} } },
-        { provide: MAT_DIALOG_DATA, useValue: { scrubberSchema: {}, scrubberModel: {} } }
+        { provide: MAT_DIALOG_DATA, useValue: { scrubberSchema: { type: 'object', properties: {} }, scrubberModel: {} } }
       ]
     })
     .compileComponents();

@@ -8,12 +8,18 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import { take } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-sugar-form',
     templateUrl: './sugar-form.component.html',
     styleUrls: ['./sugar-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatButtonModule, MatIconModule, MatTooltipModule, AuditInfoComponent, CvInputComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {

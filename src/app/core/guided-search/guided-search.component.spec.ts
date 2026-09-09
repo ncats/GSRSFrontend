@@ -6,6 +6,8 @@ import { Title } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { UtilsService } from '@gsrs-core/utils';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { vi } from 'vitest';
 
 import { GuidedSearchComponent } from './guided-search.component';
@@ -16,7 +18,7 @@ describe('GuidedSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GuidedSearchComponent ],
+      imports: [ GuidedSearchComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: HttpClient, useValue: { get: vi.fn().mockReturnValue(of({})) } },
@@ -24,7 +26,11 @@ describe('GuidedSearchComponent', () => {
         { provide: ConfigService, useValue: { environment: { baseHref: '/ginas/app/beta/' } } },
         { provide: UtilsService, useValue: {} },
         { provide: ActivatedRoute, useValue: { snapshot: { queryParams: {} } } },
-        { provide: Title, useValue: { setTitle: vi.fn() } }
+        { provide: Title, useValue: { setTitle: vi.fn() } },
+        // real (standalone) QueryStatementComponent now renders for real via
+        // <app-query-statement> in this component's own template.
+        { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
+        { provide: ControlledVocabularyService, useValue: {} }
       ]
     })
     .compileComponents();

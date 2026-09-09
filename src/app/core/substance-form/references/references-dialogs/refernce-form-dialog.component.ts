@@ -3,12 +3,18 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceReference } from '../../../substance/substance.model';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { AuthService } from '@gsrs-core/auth';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { PreviousReferencesComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references.component';
+import { ReferenceFormComponent } from '../reference-form.component';
 
 @Component({
     selector: 'app-refernce-form-dialog',
     templateUrl: './refernce-form-dialog.component.html',
     styleUrls: ['./refernce-form-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatDialogModule, MatButtonModule, PreviousReferencesComponent, ReferenceFormComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RefernceFormDialogComponent implements OnInit {

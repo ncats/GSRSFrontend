@@ -4,7 +4,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
-import { MatIconMock } from '../../../../testing/mat-icon-mock.component';
+import { RouterTestingModule } from '@angular/router/testing';
 import { vi } from 'vitest';
 
 describe('SubstanceSubunitsComponent', () => {
@@ -18,11 +18,9 @@ describe('SubstanceSubunitsComponent', () => {
       imports: [
         MatTooltipModule,
         MatButtonToggleModule,
-        HttpClientTestingModule
-      ],
-      declarations: [
-        SubstanceSubunitsComponent,
-        MatIconMock
+        HttpClientTestingModule,
+        RouterTestingModule,
+        SubstanceSubunitsComponent
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy }

@@ -8,12 +8,24 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { StructuralUnit, SubstanceCode, SubstanceService } from '@gsrs-core/substance';
 import { SafeUrl } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-structural-unit-form',
     templateUrl: './structural-unit-form.component.html',
     styleUrls: ['./structural-unit-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatTooltipModule, MatInputModule, TextFieldModule, AuditInfoComponent, CvInputComponent, SubstanceImageDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructuralUnitFormComponent implements OnInit {

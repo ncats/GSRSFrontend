@@ -38,9 +38,9 @@ describe('SubstanceFormChangeReasonComponent', () => {
       imports: [
         ReactiveFormsModule,
         MatFormFieldModule,
-        MatInputModule
+        MatInputModule,
+        SubstanceFormChangeReasonComponent
       ],
-      declarations: [SubstanceFormChangeReasonComponent],
       providers: [
         provideAnimationsAsync('noop'),
         { provide: SubstanceFormService, useValue: mockSubstanceFormService }

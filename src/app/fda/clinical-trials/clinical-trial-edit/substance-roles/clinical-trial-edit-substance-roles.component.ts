@@ -5,12 +5,22 @@ import lodashIntersection from 'lodash/intersection';
 import lodashMap from 'lodash/map';
 import { FormControl } from '@angular/forms';
 import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
     selector: 'app-clinical-trial-edit-substance-roles',
     templateUrl: './clinical-trial-edit-substance-roles.component.html',
     styleUrls: ['./clinical-trial-edit-substance-roles.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      ReactiveFormsModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatOptionModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialEditSubstanceRolesComponent implements OnInit {

@@ -384,14 +384,14 @@
 <div class="name-value tags">
   <div class="name">Tags</div>
   <div class="value">
-    <mat-chip-list #tagList aria-label="Tags" selectable="false">
+    <mat-chip-set #tagList aria-label="Tags">
       @for (tag of substance.tags; track tag) {
         <mat-chip
           removable="false">
           {{tag}}
         </mat-chip>
       }
-    </mat-chip-list>
+    </mat-chip-set>
   </div>
   @if (substance.tags.length === 0) {
     <div>

@@ -16,7 +16,7 @@ describe('UserEditDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserEditDialogComponent ],
+      imports: [ UserEditDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: vi.fn() } },

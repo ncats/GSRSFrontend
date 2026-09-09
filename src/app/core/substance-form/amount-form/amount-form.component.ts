@@ -2,13 +2,26 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input } 
 import { SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
 
 @Component({
     selector: 'app-amount-form',
     templateUrl: './amount-form.component.html',
     styleUrls: ['./amount-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      ReactiveFormsModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatInputModule,
+      AccessManagerComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AmountFormComponent implements OnInit {

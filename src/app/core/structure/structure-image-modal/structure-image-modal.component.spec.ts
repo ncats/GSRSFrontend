@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { StructureImageModalComponent } from './structure-image-modal.component';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatIconModule } from '@angular/material/icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ConfigService } from '../../config/config.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogRefStub } from '../../../../testing/mat-dialog-ref-stub';
@@ -23,11 +22,8 @@ describe('StructureImageModalComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        MatTabsModule,
-        MatIconModule,
-        HttpClientTestingModule
-      ],
-      declarations: [
+        HttpClientTestingModule,
+        RouterTestingModule,
         StructureImageModalComponent
       ],
       providers: [

@@ -6,12 +6,21 @@ import {MatDialog} from '@angular/material/dialog';
 import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
+import {CommonModule} from '@angular/common';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import {SubstanceSelectorComponent} from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-monomer-form',
     templateUrl: './monomer-form.component.html',
     styleUrls: ['./monomer-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatCheckboxModule, MatIconModule, MatButtonModule, MatTooltipModule, AuditInfoComponent, CvInputComponent, SubstanceSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonomerFormComponent implements OnInit, AfterViewInit {

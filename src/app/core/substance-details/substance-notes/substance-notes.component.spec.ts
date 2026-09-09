@@ -11,9 +11,7 @@ describe('SubstanceNotesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MatTableModule,
-        CdkTableModule
-      ],
-      declarations: [
+        CdkTableModule,
         SubstanceNotesComponent
       ]
     })

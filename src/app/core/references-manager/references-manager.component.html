@@ -45,7 +45,7 @@
 </ng-container>
 
 <ng-container matColumnDef="files">
-  <th mat-header-cell *matHeaderCellDef mat-sort-header> File </th>
+  <th mat-header-cell *matHeaderCellDef> File </th>
   <td mat-cell *matCellDef="let ref">
     @if (ref.uploadedFile) {
       <a [href] = "ref.uploadedFile"><mat-icon color = "primary" class = "blue" svgIcon="cloud_download"></mat-icon></a>
@@ -61,7 +61,7 @@
 </ng-container>
 
 <ng-container matColumnDef="access">
-  <th mat-header-cell *matHeaderCellDef mat-sort-header> Access </th>
+  <th mat-header-cell *matHeaderCellDef> Access </th>
   <td mat-cell *matCellDef="let reference">
     @if (reference.access?.length) {
       <span matTooltip="Not Public">

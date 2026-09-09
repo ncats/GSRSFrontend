@@ -10,8 +10,9 @@ import {
   EventEmitter,
   OnDestroy,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import {
+  MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
   MatAutocomplete,
 } from "@angular/material/autocomplete";
@@ -28,12 +29,28 @@ import { UtilsService } from "../utils/utils.service";
 import { GoogleAnalyticsService } from "../google-analytics/google-analytics.service";
 import { ConfigService } from "@gsrs-core/config";
 import { ControlledVocabularyService } from "@gsrs-core/controlled-vocabulary";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatOptionModule } from "@angular/material/core";
+import { MatButtonModule } from "@angular/material/button";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-substance-text-search",
   templateUrl: "./substance-text-search.component.html",
   styleUrls: ["./substance-text-search.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatOptionModule,
+    MatButtonModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceTextSearchComponent

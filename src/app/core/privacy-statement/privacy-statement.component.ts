@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 
@@ -18,7 +19,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-privacy-statement',
     templateUrl: './privacy-statement.component.html',
     styleUrls: ['./privacy-statement.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatCardModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PrivacyStatementComponent implements OnInit {

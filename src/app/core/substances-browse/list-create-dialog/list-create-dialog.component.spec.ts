@@ -11,7 +11,7 @@ describe('ListCreateDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListCreateDialogComponent ],
+      imports: [ ListCreateDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: BulkSearchService, useValue: {} },

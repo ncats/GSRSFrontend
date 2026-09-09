@@ -8,12 +8,21 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import {AuthService} from '@gsrs-core/auth/auth.service';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-clinical-add',
     templateUrl: './clinical-trial-add.component.html',
     styleUrls: ['./clinical-trial-add.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialAddComponent implements OnInit {

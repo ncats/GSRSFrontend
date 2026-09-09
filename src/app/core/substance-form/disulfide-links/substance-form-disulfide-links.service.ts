@@ -4,7 +4,9 @@ import { SubstanceFormService } from '../substance-form.service';
 import { DisulfideLink, Site } from '@gsrs-core/substance/substance.model';
 import { Observable, ReplaySubject } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase<Array<DisulfideLink>> {
   private substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
 

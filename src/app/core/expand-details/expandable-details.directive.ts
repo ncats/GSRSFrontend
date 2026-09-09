@@ -2,7 +2,7 @@ import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
 
 @Directive({
     selector: '[appExpandableDetails]',
-    standalone: false
+    standalone: true
 })
 export class ExpandableDetailsDirective implements OnInit {
 

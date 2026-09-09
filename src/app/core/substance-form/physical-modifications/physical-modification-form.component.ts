@@ -8,12 +8,24 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatListModule} from '@angular/material/list';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatInputModule} from '@angular/material/input';
+import {AccessManagerComponent} from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-physical-modification-form',
     templateUrl: './physical-modification-form.component.html',
     styleUrls: ['./physical-modification-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatListModule, MatTooltipModule, MatInputModule, AccessManagerComponent, AuditInfoComponent, CvInputComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PhysicalModificationFormComponent implements OnInit {

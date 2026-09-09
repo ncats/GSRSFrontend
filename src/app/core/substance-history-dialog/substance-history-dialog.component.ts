@@ -3,14 +3,16 @@ import { LoadingService } from '@gsrs-core/loading';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-substance-history-dialog',
     templateUrl: './substance-history-dialog.component.html',
     styleUrls: ['./substance-history-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceHistoryDialogComponent implements OnInit {

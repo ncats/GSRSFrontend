@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { AdverseEventService } from '../service/adverseevent.service';
 import { GeneralService } from '../../service/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,8 +24,7 @@ describe('AdverseEventsPtBrowseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ AdverseEventsPtBrowseComponent ],
+      imports: [ HttpClientTestingModule, AdverseEventsPtBrowseComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AdverseEventService, useValue: {} },
@@ -36,12 +35,12 @@ describe('AdverseEventsPtBrowseComponent', () => {
         { provide: Router, useValue: { navigate: () => Promise.resolve(true), events: of({}), url: '', routerState: { snapshot: { url: '' } }, createUrlTree: () => ({}), serializeUrl: () => '', routeReuseStrategy: { shouldReuseRoute: () => false } } },
         { provide: DomSanitizer, useValue: { bypassSecurityTrustHtml: (v: any) => v, bypassSecurityTrustUrl: (v: any) => v, bypassSecurityTrustResourceUrl: (v: any) => v } },
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
-        { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },
+        { provide: ConfigService, useValue: { configData: { facets: {} }, environment: {}, afterLoad: () => Promise.resolve({}) } },
         { provide: LoadingService, useValue: { setLoading: () => null, resetLoading: () => null } },
         { provide: MainNotificationService, useValue: { setNotification: () => null } },
         { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
-        { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => {}, unregisterFacetSearchHandler: () => {}, getFacetParams: () => ({}), clearSelections: () => {} } },
+        { provide: FacetsManagerService, useValue: { registerGetFacetsHandler: () => {}, unregisterFacetSearchHandler: () => {}, getFacetParams: () => ({}), clearSelections: () => {}, clearSelectionsEvent: new Subject() } },
         { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
         { provide: Title, useValue: { setTitle: () => {} } },

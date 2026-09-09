@@ -1,4 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 // import { GeneralService } from '../../service/general.service';
@@ -18,7 +21,8 @@ import {SubstanceDetail, SubstanceRelationship} from '@gsrs-core/substance/subst
     selector: 'app-relationships-download-button',
     templateUrl: './relationships-download-button.component.html',
     styleUrls: ['./relationships-download-button.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatButtonModule, MatIconModule, MatTooltipModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {

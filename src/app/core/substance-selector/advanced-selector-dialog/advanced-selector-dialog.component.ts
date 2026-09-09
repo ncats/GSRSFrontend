@@ -9,17 +9,52 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { ConfigService } from '@gsrs-core/config';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { searchSortValues } from '@gsrs-core/utils';
 import { take } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { StructureEditorModule } from '@gsrs-core/structure-editor';
+import { NameResolverComponent } from '@gsrs-core/name-resolver/name-resolver.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 @Component({
     selector: 'app-advanced-selector-dialog',
     templateUrl: './advanced-selector-dialog.component.html',
     styleUrls: ['./advanced-selector-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatIconModule,
+      MatButtonModule,
+      MatTooltipModule,
+      StructureEditorModule,
+      NameResolverComponent,
+      MatOptionModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatCardModule,
+      MatRadioModule,
+      MatPaginatorModule,
+      MatTabsModule,
+      MatSliderModule,
+      MatExpansionModule,
+      SubstanceTextSearchComponent,
+      SubstanceImageDirective
+    ]
 })
 export class AdvancedSelectorDialogComponent implements OnInit {
 

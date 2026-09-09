@@ -39,12 +39,18 @@ import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-dr
 import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
 import jp from 'jsonpath';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
     selector: 'app-substance-ssg2-form',
     templateUrl: './substance-ssg2-form.component.html',
     styleUrls: ['./substance-ssg2-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule, MatExpansionModule]
 })
 export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;

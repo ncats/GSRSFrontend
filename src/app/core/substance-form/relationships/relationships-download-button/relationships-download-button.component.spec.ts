@@ -9,7 +9,6 @@ import { ConfigService } from '@gsrs-core/config/config.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatIconMock } from '../../../../../testing/mat-icon-mock.component';
 
 // A fake AuthService whose hasPrivilege() reads a *real* Angular signal, so this spec can
 // prove the component genuinely participates in OnPush's automatic re-check mechanism —
@@ -34,8 +33,7 @@ describe('RelationshipsDownloadButtonComponent', () => {
     fakeAuthService = new FakeAuthServiceWithRealSignal();
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [RelationshipsDownloadButtonComponent, MatIconMock],
+      imports: [RouterTestingModule, RelationshipsDownloadButtonComponent],
       providers: [
         { provide: ConfigService, useValue: { configData: { loadedComponents: null } } },
         { provide: AuthService, useValue: fakeAuthService },
@@ -96,8 +94,7 @@ describe('RelationshipsDownloadButtonComponent with the real AuthService', () =>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [RelationshipsDownloadButtonComponent, MatIconMock],
+      imports: [RouterTestingModule, HttpClientTestingModule, RelationshipsDownloadButtonComponent],
       providers: [
         {
           provide: ConfigService,

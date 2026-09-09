@@ -8,6 +8,16 @@ import {
   HostListener,
   OnDestroy,
 } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatCardModule } from "@angular/material/card";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatListModule } from "@angular/material/list";
+import { MatIconModule } from "@angular/material/icon";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialogModule } from "@angular/material/dialog";
 import { GoogleAnalyticsService } from "../google-analytics/google-analytics.service";
 import { ConfigService, LoadedComponents } from "@gsrs-core/config";
 import { Environment } from "src/environments/environment.model";
@@ -20,12 +30,26 @@ import { MatSidenav } from "@angular/material/sidenav";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { UtilsService } from "@gsrs-core/utils";
 import { UsefulLink } from "../config/config.model";
+import { SubstanceTextSearchComponent } from "../substance-text-search/substance-text-search.component";
 
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatSidenavModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatListModule,
+    MatIconModule,
+    MatDividerModule,
+    MatButtonModule,
+    MatDialogModule,
+    SubstanceTextSearchComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {

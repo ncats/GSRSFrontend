@@ -1,5 +1,12 @@
+import { Component, EventEmitter, Input, Output, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { of, NEVER } from 'rxjs';
 import { vi } from 'vitest';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,8 +20,22 @@ import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
 import { SubstanceFormStructureService } from './substance-form-structure.service';
 import { ConfigService } from '@gsrs-core/config';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+import { StructureFormComponent } from './structure-form.component';
 
 import { SubstanceFormStructureCardComponent } from './substance-form-structure-card.component';
+
+// app-structure-editor is the heavy Ketcher/JSDraw wrapper - doesn't survive Karma/jsdom
+// (see structure-search.component.spec.ts). Stub it, matching only the bindings this
+// component's template actually uses.
+@Component({ selector: 'app-structure-editor', template: '', standalone: true })
+class StructureEditorStubComponent {
+  @Input() calledFrom: any;
+  @Input() disclaimer: any;
+  @Output() loadedMolfile = new EventEmitter<any>();
+  @Output() editorOnLoad = new EventEmitter<any>();
+  @Output() editorSwitched = new EventEmitter<any>();
+}
 
 describe('SubstanceFormStructureComponent', () => {
   let component: SubstanceFormStructureCardComponent;
@@ -22,7 +43,7 @@ describe('SubstanceFormStructureComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceFormStructureCardComponent ],
+      imports: [ SubstanceFormStructureCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { definition: NEVER, resolvedMol: NEVER } },
@@ -36,8 +57,16 @@ describe('SubstanceFormStructureComponent', () => {
         { provide: SubstanceFormStructuralUnitsService, useValue: {} },
         { provide: ActivatedRoute, useValue: { snapshot: { routeConfig: { path: '' }, queryParams: {} } } },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
-        { provide: ConfigService, useValue: { configData: {} } }
+        { provide: ConfigService, useValue: { configData: {} } },
+        // also injected by the real, standalone app-structure-form child this
+        // component's template renders for real (app-structure-editor is stubbed below).
+        { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of(new Proxy({}, { get: () => ({ list: [], dictionary: {} }) })) } },
       ]
+    })
+    .overrideComponent(SubstanceFormStructureCardComponent, {
+      set: {
+        imports: [CommonModule, MatExpansionModule, MatIconModule, MatMenuModule, MatButtonModule, MatTableModule, MatTooltipModule, StructureFormComponent, StructureEditorStubComponent]
+      }
     })
     .compileComponents();
   });

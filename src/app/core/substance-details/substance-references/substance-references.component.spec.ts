@@ -13,8 +13,7 @@ describe('SubstanceReferencesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceReferencesComponent ],
+      imports: [ HttpClientTestingModule, SubstanceReferencesComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },

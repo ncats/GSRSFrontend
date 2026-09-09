@@ -1,4 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, OnDestroy, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { QueryableSubstanceDictionary, CommandInput, Command } from '../queryable-substance-dictionary.model';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -11,7 +20,19 @@ import { QueryStatement } from './query-statement.model';
     selector: 'app-query-statement',
     templateUrl: './query-statement.component.html',
     styleUrls: ['./query-statement.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      FormsModule,
+      ReactiveFormsModule,
+      MatAutocompleteModule,
+      MatDatepickerModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatIconModule,
+      MatTooltipModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy {

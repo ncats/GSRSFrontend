@@ -5,7 +5,8 @@ import { FileSelectDirective } from './file-select.directive';
 
 @Component({
   template: '<div ncatsFileSelect></div>',
-  standalone: false
+  standalone: true,
+  imports: [FileSelectDirective]
 })
 class TestHostComponent {}
 
@@ -14,7 +15,7 @@ describe('FileSelectComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FileSelectDirective, TestHostComponent ]
+      imports: [ TestHostComponent ]
     })
     .compileComponents();
   });

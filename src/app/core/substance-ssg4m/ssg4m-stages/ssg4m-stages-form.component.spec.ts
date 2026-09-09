@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NEVER } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { MatMenuModule } from '@angular/material/menu';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -18,9 +16,7 @@ describe('Ssg4mStagesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ Ssg4mStagesFormComponent ],
-      imports: [ MatMenuModule ],
-      schemas: [ NO_ERRORS_SCHEMA ],
+      imports: [ Ssg4mStagesFormComponent ],
       providers: [
         { provide: SubstanceFormSsg4mStagesService, useValue: {} },
         { provide: SubstanceFormService, useValue: { substance: NEVER } },

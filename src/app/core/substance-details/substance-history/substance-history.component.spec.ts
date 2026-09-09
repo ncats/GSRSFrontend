@@ -16,8 +16,7 @@ describe('SubstanceHistoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceHistoryComponent ],
+      imports: [ HttpClientTestingModule, SubstanceHistoryComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceService, useValue: { getEdits: () => of([]), checkVersion: () => of(1) } },

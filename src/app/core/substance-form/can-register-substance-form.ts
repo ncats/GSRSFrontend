@@ -4,7 +4,9 @@ import { AuthService } from '../auth/auth.service';
 import { Observable } from 'rxjs';
 import { ConfigService } from "@gsrs-core/config";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CanRegisterSubstanceForm implements CanActivate {
 
   constructor(

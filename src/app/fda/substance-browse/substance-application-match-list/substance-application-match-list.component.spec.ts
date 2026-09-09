@@ -16,8 +16,7 @@ describe('SubstanceApplicationMatchListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceApplicationMatchListComponent ],
+      imports: [ HttpClientTestingModule, SubstanceApplicationMatchListComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GeneralService, useValue: {} },

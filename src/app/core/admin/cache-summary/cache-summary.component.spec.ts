@@ -11,8 +11,7 @@ describe('CacheSummaryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ CacheSummaryComponent ],
+      imports: [ HttpClientTestingModule, CacheSummaryComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AdminService, useValue: { getEnvironmentHealth: () => of({

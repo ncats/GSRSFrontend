@@ -19,8 +19,7 @@ describe('DataManagementComponent', () => {
     await TestBed.configureTestingModule({
       // template binds formControlName + ngModel on a real <mat-select>, so it needs a
       // real ControlValueAccessor - NO_ERRORS_SCHEMA doesn't substitute for that.
-      imports: [ ReactiveFormsModule, FormsModule, MatSelectModule, NoopAnimationsModule ],
-      declarations: [ DataManagementComponent ],
+      imports: [ ReactiveFormsModule, FormsModule, MatSelectModule, NoopAnimationsModule, DataManagementComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AdminService, useValue: {} },

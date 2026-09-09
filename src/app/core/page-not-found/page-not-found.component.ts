@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
     selector: 'app-page-not-found',
     template: '<div></div>',
     styles: [],
-    standalone: false,
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageNotFoundComponent implements OnInit {

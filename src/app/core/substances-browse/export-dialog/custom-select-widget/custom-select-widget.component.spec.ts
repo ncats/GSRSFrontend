@@ -13,7 +13,7 @@ describe('CustomSelectWidgetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CustomSelectWidgetComponent ],
+      imports: [ CustomSelectWidgetComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: {} },

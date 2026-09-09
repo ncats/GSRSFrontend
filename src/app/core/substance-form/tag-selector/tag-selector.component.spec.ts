@@ -16,8 +16,7 @@ describe('TagSelectorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, MatAutocompleteModule, NoopAnimationsModule ],
-      declarations: [ TagSelectorComponent ],
+      imports: [ HttpClientTestingModule, MatAutocompleteModule, NoopAnimationsModule, TagSelectorComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of(new Proxy({}, { get: () => ({ list: [], dictionary: {} }) })), getVocabularies: () => of({ content: [] }) } },

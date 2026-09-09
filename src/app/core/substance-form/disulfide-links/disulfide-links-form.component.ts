@@ -19,12 +19,21 @@ import { Subscription } from "rxjs";
 import { SubstanceFormService } from "@gsrs-core/substance-form/substance-form.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { SubunitSelectorDialogComponent } from "@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatSelectModule } from "@angular/material/select";
+import { MatOptionModule } from "@angular/material/core";
 
 @Component({
   selector: "app-disulfide-links-form",
   templateUrl: "./disulfide-links-form.component.html",
   styleUrls: ["./disulfide-links-form.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatTooltipModule, MatSelectModule, MatOptionModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DisulfideLinksFormComponent

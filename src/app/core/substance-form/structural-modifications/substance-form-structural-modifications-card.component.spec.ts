@@ -13,8 +13,7 @@ describe('SubstanceFormStructuralModificationsCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormStructuralModificationsCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormStructuralModificationsCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormStructuralModificationsService, useValue: { substanceStructuralModifications: NEVER } },

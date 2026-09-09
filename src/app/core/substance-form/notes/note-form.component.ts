@@ -2,12 +2,21 @@ import { ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter, Input
 import { SubstanceNote } from '../../substance/substance.model';
 import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../../utils/utils.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { DomainReferencesComponent } from '@gsrs-core/substance-form/references/domain-references/domain-references.component';
 
 @Component({
     selector: 'app-note-form',
     templateUrl: './note-form.component.html',
     styleUrls: ['./note-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatTooltipModule, AccessManagerComponent, AuditInfoComponent, DomainReferencesComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteFormComponent implements OnInit {

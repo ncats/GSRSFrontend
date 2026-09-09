@@ -11,12 +11,38 @@ import { SpecifiedSubstanceG4mProcessingMaterial, SubstanceAmount } from '@gsrs-
 import { AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 import { SubstanceFormSsg4mStagesService } from '../ssg4m-stages/substance-form-ssg4m-stages.service';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
+import { FileSelectDirective } from '@gsrs-core/file-select/file-select.directive';
+import { DomainReferencesComponent } from '@gsrs-core/substance-form/references/domain-references/domain-references.component';
 
 @Component({
     selector: 'app-ssg4m-processing-materials-form',
     templateUrl: './ssg4m-processing-materials-form.component.html',
     styleUrls: ['./ssg4m-processing-materials-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatIconModule,
+      MatButtonModule,
+      MatTooltipModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatMenuModule,
+      MatProgressSpinnerModule,
+      CvInputComponent,
+      SubstanceSelectorComponent,
+      FileSelectDirective,
+      DomainReferencesComponent
+    ]
 })
 export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy {
 

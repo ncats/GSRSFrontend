@@ -6,12 +6,17 @@ import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import {CommonModule} from '@angular/common';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import {TagSelectorComponent} from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
 
 @Component({
     selector: 'app-nucleic-acid-details-form',
     templateUrl: './nucleic-acid-details-form.component.html',
     styleUrls: ['./nucleic-acid-details-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, AuditInfoComponent, CvInputComponent, TagSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len

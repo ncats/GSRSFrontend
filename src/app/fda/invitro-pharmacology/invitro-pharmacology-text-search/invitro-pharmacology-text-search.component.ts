@@ -1,46 +1,30 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ElementRef, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, switchMap, take, takeUntil } from 'rxjs/operators';
-import { Sort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
-import { Title } from '@angular/platform-browser';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { Subject, Subscription } from 'rxjs';
-import moment from 'moment';
-import * as XLSX from 'xlsx';
-import { Location, LocationStrategy } from '@angular/common';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 /* GSRS Core Imports */
-import { AuthService } from '@gsrs-core/auth/auth.service';
-import { UtilsService } from '../../../core/utils/utils.service';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-import { GeneralService } from '../../service/general.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { FacetParam } from '@gsrs-core/facets-manager';
-import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-import { environment } from '../../../../environments/environment';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
-import { invitroPharmacologySearchSortValues } from '../invitro-pharmacology-browse/invitro-pharmacology-search-sort-values';
 
 @Component({
     selector: 'app-invitro-pharmacology-text-search',
     templateUrl: './invitro-pharmacology-text-search.component.html',
     styleUrls: ['./invitro-pharmacology-text-search.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatIconModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {

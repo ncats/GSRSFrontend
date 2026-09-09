@@ -22,8 +22,7 @@ describe('InvitroPharmacologyScreeningDataImportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InvitroPharmacologyScreeningDataImportComponent ],
-      imports: [ HttpClientTestingModule ],
+      imports: [ InvitroPharmacologyScreeningDataImportComponent, HttpClientTestingModule ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { params: {}, queryParams: {} } } },

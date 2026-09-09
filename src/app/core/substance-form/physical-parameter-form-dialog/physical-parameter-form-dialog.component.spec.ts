@@ -11,8 +11,7 @@ describe('PhysicalParameterFormDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ PhysicalParameterFormDialogComponent ],
+      imports: [ HttpClientTestingModule, PhysicalParameterFormDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: () => {}, afterClosed: () => of(null) } },

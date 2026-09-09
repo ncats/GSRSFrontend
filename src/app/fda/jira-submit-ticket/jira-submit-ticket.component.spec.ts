@@ -8,7 +8,7 @@ describe('JiraSubmitTicketComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ JiraSubmitTicketComponent ]
+      imports: [ JiraSubmitTicketComponent ]
     })
     .compileComponents();
   });

@@ -1,126 +1,119 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
-import { HomeComponent } from './home/home.component';
-import { RegistrarsComponent } from './registrars/registrars.component';
-import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
-import { StructureSearchComponent } from './structure-search/structure-search.component';
-import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
-import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
-import { LoginComponent } from './auth/login/login.component';
-import { SubstanceFormComponent } from './substance-form/substance-form.component';
 import { CanActivateSubstanceForm } from './substance-form/can-activate-substance-form';
 import {CanRegisterSubstanceForm} from '@gsrs-core/substance-form/can-register-substance-form';
 import { CanDeactivateSubstanceFormGuard } from './substance-form/can-deactivate-substance-form.guard';
-import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
-import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-downloads.component';
-import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
-import { CanActivateAdminPage } from './admin/can-activate-admin-page';
-import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
-import { SubstanceSsg4ManufactureFormComponent } from './substance-ssg4m/substance-ssg4m-form.component';
-import { ImportBrowseComponent } from '@gsrs-core/admin/import-browse/import-browse.component';
+import { EXTRA_ROUTES } from '../../environments/environment';
 
 const childRoutes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    loadComponent: () => import('./home/home.component').then(c => c.HomeComponent)
   },
   {
     path: 'home',
-    component: HomeComponent
+    loadComponent: () => import('./home/home.component').then(c => c.HomeComponent)
   },
   {
     path: 'unauthorized',
-    component: UnauthorizedComponent
+    loadComponent: () => import('./unauthorized/unauthorized.component').then(c => c.UnauthorizedComponent)
   },
   {
     path: 'browse-substance',
-    component: SubstancesBrowseComponent
+    loadComponent: () => import('./substances-browse/substances-browse.component').then(c => c.SubstancesBrowseComponent)
   },
   {
     path: 'registrars',
-    component: RegistrarsComponent,
+    loadComponent: () => import('./registrars/registrars.component').then(c => c.RegistrarsComponent)
   },
   {
     path: 'substances/register',
-    component: SubstanceFormComponent
+    loadComponent: () => import('./substance-form/substance-form.component').then(c => c.SubstanceFormComponent)
   },
   {
     path: 'substances/register/:type',
-    component: SubstanceFormComponent,
+    loadComponent: () => import('./substance-form/substance-form.component').then(c => c.SubstanceFormComponent),
     canActivate: [CanRegisterSubstanceForm],
     canDeactivate: [CanDeactivateSubstanceFormGuard]
   },
   {
     path: 'substances/:id',
-    component: SubstanceDetailsComponent
+    loadComponent: () => import('./substance-details/substance-details.component').then(c => c.SubstanceDetailsComponent)
   },
   {
     path: 'substances/:id/v/:version',
-    component: SubstanceDetailsComponent
+    loadComponent: () => import('./substance-details/substance-details.component').then(c => c.SubstanceDetailsComponent)
   },
   {
     path: 'structure-search',
-    component: StructureSearchComponent
+    loadComponent: () => import('./structure-search/structure-search.component').then(c => c.StructureSearchComponent)
   },
   {
     path: 'guided-search',
-    loadChildren: () => import('./guided-search/guided-search.module').then(m => m.GuidedSearchModule)
+    loadChildren: () => import('./guided-search/guided-search.routes').then(r => r.GUIDED_SEARCH_ROUTES)
+  },
+  {
+    path: 'bulk-search',
+    loadComponent: () => import('./bulk-search/bulk-query.component').then(c => c.BulkQueryComponent)
+  },
+  {
+    path: 'bulk-search-results',
+    loadComponent: () => import('./bulk-search/bulk-search.component').then(c => c.BulkSearchComponent)
   },
   {
     path: 'sequence-search',
-    component: SequenceSearchComponent
+    loadComponent: () => import('./sequence-search/sequence-search.component').then(c => c.SequenceSearchComponent)
   },
   {
     path: 'staging',
-    component: ImportBrowseComponent
-
+    loadComponent: () => import('./admin/import-browse/import-browse.component').then(c => c.ImportBrowseComponent)
   },
   {
     path: 'login',
-    component: LoginComponent
+    loadComponent: () => import('./auth/login/login.component').then(c => c.LoginComponent)
   },
   {
     path: 'substances/:id/edit',
-    component: SubstanceFormComponent,
+    loadComponent: () => import('./substance-form/substance-form.component').then(c => c.SubstanceFormComponent),
     canActivate: [CanActivateSubstanceForm],
     canDeactivate: [CanDeactivateSubstanceFormGuard]
   },
   {
     path: 'admin',
-    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+    loadChildren: () => import('./admin/admin.routes').then(r => r.ADMIN_ROUTES)
   },
   {
     path: 'monitor/:id',
-    component: MonitorComponent,
+    loadComponent: () => import('./admin/monitor/monitor.component').then(c => c.MonitorComponent),
     canActivate: [CanActivateAdmin]
   },
   {
     path: 'profile',
-    component: UserProfileComponent
+    loadComponent: () => import('./auth/user-profile/user-profile.component').then(c => c.UserProfileComponent)
   },
   {
     path: 'user-downloads',
-    component: UserDownloadsComponent
+    loadComponent: () => import('./auth/user-downloads/user-downloads.component').then(c => c.UserDownloadsComponent)
   },
   {
     path: 'user-downloads/:id',
-    component: UserDownloadsComponent
+    loadComponent: () => import('./auth/user-downloads/user-downloads.component').then(c => c.UserDownloadsComponent)
   },
   {
     path: 'structure-features',
-    component: SubstanceFormComponent
+    loadComponent: () => import('./substance-form/substance-form.component').then(m => m.SubstanceFormComponent)
   },
   {
     path: 'privacy-statement',
-    loadChildren: () => import('./privacy-statement/privacy-statement.module').then(m => m.PrivacyStatementModule)
+    loadChildren: () => import('./privacy-statement/privacy-statement.routes').then(r => r.PRIVACY_STATEMENT_ROUTES)
   },
   {
     path: 'nitrosamine-standalone',
-    loadChildren: () => import('./nitrosamine-standalone/nitrosamine-standalone.module').then(m => m.NitrosamineStandaloneModule)
+    loadChildren: () => import('./nitrosamine-standalone/nitrosamine-standalone.routes').then(r => r.NITROSAMINE_STANDALONE_ROUTES)
   },
+  ...EXTRA_ROUTES,
 ];
 
 const routes: Routes = [
@@ -131,7 +124,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: PageNotFoundComponent
+    loadComponent: () => import('./page-not-found/page-not-found.component').then(c => c.PageNotFoundComponent)
   }
 ];
 

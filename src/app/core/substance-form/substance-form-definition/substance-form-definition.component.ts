@@ -16,12 +16,29 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { DomainReferencesComponent } from '@gsrs-core/substance-form/references/domain-references/domain-references.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
+import { ElementLabelDisplayPipe } from '@gsrs-core/utils/element-label-display.pipe';
 
 @Component({
     selector: 'app-substance-form-definition',
     templateUrl: './substance-form-definition.component.html',
     styleUrls: ['./substance-form-definition.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatAutocompleteModule, MatCheckboxModule, MatChipsModule, MatFormFieldModule, MatIconModule, MatOptionModule, MatSelectModule, MatInputModule, MatTooltipModule, AccessManagerComponent, AuditInfoComponent, DomainReferencesComponent, SubstanceSelectorComponent, ElementLabelDisplayPipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormDefinitionComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {

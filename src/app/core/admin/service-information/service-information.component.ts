@@ -6,12 +6,22 @@ import { ConfigService } from '@gsrs-core/config/config.service';
 import { take } from 'rxjs/operators';
 import lodashFilter from 'lodash/filter';
 import lodashMap from 'lodash/map';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @Component({
     selector: 'app-service-information',
     templateUrl: './service-information.component.html',
     styleUrls: ['./service-information.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatOptionModule, MatProgressSpinnerModule, MatSelectModule, NgxJsonViewerModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServiceInformationComponent implements OnInit {

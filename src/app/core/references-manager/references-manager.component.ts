@@ -6,12 +6,17 @@ import {
 import { SubstanceService } from "../substance/substance.service";
 import { DatePipe } from "@angular/common";
 import { take } from "rxjs/operators";
+import { MatTableModule } from "@angular/material/table";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TrackLinkEventDirective } from "@gsrs-core/google-analytics/track-link-event/track-link-event.directive";
 
 @Component({
   selector: "app-references-manager",
   templateUrl: "./references-manager.component.html",
   styleUrls: ["./references-manager.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [MatTableModule, MatIconModule, MatTooltipModule, TrackLinkEventDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReferencesManagerComponent implements OnInit, OnChanges {

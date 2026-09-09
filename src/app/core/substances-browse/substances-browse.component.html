@@ -1153,11 +1153,11 @@
                                                   <div
                                                     class="mat-chip-list-container-2"
                                                     >
-                                                    <mat-chip-list selectable="false" multiple="false">
-                                                      <mat-chip color="primary" selected>{{
+                                                    <mat-chip-set>
+                                                      <mat-chip color="primary" highlighted>{{
                                                         substance.structure.stereochemistry
                                                       }}</mat-chip>
-                                                    </mat-chip-list>
+                                                    </mat-chip-set>
                                                   </div>
                                                 }
                                               </div>
@@ -1165,13 +1165,13 @@
                                             @if (!substance.structure) {
                                               <div>
                                                 <div class="mat-chip-list-container-2">
-                                                  <mat-chip-list selectable="false" multiple="false">
-                                                    <mat-chip color="primary" selected>{{
+                                                  <mat-chip-set>
+                                                    <mat-chip color="primary" highlighted>{{
                                                       substance.substanceClass
                                                       | facetDisplay : "types"
                                                       | uppercase
                                                     }}</mat-chip>
-                                                  </mat-chip-list>
+                                                  </mat-chip-set>
                                                 </div>
                                               </div>
                                             }
@@ -1473,7 +1473,6 @@
                   </div>
 
                   <ng-template #structureRefTemplate class="structure-template">
-                    <mat-dialog>
                       @if (resultsInitiated) {
                         <div style="width: 90%">
                           <h3 mat-dialog-title>{{ privateSearchType | titlecase }} Search is Processing...</h3>
@@ -1497,5 +1496,4 @@
                         Close dialog
                       </button></mat-dialog-actions
                       >
-                    </mat-dialog>
                   </ng-template>

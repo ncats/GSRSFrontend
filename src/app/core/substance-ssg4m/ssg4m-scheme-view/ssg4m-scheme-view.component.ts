@@ -9,12 +9,18 @@ import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceFormSsg4mProcessService } from '../ssg4m-process/substance-form-ssg4m-process.service';
 import { SubstanceDetail, SpecifiedSubstanceG4mProcess, SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { SubstanceSsg4mService } from '../substance-ssg4m-form.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-ssg4m-scheme-view',
     templateUrl: './ssg4m-scheme-view.component.html',
     styleUrls: ['./ssg4m-scheme-view.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatCheckboxModule, MatButtonModule, MatTooltipModule, MatIconModule, SubstanceImageDirective]
 })
 export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();

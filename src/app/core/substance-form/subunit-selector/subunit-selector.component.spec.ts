@@ -15,8 +15,7 @@ describe('SubunitSelectorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubunitSelectorComponent ],
+      imports: [ HttpClientTestingModule, SubunitSelectorComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { definition: NEVER, subunitDisplaySequences: NEVER, allSites: NEVER } },

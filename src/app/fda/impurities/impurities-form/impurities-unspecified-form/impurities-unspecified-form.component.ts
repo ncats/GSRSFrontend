@@ -7,12 +7,28 @@ import { LoadingService } from '@gsrs-core/loading';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../../model/impurities.model';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-impurities-unspecified-form',
     templateUrl: './impurities-unspecified-form.component.html',
     styleUrls: ['./impurities-unspecified-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTooltipModule,
+      CvInputComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesUnspecifiedFormComponent implements OnInit {

@@ -7,12 +7,16 @@ import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
+import { CommonModule } from '@angular/common';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-substance-form-mixture-details',
     templateUrl: './substance-form-mixture-details.component.html',
     styleUrls: ['./substance-form-mixture-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, AuditInfoComponent, SubstanceSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len

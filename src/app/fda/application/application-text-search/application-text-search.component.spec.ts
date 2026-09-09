@@ -14,8 +14,7 @@ describe('ApplicationTextSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ApplicationTextSearchComponent ],
-      imports: [ MatAutocompleteModule ],
+      imports: [ MatAutocompleteModule, ApplicationTextSearchComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ApplicationService, useValue: {} },

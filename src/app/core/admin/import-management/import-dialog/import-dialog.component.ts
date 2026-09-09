@@ -1,14 +1,21 @@
 import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { UtilsService } from '@gsrs-core/utils';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { FormControl, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/cv-import.component';
 
 @Component({
     selector: 'app-import-dialog',
     templateUrl: './import-dialog.component.html',
     styleUrls: ['./import-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatDialogModule, MatCheckboxModule, MatFormFieldModule, MatOptionModule, MatSelectModule, CvImportComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportDialogComponent implements OnInit {

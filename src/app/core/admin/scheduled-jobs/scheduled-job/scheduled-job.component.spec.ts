@@ -14,8 +14,7 @@ describe('ScheduledJobComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatIconModule, MomentModule ],
-      declarations: [ ScheduledJobComponent ],
+      imports: [ MatIconModule, MomentModule, ScheduledJobComponent ],
       providers: [
         // ngOnInit calls refresh(true), which calls adminService.fetchJob(...) unconditionally.
         { provide: AdminService, useValue: { fetchJob: () => of({ id: 'test-job-id' } as unknown as ScheduledJob) } },

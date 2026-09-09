@@ -1,19 +1,21 @@
 import { Component, ViewChild, TemplateRef, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormBuilder } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import { take, map, finalize } from 'rxjs/operators';
-import { forkJoin, from, tap, of, toArray, concatMap, catchError, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { forkJoin, from, tap, of, toArray, concatMap, catchError } from 'rxjs';
 import moment from 'moment';
 import lodashClone from 'lodash/clone';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import * as XLSX from 'xlsx';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 /* GSRS Core Imports */
@@ -21,27 +23,22 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
-import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
 import {
   InvitroAssayInformation, InvitroReference, InvitroLaboratory, InvitroSponsor, InvitroSponsorReport,
-  InvitroTestAgent, InvitroSponsorSubmitter, InvitroControl, InvitroAssayResult, InvitroAssayScreening, ValidationMessage, InvitroAssayResultInformation
+  InvitroTestAgent, InvitroSponsorSubmitter, InvitroControl, InvitroAssayResult, InvitroAssayScreening, InvitroAssayResultInformation
 } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-screening-data-import',
   templateUrl: './invitro-pharmacology-screening-data-import.component.html',
   styleUrls: ['./invitro-pharmacology-screening-data-import.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatTooltipModule]
 })
 
 export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, AfterViewInit, OnDestroy {

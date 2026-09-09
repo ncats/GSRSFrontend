@@ -5,13 +5,21 @@ import { ConfigService } from '@gsrs-core/config';
 import { take } from 'rxjs/operators';
 import lodashFilter from 'lodash/filter';
 import lodashMap from 'lodash/map';
+import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { ScheduledJobComponent } from '@gsrs-core/admin/scheduled-jobs/scheduled-job/scheduled-job.component';
 
 
 @Component({
     selector: 'app-scheduled-jobs',
     templateUrl: './scheduled-jobs.component.html',
     styleUrls: ['./scheduled-jobs.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [FormsModule, MatCardModule, MatFormFieldModule, MatOptionModule, MatProgressSpinnerModule, MatSelectModule, ScheduledJobComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduledJobsComponent implements OnInit {

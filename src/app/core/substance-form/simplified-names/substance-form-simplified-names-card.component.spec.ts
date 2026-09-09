@@ -15,12 +15,11 @@ describe('SubstanceFormSimplifiedNamesCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormSimplifiedNamesCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormSimplifiedNamesCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormNamesService, useValue: { substanceNames: NEVER } },
-        { provide: SubstanceFormService, useValue: { definition: NEVER } },
+        { provide: SubstanceFormService, useValue: { definition: NEVER, simplifiedForm: NEVER } },
         { provide: ScrollToService, useValue: { scrollToElement: () => null } },
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },

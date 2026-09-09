@@ -5,12 +5,17 @@ import {Subscription} from 'rxjs';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormStructuralUnitsService } from './substance-form-structural-units.service';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { StructuralUnitFormComponent } from './structural-unit-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-structural-units-card',
     templateUrl: './substance-form-structural-units-card.component.html',
     styleUrls: ['./substance-form-structural-units-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, StructuralUnitFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBaseFilteredList<StructuralUnit>

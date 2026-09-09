@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
     selector: 'app-loading-overlay',
     template: `<div></div>`,
     styleUrls: ['./loading-overlay.component.scss'],
-    standalone: false,
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadingOverlayComponent implements OnInit {

@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-main-notification',
     templateUrl: './main-notification.component.html',
     styleUrls: ['./main-notification.component.scss'],
-    standalone: false,
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainNotificationComponent implements OnInit, OnDestroy {

@@ -5,7 +5,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
     selector: 'ncats-ketcher-wrapper',
     templateUrl: './ketcher-wrapper.component.html',
     styleUrls: ['./ketcher-wrapper.component.scss'],
-    standalone: false,
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KetcherWrapperComponent implements OnInit, AfterViewInit {

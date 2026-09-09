@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-submit-success-dialog',
     templateUrl: './submit-success-dialog.component.html',
     styleUrls: ['./submit-success-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubmitSuccessDialogComponent implements OnInit {

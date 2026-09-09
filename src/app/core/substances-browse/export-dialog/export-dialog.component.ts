@@ -1,14 +1,35 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatInputModule } from '@angular/material/input';
+import { SchemaFormModule } from 'ngx-schema-form';
 import moment from 'moment';
 import lodashIsEqual from 'lodash/isEqual';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 
 @Component({
     selector: 'app-export-dialog',
     templateUrl: './export-dialog.component.html',
     styleUrls: ['./export-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatDialogModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTabsModule,
+      MatInputModule,
+      SchemaFormModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExportDialogComponent implements OnInit {

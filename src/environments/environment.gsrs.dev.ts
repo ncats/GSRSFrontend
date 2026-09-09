@@ -1,3 +1,4 @@
+import { Routes } from '@angular/router';
 import { baseEnvironment } from './_base-environment';
 
 export const environment = baseEnvironment;
@@ -7,3 +8,5 @@ environment.clasicBaseHref = '/ginas/app/';
 environment.googleAnalyticsId = 'UA-136176848-1';
 
 export { GsrsModule as EnvironmentModule } from '../app/core/gsrs.module';
+
+export const EXTRA_ROUTES: Routes = [];

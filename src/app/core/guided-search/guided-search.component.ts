@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
 import { QueryableSubstanceDictionary } from './queryable-substance-dictionary.model';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
@@ -7,12 +10,14 @@ import { QueryStatement } from './query-statement/query-statement.model';
 import { typeCommandOptions } from './query-statement/type-command-options.constant';
 import { UtilsService } from '@gsrs-core/utils';
 import { Title } from '@angular/platform-browser';
+import { QueryStatementComponent } from './query-statement/query-statement.component';
 
 @Component({
     selector: 'app-guided-search',
     templateUrl: './guided-search.component.html',
     styleUrls: ['./guided-search.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatCardModule, MatIconModule, MatButtonModule, QueryStatementComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuidedSearchComponent implements OnInit {

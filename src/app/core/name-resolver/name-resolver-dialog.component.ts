@@ -1,12 +1,15 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
+import { MatButtonModule } from '@angular/material/button';
+import { NameResolverComponent } from './name-resolver.component';
 
 @Component({
     selector: 'app-name-resolver-dialog',
     templateUrl: './name-resolver-dialog.component.html',
     styleUrls: ['./name-resolver-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, NameResolverComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NameResolverDialogComponent implements OnInit {

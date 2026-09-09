@@ -13,14 +13,12 @@ describe('StructureDetailsComponent', () => {
   let utilsServiceStub: UtilsServiceStub;
 
   beforeEach(async () => {
-    const configServiceSpy = { configData: vi.fn() };
+    const configServiceSpy = { configData: vi.fn(), environment: {}, afterLoad: () => Promise.resolve({}) };
     utilsServiceStub = new UtilsServiceStub();
 
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
-      ],
-      declarations: [
+        HttpClientTestingModule,
         StructureDetailsComponent
       ],
       schemas: [ NO_ERRORS_SCHEMA ],

@@ -8,6 +8,12 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/co
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { SubstanceService } from '@gsrs-core/substance';
+import { StructureService } from '@gsrs-core/structure';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { ProductIngredientFormComponent } from './product-ingredient-form.component';
 
 describe('ProductIngredientFormComponent', () => {
@@ -16,8 +22,7 @@ describe('ProductIngredientFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ProductIngredientFormComponent ],
+      imports: [ HttpClientTestingModule, ProductIngredientFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GeneralService, useValue: {} },
@@ -26,6 +31,12 @@ describe('ProductIngredientFormComponent', () => {
         { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => null, logout: () => {} } },
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
+        { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
+        { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
+        { provide: SubstanceService, useValue: {} },
+        { provide: SubstanceFormService, useValue: { definition: of({}), getStoredRelated: () => null } },
+        { provide: StructureService, useValue: {} },
+        { provide: ScrollToService, useValue: {} },
       ]
     })
     .compileComponents();

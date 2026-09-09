@@ -1,17 +1,25 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
 import moment from 'moment';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
 import { LoadingService } from '@gsrs-core/loading';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
     selector: 'app-data-management',
     templateUrl: './data-management.component.html',
     styleUrls: ['./data-management.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatOptionModule, MatProgressSpinnerModule, MatSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataManagementComponent implements OnInit {

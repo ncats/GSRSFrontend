@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit, Inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras, RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-highlighted-search-action',
     templateUrl: './highlighted-search-action.component.html',
     styleUrls: ['./highlighted-search-action.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [RouterLink, MatIconModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HighlightedSearchActionComponent implements OnInit {

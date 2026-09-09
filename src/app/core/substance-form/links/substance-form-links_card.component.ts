@@ -6,12 +6,19 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormLinksService } from './substance-form-links.service';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { LinkFormComponent } from './link-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-links',
     templateUrl: './substance-form-links_card.component.html',
     styleUrls: ['./substance-form-links_card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, LinkFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredList<Linkage>

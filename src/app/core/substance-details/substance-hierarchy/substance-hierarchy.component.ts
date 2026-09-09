@@ -5,12 +5,19 @@ import { AuthService } from '@gsrs-core/auth';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { HierarchyNode } from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-substance-hierarchy',
     templateUrl: './substance-hierarchy.component.html',
     styleUrls: ['./substance-hierarchy.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatTreeModule, MatIconModule, MatTooltipModule, MatButtonModule, RouterModule]
 })
 export class SubstanceHierarchyComponent extends SubstanceCardBase implements OnInit {
 

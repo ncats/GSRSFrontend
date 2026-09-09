@@ -2,12 +2,28 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, O
 import { SubstanceService } from "@gsrs-core/substance/substance.service";
 import { SubstanceSummary } from "@gsrs-core/substance/substance.model";
 import { ConfigService } from "@gsrs-core/config";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { SubstanceTextSearchComponent } from "@gsrs-core/substance-text-search/substance-text-search.component";
+import { SubstanceImageDirective } from "@gsrs-core/substance/substance-image.directive";
 
 @Component({
   selector: "app-substance-search-selector",
   templateUrl: "./substance-search-selector.component.html",
   styleUrls: ["./substance-search-selector.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    SubstanceTextSearchComponent,
+    SubstanceImageDirective
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceSearchSelectorComponent implements OnInit {

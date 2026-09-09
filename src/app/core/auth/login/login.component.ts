@@ -1,4 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, HostListener, Inject, DOCUMENT } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -17,7 +22,8 @@ import {sprintf} from "sprintf-js";
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit, OnDestroy {

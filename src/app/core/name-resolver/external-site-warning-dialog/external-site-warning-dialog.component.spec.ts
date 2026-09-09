@@ -13,7 +13,7 @@ describe('ExternalSiteWarningDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ExternalSiteWarningDialogComponent ],
+      imports: [ ExternalSiteWarningDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: vi.fn() } },

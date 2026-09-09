@@ -12,7 +12,7 @@ describe('PageNotFoundComponent', () => {
     routerStub = new RouterStub();
 
     await TestBed.configureTestingModule({
-      declarations: [
+      imports: [
         PageNotFoundComponent
       ],
       providers: [

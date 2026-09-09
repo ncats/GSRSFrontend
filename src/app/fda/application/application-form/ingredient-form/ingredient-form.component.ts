@@ -12,12 +12,31 @@ import { ConfigService } from '@gsrs-core/config/config.service';
 import { GsrsModule } from '@gsrs-core/gsrs.module';
 import { GeneralService } from 'src/app/fda/service/general.service';
 import { A } from '@angular/cdk/keycodes';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-ingredient-form',
     templateUrl: './ingredient-form.component.html',
     styleUrls: ['./ingredient-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTooltipModule,
+      SubstanceSearchSelectorComponent,
+      CvInputComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IngredientFormComponent implements OnInit, OnDestroy {

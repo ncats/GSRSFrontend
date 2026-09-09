@@ -14,12 +14,11 @@ describe('SubstanceFormSimplifiedCodesCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormSimplifiedCodesCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormSimplifiedCodesCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormCodesService, useValue: { substanceCodes: NEVER } },
-        { provide: SubstanceFormService, useValue: { definition: NEVER } },
+        { provide: SubstanceFormService, useValue: { definition: NEVER, simplifiedForm: NEVER } },
         { provide: ScrollToService, useValue: { scrollToElement: () => null } },
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
       ]

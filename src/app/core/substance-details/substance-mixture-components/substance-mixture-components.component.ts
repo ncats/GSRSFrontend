@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
 import {SubstanceCardBase} from '../substance-card-base';
 import {MixtureComponents, SubstanceDetail} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
@@ -9,7 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
     selector: 'app-substance-mixture-components',
     templateUrl: './substance-mixture-components.component.html',
     styleUrls: ['./substance-mixture-components.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterModule, MatIconModule, SubstanceImageDirective]
 })
 export class SubstanceMixtureComponentsComponent extends SubstanceCardBase implements OnInit {
   components: Array<MixtureComponents>;

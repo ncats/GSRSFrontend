@@ -7,17 +7,32 @@ import { MatDialog } from '@angular/material/dialog';
 import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form-dialog.component';
 import { ReuseReferencesDialogComponent } from '../references-dialogs/reuse-references-dialog.component';
 import { ReuseReferencesDialogData } from '../references-dialogs/reuse-references-dialog-data.model';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { UtilsService } from '../../../utils/utils.service';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormReferencesService } from '../substance-form-references.service';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ApplyReferenceComponent } from '@gsrs-core/substance-form/references/apply-reference/apply-reference.component';
 
 @Component({
     selector: 'app-domain-references',
     templateUrl: './domain-references.component.html',
     styleUrls: ['./domain-references.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      MatExpansionModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTableModule,
+      MatBadgeModule,
+      MatTooltipModule,
+      ApplyReferenceComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DomainReferencesComponent implements OnInit, OnDestroy {

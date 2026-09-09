@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubstanceDetail, SubstanceService } from '@gsrs-core/substance';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -7,12 +7,17 @@ import lodashCloneDeep from 'lodash/cloneDeep';
 import { LoadingService } from '@gsrs-core/loading/index';
 import { UtilsService } from '@gsrs-core/utils/index';
 import jp from 'jsonpath';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component( {
     selector: 'app-definition-switch-dialog',
     templateUrl: './definition-switch-dialog.component.html',
     styleUrls: ['./definition-switch-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, MatIconModule, MatProgressBarModule, SubstanceImageDirective]
 })
 export class DefinitionSwitchDialogComponent implements OnInit {
   public dialogRef: MatDialogRef < DefinitionSwitchDialogComponent >;

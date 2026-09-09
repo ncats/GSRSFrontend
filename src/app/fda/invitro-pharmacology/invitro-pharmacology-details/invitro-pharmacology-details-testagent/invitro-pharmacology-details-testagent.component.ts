@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { PageEvent } from '@angular/material/paginator';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { Sort } from '@angular/material/sort';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import moment from 'moment';
-import { Location, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -17,14 +17,11 @@ import { UtilsService } from '../../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { GeneralService } from '../../../service/general.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-import { environment } from '../../../../../environments/environment';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service'
@@ -35,7 +32,8 @@ import { invitroPharmacologySearchSortValues } from '../../invitro-pharmacology-
     selector: 'app-invitro-pharmacology-details-testagent',
     templateUrl: './invitro-pharmacology-details-testagent.component.html',
     styleUrls: ['./invitro-pharmacology-details-testagent.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule, MatTooltipModule, MatTableModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

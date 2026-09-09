@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GeneralService } from '../service/general.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-user-manual',
     templateUrl: './user-manual.component.html',
     styleUrls: ['./user-manual.component.scss'],
-    standalone: false,
+    imports:[ CommonModule],
+    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserManualComponent implements OnInit {

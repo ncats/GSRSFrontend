@@ -13,8 +13,7 @@ describe('SsgGradeFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SsgGradeFormComponent ],
+      imports: [ HttpClientTestingModule, SsgGradeFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { substance: NEVER } },

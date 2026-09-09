@@ -4,12 +4,20 @@ import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {SubstanceName, SubstanceRelated, SubstanceService, SubstanceSummary} from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import {AuthService} from '@gsrs-core/auth';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-substance-hierarchy',
     templateUrl: './substance-hierarchy.component.html',
     styleUrls: ['./substance-hierarchy.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, RouterModule, MatTreeModule, MatIconModule, MatButtonModule, MatTooltipModule, MatProgressSpinnerModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceHierarchyComponent implements OnInit {

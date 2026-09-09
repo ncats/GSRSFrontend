@@ -1,13 +1,17 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
+import {MatButtonModule} from '@angular/material/button';
+import {NgxJsonViewerModule} from 'ngx-json-viewer';
+import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'app-json-dialog',
     templateUrl: './json-dialog.component.html',
     styleUrls: ['./json-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatDialogModule, MatButtonModule, NgxJsonViewerModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JsonDialogComponent implements OnInit {

@@ -11,8 +11,7 @@ describe('SubmitSuccessDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubmitSuccessDialogComponent ],
+      imports: [ HttpClientTestingModule, SubmitSuccessDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: () => {}, afterClosed: () => of(null) } },

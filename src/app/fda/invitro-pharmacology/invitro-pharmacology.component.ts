@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 /* GSRS Imports */
 import { InvitroAssayInformation, ValidationMessage } from './model/invitro-pharmacology.model';
@@ -9,7 +11,8 @@ import { InvitroAssayInformation, ValidationMessage } from './model/invitro-phar
     selector: 'app-invitro-pharmacology',
     templateUrl: './invitro-pharmacology.component.html',
     styleUrls: ['./invitro-pharmacology.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatButtonModule, MatIconModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitroPharmacologyComponent implements OnInit {

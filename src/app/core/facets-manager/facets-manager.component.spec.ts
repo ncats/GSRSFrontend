@@ -9,6 +9,7 @@ import { FacetsManagerService } from './facets-manager.service';
 import { AuthService } from '@gsrs-core/auth';
 import { ConfigService } from '@gsrs-core/config';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { vi } from 'vitest';
 
 import { FacetsManagerComponent } from './facets-manager.component';
@@ -19,7 +20,7 @@ describe('FacetsManagerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FacetsManagerComponent ],
+      imports: [ FacetsManagerComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { queryParams: {} } } },
@@ -34,7 +35,8 @@ describe('FacetsManagerComponent', () => {
         { provide: GoogleAnalyticsService, useValue: { sendEvent: vi.fn(), sendPageView: vi.fn() } },
         { provide: Router, useValue: {} },
         { provide: Location, useValue: {} },
-        { provide: MatDialog, useValue: {} }
+        { provide: MatDialog, useValue: {} },
+        { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of({}) } }
       ]
     })
     .compileComponents();

@@ -17,7 +17,7 @@ describe('BulkSearchResultsSummaryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BulkSearchResultsSummaryComponent ],
+      imports: [ BulkSearchResultsSummaryComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: LoadingService, useValue: { setLoading: () => null } },

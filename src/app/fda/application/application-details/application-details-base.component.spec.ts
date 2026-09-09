@@ -18,8 +18,7 @@ describe('ApplicationDetailsBaseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ApplicationDetailsBaseComponent ],
+      imports: [ HttpClientTestingModule, ApplicationDetailsBaseComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ApplicationService, useValue: {} },

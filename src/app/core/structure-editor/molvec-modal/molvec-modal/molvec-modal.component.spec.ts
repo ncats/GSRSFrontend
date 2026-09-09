@@ -11,7 +11,7 @@ describe('MolvecModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MolvecModalComponent ],
+      imports: [ MolvecModalComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: vi.fn() } },

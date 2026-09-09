@@ -31,7 +31,9 @@ class CustomEncoder implements HttpParameterCodec {
     return decodeURIComponent(value);
   }
 }
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProductService extends BaseHttpService {
 
   private entity = 'products';

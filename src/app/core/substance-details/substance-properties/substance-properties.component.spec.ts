@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstancePropertiesComponent } from './substance-properties.component';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
-import { RouterLinkDirectiveMock } from '../../../../testing/router-link-mock.directive';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { UtilsService } from '../../utils/utils.service';
@@ -22,11 +22,9 @@ describe('SubstancePropertiesComponent', () => {
       imports: [
         MatTableModule,
         CdkTableModule,
-        HttpClientTestingModule
-      ],
-      declarations: [
-        SubstancePropertiesComponent,
-        RouterLinkDirectiveMock
+        HttpClientTestingModule,
+        RouterTestingModule,
+        SubstancePropertiesComponent
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy },

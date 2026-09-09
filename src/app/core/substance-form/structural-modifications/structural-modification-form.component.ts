@@ -8,12 +8,27 @@ import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
+import {AccessManagerComponent} from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import {SubstanceSelectorComponent} from '@gsrs-core/substance-selector/substance-selector.component';
+import {TagSelectorComponent} from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
 
 @Component({
     selector: 'app-structural-modification-form',
     templateUrl: './structural-modification-form.component.html',
     styleUrls: ['./structural-modification-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatTooltipModule, MatInputModule, MatSelectModule, MatOptionModule, AccessManagerComponent, AuditInfoComponent, CvInputComponent, SubstanceSelectorComponent, TagSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructuralModificationFormComponent implements OnInit, AfterViewInit {

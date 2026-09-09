@@ -29,7 +29,7 @@ import jp from 'jsonpath';
     selector: 'app-product-details-base',
     template: '',
     styleUrls: ['./product-details-base.component.scss'],
-    standalone: false
+    standalone: true
 })
 export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 

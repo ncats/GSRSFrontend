@@ -9,7 +9,9 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
 import {Facet, FacetQueryResponse, FacetHttpParams} from '@gsrs-core/facets-manager';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ClinicalTrialService extends BaseHttpService {
 
   totalRecords = 0;

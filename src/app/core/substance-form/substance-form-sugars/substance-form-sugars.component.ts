@@ -5,12 +5,19 @@ import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import {CommonModule} from '@angular/common';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {SugarFormComponent} from '@gsrs-core/substance-form/sugar-form/sugar-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-sugars',
     templateUrl: './substance-form-sugars.component.html',
     styleUrls: ['./substance-form-sugars.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, SugarFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<Sugar>

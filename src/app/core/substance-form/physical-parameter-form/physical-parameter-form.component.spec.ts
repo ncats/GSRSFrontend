@@ -11,8 +11,7 @@ describe('PhysicalParameterFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ PhysicalParameterFormComponent ],
+      imports: [ HttpClientTestingModule, PhysicalParameterFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },

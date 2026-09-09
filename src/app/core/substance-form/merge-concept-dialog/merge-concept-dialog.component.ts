@@ -1,18 +1,21 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SubstanceDetail, SubstanceRelated, SubstanceService} from '@gsrs-core/substance';
 import {take} from 'rxjs/operators';
 import { chain as lodashChain } from 'lodash';
 import lodashRemove from 'lodash/remove';
 import jp from 'jsonpath';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
     selector: 'app-merge-concept-dialog',
     templateUrl: './merge-concept-dialog.component.html',
     styleUrls: ['./merge-concept-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, MatProgressBarModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MergeConceptDialogComponent implements OnInit {

@@ -1,27 +1,59 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Directive, EventEmitter, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { vi } from 'vitest';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BaseComponent } from './base.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { LoadingModule } from '../loading/loading.module';
-import { RouterStub } from '../../../testing/router-stub';
-import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { SubstanceTextSearchModule } from '../substance-text-search/substance-text-search.module';
-import { MainNotificationModule } from '../main-notification/main-notification.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
+import { RouterStub } from '../../../testing/router-stub';
 import { ConfigService } from '../config/config.service';
 import { SubstanceTextSearchService } from '../substance-text-search/substance-text-search.service';
 import { ActivatedRouteStub } from '../../../testing/activated-route-stub';
-import { RouterOutletStubComponent } from '../../../testing/router-outlet-mock.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject, NEVER, of } from 'rxjs';
-import { MatIconMock } from '../../../testing/mat-icon-mock.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { UtilsService } from '../utils/utils.service';
+
+// BaseComponent is standalone now, so its own @Component.imports (not TestBed's)
+// decide what these child selectors resolve to. RouterStub is a minimal hand-rolled
+// object, not a real Angular Router, so the real RouterOutlet/RouterLink directives
+// (which construct-time-depend on a real Router) would fail here; stub them, plus the
+// 3 real child components, the same way structure-search/substances-browse specs do.
+@Component({ selector: 'router-outlet', template: '', standalone: true })
+class RouterOutletStub {}
+
+@Directive({ selector: '[routerLink]', standalone: true })
+class RouterLinkStub {
+  @Input('routerLink') linkParams: any;
+}
+
+@Component({ selector: 'app-pfda-toolbar', template: '', standalone: true })
+class PfdaToolbarStub {}
+
+@Component({ selector: 'app-session-expiration', template: '', standalone: true })
+class SessionExpirationStub {}
+
+@Component({ selector: 'app-loading', template: '', standalone: true })
+class LoadingStub {}
+
+@Component({ selector: 'app-substance-text-search', template: '', standalone: true })
+class SubstanceTextSearchStub {
+  @Input() placeholder: any;
+  @Input() styling: any;
+  @Input() searchValue: any;
+  @Input() eventCategory: any;
+  @Output() searchPerformed = new EventEmitter<any>();
+  @Output() opened = new EventEmitter<any>();
+  @Output() closed = new EventEmitter<any>();
+}
 
 describe('BaseComponent', () => {
   let component: BaseComponent;
@@ -59,19 +91,9 @@ describe('BaseComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        MatToolbarModule,
-        LoadingModule,
-        MatMenuModule,
-        SubstanceTextSearchModule,
-        MainNotificationModule,
         HttpClientTestingModule,
-        NoopAnimationsModule
-      ],
-      declarations: [
-        BaseComponent,
-        RouterLinkDirectiveMock,
-        RouterOutletStubComponent,
-        MatIconMock
+        NoopAnimationsModule,
+        BaseComponent
       ],
       providers: [
         { provide: Router, useValue: routerStub },
@@ -86,8 +108,29 @@ describe('BaseComponent', () => {
         } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    })
-    .compileComponents();
+    });
+
+    TestBed.overrideComponent(BaseComponent, {
+      set: {
+        imports: [
+          CommonModule,
+          MatToolbarModule,
+          MatDividerModule,
+          MatIconModule,
+          MatMenuModule,
+          MatButtonModule,
+          MatTooltipModule,
+          RouterOutletStub,
+          RouterLinkStub,
+          PfdaToolbarStub,
+          SessionExpirationStub,
+          LoadingStub,
+          SubstanceTextSearchStub
+        ]
+      }
+    });
+
+    await TestBed.compileComponents();
   });
 
   beforeEach(() => {

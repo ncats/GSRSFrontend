@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { SubstanceHierarchyComponent } from './substance-hierarchy.component';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { AuthService } from '@gsrs-core/auth';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SubstanceHierarchyComponent', () => {
   let component: SubstanceHierarchyComponent;
@@ -13,7 +14,7 @@ describe('SubstanceHierarchyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceHierarchyComponent ],
+      imports: [ RouterTestingModule, SubstanceHierarchyComponent ],
       providers: [
         { provide: SubstanceService, useValue: { getHierarchy: () => of([]) } },
         { provide: AuthService, useValue: { hasPrivilege: () => false } },

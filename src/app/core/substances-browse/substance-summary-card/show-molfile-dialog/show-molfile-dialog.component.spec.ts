@@ -12,8 +12,7 @@ describe('ShowMolfileDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ShowMolfileDialogComponent ],
+      imports: [ HttpClientTestingModule, ShowMolfileDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: () => {}, afterClosed: () => of(null), backdropClick: () => NEVER } },

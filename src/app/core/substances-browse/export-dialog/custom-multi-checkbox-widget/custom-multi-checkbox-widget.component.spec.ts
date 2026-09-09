@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { NEVER } from 'rxjs';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,8 +13,7 @@ describe('CustomMultiCheckboxWidgetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CustomMultiCheckboxWidgetComponent ],
-      imports: [ ReactiveFormsModule ],
+      imports: [ CustomMultiCheckboxWidgetComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: {} },

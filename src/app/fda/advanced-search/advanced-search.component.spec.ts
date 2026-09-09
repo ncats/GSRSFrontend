@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, EventEmitter, NO_ERRORS_SCHEMA, Output } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +18,35 @@ import { Title } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { StructureService } from '@gsrs-core/structure/structure.service';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-editor.module';
+import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
 import { AdvancedSearchComponent } from './advanced-search.component';
+
+// real <app-structure-editor>/<app-name-resolver> pull in DOM/HTTP machinery
+// (Ketcher/JSDraw canvas wiring, live SubstanceService calls) that doesn't
+// survive a headless test environment; stub their DOM surface instead of
+// patching the real components, same approach already used for these two in
+// structure-search.component.spec.ts.
+@Component({
+  selector: 'app-structure-editor',
+  template: '',
+  standalone: true
+})
+class StructureEditorStubComponent {
+  @Output() editorOnLoad = new EventEmitter<any>();
+  @Output() loadedMolfile = new EventEmitter<any>();
+}
+
+@Component({
+  selector: 'app-name-resolver',
+  template: '',
+  standalone: true
+})
+class NameResolverStubComponent {
+  @Output() structureSelected = new EventEmitter<string>();
+}
 
 describe('AdvancedSearchComponent', () => {
   let component: AdvancedSearchComponent;
@@ -26,8 +54,7 @@ describe('AdvancedSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ AdvancedSearchComponent ],
+      imports: [ HttpClientTestingModule, AdvancedSearchComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useValue: { navigate: () => Promise.resolve(true), events: of({}), url: '', routerState: { snapshot: { url: '' } }, createUrlTree: () => ({}), serializeUrl: () => '', routeReuseStrategy: { shouldReuseRoute: () => false } } },
@@ -49,7 +76,13 @@ describe('AdvancedSearchComponent', () => {
         { provide: Location, useValue: {} },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
         { provide: StructureService, useValue: {} },
+        { provide: AuthService, useValue: { hasPrivilege: () => false, getAuth: () => of(null) } },
+        { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
       ]
+    })
+    .overrideComponent(AdvancedSearchComponent, {
+      remove: { imports: [StructureEditorModule, NameResolverModule] },
+      add: { imports: [StructureEditorStubComponent, NameResolverStubComponent] }
     })
     .compileComponents();
   });

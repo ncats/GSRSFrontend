@@ -1,14 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { ConfigService } from '@gsrs-core/config';
+import { MatDividerModule } from '@angular/material/divider';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-substance-edit-import-dialog',
     templateUrl: './substance-edit-import-dialog.component.html',
     styleUrls: ['./substance-edit-import-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatDialogModule, MatDividerModule, MatTabsModule, FormsModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceEditImportDialogComponent implements OnInit {

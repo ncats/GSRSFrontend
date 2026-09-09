@@ -15,8 +15,7 @@ describe('SessionExpirationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SessionExpirationComponent ],
+      imports: [ HttpClientTestingModule, SessionExpirationComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },

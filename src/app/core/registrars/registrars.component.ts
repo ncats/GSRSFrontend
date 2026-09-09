@@ -1,4 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
@@ -10,7 +16,8 @@ import { take } from 'rxjs/operators';
     selector: 'app-registrars',
     templateUrl: './registrars.component.html',
     styleUrls: ['./registrars.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, RouterModule, MatCardModule, MatListModule, MatIconModule, MatDividerModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistrarsComponent implements OnInit {

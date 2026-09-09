@@ -15,7 +15,7 @@ describe('SubstanceFormReferencesCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceFormReferencesCardComponent ],
+      imports: [ SubstanceFormReferencesCardComponent ],
       providers: [
         // ngAfterViewInit subscribes to this directly, so it needs to actually emit.
         { provide: SubstanceFormReferencesService, useValue: { substanceReferences: of([]) } },

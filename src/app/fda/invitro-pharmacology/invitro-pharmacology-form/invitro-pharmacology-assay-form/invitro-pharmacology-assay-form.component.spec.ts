@@ -24,7 +24,7 @@ describe('InvitroPharmacologyAssayFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InvitroPharmacologyAssayFormComponent ],
+      imports: [ InvitroPharmacologyAssayFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { params: {}, queryParams: {} }, params: NEVER } },

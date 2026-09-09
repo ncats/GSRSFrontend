@@ -5,12 +5,24 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../../utils/utils.service';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { DomainReferencesComponent } from '@gsrs-core/substance-form/references/domain-references/domain-references.component';
 
 @Component({
     selector: 'app-code-form',
     templateUrl: './code-form.component.html',
     styleUrls: ['./code-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatTooltipModule, MatInputModule, AccessManagerComponent, AuditInfoComponent, CvInputComponent, DomainReferencesComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeFormComponent implements OnInit {

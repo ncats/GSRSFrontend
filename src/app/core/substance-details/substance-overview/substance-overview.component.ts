@@ -1,5 +1,18 @@
 
 import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
@@ -23,7 +36,23 @@ import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-di
     selector: 'app-substance-overview',
     templateUrl: './substance-overview.component.html',
     styleUrls: ['./substance-overview.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      ReactiveFormsModule,
+      MatChipsModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatMenuModule,
+      MatOptionModule,
+      MatSelectModule,
+      MatButtonModule,
+      MatTooltipModule,
+      ReferencesManagerModule,
+      SubstanceImageDirective,
+      SubstanceClassPipe
+    ]
 })
 export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit, AfterViewInit, OnDestroy {
   references: string[] = [];

@@ -3,7 +3,7 @@ import { ScrollToService } from './scroll-to.service';
 
 @Directive({
     selector: '[appScrollToTarget]',
-    standalone: false
+    standalone: true
 })
 export class ScrollToTargetDirective implements AfterViewInit, OnDestroy {
 

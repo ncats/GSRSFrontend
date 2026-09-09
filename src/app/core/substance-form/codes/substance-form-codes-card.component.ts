@@ -7,12 +7,24 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import { Subscription } from 'rxjs';
 import { SubstanceFormCodesService } from './substance-form-codes.service';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CodeFormComponent } from './code-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-codes-card',
     templateUrl: './substance-form-codes-card.component.html',
     styleUrls: ['./substance-form-codes-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatPaginatorModule, MatButtonModule, MatInputModule, MatTooltipModule, CodeFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredList<SubstanceCode>

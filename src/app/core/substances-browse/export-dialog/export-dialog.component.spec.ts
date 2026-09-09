@@ -12,8 +12,7 @@ describe('ExportDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ExportDialogComponent ],
+      imports: [ HttpClientTestingModule, ExportDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: () => {}, afterClosed: () => of(null) } },

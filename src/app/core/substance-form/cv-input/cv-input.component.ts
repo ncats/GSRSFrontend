@@ -10,6 +10,13 @@ import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
 import {AuthService} from '@gsrs-core/auth';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { ConfigService } from '@gsrs-core/config';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
@@ -19,7 +26,16 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-cv-input',
     templateUrl: './cv-input.component.html',
     styleUrls: ['./cv-input.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatButtonModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatInputModule,
+      MatTooltipModule
+    ]
 })
 export class CvInputComponent implements OnInit, OnDestroy {
   @Input() vocabulary?: any;

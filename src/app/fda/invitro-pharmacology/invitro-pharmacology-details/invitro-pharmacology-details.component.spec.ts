@@ -21,7 +21,7 @@ describe('InvitroPharmacologyDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InvitroPharmacologyDetailsComponent ],
+      imports: [ InvitroPharmacologyDetailsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { params: {}, queryParams: {} } } },

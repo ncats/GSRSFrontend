@@ -9,8 +9,7 @@ describe('SequenceAlignmentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SequenceAlignmentComponent ],
+      imports: [ HttpClientTestingModule, SequenceAlignmentComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();

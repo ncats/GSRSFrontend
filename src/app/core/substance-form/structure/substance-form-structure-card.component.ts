@@ -23,12 +23,22 @@ import { ConfigService } from '@gsrs-core/config';
 import { MatTableDataSource } from '@angular/material/table';
 import { NitrosamineDisplayDialogComponent } from './nitrosamine-display-dialog/nitrosamine-display-dialog.component';
 import { adjustFormulaForIsotopicHydrogen } from '@gsrs-core/structure-editor/molfile-isotope.util';
+import { CommonModule } from '@angular/common';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-editor.module';
+import { StructureFormComponent } from './structure-form.component';
 
 @Component({
     selector: 'app-substance-form-structure-card',
     templateUrl: './substance-form-structure-card.component.html',
     styleUrls: ['./substance-form-structure-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatExpansionModule, MatIconModule, MatMenuModule, MatButtonModule, MatTableModule, MatTooltipModule, StructureEditorModule, StructureFormComponent]
 })
 export class SubstanceFormStructureCardComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
   structureEditor: Editor;

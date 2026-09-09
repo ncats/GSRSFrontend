@@ -9,12 +9,20 @@ import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base
 import { Environment } from 'src/environments/environment.model';
 import { ConfigService } from '@gsrs-core/config';
 import { Auth, AuthService } from '@gsrs-core/auth';
+import { CommonModule } from '@angular/common';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
     selector: 'app-clinical-trial-europe-details',
     templateUrl: './clinical-trial-europe-details.component.html',
     styleUrls: ['./clinical-trial-europe-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      MatTabsModule,
+      MatCardModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

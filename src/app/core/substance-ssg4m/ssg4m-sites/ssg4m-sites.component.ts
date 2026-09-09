@@ -22,12 +22,30 @@ import { SubstanceFormSsg4mSitesService } from './substance-form-ssg4m-sites.ser
 import { SubstanceFormSsg4mStagesService } from '../ssg4m-stages/substance-form-ssg4m-stages.service';
 import { SpecifiedSubstanceG4mSite } from '@gsrs-core/substance/substance.model';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { Ssg4mStagesFormComponent } from '../ssg4m-stages/ssg4m-stages-form.component';
 
 @Component({
     selector: 'app-ssg4m-sites',
     templateUrl: './ssg4m-sites.component.html',
     styleUrls: ['./ssg4m-sites.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatButtonModule,
+      MatTooltipModule,
+      MatIconModule,
+      MatFormFieldModule,
+      MatInputModule,
+      CvInputComponent,
+      Ssg4mStagesFormComponent
+    ]
 })
 export class Ssg4mSitesComponent implements OnInit, OnDestroy {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();

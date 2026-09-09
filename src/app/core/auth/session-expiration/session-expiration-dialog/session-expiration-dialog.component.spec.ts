@@ -15,7 +15,7 @@ describe('SessionExpirationDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SessionExpirationDialogComponent ],
+      imports: [ SessionExpirationDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         // constructor reads data.sessionExpirationWarning/sessionExpiringAt directly.

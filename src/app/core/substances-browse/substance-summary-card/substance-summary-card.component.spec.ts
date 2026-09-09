@@ -9,7 +9,7 @@ import { AuthService } from '@gsrs-core/auth';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { StructureService } from '@gsrs-core/structure';
 import { ComponentFactoryResolver } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfigService } from '@gsrs-core/config';
@@ -25,17 +25,17 @@ describe('SubstanceSummaryCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, MatMenuModule ],
-      declarations: [ SubstanceSummaryCardComponent, CardDynamicSectionDirective, FacetDisplayPipe ],
+      imports: [ HttpClientTestingModule, MatMenuModule, SubstanceSummaryCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },
+        { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null, getStructureImgUrl: () => '' } },
         { provide: GoogleAnalyticsService, useValue: { sendPageView: () => null, sendEvent: () => null, sendException: () => null } },
         { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
-        { provide: SubstanceService, useValue: {} },
+        { provide: SubstanceService, useValue: { getHierarchy: () => of([]) } },
         { provide: StructureService, useValue: {} },
         { provide: ComponentFactoryResolver, useValue: {} },
         { provide: Router, useValue: { navigate: () => Promise.resolve(true), events: of({}), url: '', routerState: { snapshot: { url: '' } }, createUrlTree: () => ({}), serializeUrl: () => '', routeReuseStrategy: { shouldReuseRoute: () => false } } },
+        { provide: ActivatedRoute, useValue: { snapshot: { params: {}, queryParams: {} } } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
         { provide: ConfigService, useValue: { configData: {}, environment: {}, afterLoad: () => Promise.resolve({}) } },

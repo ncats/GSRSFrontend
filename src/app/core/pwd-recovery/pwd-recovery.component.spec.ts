@@ -11,7 +11,7 @@ describe('PwdRecoveryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PwdRecoveryComponent ],
+      imports: [ PwdRecoveryComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialogRef, useValue: { close: vi.fn() } }

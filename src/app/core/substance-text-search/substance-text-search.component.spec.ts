@@ -52,10 +52,10 @@ describe('TopSearchComponent', () => {
         ReactiveFormsModule,
         FormsModule,
         NoopAnimationsModule,
-        RouterTestingModule
+        RouterTestingModule,
+        SubstanceTextSearchComponent
       ],
       declarations: [
-        SubstanceTextSearchComponent,
         MatIconMock
       ],
       schemas: [NO_ERRORS_SCHEMA],

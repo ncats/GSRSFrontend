@@ -13,7 +13,7 @@ describe('UserDownloadsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserDownloadsComponent ],
+      imports: [ UserDownloadsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } },

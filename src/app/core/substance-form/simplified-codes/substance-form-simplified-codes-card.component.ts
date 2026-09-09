@@ -6,12 +6,21 @@ import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import {combineLatest, first, Subscription} from 'rxjs';
 import { SubstanceFormCodesService } from '../codes/substance-form-codes.service';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { SimplifiedCodeFormComponent } from './simplified-code-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-simplified-substance-form-codes-card',
     templateUrl: './substance-form-simplified-codes-card.component.html',
     styleUrls: ['./substance-form-simplified-codes-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatPaginatorModule, MatInputModule, SimplifiedCodeFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormSimplifiedCodesCardComponent extends SubstanceCardBaseFilteredList<SubstanceCode>

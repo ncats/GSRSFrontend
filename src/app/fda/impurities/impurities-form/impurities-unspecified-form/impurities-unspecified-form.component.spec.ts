@@ -15,8 +15,7 @@ describe('ImpuritiesUnspecifiedFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ImpuritiesUnspecifiedFormComponent ],
+      imports: [ HttpClientTestingModule, ImpuritiesUnspecifiedFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ImpuritiesService, useValue: {} },

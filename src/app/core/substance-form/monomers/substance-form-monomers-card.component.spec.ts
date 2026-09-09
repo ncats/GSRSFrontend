@@ -13,8 +13,7 @@ describe('SubstanceFormMonomersCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatIconModule ],
-      declarations: [ SubstanceFormMonomersCardComponent ],
+      imports: [ MatIconModule, SubstanceFormMonomersCardComponent ],
       providers: [
         // ngAfterViewInit subscribes to this directly, so it needs to actually emit.
         { provide: SubstanceFormMonomersService, useValue: { substanceMonomers: of([]) } },

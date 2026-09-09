@@ -15,7 +15,7 @@ describe('SubstanceDraftsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceDraftsComponent ],
+      imports: [ SubstanceDraftsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { cleanSubstance: () => ({ uuid: 'test-uuid', names: [] }) } },

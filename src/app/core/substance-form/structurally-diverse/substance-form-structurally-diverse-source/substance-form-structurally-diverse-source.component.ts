@@ -6,12 +6,18 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import { SubstanceFormBase } from '../../base-classes/substance-form-base';
 import { SubstanceFormStructurallyDiverseService } from '../substance-form-structurally-diverse.service';
+import { CommonModule } from '@angular/common';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-substance-form-structurally-diverse-source',
     templateUrl: './substance-form-structurally-diverse-source.component.html',
     styleUrls: ['./substance-form-structurally-diverse-source.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatRadioModule, MatButtonModule, AuditInfoComponent, CvInputComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceFormBase

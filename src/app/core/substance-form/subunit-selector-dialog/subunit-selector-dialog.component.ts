@@ -1,12 +1,15 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MatDialogModule, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import cloneDeep from 'lodash/cloneDeep';
+import {MatButtonModule} from '@angular/material/button';
+import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 
 @Component({
     selector: 'app-subunit-selector-dialog',
     templateUrl: './subunit-selector-dialog.component.html',
     styleUrls: ['./subunit-selector-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, SubunitSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {

@@ -2,13 +2,18 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, 
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { AuthService } from '@gsrs-core/auth';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSortModule } from '@angular/material/sort';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-previous-references',
     templateUrl: './previous-references.component.html',
     styleUrls: ['./previous-references.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatTableModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviousReferencesComponent implements OnInit {

@@ -12,8 +12,7 @@ describe('AccessManagerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, MatMenuModule ],
-      declarations: [ AccessManagerComponent ],
+      imports: [ HttpClientTestingModule, MatMenuModule, AccessManagerComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: {} },

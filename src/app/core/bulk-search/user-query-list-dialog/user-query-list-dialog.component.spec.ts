@@ -18,7 +18,7 @@ describe('UserQueryListDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserQueryListDialogComponent ],
+      imports: [ UserQueryListDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: BulkSearchService, useValue: { getBulkSearchLists: () => NEVER, listEmitter: new Subject<any>() } },

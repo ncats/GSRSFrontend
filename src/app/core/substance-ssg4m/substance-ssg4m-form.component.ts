@@ -57,12 +57,19 @@ import { environment } from "@gsrs-core/../../environments/environment";
 import { Ssg4mSyntheticPathway } from "./model/substance-ssg4m.model";
 import { toSvg } from "html-to-image";
 import jp from 'jsonpath';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: "app-substance-ssg4m-form",
   templateUrl: "./substance-ssg4m-form.component.html",
   styleUrls: ["./substance-ssg4m-form.component.scss"],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, MatExpansionModule]
 })
 export class SubstanceSsg4ManufactureFormComponent
   implements OnInit, AfterViewInit, OnDestroy {

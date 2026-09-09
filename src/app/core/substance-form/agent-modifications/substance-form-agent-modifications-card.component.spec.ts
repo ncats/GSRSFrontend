@@ -14,7 +14,7 @@ describe('SubstanceFormAgentModificationsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceFormAgentModificationsCardComponent ],
+      imports: [ SubstanceFormAgentModificationsCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         // ngAfterViewInit subscribes to substanceAgentModifications directly.

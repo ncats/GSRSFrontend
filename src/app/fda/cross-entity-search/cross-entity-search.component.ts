@@ -3,9 +3,17 @@ import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/route
 import { Location } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import lodashCloneDeep from 'lodash/cloneDeep';
+import { RouterModule } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
 
 /* GSRS Import */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -28,7 +36,19 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
     selector: 'app-cross-entity-search',
     templateUrl: './cross-entity-search.component.html',
     styleUrls: ['./cross-entity-search.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      RouterModule,
+      ReactiveFormsModule,
+      MatDialogModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatOptionModule,
+      MatSelectModule,
+      MatButtonModule,
+      MatTooltipModule,
+      FacetsManagerComponent
+    ]
 })
 export class CrossEntitySearchComponent implements OnInit, OnDestroy {
 

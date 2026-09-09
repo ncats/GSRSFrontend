@@ -7,12 +7,25 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import { Subscription } from 'rxjs';
 import { SubstanceFormNamesService } from './substance-form-names.service';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NameFormComponent } from './name-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-names-card',
     templateUrl: './substance-form-names-card.component.html',
     styleUrls: ['./substance-form-names-card.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatInputModule, MatTooltipModule, NameFormComponent, ScrollToTargetDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormNamesCardComponent

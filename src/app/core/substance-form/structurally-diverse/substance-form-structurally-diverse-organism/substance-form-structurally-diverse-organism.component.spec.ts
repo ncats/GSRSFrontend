@@ -13,8 +13,7 @@ describe('SubstanceFormStructurallyDiverseOrganismComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormStructurallyDiverseOrganismComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormStructurallyDiverseOrganismComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormStructurallyDiverseService, useValue: { substanceStructurallyDiverse: NEVER } },

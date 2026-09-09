@@ -16,7 +16,7 @@ describe('ImportManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImportManagementComponent ],
+      imports: [ ImportManagementComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AdminService, useValue: { getAdapters: () => NEVER } },

@@ -15,8 +15,7 @@ describe('SubstanceFormNamesCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceFormNamesCardComponent ],
+      imports: [ HttpClientTestingModule, SubstanceFormNamesCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormNamesService, useValue: { substanceNames: NEVER } },

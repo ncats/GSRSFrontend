@@ -16,8 +16,7 @@ describe('SubstanceFormDisulfideLinksCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatIconModule ],
-      declarations: [ SubstanceFormDisulfideLinksCardComponent ],
+      imports: [ MatIconModule, SubstanceFormDisulfideLinksCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         // ngAfterViewInit subscribes to these observables directly, so the stubs need

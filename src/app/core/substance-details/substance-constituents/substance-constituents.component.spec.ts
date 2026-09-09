@@ -7,6 +7,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceConstituentsComponent } from './substance-constituents.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SubstanceConstituentsComponent', () => {
   let component: SubstanceConstituentsComponent;
@@ -14,8 +15,7 @@ describe('SubstanceConstituentsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceConstituentsComponent ],
+      imports: [ HttpClientTestingModule, RouterTestingModule, SubstanceConstituentsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },

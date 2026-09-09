@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { vi } from 'vitest';
 
@@ -11,8 +10,7 @@ describe('StructureExportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StructureExportComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ],
+      imports: [ StructureExportComponent ],
       providers: [
         { provide: MatDialogRef, useValue: { close: vi.fn() } },
         { provide: MAT_DIALOG_DATA, useValue: { molfile: '', smiles: '', type: '' } }

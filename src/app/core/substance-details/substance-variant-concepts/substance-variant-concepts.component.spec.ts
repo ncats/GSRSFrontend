@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceVariantConceptsComponent } from './substance-variant-concepts.component';
-import { RouterLinkDirectiveMock } from '../../../../testing/router-link-mock.directive';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { UtilsService } from '../../utils/utils.service';
@@ -18,11 +18,9 @@ describe('SubstanceVariantConceptsComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
-      ],
-      declarations: [
-        SubstanceVariantConceptsComponent,
-        RouterLinkDirectiveMock
+        HttpClientTestingModule,
+        RouterTestingModule,
+        SubstanceVariantConceptsComponent
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy },

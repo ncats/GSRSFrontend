@@ -17,12 +17,32 @@ import { SpecifiedSubstanceG4mProcess, SubstanceRelated } from '../../substance/
 import { SubstanceFormSsg4mProcessService } from './substance-form-ssg4m-process.service';
 import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ssg4m-sites.service';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { Ssg4mSitesComponent } from '../ssg4m-sites/ssg4m-sites.component';
 
 @Component({
     selector: 'app-ssg4m-process-form',
     templateUrl: './ssg4m-process-form.component.html',
     styleUrls: ['./ssg4m-process-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatButtonModule,
+      MatTooltipModule,
+      MatIconModule,
+      MatFormFieldModule,
+      MatInputModule,
+      CvInputComponent,
+      Ssg4mSitesComponent
+    ]
 })
 export class Ssg4mProcessFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();

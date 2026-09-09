@@ -13,12 +13,36 @@ import { SubstanceRelated, SubstanceSummary, SubstanceProperty, SubstanceParamet
 import { PropertyParameterDialogComponent } from '@gsrs-core/substance-form/property-parameter-dialog/property-parameter-dialog.component';
 import { SpecifiedSubstanceG4mCriticalParameter, SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatListModule } from '@angular/material/list';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
   selector: 'app-ssg4m-critical-parameter-form',
   templateUrl: './ssg4m-critical-parameter-form.component.html',
   styleUrls: ['./ssg4m-critical-parameter-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatListModule,
+    CvInputComponent,
+    SubstanceSelectorComponent
+  ]
 })
 export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
 

@@ -7,12 +7,22 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormBase } from '../../base-classes/substance-form-base';
 import { SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormStructurallyDiverseService } from '../substance-form-structurally-diverse.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
+import { TagSelectorComponent } from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
 
 @Component({
     selector: 'app-substance-form-structurally-diverse-organism',
     templateUrl: './substance-form-structurally-diverse-organism.component.html',
     styleUrls: ['./substance-form-structurally-diverse-organism.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatDividerModule, MatFormFieldModule, MatInputModule, AuditInfoComponent, CvInputComponent, SubstanceSelectorComponent, TagSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructurallyDiverseOrganismComponent extends SubstanceFormBase

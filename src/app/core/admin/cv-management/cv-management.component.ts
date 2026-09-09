@@ -6,14 +6,22 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { CvTermDialogComponent } from '@gsrs-core/admin/cv-management/cv-term-dialog/cv-term-dialog.component';
 import { UtilsService } from '@gsrs-core/utils';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DataDictionaryService } from '@gsrs-core/utils/data-dictionary.service';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 @Component({
     selector: 'app-cv-management',
     templateUrl: './cv-management.component.html',
     styleUrls: ['./cv-management.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, MatButtonModule, MatTableModule, MatSortModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvManagementComponent implements OnInit {

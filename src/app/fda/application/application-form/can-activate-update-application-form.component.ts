@@ -3,7 +3,9 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Navig
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CanActivateUpdateApplicationFormComponent implements CanActivate {
 
     constructor(

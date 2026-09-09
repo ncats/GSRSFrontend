@@ -6,8 +6,9 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -18,12 +19,28 @@ import { AuthService } from '../../core/auth/auth.service';
 import { BulkSearchService } from './service/bulk-search.service';
 import { BulkQuery } from './bulk-query.model';
 import { BulkSearch } from './bulk-search.model';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
   @Component({
     selector: 'app-bulk-query',
     templateUrl: './bulk-query.component.html',
     styleUrls: ['./bulk-query.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      ReactiveFormsModule,
+      MatCardModule,
+      MatRadioModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatButtonModule,
+      TextInputFormComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

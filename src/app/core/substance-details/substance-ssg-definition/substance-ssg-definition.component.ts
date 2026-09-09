@@ -5,12 +5,17 @@ import { MatDialog} from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subject } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
 
 @Component({
     selector: 'app-substance-ssg-definition',
     templateUrl: './substance-ssg-definition.component.html',
     styleUrls: ['./substance-ssg-definition.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDialogModule, MatButtonModule, ReferencesManagerModule]
 })
 
 export class SubstanceSsgDefinitionComponent extends SubstanceCardBase implements OnInit {

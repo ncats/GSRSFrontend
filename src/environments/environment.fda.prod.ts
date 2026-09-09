@@ -10,3 +10,5 @@ environment.appId = 'fda';
 environment.isAnalyticsPrivate = true;
 
 export { FdaModule as EnvironmentModule } from '../app/fda/fda.module';
+
+export { FDA_ROUTES as EXTRA_ROUTES } from '../app/fda/fda.routes';

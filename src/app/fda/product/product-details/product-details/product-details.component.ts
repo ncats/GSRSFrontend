@@ -15,12 +15,30 @@ import { ProductDetailsBaseComponent } from '../product-details-base.component';
 import { GeneralService } from '../../../service/general.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ProductService } from '../../service/product.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-product-details',
     templateUrl: './product-details.component.html',
     styleUrls: ['./product-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatExpansionModule,
+      MatIconModule,
+      MatTabsModule,
+      MatTooltipModule,
+      MatButtonModule
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit {

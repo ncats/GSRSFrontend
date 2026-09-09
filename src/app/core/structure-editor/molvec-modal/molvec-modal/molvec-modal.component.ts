@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, OnInit } from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { DragDropPasteDirective } from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
 
 @Component({
     selector: 'app-molvec-modal',
     templateUrl: './molvec-modal.component.html',
     styleUrls: ['./molvec-modal.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, DragDropPasteDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MolvecModalComponent implements OnInit {

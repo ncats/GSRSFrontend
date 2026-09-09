@@ -40,8 +40,7 @@ describe('DownloadMonitorComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ DownloadMonitorComponent ],
+      imports: [ HttpClientTestingModule, DownloadMonitorComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AuthService, useValue: authService },

@@ -18,8 +18,7 @@ describe('ApplicationDarrtsDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ApplicationDarrtsDetailsComponent ],
+      imports: [ HttpClientTestingModule, ApplicationDarrtsDetailsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ApplicationService, useValue: {} },

@@ -9,6 +9,12 @@ import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.c
 import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
 import {AuthService} from '@gsrs-core/auth';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
@@ -18,7 +24,8 @@ import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragme
     selector: 'app-cv-import',
     templateUrl: './cv-import.component.html',
     styleUrls: ['./cv-import.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvImportComponent implements OnInit, OnDestroy {

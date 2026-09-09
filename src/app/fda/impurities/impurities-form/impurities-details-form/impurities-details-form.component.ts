@@ -7,12 +7,32 @@ import { LoadingService } from '@gsrs-core/loading';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { Impurities, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-impurities-details-form',
     templateUrl: './impurities-details-form.component.html',
     styleUrls: ['./impurities-details-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTooltipModule,
+      MatCardModule,
+      CvInputComponent,
+      SubstanceSelectorComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesDetailsFormComponent implements OnInit {

@@ -1,11 +1,16 @@
 import { ChangeDetectionStrategy, Component, OnInit, Inject, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-text-input-form',
     templateUrl: './text-input-form.component.html',
     styleUrls: ['./text-input-form.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

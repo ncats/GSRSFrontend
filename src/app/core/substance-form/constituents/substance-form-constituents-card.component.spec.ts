@@ -14,7 +14,7 @@ describe('SubstanceFormConstituentsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceFormConstituentsCardComponent ],
+      imports: [ SubstanceFormConstituentsCardComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         // ngAfterViewInit subscribes to substanceConstituents directly.

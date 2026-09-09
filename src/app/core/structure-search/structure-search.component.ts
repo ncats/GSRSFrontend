@@ -8,6 +8,13 @@ import {
   ViewChild,
   OnDestroy,
 } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatCardModule } from "@angular/material/card";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
+import { MatOptionModule } from "@angular/material/core";
+import { MatSliderModule } from "@angular/material/slider";
+import { MatButtonModule } from "@angular/material/button";
 import { NavigationExtras, Router, ActivatedRoute } from "@angular/router";
 import { InterpretStructureResponse } from "../structure/structure-post-response.model";
 import { MatDialog } from "@angular/material/dialog";
@@ -22,13 +29,25 @@ import { OverlayContainer } from "@angular/cdk/overlay";
 import { StructureExportComponent } from "@gsrs-core/structure/structure-export/structure-export.component";
 import { Title } from "@angular/platform-browser";
 import { Subscription, take } from "rxjs";
-import { StructureEditorComponent } from "@gsrs-core/structure-editor";
+import { StructureEditorComponent, StructureEditorModule } from "@gsrs-core/structure-editor";
+import { NameResolverModule } from "../name-resolver/name-resolver.module";
 
 @Component({
   selector: "app-structure-search",
   templateUrl: "./structure-search.component.html",
   styleUrls: ["./structure-search.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatSliderModule,
+    MatButtonModule,
+    StructureEditorModule,
+    NameResolverModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StructureSearchComponent

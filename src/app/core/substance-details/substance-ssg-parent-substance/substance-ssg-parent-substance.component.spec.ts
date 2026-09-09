@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
@@ -13,8 +14,7 @@ describe('SubstanceSsgParentSubstanceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceSsgParentSubstanceComponent ],
+      imports: [ HttpClientTestingModule, RouterTestingModule, SubstanceSsgParentSubstanceComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },

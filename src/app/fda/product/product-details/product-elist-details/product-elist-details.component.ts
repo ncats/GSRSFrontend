@@ -16,12 +16,15 @@ import { ProductDetailsBaseComponent } from '../product-details-base.component';
 import { ConfigService } from '@gsrs-core/config';
 import { GeneralService } from '../../../service/general.service';
 import { ProductElist } from '../../model/productelist/productelist.model';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
     selector: 'app-product-elist-details',
     templateUrl: './product-elist-details.component.html',
     styleUrls: ['./product-elist-details.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [RouterModule, MatCardModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

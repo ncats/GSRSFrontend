@@ -11,8 +11,7 @@ describe('ScheduledJobsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ScheduledJobsComponent ],
+      imports: [ HttpClientTestingModule, ScheduledJobsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AdminService, useValue: {} },

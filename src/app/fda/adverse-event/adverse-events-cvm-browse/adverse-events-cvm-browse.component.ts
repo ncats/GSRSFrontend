@@ -26,12 +26,46 @@ import { AdverseEventService } from '../service/adverseevent.service';
 import { GeneralService } from '../../service/general.service';
 import { AdverseEventCvm } from '../model/adverse-event.model';
 import { adverseEventCvmSearchSortValues } from './adverse-events-cvm-search-sort-values';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
+import { AdverseEventTextSearchComponent } from '../adverse-event-text-search/adverse-event-text-search.component';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
 
 @Component({
     selector: 'app-adverse-events-cvm-browse',
     templateUrl: './adverse-events-cvm-browse.component.html',
     styleUrls: ['./adverse-events-cvm-browse.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatSidenavModule,
+      MatIconModule,
+      MatMenuModule,
+      MatButtonModule,
+      MatButtonToggleModule,
+      MatTooltipModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatPaginatorModule,
+      MatTableModule,
+      MatSortModule,
+      MatCardModule,
+      AdverseEventTextSearchComponent,
+      FacetsManagerComponent
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

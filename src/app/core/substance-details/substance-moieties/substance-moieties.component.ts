@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail, SubstanceMoiety} from '../../substance/substance.model';
 import { SafeUrl } from '@angular/platform-browser';
@@ -13,7 +15,8 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-substance-moieties',
     templateUrl: './substance-moieties.component.html',
     styleUrls: ['./substance-moieties.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, SubstanceImageDirective]
 })
 export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnInit {
   moieties: Array<SubstanceMoiety> = [];

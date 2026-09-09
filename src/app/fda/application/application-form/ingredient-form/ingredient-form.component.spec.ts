@@ -16,8 +16,7 @@ describe('IngredientFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ IngredientFormComponent ],
+      imports: [ HttpClientTestingModule, IngredientFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), getUser: () => null, logout: () => {} } },

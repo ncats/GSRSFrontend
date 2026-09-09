@@ -9,6 +9,9 @@ import { SubstanceFormReferencesService } from './substance-form-references.serv
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormService } from '../substance-form.service';
+import { DataDictionaryService } from '@gsrs-core/utils/data-dictionary.service';
+import { AuthService } from '@gsrs-core/auth';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { ReferenceFormComponent } from './reference-form.component';
 
 describe('ReferenceFormComponent', () => {
@@ -17,8 +20,7 @@ describe('ReferenceFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ReferenceFormComponent ],
+      imports: [ HttpClientTestingModule, ReferenceFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of(new Proxy({}, { get: () => ({ list: [], dictionary: {} }) })), getVocabularies: () => of({ content: [] }) } },
@@ -28,6 +30,11 @@ describe('ReferenceFormComponent', () => {
         { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
         { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
         { provide: SubstanceFormService, useValue: {} },
+        // also injected by the real, standalone app-cv-input/app-previous-references/app-tag-selector
+        // children this component's template now renders for real.
+        { provide: DataDictionaryService, useValue: { getDictionaryRow: () => ({ fieldName: 'test', CVDomain: 'test' }) } },
+        { provide: AuthService, useValue: { hasPrivilege: () => false, getAuth: () => of(null), getUser: () => null } },
+        { provide: SubstanceService, useValue: { getSubstanceReferences: () => of({ total: 0, content: [] }) } },
       ]
     })
     .compileComponents();

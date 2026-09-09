@@ -12,7 +12,26 @@ import {
   QueryList,
   ChangeDetectorRef
 } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, NavigationExtras, Params, RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceSummary } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
@@ -39,6 +58,7 @@ import { NarrowSearchSuggestion, PagingResponse } from '@gsrs-core/utils';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
+import { FacetsManagerComponent } from '../facets-manager/facets-manager.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
@@ -54,12 +74,51 @@ import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { I } from '@angular/cdk/keycodes';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
+import { SubstanceSummaryCardComponent } from './substance-summary-card/substance-summary-card.component';
+import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
+import { CrossEntitySearchComponent } from '../../fda/cross-entity-search/cross-entity-search.component';
+import { TakePipe } from '../utils/take.pipe';
+import { FacetDisplayPipe } from '../facets-manager/facet-display.pipe';
+import { SubstanceImageDirective } from '../substance/substance-image.directive';
+import { TrackLinkEventDirective } from '../google-analytics/track-link-event/track-link-event.directive';
 
 @Component({
     selector: 'app-substances-browse',
     templateUrl: './substances-browse.component.html',
     styleUrls: ['./substances-browse.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      ReactiveFormsModule,
+      RouterModule,
+      MatButtonModule,
+      MatButtonToggleModule,
+      MatCardModule,
+      MatChipsModule,
+      MatDialogModule,
+      MatExpansionModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatMenuModule,
+      MatOptionModule,
+      MatPaginatorModule,
+      MatProgressSpinnerModule,
+      MatSelectModule,
+      MatSidenavModule,
+      MatTableModule,
+      MatTooltipModule,
+      SubstanceSummaryCardComponent,
+      BulkSearchResultsSummaryComponent,
+      CrossEntitySearchComponent,
+      FacetsManagerComponent,
+      BrowseHeaderDynamicSectionDirective,
+      SubstanceImageDirective,
+      TrackLinkEventDirective,
+      TakePipe,
+      FacetDisplayPipe
+    ]
 })
 export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;

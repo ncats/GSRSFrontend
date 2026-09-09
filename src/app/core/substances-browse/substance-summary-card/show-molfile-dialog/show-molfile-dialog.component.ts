@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { StructureService } from '@gsrs-core/structure';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -7,7 +9,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
     selector: 'app-show-molfile-dialog',
     templateUrl: './show-molfile-dialog.component.html',
     styleUrls: ['./show-molfile-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [FormsModule, MatDialogModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShowMolfileDialogComponent {

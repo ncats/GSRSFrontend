@@ -9,8 +9,7 @@ describe('SubstanceAuditInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ SubstanceAuditInfoComponent ],
+      imports: [ HttpClientTestingModule, SubstanceAuditInfoComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();

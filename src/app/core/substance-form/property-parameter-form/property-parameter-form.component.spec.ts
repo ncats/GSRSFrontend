@@ -11,8 +11,7 @@ describe('PropertyParameterFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ PropertyParameterFormComponent ],
+      imports: [ HttpClientTestingModule, PropertyParameterFormComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of(new Proxy({}, { get: () => ({ list: [], dictionary: {} }) })), getVocabularies: () => of({ content: [] }) } },
@@ -24,7 +23,7 @@ describe('PropertyParameterFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PropertyParameterFormComponent);
     component = fixture.componentInstance;
-    component.parameter = {} as any;
+    component.parameter = { value: {} } as any;
     fixture.detectChanges();
   });
 

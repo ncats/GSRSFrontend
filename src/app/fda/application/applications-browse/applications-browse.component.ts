@@ -30,12 +30,59 @@ import { StructureImageModalComponent, StructureService } from '@gsrs-core/struc
 import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
 
 import { Application } from '../model/application.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CrossEntitySearchComponent } from '../../cross-entity-search/cross-entity-search.component';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
+import { ApplicationTextSearchComponent } from '../application-text-search/application-text-search.component';
 
 @Component({
     selector: 'app-applications-browse',
     templateUrl: './applications-browse.component.html',
     styleUrls: ['./applications-browse.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatSidenavModule,
+      MatIconModule,
+      MatExpansionModule,
+      MatMenuModule,
+      MatButtonModule,
+      MatButtonToggleModule,
+      MatTooltipModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatPaginatorModule,
+      MatInputModule,
+      MatTableModule,
+      MatSortModule,
+      MatCardModule,
+      MatBadgeModule,
+      CrossEntitySearchComponent,
+      FacetsManagerComponent,
+      BulkSearchResultsSummaryComponent,
+      ApplicationTextSearchComponent
+    ]
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;

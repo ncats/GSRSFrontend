@@ -1,17 +1,24 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras, RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfigService } from '../../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { AuthService } from '../../auth/auth.service';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { concatMap, Subscription } from 'rxjs';
 import { NavItem } from '@gsrs-core/config';
+import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
 
 @Component({
     selector: 'app-pfda-toolbar',
     templateUrl: './pfda-toolbar.component.html',
     styleUrls: ['./pfda-toolbar.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [RouterModule, MatToolbarModule, MatDividerModule, MatIconModule, MatMenuModule, MatTooltipModule, SubstanceTextSearchComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PfdaToolbarComponent implements OnInit, OnDestroy {

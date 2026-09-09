@@ -8,7 +8,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconMock } from '../../../../testing/mat-icon-mock.component';
 
 describe('SubstanceCodesComponent', () => {
   let component: SubstanceCodesComponent;
@@ -25,11 +24,8 @@ describe('SubstanceCodesComponent', () => {
         FormsModule,
         MatTreeModule,
         RouterTestingModule,
-        NoopAnimationsModule
-      ],
-      declarations: [
-        SubstanceCodesComponent,
-        MatIconMock
+        NoopAnimationsModule,
+        SubstanceCodesComponent
       ]
     })
     .compileComponents();

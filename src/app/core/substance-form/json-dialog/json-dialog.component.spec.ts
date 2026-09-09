@@ -12,8 +12,7 @@ describe('JsonDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ JsonDialogComponent ],
+      imports: [ HttpClientTestingModule, JsonDialogComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: SubstanceFormService, useValue: { cleanSubstance: () => ({}) } },

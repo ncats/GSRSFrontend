@@ -14,8 +14,7 @@ describe('AdverseEventTextSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AdverseEventTextSearchComponent ],
-      imports: [ MatAutocompleteModule ],
+      imports: [ MatAutocompleteModule, AdverseEventTextSearchComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AdverseEventService, useValue: {} },

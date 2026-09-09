@@ -1,12 +1,14 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MatDialogModule, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {SubstanceAmount} from '@gsrs-core/substance';
+import {AmountFormComponent} from '@gsrs-core/substance-form/amount-form/amount-form.component';
 
 @Component({
     selector: 'app-amount-form-dialog',
     templateUrl: './amount-form-dialog.component.html',
     styleUrls: ['./amount-form-dialog.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatDialogModule, AmountFormComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AmountFormDialogComponent implements OnInit {

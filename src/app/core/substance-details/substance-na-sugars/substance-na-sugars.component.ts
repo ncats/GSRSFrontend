@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import {Sugar, Site, SubstanceDetail} from '../../substance/substance.model';
 import {SubstanceCardBase} from '../substance-card-base';
 import {Subject, Subscription} from 'rxjs';
@@ -8,7 +9,8 @@ import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
     selector: 'app-substance-na-sugars',
     templateUrl: './substance-na-sugars.component.html',
     styleUrls: ['./substance-na-sugars.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatTableModule]
 })
 export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnInit, OnDestroy {
   sugars: Array<Sugar>;

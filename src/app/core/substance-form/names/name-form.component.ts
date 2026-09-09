@@ -23,12 +23,29 @@ import { MatDialog } from "@angular/material/dialog";
 import { SubstanceFormService } from "@gsrs-core/substance-form/substance-form.service";
 import { SubstanceFormNamesService } from "@gsrs-core/substance-form/names/substance-form-names.service";
 import { AuthService } from "@gsrs-core/auth";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatInputModule } from "@angular/material/input";
+import { AccessManagerComponent } from "@gsrs-core/substance-form/access-manager/access-manager.component";
+import { AuditInfoComponent } from "@gsrs-core/substance-form/audit-info/audit-info.component";
+import { CvInputComponent } from "@gsrs-core/substance-form/cv-input/cv-input.component";
+import { DomainReferencesComponent } from "@gsrs-core/substance-form/references/domain-references/domain-references.component";
+import { NameOrgsComponent } from "./name-orgs.component";
+import { TagSelectorComponent } from "@gsrs-core/substance-form/tag-selector/tag-selector.component";
+import { ElementLabelDisplayPipe } from "@gsrs-core/utils/element-label-display.pipe";
 
 @Component({
   selector: "app-name-form",
   templateUrl: "./name-form.component.html",
   styleUrls: ["./name-form.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatRadioModule, MatTooltipModule, MatInputModule, AccessManagerComponent, AuditInfoComponent, CvInputComponent, DomainReferencesComponent, NameOrgsComponent, TagSelectorComponent, ElementLabelDisplayPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NameFormComponent implements OnInit, OnDestroy {
