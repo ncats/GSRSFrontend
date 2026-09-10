@@ -25,9 +25,26 @@
 
 .file-row {
   width: 40%;
-  height: 40px;
+  min-height: 40px;
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+}
+
+.file-row > button {
+  flex-shrink: 0;
+}
+
+.file-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+  align-self: center;
+}
+
+.file-name.error {
+  color: var(--error-dialog-color);
+  font-weight: 500;
 }
 
 ::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-content {
