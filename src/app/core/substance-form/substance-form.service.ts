@@ -1926,6 +1926,26 @@ export class SubstanceFormService implements OnDestroy {
     }
   }
 
+  // For paired-linkage types (e.g. Cys-linker-Cys); unlike siteString(), does not sort/range-compress, since that would destroy the pairing.
+  pairedSiteString(sites: Array<Site>): string {
+    if (!sites || sites.length === 0) {
+      return '';
+    }
+    const pairs: Array<string> = [];
+    for (let i = 0; i < sites.length; i += 2) {
+      const from = sites[i];
+      const fromLabel = from.subunitIndex + '_' + from.residueIndex;
+      if (i + 1 < sites.length) {
+        const to = sites[i + 1];
+        pairs.push(fromLabel + '-' + to.subunitIndex + '_' + to.residueIndex);
+      } else {
+        // Odd leftover site with no partner — shown alone rather than dropped.
+        pairs.push(fromLabel);
+      }
+    }
+    return pairs.join('; ');
+  }
+
   createSubunitDisplay(): Array<SubunitSequence> {
     let subunits = [];
     if (this.privateSubstance.substanceClass === 'protein') {

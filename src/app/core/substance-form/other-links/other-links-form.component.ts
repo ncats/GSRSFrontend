@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Link, SubstanceReference} from '@gsrs-core/substance';
+import {isPairedLinkageType, Link, SubstanceReference} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {MatDialog} from '@angular/material/dialog';
@@ -54,8 +54,20 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
     return this.privateLink;
   }
   updateDisplay(): void {
-    this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
+    // Paired-linkage types (e.g. Cys-linker-Cys) use pairedSiteString(), which keeps site pairing instead of sorting/range-compressing like siteString().
+    if (isPairedLinkageType(this.privateLink.linkageType)) {
+      this.siteDisplay = this.substanceFormService.pairedSiteString(this.privateLink.sites);
+    } else {
+      this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
+    }
   }
+
+  onLinkageTypeChange(value: string): void {
+    this.privateLink.linkageType = value;
+    // Re-render siteDisplay since the paired-vs-flat format depends on the type.
+    this.updateDisplay();
+  }
+
   deleteLink(): void {
     this.privateLink.$$deletedCode = this.utilsService.newUUID();
       this.deleteTimer = setTimeout(() => {
@@ -79,7 +91,8 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   openDialog(): void {
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
-      data: {'card': 'other', 'link': this.privateLink.sites},
+      // preserveSiteOrder stops the selector from re-sorting sites after each click, which would lose pairing before the dialog closes.
+      data: {'card': 'other', 'link': this.privateLink.sites, 'preserveSiteOrder': isPairedLinkageType(this.privateLink.linkageType)},
       width: '1040px',
       panelClass: 'subunit-dialog'
     });
