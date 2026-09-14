@@ -40,14 +40,18 @@ a {
 // The `!important` defeats inline `style="color:..."` and any other
 // competing selector of equal or lower specificity.
 a.substance-name,
-span.name,
 a.substance-name span,
 a.substance-name span.name {
   color: var(--link-color) !important;
+  text-decoration: underline;
 }
 
 // Catch any other named-color class that might slip through innerHTML.
 a[href].substance-name {
+  color: var(--link-color) !important;
+}
+
+.form-name span.name {
   color: var(--link-color) !important;
 }
 

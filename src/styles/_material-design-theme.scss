@@ -6,7 +6,7 @@
 // Be sure that you only ever include this mixin once!
 @include mat.core();
 $my-blue: (
-  50: var(--version-text-color),
+  50: var(--primary-deep),
   100: #a4c5e0,
   200: var(--accent-secondary-main),
   300: 	#4186be,
@@ -16,10 +16,10 @@ $my-blue: (
   700: #d32f2f,
   800: #c62828,
   900: #b71c1c,
-  A100: var(--version-text-color),
-  A200: var(--version-text-color),
-  A400: var(--version-text-color),
-  A700: var(--version-text-color),
+  A100: var(--primary-deep),
+  A200: var(--primary-deep),
+  A400: var(--primary-deep),
+  A700: var(--primary-deep),
   contrast: (
     50: var(--surface-card),
     100: rgba(black, 0.87),

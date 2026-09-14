@@ -1,9 +1,10 @@
 /* app-loading.css
  *
  * The loading component renders a top progress bar and a centered spinner
- * when the app is busy. The spinner has a transparent background so it
- * floats over the page (or over the CDK overlay backdrop when a dialog is
- * loading). The spinner's track and arc colors are themed via variables.
+ * when the app is busy. Kept identical to production GSRS behavior:
+ * the spinner is only fixed + centered — no background, padding, radius
+ * or custom stroke colors, so the Material theme's active-indicator color
+ * (#4793d1 blue) renders the arc, matching gsrs.ncats.nih.gov.
  */
 
 /* Top loading bar (old + MDC) */
@@ -16,11 +17,8 @@
   right: 0;
 }
 
-/* Centered spinner (old + MDC)
- * - fixed position at viewport center
- * - transparent background so the spinner floats over the page (or over
- *   the CDK overlay backdrop when a dialog is loading)
- */
+/* Centered spinner (old + MDC) — matches production exactly:
+ * fixed at viewport center, block display, no surface styling. */
 :host ::ng-deep .mat-progress-spinner,
 :host ::ng-deep .mat-mdc-progress-spinner {
   z-index: 1003;
@@ -28,29 +26,5 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  box-sizing: border-box;
-
-  /* Transparent surface so the spinner does not look like a card.
-   * The --loading-overlay-bg variable controls the translucent
-   * tint applied behind the spinner, matching the CDK overlay backdrop. */
-  background: transparent;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-/* The track (background ring) of the spinner SVG — was black by default.
- * Make it a soft neutral grey so it pairs with the white surface. */
-:host ::ng-deep .mat-progress-spinner circle,
-:host ::ng-deep .mat-mdc-progress-spinner circle {
-  stroke: var(--spinner-track-color);
-}
-
-/* The active arc color — pulled from the brand theme so it matches buttons. */
-:host ::ng-deep .mat-progress-spinner[mode='indeterminate'] circle,
-:host ::ng-deep .mat-mdc-progress-spinner[mode='indeterminate'] circle {
-  stroke: var(--spinner-stroke-color);
+  display: block;
 }

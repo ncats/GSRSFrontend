@@ -1,8 +1,16 @@
 @use '@angular/material' as mat;
 
-:root {
+// Default design tokens. Declared inside the "defaults" cascade layer so that
+// any unlayered :root rule overrides them regardless of stylesheet order.
+// This is what makes runtime theming via assets/styles/styles.custom.css
+// work: that file is loaded before the compiled global bundle, so without
+// this layer its :root declarations lose the cascade to these same-token
+// definitions. Unlayered styles always beat layered ones (CSS Cascade 5).
+@layer defaults {
+  :root {
 
     --primary-color: #4793d1;
+    --primary-deep: #162b50;
     --accent-secondary-main: #229fdd;
     --side-nav-bg-color: #002b5c;
     --surface-base: #ffffff;
@@ -96,7 +104,6 @@
     --dark-label-color: rgba(0, 0, 0, 0.54);
     --spinner-bg-color: rgba(150, 148, 148, 0.15);
     --spinner-stroke-color: #4793d1;
-    --spinner-track-color: #e0e0e0;
     --loading-overlay-bg: rgba(0, 0, 0, 0.5);
     --border-color: rgba(0, 0, 0, .1);
     --border-soft: #E0E0E0;
@@ -175,4 +182,5 @@
     --tab-gradient-start: #fff;
     --tab-gradient-end: #b2b2b2;
     --app-body-bg: rgba(94, 145, 186, 0.12);
+  }
 }

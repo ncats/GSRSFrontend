@@ -572,10 +572,28 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   font-weight: 400;
   height: 48px;
 
-  .mdc-list-item__primary-text {
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--link-color);
+  &:not(:has(> a)),
+  &:has(> .mdc-list-item__primary-text:not(:has(a))) {
+    .mdc-list-item__primary-text {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  &:has(> a),
+  &:has(> .mdc-list-item__primary-text a) {
+    .mdc-list-item__primary-text {
+      color: var(--link-color);
+    }
+
+    .mdc-list-item__secondary-text {
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .mat-icon {
+      color: var(--mat-list-color);
+    }
   }
 
   .mdc-list-item__secondary-text {
@@ -987,19 +1005,14 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 }
 
 // Scoped to app-loading only — prevents ALL spinners from being fixed/centered.
-// Background and surface come from
-// src/app/core/loading/loading/loading.component.scss which uses
-// --surface-card for the card surface, plus --spinner-track-color
-// and --spinner-stroke-color for the spinner SVG.
+// Matches production GSRS: block display, no surface/background styling.
 app-loading .mat-mdc-progress-spinner {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1003;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
 
 // ============================================================================

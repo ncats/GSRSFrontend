@@ -114,14 +114,14 @@
   <div *ngIf="previousSubstance && !selectedSubstance">
     <a
       (click)="revertEdit()"
-      style="color: #1565c0; font-weight: 550; margin-top: 5px"
+      style="color: var(--link-color); font-weight: 550; margin-top: 5px"
       >Cancel and Revert</a
     >
   </div>
   <div class="centered">
     <a
       style="
-        color: #1565c0;
+        color: var(--link-color);
         font-weight: 550;
         margin-top: 3px;
         margin-right: 10px;
@@ -131,7 +131,7 @@
     >
     <a
       style="
-        color: #1565c0;
+        color: var(--link-color);
         font-weight: 550;
         margin-top: 3px;
         margin-right: 10px;
@@ -141,7 +141,7 @@
     >
     <a
       *ngIf="showDraftOption"
-      style="color: #1565c0; font-weight: 550; margin-top: 3px"
+      style="color: var(--link-color); font-weight: 550; margin-top: 3px"
       (click)="selectDraft()"
       >Add Draft</a
     >
