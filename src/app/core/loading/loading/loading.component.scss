@@ -1,22 +1,30 @@
-/* app-loading.css */
+/* app-loading.css
+ *
+ * The loading component renders a top progress bar and a centered spinner
+ * when the app is busy. Kept identical to production GSRS behavior:
+ * the spinner is only fixed + centered — no background, padding, radius
+ * or custom stroke colors, so the Material theme's active-indicator color
+ * (#4793d1 blue) renders the arc, matching gsrs.ncats.nih.gov.
+ */
 
 /* Top loading bar (old + MDC) */
-// :host ::ng-deep .mat-progress-bar,
-// :host ::ng-deep .mat-mdc-progress-bar {
-//   z-index: 1003;
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-// }
+:host ::ng-deep .mat-progress-bar,
+:host ::ng-deep .mat-mdc-progress-bar {
+  z-index: 1003;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
 
-// /* Centered spinner (old + MDC) */
-// :host ::ng-deep .mat-progress-spinner,
-// :host ::ng-deep .mat-mdc-progress-spinner {
-//   z-index: 1003;
-//   position: fixed;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   display: block;
-// }
+/* Centered spinner (old + MDC) — matches production exactly:
+ * fixed at viewport center, block display, no surface styling. */
+:host ::ng-deep .mat-progress-spinner,
+:host ::ng-deep .mat-mdc-progress-spinner {
+  z-index: 1003;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+}

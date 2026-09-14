@@ -6,12 +6,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: var(--notif-backdrop-bg-color);
+  background-color: var(--overlay-modal-bg);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: var(--notif-backdrop-color);
+  color: var(--overlay-modal-text);
 }
 
 .link-form-container {

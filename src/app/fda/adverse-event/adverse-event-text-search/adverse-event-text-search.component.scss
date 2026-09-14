@@ -14,7 +14,7 @@ form {
 
 .substance-suggestion-field {
   padding: 8px 6px;
-  color: var(--regular-white-color);
+  color: var(--surface-card);
   overflow: hidden;
 }
 
@@ -22,7 +22,7 @@ form {
   padding: 5px;
   border-radius: 5px;
   background-color: var(--link-primary-color);
-  color: var(--regular-white-color);
+  color: var(--surface-card);
 }
 
 .suggestion-styling {
@@ -128,7 +128,7 @@ form {
       height: 48px;
       padding-right: 0px;
       padding-left: 0px;
-      background-color: var(--regular-white-color);
+      background-color: var(--surface-card);
       overflow: hidden;
       mat-form-field {
         width: 100% !important;

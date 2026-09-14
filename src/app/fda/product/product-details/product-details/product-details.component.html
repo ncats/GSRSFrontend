@@ -48,17 +48,17 @@
       </div>
 
       <div class="width60percent marginleft50px font11px" *ngIf="product.id">
-        <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
-        <span class="colorgray">Create Date:</span>
+        <span class="text-muted">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
+        <span class="text-muted">Create Date:</span>
         {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-        <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
-        <span class="colorgray">Modify Date:</span> {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+        <span class="text-muted">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
+        <span class="text-muted">Modify Date:</span> {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
       </div>
 
     </div> <!-- class=divflex -->
 
 
-    <div class="margintop10px font16px colorblue"><b>Product Summaries</b>
+    <div class="margintop10px font16px text-info"><b>Product Summaries</b>
 
       &nbsp;&nbsp;&nbsp;
 
@@ -105,7 +105,7 @@
                         <div class="colorlightblue font16px"><b>{{prodName.productName}}</b>
 
                           <span *ngIf="prodName.productNameType">
-                            <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
+                            <span class="text-muted font11px">&nbsp;({{prodName.productNameType}})</span>
                           </span>
 
                         </div>
@@ -215,7 +215,7 @@
                 <div class="row-property-value-2">
                   {{product.manufacturerCode}}
                   <span *ngIf="product.manufacturerCodeType">
-                    <span class="colorgray font11px">&nbsp;({{product.manufacturerCodeType}})</span>
+                    <span class="text-muted font11px">&nbsp;({{product.manufacturerCodeType}})</span>
                   </span>
                 </div>
               </div>
@@ -544,7 +544,7 @@
 
 
     <!-- PRODUCT FULL DETAILS -->
-    <div class="margintop10px font16px colorblue"><b>Product Full Details</b>
+    <div class="margintop10px font16px text-info"><b>Product Full Details</b>
 
       &nbsp;&nbsp;&nbsp;
 
@@ -935,7 +935,7 @@
                                         <div class="row-property-value-2">
                                           <div *ngIf="ingred._substanceUuid">
                                             <a [routerLink]="['/substances', ingred._substanceUuid]" target="_blank">
-                                              <span class="colorblue font16px">
+                                              <span class="text-info font16px">
                                                 <b>{{ingred._ingredientName}}</b>
                                               </span>
                                             </a>
@@ -945,7 +945,7 @@
                                           <div class="margintop10px"
                                             *ngFor="let active of ingred._ingredientNameActiveMoieties; let activeIndex = index">
                                             <span class="font12px"><b>{{active}}</b></span>
-                                            <span class="colorgray font11px">&nbsp;(Active Moiety)</span>
+                                            <span class="text-muted font11px">&nbsp;(Active Moiety)</span>
                                           </div>
 
                                         </div>
@@ -975,7 +975,7 @@
                                           <div class="margintop10px"
                                             *ngFor="let active of ingred._basisOfStrengthActiveMoieties; let activeIndex = index">
                                             <span class="font12px"><b>{{active}}</b></span>
-                                            <span class="colorgray font11px">&nbsp;(Active Moiety)</span>
+                                            <span class="text-muted font11px">&nbsp;(Active Moiety)</span>
                                           </div>
 
                                         </div>
@@ -1200,7 +1200,7 @@
                       Provenance:
                     </div>
                     <div class="row-property-value">
-                      <span class="font16px colorred"><b>{{ x.provenance }}</b></span>
+                      <span class="font16px text-danger"><b>{{ x.provenance }}</b></span>
                     </div>
                   </div>
                   <div class="row-property">

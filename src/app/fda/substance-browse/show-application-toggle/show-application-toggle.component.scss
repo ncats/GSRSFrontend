@@ -7,7 +7,7 @@
 }
 
 .colororange {
-  color: var(--regular-orange-color);
+  color: var(--accent-attention);
 }
 
 .font14px {
@@ -41,12 +41,12 @@
   padding-left: 260px;
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
 .colorgreen {
-  color: var(--regular-green-color);
+  color: var(--accent-positive);
 }
 
 #parent #popup {

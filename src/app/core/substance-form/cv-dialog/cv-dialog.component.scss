@@ -33,7 +33,7 @@
 
 
   .ERROR {
-    background-color: var(--regular-red-color);
+    background-color: var(--accent-warning);
     color: var(--error-dialog-color);
     background-color: var(--error-dialog-bg-color);
     padding: 4px 5px;
@@ -51,8 +51,8 @@ border-radius: 5px;
 }
 
 .INFO {
-color: var(--regular-black-color);
-background-color: var(--regular-lightgray-color);
+color: var(--text-strong);
+background-color: var(--surface-muted);
 padding: 4px 5px;
 margin-right: 5px;
 border-radius: 5px;

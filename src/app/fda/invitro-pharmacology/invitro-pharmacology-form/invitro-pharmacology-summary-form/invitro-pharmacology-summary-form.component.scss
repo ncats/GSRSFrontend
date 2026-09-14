@@ -4,7 +4,7 @@
   flex-direction: column;
   top: 64px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   align-items: center;
   justify-content: center;
   box-shadow:
@@ -32,7 +32,7 @@
 .actions-container {
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   padding: 10px;
   display: flex;
 }
@@ -114,24 +114,24 @@
   font-size: 18px;
   font-weight: 700px;
   font-family: Arial, Helvetica, sans-serif;
-  color: var(--regular-blue-color);
+  color: var(--accent-info);
 }
 
 .headerstyle {
   border-radius: 6px 6px 0px 0px;
-  border: 1px solid var(--blue-color);
+  border: 1px solid var(--accent-primary-strong);
   background-color: var(--table-th-border-color); /*--primary-title-color*/
   border-bottom: none;
   padding-left: 10px;
   height: 50px;
-  color: #ffffff;
+  color: var(--surface-base);
 }
 
 .tabStyle {
   width: 250px;
   height: 30px;
-  border: 1px solid var(--regular-grey-color);
-  background: var(--tabstyle-bg-img-end-color);
+  border: 1px solid var(--text-tertiary);
+  background: var(--tab-gradient-end);
 }
 
 .fieldKey {
@@ -147,7 +147,7 @@
   height: 40px;
   padding-left: 5px;
   padding-right: 5px;
-  background-color: #f7f7f7;
+  background-color: var(--table-bg-color-2);
 }
 
 .row {
@@ -164,7 +164,7 @@
 .row-property {
   display: flex;
   width: 50%;
-  border: 1px solid green;
+  border: 1px solid var(--accent-positive);
 }
 
 .row-property-key {
@@ -398,11 +398,11 @@ marginbottom40px {
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .bordergreen {
-  border: 1px solid var(--regular-green-color);
+  border: 1px solid var(--accent-positive);
 }
 
 .width20px {
@@ -512,24 +512,24 @@ marginbottom40px {
   width: 100%;
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorlightblack {
-  color: rgb(98, 95, 95);
+.text-soft {
+  color: var(--label-color);
 }
 
 .colorblack {
-  color: black;
+  color: var(--feedback-neutral-text);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
-.colorblue {
-  color: var(--regular-blue-color);
+.text-info {
+  color: var(--accent-info);
 }
 
 .font11px {
@@ -601,7 +601,7 @@ marginbottom40px {
 }
 
 .borderbottom {
-  border-bottom: 1px solid var(--royal-blue-color);
+  border-bottom: 1px solid var(--accent-prestige);
 }
 
 .height35px {
@@ -620,7 +620,7 @@ marginbottom40px {
 
 .disabledfield {
   cursor: not-allowed;
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 /* CV INPUT OVERWRITE WIDTH */
@@ -636,8 +636,8 @@ marginbottom40px {
 
 hr {
   border: none;
-  border-top: 4px dotted var(--regular-green-color);
-  color: var(--hr-color);
+  border-top: 4px dotted var(--accent-positive);
+  color: var(--divider-strong);
   overflow: visible;
   text-align: center;
   height: 4px;
@@ -655,11 +655,11 @@ hr {
 .mat-form-field-style {
   /* OVERWRITE MATERIAL INPUT FIELDS */
   .mat-form-field-infix {
-    color: var(--regular-blue-color);
+    color: var(--accent-info);
   }
 
   .mat-select-value {
-    color: var(--regular-blue-color);
+    color: var(--accent-info);
   }
 
   .mat-form-field-label {
@@ -683,9 +683,9 @@ hr {
   .mat-form-field-disabled .mat-form-field-underline {
     background-image: linear-gradient(
       to right,
-      var(--img-linear-gradient-start-color) 0,
-      var(--textarea-dark-border-color) 10%,
-      var(--img-linear-gradient-color) 0
+      var(--image-gradient-start) 0,
+      var(--input-border-strong) 10%,
+      var(--image-gradient-end) 0
     ) !important;
     background-size: 1px 100% !important;
     background-repeat: repeat-x !important;
@@ -697,7 +697,7 @@ hr {
   }
 
   mat-hint {
-    color: var(--regular-red-color) !important;
+    color: var(--accent-warning) !important;
   }
 }
 
@@ -714,21 +714,21 @@ hr {
 }
 
 .errortext {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
   font-size: 11px;
 }
 
 fieldset.border {
-  border: 2px solid var(--regular-green-color) !important;
+  border: 2px solid var(--accent-positive) !important;
   padding: 0 10px 10px 10px;
   margin-bottom: 50px;
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;
   /* override the default value of min-content */
-  -webkit-box-shadow: 3px 6px 11px 1px var(--fieldset-box-shadow-color);
-  -moz-box-shadow: 3px 6px 11px 1px var(--fieldset-box-shadow-color);
-  box-shadow: 3px 4px 5px 1px var(--fieldset-box-shadow-color);
+  -webkit-box-shadow: 3px 6px 11px 1px var(--fieldset-shadow);
+  -moz-box-shadow: 3px 6px 11px 1px var(--fieldset-shadow);
+  box-shadow: 3px 4px 5px 1px var(--fieldset-shadow);
 }
 
 legend.border {
@@ -736,7 +736,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: var(--legend-blue-border-color);
+  color: var(--legend-info-border);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
@@ -744,8 +744,8 @@ legend.border {
 
 .custom-badge {
   .mat-badge-content {
-    background: var(--mustard-color);
-    color: var(--regular-white-color);
+    background: var(--accent-spice);
+    color: var(--surface-card);
   }
 
   .mat-badge-medium .mat-badge-above .mat-badge-top .mat-badge-content {
@@ -761,7 +761,7 @@ legend.border {
   transition: all 500ms ease-out;
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   display: flex;
   flex-direction: column;
 
@@ -812,7 +812,7 @@ legend.border {
 /* Table Style Begin */
 table.tableStyle {
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  border: 1px solid var(--secondary-blue-color);
+  border: 1px solid var(--accent-secondary);
   background-color: var(--table-bg-color);
   width: 100%;
   text-align: left;
@@ -850,7 +850,7 @@ table.tableStyle thead th {
   color: var(--table-th-color);
   border-left: 1px solid var(--table-th-border-color-2);
   padding: 10px 10px;
-  background: #ededed;
+  background: var(--query-bg-color);
 }
 
 table.tableStyle thead th:first-child {
@@ -860,7 +860,7 @@ table.tableStyle thead th:first-child {
 table.tableStyle tfoot {
   font-size: 14px;
   font-weight: bold;
-  color: var(--white-color);
+  color: var(--surface-base);
   background: var(--table-th-border-color-2);
   border-top: 2px solid var(--table-thead-border-color);
 }
@@ -875,8 +875,8 @@ table.tableStyle tfoot .links {
 
 table.tableStyle tfoot .links a {
   display: inline-block;
-  background: var(--secondary-blue-color);
-  color: var(--white-color);
+  background: var(--accent-secondary);
+  color: var(--surface-base);
   padding: 2px 8px;
   border-radius: 5px;
 }

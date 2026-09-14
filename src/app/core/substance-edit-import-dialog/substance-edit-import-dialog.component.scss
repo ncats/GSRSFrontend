@@ -6,7 +6,7 @@
 .info {
   padding: 20px;
   padding-bottom: 30px;
-  color: black;
+  color: var(--feedback-neutral-text);
 }
 
 .file-import {
@@ -49,31 +49,31 @@
 }
 
 .button-select-file {
-  color: #007cba;
-  border: 1px solid #007cba;
+  color: var(--legend-info-border-2);
+  border: 1px solid var(--legend-info-border-2);
 }
 
 .button-cancel {
-  background-color: #ffffff;
+  background-color: var(--surface-base);
   border: 1px solid #d60036;
 }
 
 // .button-import {
-//     color: #FFFFFF;
-//     background-color: #007CBA;
+//     color: var(--surface-base);
+//     background-color: var(--legend-info-border-2);
 //     border: 1px solid 007CBA;
 // }
 
 .colorwhite {
-  color: #ffffff;
+  color: var(--surface-base);
 }
 
-.colorred {
-  color: red;
+.text-danger {
+  color: var(--accent-warning);
 }
 
-.colorblue {
-  color: #007cba;
+.text-info {
+  color: var(--legend-info-border-2);
   padding-top: 24px;
   font-size: 24px;
   font-weight: bold;
@@ -85,12 +85,12 @@
 
 .padbottom20px {
   padding-bottom: 20px;
-  color: black;
+  color: var(--feedback-neutral-text);
 }
 
 .mat-divider {
   margin: 20px 20px;
-  border-top-color: black;
+  border-top-color: var(--feedback-neutral-text);
 }
 
 ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {

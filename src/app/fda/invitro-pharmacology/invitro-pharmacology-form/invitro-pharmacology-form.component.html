@@ -200,7 +200,7 @@
 
                     <div class="divflex margintop15px width95percent">
 
-                      <div class="colorblue font18px fontbold fontverdana">
+                      <div class="text-info font18px fontbold fontverdana">
                         Reference
                       </div>
 
@@ -226,7 +226,7 @@
 
                             <div class="form-row margintop10px">
                               <div class="fieldKey">
-                                <mat-label>Reference Source Type:&nbsp;<span class="colorred">*</span></mat-label>
+                                <mat-label>Reference Source Type:&nbsp;<span class="text-danger">*</span></mat-label>
                               </div>
 
                               <app-cv-input class="fieldvalue" domain="DOCUMENT_TYPE" title="" name="sourceType"
@@ -236,7 +236,7 @@
 
                             <div class="form-row margintop10px">
                               <div class="fieldKey">
-                                <mat-label>Reference Source/Citation:&nbsp;<span class="colorred">*</span></mat-label>
+                                <mat-label>Reference Source/Citation:&nbsp;<span class="text-danger">*</span></mat-label>
                               </div>
                               <mat-form-field class="fieldvalue">
                                 <input matInput placeholder="" [(ngModel)]="reference.sourceCitation"
@@ -278,7 +278,7 @@
 
                     <div class="divflex margintop30px width95percent">
 
-                      <div class="padtop5px colorblue font18px fontbold fontverdana">
+                      <div class="padtop5px text-info font18px fontbold fontverdana">
                         Laboratory
                       </div>
                     </div>
@@ -290,7 +290,7 @@
                     <!-- Form Entry -->
                     <div class="form-row margintop10px">
                       <div class="fieldKey">
-                        <mat-label>Laboratory Name:&nbsp;<span class="colorred">*</span></mat-label>
+                        <mat-label>Laboratory Name:&nbsp;<span class="text-danger">*</span></mat-label>
                       </div>
 
                       <mat-form-field class="fieldvalue">
@@ -451,7 +451,7 @@
 
                     <div class="divflex margintop40px width95percent">
 
-                      <div class="padtop5px colorblue font18px fontbold fontverdana">
+                      <div class="padtop5px text-info font18px fontbold fontverdana">
                         Sponsor
                       </div>
 
@@ -506,7 +506,7 @@
                     <!-- Sponsor Data Entry Form BEGIN -->
                     <div class="form-row margintop10px">
                       <div class="fieldKey">
-                        <mat-label>Sponsor Contact Name:&nbsp;<span class="colorred">*</span></mat-label>
+                        <mat-label>Sponsor Contact Name:&nbsp;<span class="text-danger">*</span></mat-label>
                       </div>
                       <mat-form-field class="fieldvalue">
                         <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsor.sponsorContactName"
@@ -588,7 +588,7 @@
                     <br>
                     <div class="divflex margintop20px width95percent">
 
-                      <div class="padtop5px colorblue font18px fontbold fontverdana">
+                      <div class="padtop5px text-info font18px fontbold fontverdana">
                         Sponsor Report Submitters
                         ({{assayResultInfo.invitroSponsorReport.invitroSponsorSubmitters.length}})
 
@@ -667,7 +667,7 @@
                       <!-- Form Entry -->
                       <div class="form-row margintop10px">
                         <div class="fieldKey">
-                          <mat-label>Sponsor Report Submitter Name:&nbsp;<span class="colorred">*</span></mat-label>
+                          <mat-label>Sponsor Report Submitter Name:&nbsp;<span class="text-danger">*</span></mat-label>
                         </div>
                         <mat-form-field class="fieldvalue">
                           <input matInput placeholder="" [(ngModel)]="sponsorSub.sponsorReportSubmitterName"
@@ -733,14 +733,14 @@
                   <!-- SPONSOR REPORT BEGIN -->
                   <div *ngIf="assayResultInfo.invitroSponsorReport">
                     <div class="divflex margintop30px width95percent">
-                      <div class="padtop5px colorblue font18px fontbold fontverdana">
+                      <div class="padtop5px text-info font18px fontbold fontverdana">
                         Report
                       </div>
                     </div>
 
                     <div class="form-row margintop10px">
                       <div class="fieldKey">
-                        <mat-label>Report Number:&nbsp;<span class="colorred">*</span></mat-label>
+                        <mat-label>Report Number:&nbsp;<span class="text-danger">*</span></mat-label>
                       </div>
                       <mat-form-field class="fieldvalue">
                         <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsorReport.reportNumber"
@@ -802,7 +802,7 @@
 
                     <div class="divflex margintop10px width95percent">
 
-                      <div class="padtop5px colorblue font18px fontbold fontverdana">
+                      <div class="padtop5px text-info font18px fontbold fontverdana">
                         Test Agent
                       </div>
 
@@ -871,7 +871,7 @@
                     <br><br>
                     <div class="form-row">
                       <div class="fieldKey">
-                        <mat-label>Batch Number:&nbsp;<span class="colorred">*</span></mat-label>
+                        <mat-label>Batch Number:&nbsp;<span class="text-danger">*</span></mat-label>
                       </div>
                       <mat-form-field class="fieldvalue">
                         <input matInput placeholder="" [(ngModel)]="assayResultInfo.batchNumber" name="batchNumber" />
@@ -1021,7 +1021,7 @@
                   <!-- RESULT DETAILS BEGIN -->
                   <div class="divflex margintop30px width95percent">
 
-                    <div class="padtop5px colorblue font18px fontbold fontverdana">
+                    <div class="padtop5px text-info font18px fontbold fontverdana">
                       Results&nbsp;({{existingAssaysByAssaySetList.length}})
                     </div>
 
@@ -1042,7 +1042,7 @@
 
                         <!-- Display Message -->
                         <div *ngIf="assayMessage">
-                          <span class="font12px colorred">{{assayMessage}}</span>
+                          <span class="font12px text-danger">{{assayMessage}}</span>
                         </div>
                       </div>
                     </div>

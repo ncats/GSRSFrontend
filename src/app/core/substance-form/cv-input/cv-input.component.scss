@@ -26,13 +26,13 @@
   width: 100%;
 
   mat-hint {
-    color: var(--regular-red-color);
+    color: var(--accent-warning);
   }
 }
 
 .add-term {
   --mat-text-button-horizontal-padding: 4px;
-  color: var(--secondary-blue) !important;
+  color: var(--accent-secondary-main) !important;
   font-style: italic;
   min-width: 0 !important;
   flex-shrink: 0;

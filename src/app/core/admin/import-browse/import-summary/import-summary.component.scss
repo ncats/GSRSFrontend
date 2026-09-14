@@ -100,7 +100,7 @@ font-size: 18px;
 
       .status {
         font-size: 24px;
-        color: var(--pink-span-color);
+        color: var(--feedback-error-text);
         margin-right: 25px;
       }
 
@@ -231,7 +231,7 @@ font-size: 18px;
 }
 
 .lock-icon {
-    color: var(--lock-icon-color);
+    color: var(--icon-locked);
 }
 
 .validation-container {
@@ -256,7 +256,7 @@ font-size: 18px;
 .similarity {
   padding-left: 10px;
   font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
-  color: var(--pink-span-color);
+  color: var(--feedback-error-text);
 }
 
 .similarity-label {
@@ -278,7 +278,7 @@ font-size: 18px;
 .match-context {
     display: block;
     font-size: small; 
-    color: var(--regular-green-color);
+    color: var(--accent-positive);
     margin-top: 8px;
     margin-bottom: 8px;
 }

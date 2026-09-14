@@ -70,8 +70,8 @@
 }
 
   .SUCCESS {
-    color: var(--success-green-color);
-    background-color: var(--success-green-bg-color);
+    color: var(--feedback-success-text);
+    background-color: var(--feedback-success-bg);
 
   }
 
@@ -82,7 +82,7 @@
     transition: all 500ms ease-out;
     max-width: 1028px;
     width: 100%;
-    background-color: var(--regular-white-color);
+    background-color: var(--surface-card);
     display: flex;
     flex-direction: column;
       max-height: 500px;

@@ -1,6 +1,6 @@
 /* awtodo come back */
 .bordergray {
-  border: 1px border var(--regular-grey-color);
+  border: 1px border var(--text-tertiary);
 }
 
 .mat-divider.mat-divider-inset {
@@ -71,12 +71,12 @@
   z-index: 1;
   position: relative;
   margin-right: 25px;
-  background-color: #FFFFFF;
-  border: 1px solid #007CBA;
+  background-color: var(--surface-base);
+  border: 1px solid var(--legend-info-border-2);
 }
 
 fieldset.border {
-  border: solid 2px var(--fieldset-blue-border-color) !important;
+  border: solid 2px var(--fieldset-info-border) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   margin-top: 20px;
@@ -89,7 +89,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  color: var(--legend-blue-border-color-2);
+  color: var(--legend-info-border-2);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
@@ -104,14 +104,14 @@ legend.border {
   max-width: 120px;
   text-align: top;
   margin-bottom: 10px;
-  color: #007CBA !important; 
+  color: var(--legend-info-border-2) !important; 
   opacity: 1 !important;
 }
 
 :host ::ng-deep .mat-mdc-tab .mdc-tab__text-label,
 :host ::ng-deep .mat-tab-label-content {
   margin-top: -5px;
-  color: #007CBA !important;
+  color: var(--legend-info-border-2) !important;
 }
 
 :host ::ng-deep .mat-mdc-tab-header,
@@ -123,12 +123,12 @@ legend.border {
 :host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab.mdc-tab--active,
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
   background: url("../../assets/images/home/tab_active.png");
-  color: #FFFFFF !important;
+  color: var(--surface-base) !important;
   padding-top: -10px;
 }
 
 :host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-  color: #FFFFFF !important;
+  color: var(--surface-base) !important;
   font-weight: bold !important;
 }
 

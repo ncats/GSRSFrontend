@@ -24,7 +24,7 @@
 .user {
   font-size: 12px;
   letter-spacing: 0.4px;
-  color: var(--regular-white-color);
+  color: var(--surface-card);
   white-space: nowrap;
 }
 .arrow-button {
@@ -37,14 +37,14 @@ button.mat-mdc-button.top-button {
   --button-icon-svg-size: 100%;
 
   font-size: 16px;
-        color: white;
+        color: var(--surface-card);
         padding-right: 10px;
         margin-right: 15px;
         padding-top: 10px;
         padding-bottom: 10px;
 }
 ::ng-deep button.mat-mdc-button.top-button:hover {
-    background-color: rgb(71, 147, 209) !important;
+    background-color: var(--primary-color) !important;
   }
 
 .user-button {
@@ -109,16 +109,16 @@ button.mat-mdc-button.top-button {
 
     .user-button.mat-mdc-icon-button {
       --mat-icon-button-icon-size: 30px;
-      color: var(--regular-white-color);
+      color: var(--surface-card);
 
       ::ng-deep .mat-icon {
-        color: var(--regular-white-color);
+        color: var(--surface-card);
         height: 30px !important;
         width: 30px !important;
       }
 
       ::ng-deep svg {
-        fill: var(--regular-white-color);
+        fill: var(--surface-card);
         height: 30px !important;
         width: 30px !important;
       }
@@ -131,7 +131,7 @@ button.mat-mdc-button.top-button {
     width: 30px;
     margin-bottom: -10px;
     line-height: unset;
-    color: white;
+    color: var(--surface-card);
   }
 
   ::ng-deep svg {
@@ -163,7 +163,7 @@ button.mat-mdc-button.top-button {
 
     & > a {
       font-size: 16px;
-      color: #e6e6e6;
+      color: var(--nav-link-color);
       padding-bottom: 7px;
       transition: all 150ms linear;
       text-decoration: none;
@@ -171,10 +171,10 @@ button.mat-mdc-button.top-button {
 
       &:hover,
       &.active {
-        color: white;
+        color: var(--surface-card);
         cursor: pointer;
         padding-bottom: 5px;
-        border-bottom: 2px solid white;
+        border-bottom: 2px solid var(--surface-card);
         text-decoration: none;
       }
     }
@@ -200,7 +200,7 @@ button.mat-mdc-button.top-button {
 }
 
 .login-link {
-  color: white !important;
+  color: var(--surface-card) !important;
   font-size: 16px;
   text-decoration: none;
 }

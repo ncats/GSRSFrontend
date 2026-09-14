@@ -86,7 +86,7 @@
             </span>
             <ng-template #noValidRecord>
               <br>
-              <span class="colorred">
+              <span class="text-danger">
                 <b>Not all records are valid. Please correct the records in Excel file and validate again</b>
               </span>
               <br><br>
@@ -100,10 +100,10 @@
             <table class="tableStyle widthmax100percent">
               <tr>
                 <th>#</th>
-                <th>Assay Set <span class=colorred>*</span></th>
-                <th>External Assay Source <span class=colorred>*</span></th>
-                <th>External Assay ID <span class=colorred>*</span></th>
-                <th>Assay Target Name <span class=colorred>*</span></th>
+                <th>Assay Set <span class=text-danger>*</span></th>
+                <th>External Assay Source <span class=text-danger>*</span></th>
+                <th>External Assay ID <span class=text-danger>*</span></th>
+                <th>Assay Target Name <span class=text-danger>*</span></th>
                 <th>Validation Error Message</th>
                 <th>Validation Pass/Fail</th>
               </tr>
@@ -204,12 +204,12 @@
           <div *ngIf="importDataList.length > 0">
 
             <div class="divflex" *ngIf="isAllRecordSaved == false">
-              <div class="colorblue"><b>Total Assay Records ready for import into the database from Excel
+              <div class="text-info"><b>Total Assay Records ready for import into the database from Excel
                   file:</b>&nbsp;
                 <span class="colorgreen font20px"><b>{{importDataList.length}}</b></span>
               </div>
               <div class="marginleft180px font11px">
-                <span class=colorred>*</span> = Required Field
+                <span class=text-danger>*</span> = Required Field
               </div>
             </div>
 
@@ -217,10 +217,10 @@
             <table class="tableStyle margintop30px">
               <tr class="font11px">
                 <th>#</th>
-                <th>Assay Set <span class=colorred>*</span></th>
+                <th>Assay Set <span class=text-danger>*</span></th>
                 <th>Assay ID</th>
-                <th>External Assay Source <span class=colorred>*</span></th>
-                <th>External Assay ID <span class=colorred>*</span></th>
+                <th>External Assay Source <span class=text-danger>*</span></th>
+                <th>External Assay ID <span class=text-danger>*</span></th>
                 <th>External Assay Reference URL</th>
                 <th>Assay Title</th>
                 <th>Assay Format</th>
@@ -232,7 +232,7 @@
                 <th>Presention Type</th>
                 <th>Presentation</th>
                 <th>Public Domain</th>
-                <th>Assay Target Name <span class=colorred>*</span></th>
+                <th>Assay Target Name <span class=text-danger>*</span></th>
                 <th>Assay Target Name Approval ID</th>
                 <th>Target Species</th>
                 <th>Human Homolog Target Name</th>
@@ -305,7 +305,7 @@
 
 </div> 
 <ng-template #noLogin>
-  <div class="margintop150px marginleft20px font18 colorred">
+  <div class="margintop150px marginleft20px font18 text-danger">
     Please Login to import Assay Data.
   </div>
 </ng-template>

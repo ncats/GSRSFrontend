@@ -58,24 +58,24 @@ marginleft50px {
   padding-top: -50px;
 }
 
-.colorblue {
-  color: var(--deep-purple-color);
+.text-info {
+  color: var(--accent-mystical-strong);
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .colororange {
-  color: var(--orange-color-rgb-2);
+  color: var(--accent-warm-rgb-2);
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .width140px {

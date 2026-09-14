@@ -83,23 +83,23 @@
           <span *ngIf="invitroReference">
             <span class="font14px"><b>1. Reference Information</b></span><br><br>
 
-            <span class="fieldKey">Reference Source Type <span class="colorred">*</span>:</span>
+            <span class="fieldKey">Reference Source Type <span class="text-danger">*</span>:</span>
             <span class="fieldvalue">
               {{invitroReference.sourceType}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
+              <span class="text-danger fontbold"
                 *ngIf="(requiredFieldMissingArray[0].sourceType && requiredFieldMissingArray[0].sourceType == true)">
                 Required Field
               </span>
             </span><br>
 
-            <span class="fieldKey">Reference Source/Citation <span class="colorred">*</span>:</span>
+            <span class="fieldKey">Reference Source/Citation <span class="text-danger">*</span>:</span>
             <span class="fieldvalue">
               {{invitroReference.sourceCitation}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
+              <span class="text-danger fontbold"
                 *ngIf="(requiredFieldMissingArray[0].sourceCitation && requiredFieldMissingArray[0].sourceCitation == true)">
                 Required Field
               </span>
@@ -119,11 +119,11 @@
             <span class="font14px"><b>2. Laboratory Information</b></span>
             <br><br>
 
-            <span class="fieldKey">Laboratory Name <span class="colorred">*</span>:</span>
+            <span class="fieldKey">Laboratory Name <span class="text-danger">*</span>:</span>
             <span class="fieldvalue">{{invitroLaboratory.laboratoryName}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
+              <span class="text-danger fontbold"
                 *ngIf="(requiredFieldMissingArray[0].laboratoryName && requiredFieldMissingArray[0].laboratoryName == true)">
                 Required Field
               </span>
@@ -165,11 +165,11 @@
           <span *ngIf="invitroSponsor">
             <span class="font14px"><b>3. Sponsor Information</b></span><br><br>
 
-            <span class="fieldKey">Sponsor Contact Name <span class="colorred">*</span>:</span>
+            <span class="fieldKey">Sponsor Contact Name <span class="text-danger">*</span>:</span>
             <span class="fieldvalue">{{invitroSponsor.sponsorContactName}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
+              <span class="text-danger fontbold"
                 *ngIf="(requiredFieldMissingArray[0].sponsorContactName && requiredFieldMissingArray[0].sponsorContactName == true)">
                 Required Field
               </span>
@@ -202,11 +202,11 @@
 
             <div *ngFor="let submitter of invitroSponsorReport.invitroSponsorSubmitters; let index = index">
 
-              <span class="fieldKey">Sponsor Report Submitter Name <span class="colorred">*</span>:</span>
+              <span class="fieldKey">Sponsor Report Submitter Name <span class="text-danger">*</span>:</span>
               <span class="fieldvalue">{{submitter.sponsorReportSubmitterName}}
 
                 <!-- Required Field message -->
-                <span class="colorred fontbold"
+                <span class="text-danger fontbold"
                   *ngIf="(requiredFieldMissingArray[0].sponsorReportSubmitterName && requiredFieldMissingArray[0].sponsorReportSubmitterName == true)">
                   Required Field
                 </span>
@@ -235,11 +235,11 @@
           <span *ngIf="invitroSponsorReport">
             <span class="font14px"><b>5. Report Information</b></span><br><br>
 
-            <span class="fieldKey">Report Number <span class="colorred">*</span>:</span>
+            <span class="fieldKey">Report Number <span class="text-danger">*</span>:</span>
             <span class="fieldvalue">{{invitroSponsorReport.reportNumber}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
+              <span class="text-danger fontbold"
                 *ngIf="(requiredFieldMissingArray[0].reportNumber && requiredFieldMissingArray[0].reportNumber == true)">
                 Required Field
               </span>
@@ -248,7 +248,7 @@
             <span class="fieldKey">Report Date:</span>
             <span class="fieldvalue">
               <span
-                [ngClass]="invitroSponsorReport.reportDate && invitroSponsorReport.reportDate !== 'Invalid date'? '' : 'colorred'">
+                [ngClass]="invitroSponsorReport.reportDate && invitroSponsorReport.reportDate !== 'Invalid date'? '' : 'text-danger'">
                 {{invitroSponsorReport.reportDate}}
               </span>
             </span><br>
@@ -271,11 +271,11 @@
             <span class="fieldKey">Test Agent ID (Company Code):</span>
             <span class="fieldvalue">{{invitroTestAgent.testAgentCompanyCode}}</span><br>
 
-            <span class="fieldKey">Test Agent Name (FDA) <span class="colorred">*</span>:</span>
+            <span class="fieldKey">Test Agent Name (FDA) <span class="text-danger">*</span>:</span>
             <span class="fieldvalue">{{invitroTestAgent.testAgent}}
 
               <!-- Required Field message -->
-              <span class="colorred fontbold"
+              <span class="text-danger fontbold"
                 *ngIf="(requiredFieldMissingArray[0].testAgent && requiredFieldMissingArray[0].testAgent == true)">
                 Required Field
               </span>
@@ -299,10 +299,10 @@
           <span *ngIf="invitroResultInfo">
             <span class="font14px"><b>7. Batch Information</b></span><br><br>
 
-            <span class="fieldKey">Batch Number <span class="colorred">*</span>:</span>
+            <span class="fieldKey">Batch Number <span class="text-danger">*</span>:</span>
             <span class="fieldvalue">{{invitroResultInfo.batchNumber}}
 
-              <span class="colorred fontbold"
+              <span class="text-danger fontbold"
                 *ngIf="(requiredFieldMissingArray[0].batchNumber && requiredFieldMissingArray[0].batchNumber == true)">
                 Required Field
               </span>
@@ -327,8 +327,8 @@
             <table class="tableStyle">
               <tr>
                 <td>Number</td>
-                <td>External Assay Source <span class="colorred">*</span></td>
-                <td>External Assay ID <span class="colorred">*</span></td>
+                <td>External Assay Source <span class="text-danger">*</span></td>
+                <td>External Assay ID <span class="text-danger">*</span></td>
                 <td>Assay ID</td>
                 <td>Control Substance</td>
                 <td>Type of Control</td>
@@ -343,7 +343,7 @@
                 <td>{{ctrl.externalAssaySource}}
 
                   <!-- Required Field message -->
-                  <span class="colorred fontbold"
+                  <span class="text-danger fontbold"
                     *ngIf="(requiredFieldMissingArray[indexControl].controlExternalAssaySource && requiredFieldMissingArray[indexControl].controlExternalAssaySource == true)">
                     Required Field
                   </span>
@@ -352,7 +352,7 @@
                 <td>{{ctrl.externalAssayId}}
 
                   <!-- Required Field message -->
-                  <span class="colorred fontbold"
+                  <span class="text-danger fontbold"
                     *ngIf="(requiredFieldMissingArray[indexControl].controlExternalAssayId && requiredFieldMissingArray[indexControl].controlExternalAssayId == true)">
                     Required Field
                   </span>
@@ -392,8 +392,8 @@
                 <td>Number</td>
                 <td>Assay Found In Database</td>
                 <td>Assay Set</td>
-                <td>External Assay Source <span class="colorred">*</span></td>
-                <td>External Assay ID <span class="colorred">*</span></td>
+                <td>External Assay Source <span class="text-danger">*</span></td>
+                <td>External Assay ID <span class="text-danger">*</span></td>
                 <td>Assay ID</td>
                 <td>Test Date (mm/dd/yyyy)</td>
                 <td>Test Agent Concentration</td>
@@ -440,14 +440,14 @@
 
                 <td>
                   <div *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'; else foundAssaySource">
-                    <span class="colorred"><b>{{result.externalAssaySource}}</b></span>
+                    <span class="text-danger"><b>{{result.externalAssaySource}}</b></span>
                   </div>
                   <ng-template #foundAssaySource>
                     {{result.externalAssaySource}}
                   </ng-template>
 
                   <!-- Required Field message -->
-                  <span class="colorred fontbold"
+                  <span class="text-danger fontbold"
                     *ngIf="(requiredFieldMissingArray[indexResult].resultExternalAssaySource && requiredFieldMissingArray[indexResult].resultExternalAssaySource == true)">
                     Required Field
                   </span>
@@ -455,14 +455,14 @@
 
                 <td>
                   <div *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'; else foundExternalAssayId">
-                    <span class="colorred"><b>{{result.externalAssayId}}</b></span>
+                    <span class="text-danger"><b>{{result.externalAssayId}}</b></span>
                   </div>
                   <ng-template #foundExternalAssayId>
                     {{result.externalAssayId}}
                   </ng-template>
 
                   <!-- Required Field message -->
-                  <span class="colorred fontbold"
+                  <span class="text-danger fontbold"
                     *ngIf="(requiredFieldMissingArray[indexResult].resultExternalAssayId && requiredFieldMissingArray[indexResult].resultExternalAssayId == true)">
                     Required Field
                   </span>

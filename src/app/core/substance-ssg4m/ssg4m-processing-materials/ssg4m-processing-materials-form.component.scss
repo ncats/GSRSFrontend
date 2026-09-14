@@ -1,7 +1,7 @@
 .form-container {
   padding: 5px 10px 12px 10px;
   position: relative;
-  /*border: 1px solid var(--pale-border-color-rgb);*/
+  /*border: 1px solid var(--border-soft-rgb);*/
 }
 
 .notification-backdrop {
@@ -12,12 +12,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: var(--notif-backdrop-bg-color);
+  background-color: var(--overlay-modal-bg);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: var(--notif-backdrop-color);
+  color: var(--overlay-modal-text);
 }
 
 .form-row {
@@ -74,7 +74,7 @@
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .margintopneg30px {
@@ -131,8 +131,8 @@
   margin-top: -15px;
 }
 
-.colorred {
-  color: red;
+.text-danger {
+  color: var(--accent-warning);
 }
 
 hr.style {

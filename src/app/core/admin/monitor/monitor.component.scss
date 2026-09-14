@@ -31,10 +31,10 @@
     height: 17px;
     margin-bottom: 5px;
     font-size:12px;
-    color: var(--regular-black-color);
-  -webkit-text-fill-color: var(--regular-white-color); /* Will override color (regardless of order) */
+    color: var(--text-strong);
+  -webkit-text-fill-color: var(--surface-card); /* Will override color (regardless of order) */
   -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: var(--regular-black-color);
+  -webkit-text-stroke-color: var(--text-strong);
 }
 
 .load-fail {
@@ -220,7 +220,7 @@ margin-bottom: auto;
   .deleted {
       margin: auto;
       padding: 10px;
-      color: var(--regular-grey-color);
+      color: var(--text-tertiary);
       font-style: italics;
       font-size: 18px;
   }
@@ -246,7 +246,7 @@ margin-bottom: auto;
 
   .count-cont {
       text-align: center;
-      color: var(--regular-white-color);
+      color: var(--surface-card);
       margin-top: -22px;
       font-weight: 500;
       z-index: 5;

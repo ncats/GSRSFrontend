@@ -1,16 +1,16 @@
 <div *ngIf="(loadingComplete === true && foundCenterList === false && applicationCount === 0)">
   <br>
-  <div class="padleft25px colorblue"><b>No Application Found</b></div>
+  <div class="padleft25px text-info"><b>No Application Found</b></div>
   <br>
 </div>
 
 <mat-tab-group (selectedTabChange)="applicationTabSelected($event)">
   <mat-tab label="{{appCenter}}" *ngFor="let appCenter of centerList; let index = index">
 
-    <div class="padtop5px padleft25px font15px colorblue">
+    <div class="padtop5px padleft25px font15px text-info">
       <b> {{appCenter}}</b>
       &nbsp;&nbsp;&nbsp;
-      <span class="colorred">{{loadingStatus}}</span>
+      <span class="text-danger">{{loadingStatus}}</span>
       &nbsp;&nbsp;&nbsp;
       <!-- Export Button -->
       <span class="export" *ngIf="canExport && totalRecords > 0">
@@ -45,7 +45,7 @@
             <span *ngIf="application.fromTable && application.fromTable !== 'GSRS'">
               <a [routerLink]="['/application-darrts', application.appType, application.appNumber]"
                 target="_blank">{{application.appType}}</a>
-              <br><span class="font10px colorgray">(Integrity)</span>
+              <br><span class="font10px text-muted">(Integrity)</span>
             </span>
           </td>
         </ng-container>
@@ -97,7 +97,7 @@
 </div>
 <ng-template #nocenter>
   <br>
-  <div class="padleft25px colorblue"><b>No Application Found</b></div>
+  <div class="padleft25px text-info"><b>No Application Found</b></div>
   <br>
 </ng-template>
 -->

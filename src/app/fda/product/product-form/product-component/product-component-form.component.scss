@@ -77,11 +77,11 @@
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .bordergreen {
-  border: 1px solid var(--regular-green-color);
+  border: 1px solid var(--accent-positive);
 }
 
 .margintop20px {
@@ -113,31 +113,31 @@
 }
 
 .colorgreen {
-  color: var(--regular-green-color);
+  color: var(--accent-positive);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
 .titlegreen {
-  color: var(--regular-green-color);
+  color: var(--accent-positive);
   font-size: 17px;
   font-weight: 500;
 }
 
 .titleorange {
-  color: var(--regular-orangered-color);
+  color: var(--accent-alert);
   font-size: 17px;
   font-weight: 500;
 }
 
 .titlebrown {
-  color: var(--brown-color);
+  color: var(--accent-earth);
   font-size: 17px;
   font-weight: 500;
 }
@@ -164,24 +164,24 @@
 
 hr {
   border: none;
-  border-top: 3px dotted var(--regular-green-color);
-  color: var(--hr-color);
+  border-top: 3px dotted var(--accent-positive);
+  color: var(--divider-strong);
   overflow: visible;
   text-align: center;
   height: 5px;
 }
 
 fieldset.border {
-  border: solid 1px var(--regular-green-color) !important;
+  border: solid 1px var(--accent-positive) !important;
   padding: 0 10px 10px 10px;
   margin-bottom: 10px;
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */
   /*
-  -webkit-box-shadow: 3px 6px 11px 1px var(--fieldset-box-shadow-color);
-  -moz-box-shadow: 3px 6px 11px 1px var(--fieldset-box-shadow-color);
-  box-shadow: 3px 4px 5px 1px var(--fieldset-box-shadow-color);
+  -webkit-box-shadow: 3px 6px 11px 1px var(--fieldset-shadow);
+  -moz-box-shadow: 3px 6px 11px 1px var(--fieldset-shadow);
+  box-shadow: 3px 4px 5px 1px var(--fieldset-shadow);
   */
 }
 
@@ -190,7 +190,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 13px;
-  color: var(--legend-blue-border-color);
+  color: var(--legend-info-border);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;

@@ -574,7 +574,7 @@
 
                   <ng-template mat-tab-label>
                     <span class="font13px colorlightblue">Provenance:</span>&nbsp;
-                    <span class="colorred font16px">
+                    <span class="text-danger font16px">
                       {{prodProv.provenance}}
                     </span>
                   </ng-template>
@@ -595,7 +595,7 @@
                               <div class="colorlightblue font16px"><b>{{prodName.productName}}</b>
 
                                 <span *ngIf="prodName.productNameType">
-                                  <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
+                                  <span class="text-muted font11px">&nbsp;({{prodName.productNameType}})</span>
                                 </span>
 
                               </div>
@@ -1130,7 +1130,7 @@
       <ng-template #noRecordProduct>
         <!-- No Product Found. -->
         <!--
-      <div class="padleft10px colorred">
+      <div class="padleft10px text-danger">
         <br>
         No Product records found. Please Reindex to see the Product records here.
       </div>

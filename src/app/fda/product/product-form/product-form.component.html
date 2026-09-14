@@ -216,21 +216,21 @@
 
           <div class="font11px" *ngIf="product.id">
             <div class="textalignright">
-              <span *ngIf="product.provenance" class="font12px colorred">
+              <span *ngIf="product.provenance" class="font12px text-danger">
                 Provenance: {{ product.provenance }}
               </span>
             </div>
-            <span class="colorgray">Created By:</span>
+            <span class="text-muted">Created By:</span>
             {{ product.createdBy }}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Create Date:</span>
+            <span class="text-muted">Create Date:</span>
             {{
               product.creationDate
                 | date
                   : "MM/dd/yyyy hh:mm:ss
             a"
-            }}&nbsp;&nbsp;&nbsp; <span class="colorgray">Modified By:</span>
+            }}&nbsp;&nbsp;&nbsp; <span class="text-muted">Modified By:</span>
             {{ product.modifiedBy }}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modify Date:</span>
+            <span class="text-muted">Modify Date:</span>
             {{ product.lastModifiedDate | date: "MM/dd/yyyy hh:mm:ss a" }}
           </div>
         </div>
@@ -488,7 +488,7 @@
                         {{ product.productProvenances.length }}</span
                       >
                       Product Provenance
-                      <span class="colorblue" *ngIf="prodProv.provenance"
+                      <span class="text-info" *ngIf="prodProv.provenance"
                         >: {{ prodProv.provenance }}</span
                       >
                     </legend>

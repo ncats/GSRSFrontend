@@ -159,7 +159,7 @@
       <div class="width100percent">
         <mat-card class="card-fit">
           <mat-card-title>
-            <span class="colorblue font20px"><b></b></span>
+            <span class="text-info font20px"><b></b></span>
           </mat-card-title>
 
           <mat-card-content class="">
@@ -519,19 +519,19 @@
                     class="form-row font11px"
                     *ngIf="screening.invitroSummary.createdBy"
                   >
-                    <span class="colorgray">Created By:</span>&nbsp;{{
+                    <span class="text-muted">Created By:</span>&nbsp;{{
                       screening.invitroSummary.createdBy
                     }}&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span class="colorgray">Create Date:</span>&nbsp;{{
+                    <span class="text-muted">Create Date:</span>&nbsp;{{
                       screening.invitroSummary.createdDate
                         | date
                           : "MM/dd/yyyy hh:mm:ss
                     a"
                     }}&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span class="colorgray">Modified By:</span>&nbsp;{{
+                    <span class="text-muted">Modified By:</span>&nbsp;{{
                       screening.invitroSummary.modifiedBy
                     }}&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span class="colorgray">Modify Date:</span>&nbsp;{{
+                    <span class="text-muted">Modify Date:</span>&nbsp;{{
                       screening.invitroSummary.modifiedDate
                         | date: "MM/dd/yyyy hh:mm:ss a"
                     }}

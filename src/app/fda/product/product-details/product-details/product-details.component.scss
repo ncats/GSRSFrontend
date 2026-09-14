@@ -313,47 +313,47 @@
 }
 
 .colorblack {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
 }
 
 .colorwhite {
-  color: var(--regular-white-color);
+  color: var(--surface-card);
 }
 
 .coloroffwhite {
-  color: var(--light-yellow-color-2);
+  color: var(--highlight-soft-attention-2);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
 .colororange {
-  color: var(--orange-color);
+  color: var(--accent-warm);
 }
 
-.colorblue {
-  color: var(--regular-blue-color);
+.text-info {
+  color: var(--accent-info);
 }
 
 .colorlightblue {
-  color: var(--blue-color);
+  color: var(--accent-primary-strong);
 }
 
 .colorgreen {
-  color: var(--regular-green-color);
+  color: var(--accent-positive);
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .bordergreen {
-  border: 1px solid var(--regular-green-color);
+  border: 1px solid var(--accent-positive);
 }
 
 .bordertopnone {
@@ -365,7 +365,7 @@
 }
 
 .colororange {
-  color: var(--orange-color);
+  color: var(--accent-warm);
 }
 
 .width300px {
@@ -400,13 +400,13 @@
 }
 
 .backgroundblue {
-  background-color: var(--regular-blue-color);
+  background-color: var(--accent-info);
 }
 
 hr {
   border: none;
-  border-top: 3px dotted var(--regular-green-color);
-  color: var(--hr-color);
+  border-top: 3px dotted var(--accent-positive);
+  color: var(--divider-strong);
   overflow: visible;
   text-align: center;
   height: 5px;
@@ -427,8 +427,8 @@ hr {
  }
 
 .badge-one {
-  background-color: green;
-  color: white;
+  background-color: var(--accent-positive);
+  color: var(--surface-card);
   padding: 3px 3px;
   text-align: center;
   border-radius: 5px;
@@ -444,7 +444,7 @@ hr {
 
 .badge-two {
   background-color: rgb(113, 94, 2);
-  color: white;
+  color: var(--surface-card);
   padding: 6px 6px;
   text-align: center;
   border-radius: 10px;
@@ -459,7 +459,7 @@ hr {
 .ingredienttitle {
    width: 190px;
    height: 40px;
-   background-color: var(--legend-bg-color);
+   background-color: var(--legend-info-bg);
    border-radius: 10px 10px 0px 0px;
    border: 1px solid gray;
    border-bottom: none;
@@ -468,7 +468,7 @@ hr {
 table.blueTable {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   /*font-family: Verdana, Geneva, sans-serif;*/
-  border: 1px solid var(--secondary-blue-color);
+  border: 1px solid var(--accent-secondary);
   background-color: var(--table-bg-color);
   width: 100%;
   text-align: left;
@@ -510,7 +510,7 @@ table.blueTable thead th:first-child {
 table.blueTable tfoot {
   font-size: 14px;
   font-weight: bold;
-  color: var(--white-color);
+  color: var(--surface-base);
   background: var(--table-th-border-color-2);
   border-top: 2px solid var(--table-thead-border-color);
 }
@@ -525,8 +525,8 @@ table.blueTable tfoot .links {
 
 table.blueTable tfoot .links a{
   display: inline-block;
-  background: var(--secondary-blue-color);
-  color: var(--white-color);
+  background: var(--accent-secondary);
+  color: var(--surface-base);
   padding: 2px 8px;
   border-radius: 5px;
 }
@@ -541,7 +541,7 @@ table.blueTable tfoot .links a{
 .tab-style {
   border-width: 9px;
   border-style: solid;
-  border-color: red;
+  border-color: var(--accent-warning);
 }
 
 /* TAB STYLE BEGIN */
@@ -556,7 +556,7 @@ table.blueTable tfoot .links a{
   color: #393939;
   opacity: 1 !important;
   border-radius: 10px 10px 0px 0px;
-  background-color: var(--regular-lightgray-color-2);
+  background-color: var(--surface-muted-2);
 }
 
 :host ::ng-deep .mat-mdc-tab .mdc-tab__text-label,
@@ -567,18 +567,18 @@ table.blueTable tfoot .links a{
 :host ::ng-deep .mat-mdc-tab-header,
 :host ::ng-deep .mat-tab-header {
   margin-top: -10px; /* tab margin*/
-  border-bottom: 1px solid rgb(205, 201, 201);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 :host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab.mdc-tab--active,
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  background-color: var(--tabstyle-bg-color-7);
-  color: #FFFFFF !important;
+  background-color: var(--tab-link-bg-strong);
+  color: var(--surface-base) !important;
   font-weight: bold;
 }
 
 :host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-  color: #FFFFFF !important;
+  color: var(--surface-base) !important;
 }
 
 :host ::ng-deep .mdc-tab-indicator,
@@ -606,7 +606,7 @@ table.blueTable tfoot .links a{
 @media(max-width: 918px) {
   .product-property {
         width: 100%;
-        border:1px solid var(--regular-red-color);
+        border:1px solid var(--accent-warning);
   }
 
   .row {

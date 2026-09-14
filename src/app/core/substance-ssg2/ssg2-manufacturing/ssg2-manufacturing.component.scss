@@ -21,12 +21,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--overlay-modal-bg);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--overlay-modal-text);
 }
 
 .form-row {
@@ -77,7 +77,7 @@
 .materialborder {
   padding-top: 10px;
   margin-top: 15px;
-  border: 2px solid rgb(182, 175, 175);
+  border: 2px solid var(--border-soft-rgb-4);
 }
 
 .materialtitle {
@@ -99,7 +99,7 @@
 }
 
 .borderorange {
-  border: 1px solid orangered;
+  border: 1px solid var(--accent-alert);
 }
 
 .fontsize18px {
@@ -107,7 +107,7 @@
 }
 
 .colorgreen {
-  color: green;
+  color: var(--accent-positive);
 }
 
 .margintop10px {
@@ -127,8 +127,8 @@
   position: relative;
   top: 25px;
   margin-right: 20px;
-  background-color: #ffffff;
-  border: 1px solid #007cba;
+  background-color: var(--surface-base);
+  border: 1px solid var(--legend-info-border-2);
 }
 
 .button-delete-stage {
@@ -136,9 +136,9 @@
   position: absolute;
   top: -60px;
   margin-right: 20px;
-  color: red;
-  background-color: #ffffff;
-  border: 1px solid red;
+  color: var(--accent-warning);
+  background-color: var(--surface-base);
+  border: 1px solid var(--accent-warning);
 }
 
 .button-delete {
@@ -152,9 +152,9 @@
   position: absolute;
   top: -60px;
   margin-right: 360px;
-  color: #007cba;
-  background-color: #ffffff;
-  border: 1px solid #007cba;
+  color: var(--legend-info-border-2);
+  background-color: var(--surface-base);
+  border: 1px solid var(--legend-info-border-2);
 }
 
 .button-insert-after {
@@ -162,9 +162,9 @@
   position: absolute;
   top: -60px;
   margin-right: 180px;
-  color: #007cba;
-  background-color: #ffffff;
-  border: 1px solid #007cba;
+  color: var(--legend-info-border-2);
+  background-color: var(--surface-base);
+  border: 1px solid var(--legend-info-border-2);
 }
 
 fieldset.border {
@@ -175,9 +175,9 @@ fieldset.border {
   margin-bottom: 30px;
   min-width: 0; /* override the default value of min-content */
   /*
-  -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
-  -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
-  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64); */
+  -webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-shadow);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-shadow);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-shadow); */
 }
 
 legend.border {
@@ -185,8 +185,8 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  /* FDA COLOR BLUE CODE Hex: #007CBA */
-  color: #007cba;
+  /* FDA COLOR BLUE CODE Hex: var(--legend-info-border-2) */
+  color: var(--legend-info-border-2);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;

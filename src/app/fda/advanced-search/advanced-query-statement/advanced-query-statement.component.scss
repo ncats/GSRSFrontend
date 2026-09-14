@@ -104,18 +104,18 @@ mat-form-field {
   }
 
   div {
-    color: var(--regular-grey-color);
+    color: var(--text-tertiary);
     font-size: 12px;
   }
 
   span {
-    color: var(--regular-black-color);
+    color: var(--text-strong);
   }
 }
 
 mat-error {
-  --mat-form-field-error-text-color: var(--regular-red-color);
-  color: var(--regular-red-color);
+  --mat-form-field-error-text-color: var(--accent-warning);
+  color: var(--accent-warning);
 }
 
 .marginright20px {
@@ -169,5 +169,5 @@ mat-error {
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }

@@ -34,13 +34,13 @@
   padding-top: 10p;
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .button-style {
-  background-color:var(--blue-bg-color-rgb);
-  color: var(--white-color);
+  background-color:var(--accent-primary-overlay);
+  color: var(--surface-base);
   text-decoration: none;
   vertical-align: middle;
   font-weight: 600;

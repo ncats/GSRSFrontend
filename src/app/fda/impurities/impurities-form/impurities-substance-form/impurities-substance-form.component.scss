@@ -4,7 +4,7 @@
   flex-direction: column;
   top: 64px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   align-items: center;
   justify-content: center;
   box-shadow:
@@ -49,7 +49,7 @@
   font-size: 18px;
   font-weight: 700px;
   font-family: Arial, Helvetica, sans-serif;
-  color: var(--regular-blue-color);
+  color: var(--accent-info);
   padding-top: 10px;
 }
 
@@ -154,7 +154,7 @@
 .actions-container {
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   padding: 10px;
   display: flex;
 }
@@ -174,7 +174,7 @@
   transition: all 500ms ease-out;
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   display: flex;
   flex-direction: column;
 
@@ -304,24 +304,24 @@
 }
 
 .borderlightgray {
-  border: 1px solid rgb(224, 224, 224);
+  border: 1px solid var(--border-soft);
 }
 
 .borderyellow {
-  border: 1px solid var(--yellow-color);
+  border: 1px solid var(--accent-attention);
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .bordergreen {
-  border: 1px solid var(--regular-green-color);
+  border: 1px solid var(--accent-positive);
 }
 
 .borderstructure {
-  border: 1px solid rgb(231, 231, 231);
-  box-shadow: 2px 2px #eeeeee;
+  border: 1px solid var(--surface-muted-2);
+  box-shadow: 2px 2px var(--border-soft);
   margin-right: 10px;
 }
 
@@ -349,12 +349,12 @@
   width: 75%;
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .font11px {
@@ -395,7 +395,7 @@
 
 .disabledfield {
   cursor: not-allowed;
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 /* CV INPUT OVERWRITE WIDTH */
@@ -411,8 +411,8 @@
 
 hr {
   border: none;
-  border-top: 3px solid var(--regular-green-color);
-  color: var(--hr-color);
+  border-top: 3px solid var(--accent-positive);
+  color: var(--divider-strong);
   overflow: visible;
   text-align: center;
   height: 5px;
@@ -421,15 +421,15 @@ hr {
 .tabStyle {
   width: 200px;
   height: 30px;
-  border: 1px solid var(--regular-grey-color);
-  background: var(--tabstyle-bg-color-2);
+  border: 1px solid var(--text-tertiary);
+  background: var(--tab-warning-bg);
 }
 
 // .mat-form-field-style theming is applied globally in _material-overrides.scss
 // via CSS custom properties so it cascades through component boundaries.
 
 .errortext {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
   font-size: 11px;
 }
 
@@ -438,14 +438,14 @@ hr {
 }
 
 .borderbottom {
-  border-bottom: 1px solid var(--regular-gainsboro-color);
+  border-bottom: 1px solid var(--surface-divider);
 }
 
 .tabStyle {
   width: 170px;
   height: 30px;
-  border: 1px solid var(--regular-grey-color);
-  background: var(--tabstyle-bg-color-3);
+  border: 1px solid var(--text-tertiary);
+  background: var(--tab-attention-bg);
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
   -moz-border-radius-topleft: 5px;
@@ -474,8 +474,8 @@ hr {
 
 .custom-badge {
   .mat-badge-content {
-    background: var(--mustard-color);
-    color: var(--regular-white-color);
+    background: var(--accent-spice);
+    color: var(--surface-card);
   }
   .mat-badge-medium .mat-badge-above .mat-badge-top .mat-badge-content {
     top: unset;
@@ -488,7 +488,7 @@ hr {
   .close-button,
   .activate-search-button {
     mat-icon svg {
-      fill: black !important;
+      fill: var(--feedback-neutral-text) !important;
     }
   }
 }

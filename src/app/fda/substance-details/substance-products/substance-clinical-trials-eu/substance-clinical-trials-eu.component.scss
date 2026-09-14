@@ -21,12 +21,12 @@
   font-size: 15px;
 }
 
-.colorgray {
-	color: var(--regular-grey-color);
+.text-muted {
+	color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .padleft25px {
@@ -37,8 +37,8 @@
   padding-top: 5px;
 }
 
-.colorblue {
-  color: var(--deep-purple-color);
+.text-info {
+  color: var(--accent-mystical-strong);
 }
 
 .spinnerstyle {

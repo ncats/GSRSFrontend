@@ -4,7 +4,7 @@
   flex-direction: column;
   /*top: 64px; */
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   align-items: center;
   /*justify-content: center;*/
   box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
@@ -23,7 +23,7 @@
 .actions-container {
   max-width: 100%;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   padding: 10px 45px;
   display: flex;
   justify-content: flex-end;
@@ -124,7 +124,7 @@ mat-select-panel {
   transition: all 500ms ease-out;
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   display: flex;
   flex-direction: column;
 
@@ -242,24 +242,24 @@ mat-select-panel {
 }
 
 .bordergray {
-  border: 1px solid green;
+  border: 1px solid var(--accent-positive);
 }
 
 .borderblue {
-  border: 1px solid #007CBA;
+  border: 1px solid var(--legend-info-border-2);
 }
 
 .fontbold {
   font-weight: bold;
 }
 
-/* FDA COLOR BLUE CODE Hex: #007CBA */
-.colorbluefda {
-  color: #007CBA;
+/* FDA COLOR BLUE CODE Hex: var(--legend-info-border-2) */
+.text-brand {
+  color: var(--legend-info-border-2);
 }
 
-.colorred {
-  color: red;
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .bkcoloryellow {
@@ -272,17 +272,17 @@ mat-select-panel {
 }
 
 .mat-menu-item {
-  color: #007CBA !important;
+  color: var(--legend-info-border-2) !important;
 }
 
 /*
 button.mat-menu-item{
-  background-color: white;
+  background-color: var(--surface-card);
 }
 
 button.mat-menu-item:hover {
-  background-color: #007CBA;
-  color: #fff !important;
+  background-color: var(--legend-info-border-2);
+  color: var(--surface-base) !important;
 }
 */
 

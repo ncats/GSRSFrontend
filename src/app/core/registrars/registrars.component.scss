@@ -154,7 +154,7 @@ a.mat-list-item {
 
 .big-button {
   font-size: 19px !important;
-  color: var(--regular-white-color) !important;
+  color: var(--surface-card) !important;
   background-color: var(--primary-color) !important;
   padding: 3px 14px !important;
 }
@@ -271,7 +271,7 @@ mat-list-item {
 
 .custom-wrap:hover {
   text-decoration: underline;
-  background-color: var(--hover-bg-color);
+  background-color: var(--row-hover-bg);
   cursor: pointer;
 }
 
@@ -288,13 +288,13 @@ mat-list-item {
 
 .entry:hover {
   /* text-decoration: underline;
-  background-color:  var(--hover-bg-color);
+  background-color:  var(--row-hover-bg);
   cursor: pointer;*/
 }
 
 .entry:hover div {
   text-decoration: underline;
-  /*background-color:  var(--hover-bg-color);*/
+  /*background-color:  var(--row-hover-bg);*/
 }
 
 .half-column {

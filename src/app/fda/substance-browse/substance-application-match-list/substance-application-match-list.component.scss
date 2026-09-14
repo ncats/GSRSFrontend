@@ -23,20 +23,20 @@
   font-size: 18px;
 }
 
-.colorred {
-	color: var(--regular-red-color);
+.text-danger {
+	color: var(--accent-warning);
 }
 
 .colorgreen {
-	color: var(--regular-green-color);
+	color: var(--accent-positive);
 }
 
 .colorpurple {
-	color: var(--regular-purple-color);
+	color: var(--accent-mystical);
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .padtop20px {
@@ -72,9 +72,9 @@
 	vertical-align: top;
 	color: var(--secondary-title-color);
 	padding-left: 3px;
-	background-color: var(--pale-border-color-rgb-2);
-	border-bottom: 1px solid var(--regular-grey-color);
-	border-right: 1px solid var(--regular-grey-color);
+	background-color: var(--border-soft-rgb-2);
+	border-bottom: 1px solid var(--text-tertiary);
+	border-right: 1px solid var(--text-tertiary);
 }
 
 .cellstyle {
@@ -82,11 +82,11 @@
 	text-align: top;
   padding-left: 3px;
   padding-top: 3px;
-	border-right: 1px solid var(--regular-grey-color);
+	border-right: 1px solid var(--text-tertiary);
 }
 
 .backgroundyellow {
-  background-color: var(--light-yellow-color-2);
+  background-color: var(--highlight-soft-attention-2);
 }
 
 .divflex {

@@ -10,6 +10,15 @@
   color: var(--link-color);
 }
 
+// Classification tree links are plain anchors (no class), rendered via
+// [innerHTML]. Color them through --link-color so runtime overrides of the
+// token (e.g. styles.custom.css) apply here too. The mat-column-classificationTree
+// class (added by mat-table per column) scopes this to the classification
+// column only; .a-link links keep their own rule above.
+td.mat-column-classificationTree a:not(.a-link) {
+  color: var(--link-color);
+}
+
 .disabled-btn {
   color: var(--box-shadow-color-5);
   background-color: var(--box-shadow-color-3);

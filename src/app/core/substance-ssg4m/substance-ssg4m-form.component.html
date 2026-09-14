@@ -3,7 +3,7 @@
     <div class="actions-container">
 
       <!-- SAVING DELAY: Display Cancel button if it is taking too long to save -->
-      <div class="divflex padtop15px colorred padleft25px fontsize16px padall25px marginright75px bkcoloryellow"
+      <div class="divflex padtop15px text-danger padleft25px fontsize16px padall25px marginright75px bkcoloryellow"
         *ngIf="saveDelayedMessage">
         <div [innerHTML]="saveDelayedMessage">
         </div>
@@ -18,7 +18,7 @@
 
       <!-- Drop down menu with sub menu -->
       <button mat-stroked-button color="primary" class="borderblue" [matMenuTriggerFor]="menu"><span
-          class="colorbluefda">Import and Export</span>
+          class="text-brand">Import and Export</span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <mat-menu #menu="matMenu" x-position="before" class="custom-menu">
@@ -86,14 +86,14 @@
     <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
       <!-- Only show the title when passed parameter header=true in the Url -->
       <div *ngIf="showHeaderBar === 'true'">
-        <span class="colorbluefda fontbold padleft25px">{{(id && !imported) ? 'Editing ' : 'Registering New '}} -
+        <span class="text-brand fontbold padleft25px">{{(id && !imported) ? 'Editing ' : 'Registering New '}} -
           Specified Substance Group 4 Manufacturing
         </span>
       </div>
 
       <!-- If Error Message exists, display here -->
       <div class="ontopmessage" *ngIf="errorMessage"
-        class="bordergray colorred margintop10px padleft25px fontsize16px padall25px bkcoloryellow">
+        class="bordergray text-danger margintop10px padleft25px fontsize16px padall25px bkcoloryellow">
         <div [innerHTML]="errorMessage"></div>
       </div>
 
@@ -106,7 +106,7 @@
               [ngClass]="{'hidden': section.isHidden}">
               <mat-expansion-panel-header>
                 <mat-panel-title>
-                  <span class="fontsize20px colorbluefda fontbold">{{section.menuLabel}}</span>
+                  <span class="fontsize20px text-brand fontbold">{{section.menuLabel}}</span>
                   <div class="middle-fill"></div>
 
                   <div *ngIf="section.canAddItem && (section.menuLabel && section.menuLabel !== 'Processes')">

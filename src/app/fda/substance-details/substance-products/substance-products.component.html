@@ -11,7 +11,7 @@
 
       <div *ngIf="(loadingComplete === true && foundProvenanceList === false && productCount === 0)">
         <br>
-        <div class="padleft25px colorblue"><b>No Product Found</b></div>
+        <div class="padleft25px text-info"><b>No Product Found</b></div>
         <br>
       </div>
 
@@ -19,10 +19,10 @@
       <mat-tab-group (selectedTabChange)="tabSelected($event)">
         <mat-tab label="{{prov}}" *ngFor="let prov of provenanceList; let index = index">
 
-          <div class="divflex padtop5px padleft25px font15px colorblue">
+          <div class="divflex padtop5px padleft25px font15px text-info">
             <b> {{prov}}</b>
             &nbsp;&nbsp;&nbsp;
-            <span class="colorred">{{loadingStatus}}</span>
+            <span class="text-danger">{{loadingStatus}}</span>
             &nbsp;&nbsp;&nbsp;
 
             <!-- Export Button -->
@@ -97,7 +97,7 @@
                           {{prodCode.productCode}}
                         </span>
 
-                        <span class="colorgray">&nbsp;({{prodCode.productCodeType}})</span>
+                        <span class="text-muted">&nbsp;({{prodCode.productCodeType}})</span>
                         
                         <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
                         </mat-icon>
@@ -119,7 +119,7 @@
                         <li>{{prodName.productName}}
 
                           <span *ngIf="prodName.productNameType">
-                            <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
+                            <span class="text-muted font11px">&nbsp;({{prodName.productNameType}})</span>
                           </span>
                         </li>
                       </div>
