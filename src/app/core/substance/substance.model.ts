@@ -431,6 +431,11 @@ export interface Link extends SubstanceBase {
   references?: Array<string>;
 }
 
+// True for linkage types that bond sites in pairs (e.g. Cys-linker-Cys, Cys-linker-Lys) rather than a flat set/range.
+export function isPairedLinkageType(linkageType: string): boolean {
+  return !!linkageType && linkageType.toLowerCase().includes('linker');
+}
+
 export interface DisulfideLink extends SubstanceBase {
   sites?: Array<Site>;
   sitesShorthand?: string;

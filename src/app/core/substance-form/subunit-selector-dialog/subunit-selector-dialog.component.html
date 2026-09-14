@@ -4,6 +4,7 @@
 <app-subunit-selector
   [card]="data.card"
   [link]="data.link"
+  [preserveSiteOrder]="data.preserveSiteOrder"
   [feature]="data.feature ? data.feature : null"
   (disulfidesUpdate)="updateDisulfides($event)"
   (sitesUpdate)="updateSites($event)"
