@@ -8,6 +8,7 @@
 @use "styles";
 @use "material-overrides";
 
+@import "quill/dist/quill.snow.css";
 
 :host .mdc-text-field {
   padding: 0 !important;

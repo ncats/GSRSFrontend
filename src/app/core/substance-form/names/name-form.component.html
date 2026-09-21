@@ -32,19 +32,20 @@
       </mat-checkbox>
     </div>
 
-    <mat-form-field class="name">
-      <mat-label>Name</mat-label>
-      <textarea
-        matInput
-        rows="1"
-        [(ngModel)]="name.name"
-        required
-        name="name"
-        (keypress)="preventNewLine($event)"
-        (input)="autoResize($event)"
-      ></textarea>
-      <!-- <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" /> -->
-    </mat-form-field>
+    <div class="name-editor-field">
+      <label for="entity-name-editor" id="entity-name-label">Name</label>
+      <quill-editor
+         id="entity-name-editor"
+          aria-labelledby="entity-name-label"
+            [formControl]="nameControl"
+            theme="snow"
+            [modules]="editorModules"
+            [formats]="allowedFormats"
+            format="html"
+            placeholder="substance name goes here">
+          </quill-editor>
+    </div>
+
     <a
       class="resolve"
       *ngIf="name.name && name.name.length > 0 && substanceType === 'structure'"

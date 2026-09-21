@@ -22,6 +22,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatOptionModule } from "@angular/material/core";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ElementLabelDisplayModule } from "@gsrs-core/utils/element-label-display.module";
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { ElementLabelDisplayModule } from "@gsrs-core/utils/element-label-displa
     MatOptionModule,
     MatTooltipModule,
     ElementLabelDisplayModule,
+    QuillModule
   ],
   declarations: [
     SubstanceFormNamesCardComponent,

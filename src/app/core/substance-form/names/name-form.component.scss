@@ -127,3 +127,13 @@
     margin-right: 0;
   }
 }
+
+.name-editor-field {
+  width: 500px;
+  max-width: 100%;
+}
+
+.name-editor-field quill-editor {
+  display: block;
+  width: 100%;
+}

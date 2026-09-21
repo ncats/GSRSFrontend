@@ -3,6 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/core/app.module';
 import { environment } from './environments/environment';
 import 'hammerjs';
+import "./app/quill-config";
 
 if (environment.production) {
   enableProdMode();

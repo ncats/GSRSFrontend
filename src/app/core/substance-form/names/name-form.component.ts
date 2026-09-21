@@ -7,7 +7,6 @@ import {
   OnDestroy,
 } from "@angular/core";
 import {
-  SubstanceDetail,
   SubstanceName,
   SubstanceNameOrg,
 } from "../../substance/substance.model";
@@ -38,11 +37,32 @@ export class NameFormComponent implements OnInit, OnDestroy {
   deleteTimer: any;
   private subscriptions: Array<Subscription> = [];
   overlayContainer: HTMLElement;
-  substanceType = "";
+  substanceType: string | undefined = "";
   viewFull = true;
   showStd = false;
   canChangeDisplayName: boolean = false;
   substanceStatus: string = "";
+
+  editorModules = {
+    toolbar: [
+      ['italic'],
+      [{ script: 'sub' }, { script: 'super' }],
+      ['clean']
+    ],
+    keyboard: {
+      bindings: {
+        preventEnter: {
+          key: "Enter",
+          handler: () => false
+        }
+      }
+    }
+  };
+
+  allowedFormats = [
+    'italic',
+    'script'
+  ];
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -55,6 +75,13 @@ export class NameFormComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    this.subscriptions.push(
+      this.nameControl.valueChanges.subscribe((html: string | null) => {
+        if (this.privateName) {
+          this.privateName.name = this.normalizeNameHtml(html);
+        }
+      }),
+    );
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const definition = this.substanceFormService.definition.subscribe((def) => {
       this.substanceType = def.substanceClass;
@@ -102,15 +129,21 @@ export class NameFormComponent implements OnInit, OnDestroy {
   set name(name: SubstanceName) {
     if (name != null) {
       this.privateName = name;
+
       if (
         !this.privateName.languages ||
         this.privateName.languages.length === 0
       ) {
         this.privateName.languages = ["en"];
       }
+
       if (!this.privateName.type) {
         this.privateName.type = "cn";
       }
+
+      this.nameControl.setValue(this.privateName.name ?? "", {
+        emitEvent: false
+      });
     }
   }
 
@@ -189,5 +222,15 @@ export class NameFormComponent implements OnInit, OnDestroy {
     if (event.key === "Enter") {
       event.preventDefault();
     }
+  }
+
+  private normalizeNameHtml(html: string | null): string {
+   const value = (html ?? "").trim();
+
+    return value === "<p><br></p>" || value === "<p></p>"
+      ? ""
+      : value
+        .replace(/<P>/gi, "")
+        .replace(/<\/p>/gi, "");
   }
 }
