@@ -14,7 +14,7 @@ The full steps for a complete build are as follows, each will be given in more d
 1. Step 1 [Required] Obtain the required software dependencies (node, npm, and angular CLI, as mentioned above)
 2. Step 2 [Optional] Clear any previous build files, locks, and local dependencies (this step is not typically necessary, but it ensures constency if there were previous local builds)
 3. Step 3 [Optional] Prepare dojo dependencies and place in zip file `lib/dojo-custom-jsdraw.zip` (this dojo build is already prepared by default so this step is optional)
-4. Step 4 [Required] Prepare fundamental dependencies by doing `npm install` with `package.dev.json` file.
+4. Step 4 [Required] Prepare fundamental dependencies by running `npm install`.
 5. Step 5 [Required] Prepare extended one-time build dependencies using specific build commands
 6. Step 6 [Required] Build, run or test the codebase as normal
 
@@ -27,16 +27,15 @@ bash build.sh
 
 Make sure to have these installed in order to run the application:
 
-* [Node](https://nodejs.org/en/)
+* [Node](https://nodejs.org/en/) - version 20.19.0 (see `.github/workflows/binary_build.yml` for the version used in CI)
 * [npm](https://www.npmjs.com/) - usually included in the node installation
-* Angular CLI - on any command line run `npm install -g @angular/cli@latest`
+* Angular CLI - on any command line run `npm install -g @angular/cli@20`
  * The angular cli "ng" executable will be located in this folder:
    * `C:\Users\<USER>\AppData\Roaming\npm\` (Windows 7)
    * `~/.npm-global/bin/` (linux)
    * Note: For best results, this path should be added to your windows/bash
      path as the command will be used a lot.
-   * The angular CLI tool currently needs to have build-angular version <=0.803.25
-   * To force this installation after an audit fix run `npm i @angular-devkit/build-angular@0.803.25`
+   * This project currently targets Angular 20, so `@angular/cli` and `@angular-devkit/build-angular` should match that major version (`^20.x`)
   
 ## Step 2 [Optional]: Clear any Previous Build Files
 
@@ -77,7 +76,7 @@ If you have a need for a different environment, you can create a new one based o
 
 ## Troubleshooting
 
-GSRSFrontend uses node-sass, which has varying compatibilities based on the version of node.js being used. See https://www.npmjs.com/package/node-sass to check which version is compatable with your node version. The value of node-sass being used can be changed in the root 'package.json' file, where the default value is set as `"node-sass": "4.13.1",`
+GSRSFrontend uses dart `sass` (not `node-sass`) for compiling styles, so there are no native-binding/node-version compatibility issues to manage. The version in use can be checked/changed in the root `package.json` file under the `sass` dependency.
 
 # Development tools
 
@@ -92,9 +91,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-
+The `e2e` npm script remains, but no Angular end-to-end test target or tooling is currently configured for this project.
 
 ## Further help
 

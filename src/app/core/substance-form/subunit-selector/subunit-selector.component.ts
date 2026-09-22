@@ -28,6 +28,8 @@ import { SubstanceFormLinksService } from '../links/substance-form-links.service
 export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() card: any;
   @Input() link?: Array<any>;
+  // When true, keeps sites in click order (pairing) instead of sorting — for paired-linkage types like Cys-linker-Cys.
+  @Input() preserveSiteOrder?: boolean;
   @Output() sitesUpdate = new EventEmitter<Array<Site>>();
   @Output() featureUpdate = new EventEmitter<any>();
   @Output() disulfidesUpdate = new EventEmitter<any>();
@@ -220,19 +222,26 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   updateDisplay(): void {
-    this.sites = this.sites.sort(function (s1, s2) {
-      if (s1.subUnitIndex > s2.subunitIndex) {
-        return 1;
-      } else if (s1.subunitIndex < s2.subunitIndex) {
-        return -1;
-      } else if (s1.residueIndex > s2.residueIndex) {
-        return 1;
-      } else if (s1.residueIndex < s2.residueIndex) {
-      } else {
-        return 1;
-      }
-    });
-    this.sitesDisplay = this.substanceFormService.siteString(this.sites);
+    // Skip the sort for paired-linkage types, since click order IS the pairing.
+    if (!this.preserveSiteOrder) {
+      // Fixed a subUnitIndex/subunitIndex typo and a missing return here (both pre-existing) while touching this comparator for preserveSiteOrder.
+      this.sites = this.sites.sort(function (s1, s2) {
+        if (s1.subunitIndex > s2.subunitIndex) {
+          return 1;
+        } else if (s1.subunitIndex < s2.subunitIndex) {
+          return -1;
+        } else if (s1.residueIndex > s2.residueIndex) {
+          return 1;
+        } else if (s1.residueIndex < s2.residueIndex) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+    }
+    this.sitesDisplay = this.preserveSiteOrder
+      ? this.substanceFormService.pairedSiteString(this.sites)
+      : this.substanceFormService.siteString(this.sites);
   }
 
   toggleMultiDisulfide(subunit: any, residue: any, value: any, event): void {
