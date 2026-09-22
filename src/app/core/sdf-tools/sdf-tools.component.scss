@@ -1,0 +1,36 @@
+// The app's single-row `.mat-toolbar` (both the GSRS header and the pFDA toolbar) is
+// `position: fixed; top: 0; height: 64px` — see `.mat-toolbar:not(.mat-toolbar-multiple-rows)`
+// in styles/_material-overrides.scss. It is out of the document flow, so a routed page that
+// starts at the top of the viewport renders underneath it. Offset the container by the
+// toolbar height so the "SD File Tools" heading clears it.
+$toolbar-height: 64px;
+
+.sdf-tools-container {
+  padding: calc(#{$toolbar-height} + 20px) 30px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.sdf-tools-header {
+  h1 {
+    margin-bottom: 6px;
+    font-size: 26px;
+  }
+}
+
+.sdf-tools-subtitle {
+  color: rgba(0, 0, 0, 0.62);
+  max-width: 860px;
+  margin-top: 0;
+  line-height: 1.5;
+}
+
+.sdf-tools-tabs {
+  margin-top: 12px;
+}
+
+@media (max-width: 700px) {
+  .sdf-tools-container {
+    padding: calc(#{$toolbar-height} + 16px) 12px 32px;
+  }
+}

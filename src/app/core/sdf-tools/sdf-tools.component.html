@@ -1,0 +1,35 @@
+<div class="sdf-tools-container">
+  <div class="sdf-tools-header">
+    <h1>SD File Tools</h1>
+    <p class="sdf-tools-subtitle">
+      Everything you need to prepare a Structure-Data File (SD File) for a regulatory
+      submission: validate it against the GSRS Quick Guide, convert it into GSRS substance
+      JSON, and read the guidance &mdash; all in one place.
+    </p>
+  </div>
+
+  <mat-tab-group
+    class="sdf-tools-tabs"
+    [selectedIndex]="selectedIndex"
+    (selectedTabChange)="onTabChanged($event)"
+    animationDuration="0ms"
+  >
+    <mat-tab label="Validate">
+      <ng-template matTabContent>
+        <app-sdf-validator></app-sdf-validator>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Import">
+      <ng-template matTabContent>
+        <app-sdf-import></app-sdf-import>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Guide">
+      <ng-template matTabContent>
+        <app-sdf-guide></app-sdf-guide>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -1,0 +1,92 @@
+<div class="sdf-guide">
+  <div class="guide-downloads">
+    <a
+      mat-flat-button
+      color="primary"
+      [href]="quickGuideUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Open the SD File Quick Guide (PDF)
+    </a>
+    <a mat-stroked-button [href]="sampleFileUrl" [attr.download]="sampleFilename">
+      Download a sample SD File
+    </a>
+  </div>
+
+  <section class="guide-section">
+    <h3>What to include in an SD File</h3>
+    <p>
+      SD Files should represent drug substances, starting materials, intermediates,
+      impurities, degradants, and leachables exceeding the Analytical Evaluation Threshold
+      (AET). <strong>Reagents and solvents should be excluded.</strong>
+    </p>
+  </section>
+
+  <section class="guide-section">
+    <h3>Recommended data headers</h3>
+    <p>
+      Headers must be enclosed in angle brackets, for example
+      <code>&gt; &lt;NAME&gt;</code>. Using these exact names promotes an efficient review.
+    </p>
+    <table class="guide-table">
+      <thead>
+        <tr>
+          <th>Header</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of recommendedHeaders">
+          <td><code>{{ item.header }}</code></td>
+          <td>{{ item.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="guide-section">
+    <h3>Key format requirements</h3>
+    <ul class="guide-list">
+      <li><strong>Structure format</strong> must be V2000. V3000 is not accepted.</li>
+      <li>
+        The <strong>MOL header</strong> must contain exactly three lines before the counts
+        line (the line containing <code>V2000</code>). These lines may be blank.
+      </li>
+      <li>
+        Records must be separated by a line containing four dollar signs:
+        <code>$$$$</code>.
+      </li>
+      <li>The file extension must be <code>.sdf</code> or <code>.txt</code>.</li>
+      <li>
+        Avoid special atom notations and S-groups where possible; see the Quick Guide for
+        how to represent salts, stereochemistry and isotopes properly.
+      </li>
+      <li>
+        At least one record should be identified as the <strong>drug substance</strong> in
+        its <code>ROLE</code> field.
+      </li>
+    </ul>
+  </section>
+
+  <section class="guide-section">
+    <h3>Support</h3>
+    <ul class="guide-list">
+      <li *ngFor="let contact of supportContacts">
+        {{ contact.label }}:
+        <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="guide-section">
+    <h3>Online resources</h3>
+    <ul class="guide-list">
+      <li *ngFor="let resource of onlineResources">
+        <a [href]="resource.url" target="_blank" rel="noopener noreferrer">
+          {{ resource.label }}
+        </a>
+      </li>
+    </ul>
+  </section>
+</div>

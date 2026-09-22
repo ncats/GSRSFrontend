@@ -1,0 +1,50 @@
+<div class="sdf-validator">
+  <div class="validator-toolbar">
+    <div class="validator-intro">
+      <p>
+        Check an SD File against the recommendations in the GSRS
+        <em>Quick Guide to Creating a Structure-Data File (SD File) for eCTD Submissions</em>
+        before you submit it. Everything runs inside your browser &mdash;
+        <strong>your file is never uploaded to a server</strong>.
+      </p>
+    </div>
+    <div class="validator-actions">
+      <a
+        mat-flat-button
+        color="primary"
+        [href]="validatorUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open in a new tab
+      </a>
+      <a mat-stroked-button [href]="validatorUrl" [attr.download]="validatorFilename">
+        Download (works offline)
+      </a>
+    </div>
+  </div>
+
+  <div class="validator-frame-container" *ngIf="isBrowser; else browserOnly">
+    <iframe
+      class="validator-frame"
+      title="SD File Validator"
+      [src]="safeValidatorUrl"
+      sandbox="allow-scripts allow-downloads allow-popups allow-modals"
+      referrerpolicy="no-referrer"
+    ></iframe>
+  </div>
+
+  <ng-template #browserOnly>
+    <p class="validator-notice">The SD File Validator requires a browser to run.</p>
+  </ng-template>
+
+  <div class="validator-disclaimer">
+    <p>
+      <strong>Disclaimer:</strong> Using this tool does not guarantee that your submission
+      nor SD File will pass eCTD validation, and it does not guarantee approval of your
+      submission. This validator is provided to assist with SD File preparation and does not
+      replace official FDA guidance. The validation results are advisory and do not
+      constitute an official FDA review. The validator cannot capture all issues.
+    </p>
+  </div>
+</div>
