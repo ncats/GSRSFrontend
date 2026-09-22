@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { concatMap, map, switchMap, take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
@@ -32,7 +33,8 @@ export class ImpuritiesService extends BaseHttpService {
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
-    public utilsService: UtilsService
+    public utilsService: UtilsService,
+    public authService: AuthService
   ) {
     super(configService);
     // Initialize fields that depend on configService
@@ -159,6 +161,43 @@ export class ImpuritiesService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
+
+    // precisionFDA only: the GSRS impurities database is read-only. The submission is intercepted by
+    // the pFDA platform, which stores the impurities JSON as a file in the user's My Home area and
+    // returns a 'fileUrl'. Saving requires an authenticated pFDA user, so anonymous users are
+    // prompted to log in (popup) before the request is sent.
+    if (this.configService.configData && this.configService.configData.isPfdaVersion) {
+      // No trailing slash, the pFDA platform routes this exact path to its own file-upload endpoint
+      const pfdaUrl = this.configService.configData.apiBaseUrl + 'api/v1/impurities';
+      const method = ((this.impurities != null) && (this.impurities.id)) ? 'PUT' : 'POST';
+      const pfdaOptions = {
+        body: this.impurities,
+        headers: {
+          'Content-type': 'application/json'
+        }
+      };
+
+      return this.authService.getAuth().pipe(
+        // getAuth() is a BehaviorSubject that never completes. Taking a single value prevents the
+        // auth update emitted by a successful pfdaLogin() from queueing a second save request.
+        take(1),
+        concatMap(auth =>
+          auth
+            ? this.http.request<Impurities>(method, pfdaUrl, pfdaOptions)
+            : this.authService.pfdaLogin().pipe(
+              concatMap(success =>
+                success
+                  ? this.http.request<Impurities>(method, pfdaUrl, pfdaOptions)
+                  : throwError(() => ({
+                    type: 'AUTH',
+                    message: 'Authentication failed',
+                  }))
+              )
+            )
+        )
+      );
+    }
+
     // Update Impurity
     if ((this.impurities != null) && (this.impurities.id)) {
       return this.http.put<Impurities>(url, this.impurities, options);
