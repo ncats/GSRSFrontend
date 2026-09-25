@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { SdfToolsComponent } from './sdf-tools.component';
+import { SDF_IMPORT_ENABLED, SDF_TOOLS_TABS } from './sdf-tools.constants';
 
 describe('SdfToolsComponent', () => {
   let component: SdfToolsComponent;
@@ -56,7 +57,8 @@ describe('SdfToolsComponent', () => {
   it('should select the tab named in the query param', () => {
     queryParamMap = of(makeParamMap('guide'));
     createComponent();
-    expect(component.selectedIndex).toBe(2);
+    expect(component.selectedIndex).toBe(SDF_TOOLS_TABS.indexOf('guide'));
+    expect(component.selectedIndex).toBeGreaterThan(0);
   });
 
   it('should fall back to the first tab for an unknown tab name', () => {
@@ -67,11 +69,11 @@ describe('SdfToolsComponent', () => {
 
   it('should write the active tab back to the query params', () => {
     createComponent();
-    component.onTabChanged({ index: 1 } as any);
+    component.onTabChanged({ index: SDF_TOOLS_TABS.indexOf('guide') } as any);
 
     expect(routerSpy.navigate).toHaveBeenCalled();
     const args = routerSpy.navigate.calls.mostRecent().args;
-    expect(args[1].queryParams).toEqual({ tab: 'import' });
+    expect(args[1].queryParams).toEqual({ tab: 'guide' });
     expect(args[1].replaceUrl).toBe(true);
   });
 
@@ -80,6 +82,28 @@ describe('SdfToolsComponent', () => {
     routerSpy.navigate.calls.reset();
     component.onTabChanged({ index: 99 } as any);
     expect(routerSpy.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should keep the import tab in sync with the SDF_IMPORT_ENABLED flag', () => {
+    createComponent();
+    expect(component.importEnabled).toBe(SDF_IMPORT_ENABLED);
+    expect(SDF_TOOLS_TABS.includes('import')).toBe(SDF_IMPORT_ENABLED);
+  });
+
+  it('should fall back to the first tab when ?tab=import is requested while import is disabled', () => {
+    if (SDF_IMPORT_ENABLED) {
+      pending('Import tab is enabled');
+      return;
+    }
+    queryParamMap = of(makeParamMap('import'));
+    createComponent();
+    expect(component.selectedIndex).toBe(0);
+  });
+
+  it('should render one mat-tab per entry in SDF_TOOLS_TABS', () => {
+    createComponent();
+    const tabs = fixture.nativeElement.querySelectorAll('mat-tab');
+    expect(tabs.length).toBe(SDF_TOOLS_TABS.length);
   });
 
   it('should read the pfda flag from config', () => {

@@ -3,8 +3,8 @@
     <h1>SD File Tools</h1>
     <p class="sdf-tools-subtitle">
       Everything you need to prepare a Structure-Data File (SD File) for a regulatory
-      submission: validate it against the GSRS Quick Guide, convert it into GSRS substance
-      JSON, and read the guidance &mdash; all in one place.
+      submission: validate it against the GSRS Quick Guide<ng-container *ngIf="importEnabled">,
+      convert it into GSRS substance JSON,</ng-container> and read the guidance &mdash; all in one place.
     </p>
   </div>
 
@@ -20,7 +20,7 @@
       </ng-template>
     </mat-tab>
 
-    <mat-tab label="Import">
+    <mat-tab *ngIf="importEnabled" label="Import">
       <ng-template matTabContent>
         <app-sdf-import></app-sdf-import>
       </ng-template>

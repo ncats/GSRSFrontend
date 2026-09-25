@@ -16,7 +16,15 @@ export const SDF_SAMPLE_FILENAME = '00_SampleSDF_MF012345_API_Name.sdf';
 
 export type SdfToolsTab = 'validate' | 'import' | 'guide';
 
-export const SDF_TOOLS_TABS: Array<SdfToolsTab> = ['validate', 'import', 'guide'];
+/**
+ * The Import tab is hidden until the admin-only backend endpoints it depends on are finalized.
+ * Flip to true to re-enable it; SdfImportComponent/SdfImportService remain wired in the module.
+ */
+export const SDF_IMPORT_ENABLED = false;
+
+/** Tabs currently rendered in the hub, in display order. Indices map 1:1 to mat-tab indices. */
+export const SDF_TOOLS_TABS: Array<SdfToolsTab> = (['validate', 'import', 'guide'] as Array<SdfToolsTab>)
+  .filter(tab => tab !== 'import' || SDF_IMPORT_ENABLED);
 
 /** File extensions the SD File Quick Guide permits for an SD File. */
 export const SDF_ACCEPTED_EXTENSIONS = '.sdf,.txt';

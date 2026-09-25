@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
-import { SDF_TOOLS_TABS, SdfToolsTab } from './sdf-tools.constants';
+import { SDF_IMPORT_ENABLED, SDF_TOOLS_TABS, SdfToolsTab } from './sdf-tools.constants';
 
 @Component({
   selector: 'app-sdf-tools',
@@ -14,6 +14,7 @@ import { SDF_TOOLS_TABS, SdfToolsTab } from './sdf-tools.constants';
 export class SdfToolsComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
   isPfdaVersion = false;
+  readonly importEnabled = SDF_IMPORT_ENABLED;
 
   private subscriptions: Array<Subscription> = [];
 
