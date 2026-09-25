@@ -26,7 +26,9 @@ export class SdfGuideComponent implements OnInit {
   constructor(private configService: ConfigService) {}
 
   ngOnInit(): void {
-    const baseHref = this.configService.environment?.baseHref || '/';
+    // Some builds (e.g. fda.prod) leave environment.baseHref empty and set <base href> via
+    // `ng build --base-href` instead; a relative URL then resolves against that base tag.
+    const baseHref = this.configService.environment?.baseHref || '';
     this.quickGuideUrl = `${baseHref}${SDF_TOOLS_ASSET_DIR}${SDF_QUICK_GUIDE_FILENAME}`;
     this.sampleFileUrl = `${baseHref}${SDF_TOOLS_ASSET_DIR}${SDF_SAMPLE_FILENAME}`;
   }

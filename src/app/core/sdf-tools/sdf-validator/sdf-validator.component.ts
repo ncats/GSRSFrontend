@@ -33,7 +33,9 @@ export class SdfValidatorComponent implements OnInit {
   ngOnInit(): void {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
-    const baseHref = this.configService.environment?.baseHref || '/';
+    // Some builds (e.g. fda.prod) leave environment.baseHref empty and set <base href> via
+    // `ng build --base-href` instead; a relative URL then resolves against that base tag.
+    const baseHref = this.configService.environment?.baseHref || '';
     this.validatorUrl = `${baseHref}${SDF_TOOLS_ASSET_DIR}${SDF_VALIDATOR_FILENAME}`;
     this.safeValidatorUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.validatorUrl);
   }
