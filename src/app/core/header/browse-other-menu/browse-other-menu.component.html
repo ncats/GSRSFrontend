@@ -1,0 +1,43 @@
+@if (loadedComponents && showBrowseOther()) {
+  <div>
+    <button
+      class="top-button extra-browse"
+      mat-button
+      mat-primary-button
+      style="color: white; font-size: 16px; padding-top: 10px; padding-bottom: 10px"
+      [matMenuTriggerFor]="browse"
+      (click)="increaseMenuZindex()"
+      aria-label="main menu"
+    >
+      <span style="font-size: 16px">Browse Other</span>
+      <mat-icon svgIcon="chevron_down"></mat-icon>
+    </button>
+    <mat-menu #browse="matMenu" (closed)="removeZindex()">
+      @if (loadedComponents.applications) {
+        <a mat-menu-item routerLink="/browse-applications">Browse Applications</a>
+        <mat-divider></mat-divider>
+      }
+      @if (loadedComponents.products) {
+        <a mat-menu-item routerLink="/browse-products">Browse Products</a>
+        <mat-divider></mat-divider>
+      }
+      @if (loadedComponents.clinicaltrials) {
+        <a mat-menu-item routerLink="/browse-clinical-trials">Browse Clinical Trials</a>
+        <mat-divider></mat-divider>
+      }
+      @if (loadedComponents.adverseevents) {
+        <a mat-menu-item routerLink="/browse-adverse-events">Browse Adverse Events</a>
+        <mat-divider></mat-divider>
+      }
+      @if (loadedComponents.adverseevents && adverseEventShinyHomepageDisplay) {
+        <mat-divider></mat-divider>
+        <a mat-menu-item [href]="adverseEventShinyHomepageURL" target="_blank">
+          Browse Adverse Events
+        </a>
+      }
+      @if (loadedComponents.invitropharmacology) {
+        <a mat-menu-item routerLink="/browse-invitro-pharm">Browse In Vitro Pharmacology</a>
+      }
+    </mat-menu>
+  </div>
+}

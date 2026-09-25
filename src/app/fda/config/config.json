@@ -1,5 +1,19 @@
 {
-  "version": "3.2.0-SNAPSHOT",
+  "deprecated_customToolbarComponent": "precisionFDA",
+  "_isPfdaVersion": true,
+  "apiBaseUrl": "http://localhost:8081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/",
+  "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
+
+  "_apiBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/",
+  "_gsrsHomeBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/ui/",
+  "_apiSSG4mBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/",
+
+  "showFooter": true,
+  "occasionalApiBasePath": "/ginas/app",
+  "version": "3.2.0-SNAPSHOT-ncats-branch",
+  "phpIdUrl": "https://phpidpublish.who-umc.org/search?phpid=",
+  "rxNormUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?searchdb=rxcui&query=",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "false",
@@ -18,12 +32,8 @@
   "showCrossEntitySearchDropdown": true,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "disableJSDraw": false,
-  "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
-  "apiBaseUrl": "http://localhost:8081/ginas/app/",
-  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
-  "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
-  "occasionalApiBasePath": "/ginas/app",
   "restApiPrefix": "/ginas/app",
+  "showTopBanner": true,
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -33,6 +43,7 @@
   "stagingArea": {
     "mergeAction": false
   },
+
   "userRegistration": {
     "configurations": {
       "emailForm": {
@@ -93,13 +104,7 @@
     ]
   },
   "filteredDuplicationCodes": ["BDNUM", "FDA UNII"],
-  "typeaheadFields": [
-    "Standardized_Name",
-    "Display_Name",
-    "CAS",
-    "Name",
-    "Approval_ID"
-  ],
+  "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID"],
   "loadedComponents": {
     "applications": true,
     "products": true,
@@ -927,7 +932,7 @@
             "DASH INDICATION",
             "DEA NO.",
             "DME Reactions",
-            "DRUGBANK",
+            "DRUG BANK",
             "DRUG CENTRAL",
             "DSLD",
             "EC (ENZYME CLASS)",

@@ -1047,9 +1047,6 @@ app-loading .mat-mdc-progress-spinner {
     flex-direction: row;
     height: 64px;
     background-color: var(--primary-color);
-    position: fixed;
-    top: 0;
-    z-index: 1001;
 
     // @media (max-width: 990px) {
     //   height: auto;

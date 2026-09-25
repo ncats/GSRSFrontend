@@ -1,8 +1,8 @@
 .top-fixed {
-  position: fixed;
+  position: sticky;
   display: flex;
   flex-direction: column;
-  top: 64px;
+  top: 0;
   width: 100%;
   background-color: var(--regular-white-color);
   align-items: center;
@@ -16,7 +16,8 @@
 
 .form-content-container {
   overflow: hidden;
-  padding-top: 110px;
+  // padding-top: 110px;
+  // margin-bottom: 200px; /* ncats branch begin/end */
 }
 
 .scrollable-container {

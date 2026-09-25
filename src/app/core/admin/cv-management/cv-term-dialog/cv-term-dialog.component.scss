@@ -1,67 +1,69 @@
 .form-row {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
 .double-row {
-  justify-content: space-evenly;
+    justify-content: space-evenly;
 }
 
 .validation {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-bottom: 5px;
+display:flex;
+flex-direction: column;
+width: 100%;  
+margin-bottom:5px;
 }
 
 .ERROR {
-  background-color: var(--regular-red-color);
-  color: var(--error-dialog-color);
-  background-color: var(--error-dialog-bg-color);
-  padding: 4px 5px;
-  margin-right: 5px;
-  border-radius: 5px;
+        background-color: var(--regular-red-color);
+        color: var(--error-dialog-color);
+        background-color: var(--error-dialog-bg-color);
+        padding: 4px 5px;
+        margin-right: 5px;
+        border-radius: 5px;
 }
 
 .WARNING {
-  color: var(--warning-dialog-color);
-  background-color: var(--warning-dialog-bg-color);
-  padding: 4px 5px;
-  margin-right: 5px;
-  border-radius: 5px;
+    color: var(--warning-dialog-color);
+    background-color: var(--warning-dialog-bg-color);
+    padding: 4px 5px;
+    margin-right: 5px;
+    border-radius: 5px;
 }
 
 .INFO {
-  color: var(--regular-black-color);
-  background-color: var(--regular-lightgray-color);
-  padding: 4px 5px;
-  margin-right: 5px;
-  border-radius: 5px;
+    color: var(--regular-black-color);
+    background-color: var(--regular-lightgray-color);
+    padding: 4px 5px;
+    margin-right: 5px;
+    border-radius: 5px;
 }
 
 .message {
-  padding-top: 5px;
-  padding-left: 15px;
+    padding-top: 5px;
+    padding-left: 15px;
 }
 .content-fix {
-  min-height: 250px;
-  padding: 15px 20px;
+    min-height: 250px;
+    padding: 15px 20px;
+    /* __aw__ see if need for ncats branch */
+    overflow: scroll;
 }
 
 .src-column {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
+    display: flex;
+    flex-direction:column;
+    width:50%;   
 }
 
 .actions {
-  height: 75px;
+    height: 75px;
 }
 
 .title {
-  height: 42px;
+    height: 42px;
   font-size: 32px;
   font-weight: 500;
   letter-spacing: normal;
@@ -69,17 +71,17 @@
 }
 
 .loading-container {
-  max-height: calc(100% - 150px);
-  min-height: 250px;
-  width: 100%;
-  align-content: center;
+    max-height: calc(100% - 150px);
+    min-height: 250px;
+    width: 100%;
+    align-content: center;
 }
 
 ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
-  height: unset !important;
+    height: unset !important;
   max-height: 90vh;
 }
 
 .delete-icon {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }

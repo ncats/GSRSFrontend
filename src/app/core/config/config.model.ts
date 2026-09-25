@@ -20,6 +20,9 @@ export interface Config {
     homeHeader?: string;
     homeContents?: string;
     contactEmail?: string;
+
+    contactEmailAlt?: string;   /* ncats branch begin/end */ 
+
     defaultCodeSystem?: string;
     primaryCode?: string;
     typeaheadFields?: Array<string>;
@@ -92,6 +95,15 @@ export interface Config {
     enableStructureFeatures?: boolean;
     StructureFeaturePriority?: Array<string>;
     structureEditSearch?: boolean;
+
+    /* ncats branch begin */ 
+    bannerText?: string;
+    showTopBanner?: boolean;
+    showLogin?: boolean;
+    showLoginButton?: boolean;
+    showFooter?: boolean; 
+    /* ncats branch end */ 
+
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;
     enablePDFDownload ?: DownloadAsPDF;
