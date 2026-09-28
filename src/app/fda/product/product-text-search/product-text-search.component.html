@@ -57,6 +57,7 @@
         </mat-autocomplete>
       </mat-form-field>
       <button
+        type="button"
         aria-label="Search Button"
         class="search-button"
         mat-icon-button
@@ -65,10 +66,11 @@
         >
         <mat-icon svgIcon="search"></mat-icon>
       </button>
-      <button class="close-button" mat-icon-button (click)="deactivateSearch()">
+      <button type="button" class="close-button" mat-icon-button (click)="deactivateSearch()">
         <mat-icon svgIcon="close"></mat-icon>
       </button>
       <button
+        type="button"
         class="activate-search-button"
         mat-icon-button
         (click)="activateSearch()"
