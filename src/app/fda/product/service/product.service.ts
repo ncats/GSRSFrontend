@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParameterCodec, HttpParams } from '@angular/common/http';
-import { Observable, Observer, } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Observable, Observer, throwError } from 'rxjs';
+import { concatMap, map, switchMap, take, tap } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
@@ -49,7 +50,8 @@ export class ProductService extends BaseHttpService {
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
-    public utilsService: UtilsService
+    public utilsService: UtilsService,
+    public authService: AuthService
   ) {
     super(configService);
     // Initialize fields that depend on configService
@@ -548,6 +550,43 @@ export class ProductService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
+
+    // precisionFDA only: the GSRS product database is read-only. The submission is intercepted by
+    // the pFDA platform, which stores the product JSON as a file in the user's My Home area and
+    // returns a 'fileUrl'. Saving requires an authenticated pFDA user, so anonymous users are
+    // prompted to log in (popup) before the request is sent.
+    if (this.configService.configData && this.configService.configData.isPfdaVersion) {
+      // No trailing slash, the pFDA platform routes this exact path to its own file-upload endpoint
+      const pfdaUrl = this.configService.configData.apiBaseUrl + 'api/v1/products';
+      const method = ((this.product != null) && (this.product.id)) ? 'PUT' : 'POST';
+      const pfdaOptions = {
+        body: this.product,
+        headers: {
+          'Content-type': 'application/json'
+        }
+      };
+
+      return this.authService.getAuth().pipe(
+        // getAuth() is a BehaviorSubject that never completes. Taking a single value prevents the
+        // auth update emitted by a successful pfdaLogin() from queueing a second save request.
+        take(1),
+        concatMap(auth =>
+          auth
+            ? this.http.request<Product>(method, pfdaUrl, pfdaOptions)
+            : this.authService.pfdaLogin().pipe(
+              concatMap(success =>
+                success
+                  ? this.http.request<Product>(method, pfdaUrl, pfdaOptions)
+                  : throwError(() => ({
+                    type: 'AUTH',
+                    message: 'Authentication failed',
+                  }))
+              )
+            )
+        )
+      );
+    }
+
     // Update Product
     if ((this.product != null) && (this.product.id)) {
       return this.http.put<Product>(url, this.product, options);

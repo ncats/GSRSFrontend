@@ -319,6 +319,9 @@ export class SubstanceSsg4mService implements OnDestroy {
       return this.http.request(method, url, options);
     } else {
       return this.authService.getAuth().pipe(
+        // getAuth() is a BehaviorSubject that never completes. Taking a single value prevents the
+        // auth update emitted by a successful pfdaLogin() from queueing a second save request.
+        take(1),
         concatMap(auth =>
           auth
             ? this.http.request(method, url, options)

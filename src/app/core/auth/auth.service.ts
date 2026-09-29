@@ -153,12 +153,32 @@ export class AuthService {
     );
 
     return this.waitForPopupToClose(loginWindow).pipe(
-      concatMap(() =>
-        this.getAuth().pipe(
-          map((authAfterLogin) => !!authAfterLogin), // Convert to boolean (true = success)
-          catchError(() => of(false)), // Return false if there's an error
-        ),
-      ),
+      take(1),
+      // The popup only establishes the server side session, the cached auth state here is still
+      // the pre-login one. Re-fetch it explicitly rather than reading the auth BehaviorSubject,
+      // which would synchronously replay the stale (empty) value and report a failed login.
+      concatMap(() => this.fetchAuth().pipe(take(1))),
+      concatMap((authAfterLogin) => {
+        if (!authAfterLogin || !authAfterLogin.computedToken) {
+          this._auth = null;
+          this._authUpdate.next(null);
+          return of(false);
+        }
+
+        this._auth = authAfterLogin;
+        if (isPlatformBrowser(this.platformId)) {
+          sessionStorage.setItem("authToken", authAfterLogin.computedToken);
+        }
+        this._authUpdate.next(this._auth);
+
+        // The privileges cached before the popup belong to the anonymous user, refresh them
+        // before reporting success. A failing privileges call must not fail the login itself.
+        return this.fetchPrivs().pipe(
+          map(() => true),
+          catchError(() => of(true)),
+        );
+      }),
+      catchError(() => of(false)), // Return false if there's an error
     );
   }
 

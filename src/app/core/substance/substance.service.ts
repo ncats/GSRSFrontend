@@ -19,7 +19,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
 import { FacetHttpParams } from '../facets-manager/facet-http-params';
 import { UtilsService } from '../utils/utils.service';
-import { switchMap, map, catchError, takeWhile } from 'rxjs/operators';
+import { switchMap, map, catchError, take, takeWhile } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
@@ -895,6 +895,9 @@ export class SubstanceService extends BaseHttpService {
       return this.http.request(method, url, options);
     } else {
       return this.authService.getAuth().pipe(
+        // getAuth() is a BehaviorSubject that never completes. Taking a single value prevents the
+        // auth update emitted by a successful pfdaLogin() from queueing a second save request.
+        take(1),
         concatMap(auth =>
           auth
             ? this.http.request(method, url, options)

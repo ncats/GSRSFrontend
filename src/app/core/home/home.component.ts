@@ -135,7 +135,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getAdverseEventShinyConfig();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
-    this.canRegister = await this.authService.canEditData();
+    // On pFDA the backing database is read-only, so the Register quick links are
+    // shown to everyone (including anonymous users) rather than only to editors.
+    this.canRegister =
+      this.configService.configData.isPfdaVersion === true ||
+      (await this.authService.canEditData());
   }
 
   ngAfterViewInit() {
