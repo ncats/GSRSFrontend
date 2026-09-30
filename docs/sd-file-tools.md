@@ -29,7 +29,7 @@ src/app/core/sdf-tools/
 └── sdf-guide/                    # reference tab
 
 src/app/core/assets/sdf-tools/
-├── SD_File_Validator_2_1.html
+├── SD_File_Validator_2_2.html
 ├── Quick_Guide_SDF_eCTD_508.pdf
 └── 00_SampleSDF_MF012345_API_Name.sdf
 ```
@@ -66,19 +66,43 @@ Notes on the embed:
 1. Copy the new HTML into `src/app/core/assets/sdf-tools/`.
 2. Update `SDF_VALIDATOR_FILENAME` in `sdf-tools.constants.ts`.
 
-That is the whole change — the filename is pinned in exactly one place. (The v2.1 user guide's
-System Requirements section still references `SD_File_Validator_2_0.html`; trust the actual
-file you were given, not that string.)
+That is the whole change for the tool itself — the filename is pinned in exactly one place.
+Commit the file byte-for-byte as received (v2.2 ships with CRLF line endings; do not
+normalize them). Delete the previous version rather than keeping it alongside: the
+`GinasUnauthorizedController` CSP override matches any `.html` under `assets/sdf-tools/`, so
+a stale copy stays publicly served.
 
-Check the new file against the build budget — it is large because JSChemify is inlined.
+Also:
 
-### Verified against the real v2.1 file
+- **Diff it against the previous version** with line endings normalized
+  (`diff <(tr -d '\r' < old) <(tr -d '\r' < new)`) — it is a verbatim FDA drop, so the
+  diff tells you exactly what changed and whether the audit below needs repeating.
+- **Sync the Guide tab with the new user guide** (`SD_File_Validator_Documentation_X_Y.md`,
+  supplied with the HTML but not committed). The Guide tab's content lives in
+  `sdf-tools.constants.ts`: `SDF_INCLUDED_SUBSTANCE_TYPES` and `SDF_RECOMMENDED_HEADERS`
+  mirror section 2, `SDF_SUPPORT_CONTACTS` and `SDF_ONLINE_RESOURCES` mirror section 9.
+- Check the new file against the build budget — it is large because JSChemify is inlined.
 
-The FDA-authored `SD_File_Validator_2_1.html` (369 KB, SHA-256 `90fd02c9…0f4b`) was audited
-and driven end-to-end inside the exact sandbox above:
+### Version history
+
+- **v2.2** (September 2026): functionally identical to v2.1 — the only changes are the
+  version comment and the footer links (now precisionFDA UNII Search, precisionFDA-GSRS,
+  NCATS GSRS Homepage, DMF Guide; the "Other Applications Guide" link was dropped). The
+  accompanying user guide dropped the CDER eCTD contact (`esub@fda.hhs.gov`) and the
+  "other applications" Quick Guide link and expanded the "what to include" list; the Guide
+  tab was updated to match. Note the tool's *downloaded report* still lists
+  `esub@fda.hhs.gov` — that is FDA content, left as-is.
+- **v2.1**: initial version shipped with the hub.
+
+### Verified against the real v2.2 file
+
+The FDA-authored `SD_File_Validator_2_2.html` (381 KB with CRLF line endings, SHA-256
+`8bba2d2a…3135`) was audited and driven end-to-end inside the exact sandbox above (as was
+v2.1 before it, SHA-256 `90fd02c9…0f4b`):
 
 - **Self-contained**: zero external `src`/`href` resource loads — the only absolute URLs are
-  four ordinary hyperlinks (UNII Search, NCATS GSRS, two FDA Quick Guide pages). Two inline
+  four ordinary hyperlinks (precisionFDA UNII Search, precisionFDA-GSRS, NCATS GSRS
+  Homepage, FDA DMF Quick Guide page). Two inline
   `<script>` blocks, no `fetch`/`XMLHttpRequest`, no forms.
 - **Sandbox-safe**: uses no `localStorage`/`sessionStorage`/`document.cookie`, so the missing
   `allow-same-origin` costs it nothing. (Storage access does throw `SecurityError` in the
@@ -127,7 +151,7 @@ granted for scripts and styles and `data:`/`blob:` allowed for `img-src` (the re
 structures and the report download). The site-wide CSP is untouched; verify with:
 
 ```bash
-curl -skD - .../ui/assets/sdf-tools/SD_File_Validator_2_1.html | grep -i content-security
+curl -skD - .../ui/assets/sdf-tools/SD_File_Validator_2_2.html | grep -i content-security
 curl -skD - .../ui/sdf-tools                                   | grep -i content-security
 ```
 

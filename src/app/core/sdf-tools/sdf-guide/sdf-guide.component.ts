@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '@gsrs-core/config';
 import {
+  SDF_INCLUDED_SUBSTANCE_TYPES,
   SDF_ONLINE_RESOURCES,
   SDF_QUICK_GUIDE_FILENAME,
   SDF_RECOMMENDED_HEADERS,
@@ -19,6 +20,7 @@ export class SdfGuideComponent implements OnInit {
   quickGuideUrl: string;
   sampleFileUrl: string;
   sampleFilename = SDF_SAMPLE_FILENAME;
+  includedSubstanceTypes = SDF_INCLUDED_SUBSTANCE_TYPES;
   recommendedHeaders = SDF_RECOMMENDED_HEADERS;
   supportContacts = SDF_SUPPORT_CONTACTS;
   onlineResources = SDF_ONLINE_RESOURCES;

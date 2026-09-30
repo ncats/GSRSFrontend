@@ -17,10 +17,13 @@
   <section class="guide-section">
     <h3>What to include in an SD File</h3>
     <p>
-      SD Files should represent drug substances, starting materials, intermediates,
-      impurities, degradants, and leachables exceeding the Analytical Evaluation Threshold
-      (AET). <strong>Reagents and solvents should be excluded.</strong>
+      Per the SD File Quick Guide, SD Files should be used to represent the following types of
+      substances. See the Quick Guide for more comprehensive information.
     </p>
+    <ul class="guide-list">
+      <li *ngFor="let substanceType of includedSubstanceTypes">{{ substanceType }}</li>
+    </ul>
+    <p><strong>Reagents and solvents should be excluded.</strong></p>
   </section>
 
   <section class="guide-section">

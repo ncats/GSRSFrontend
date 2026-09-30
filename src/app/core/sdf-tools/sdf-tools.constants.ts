@@ -8,7 +8,7 @@
 
 export const SDF_TOOLS_ASSET_DIR = 'assets/sdf-tools/';
 
-export const SDF_VALIDATOR_FILENAME = 'SD_File_Validator_2_1.html';
+export const SDF_VALIDATOR_FILENAME = 'SD_File_Validator_2_2.html';
 
 export const SDF_QUICK_GUIDE_FILENAME = 'Quick_Guide_SDF_eCTD_508.pdf';
 
@@ -48,22 +48,33 @@ export const SDF_RECOMMENDED_HEADERS: Array<{ header: string; description: strin
   { header: 'NOTES', description: 'Any additional qualifying information.' }
 ];
 
-export const SDF_SUPPORT_CONTACTS: Array<{ label: string; email: string }> = [
-  { label: 'SD File formatting questions', email: 'FDA-SRS@fda.hhs.gov' },
-  { label: 'DMF submission issues', email: 'DMFOGD@fda.hhs.gov' },
-  { label: 'CDER eCTD technical support', email: 'esub@fda.hhs.gov' }
+/** Substance types an SD File should represent, from section 2 of the validator user guide (v2.2). */
+export const SDF_INCLUDED_SUBSTANCE_TYPES: Array<string> = [
+  'Drug substances',
+  'Drug product(s)',
+  'Starting materials',
+  'Intermediates',
+  'Impurities',
+  'Degradants',
+  'Leachables',
+  'Unique reagents',
+  'Nitrosamines',
+  '"Residual solvents" per ICH Q3C'
 ];
 
-/** "Online Resources" from section 9 of the FDA SD File Validator user guide. */
+/** "FDA Support Contacts" from section 9 of the validator user guide (v2.2). */
+export const SDF_SUPPORT_CONTACTS: Array<{ label: string; email: string }> = [
+  { label: 'SD File formatting questions', email: 'FDA-SRS@fda.hhs.gov' },
+  { label: 'DMF submission issues', email: 'DMFOGD@fda.hhs.gov' }
+];
+
+/** "Online Resources" from section 9 of the validator user guide (v2.2). */
 export const SDF_ONLINE_RESOURCES: Array<{ label: string; url: string }> = [
-  { label: 'FDA UNII Search', url: 'https://precision.fda.gov/uniisearch' },
-  { label: 'NCATS GSRS database', url: 'https://gsrs.ncats.nih.gov/ginas/app/ui/home' },
+  { label: 'precisionFDA UNII Search', url: 'https://precision.fda.gov/uniisearch' },
+  { label: 'precisionFDA-GSRS', url: 'https://precision.fda.gov/ginas/app/ui/' },
+  { label: 'NCATS GSRS Homepage', url: 'https://gsrs.ncats.nih.gov/' },
   {
-    label: 'Quick Guide for DMF submissions',
+    label: 'Quick Guide for Type II DMF, NDA, ANDA, and other eCTD Submissions',
     url: 'https://www.fda.gov/drugs/drug-master-files-dmfs/drug-master-file-dmf-submission-resources'
-  },
-  {
-    label: 'Quick Guide for other submission types (NDA, ANDA, BLA, IND)',
-    url: 'https://www.fda.gov/media/161877/download?attachment'
   }
 ];

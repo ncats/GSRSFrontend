@@ -3,6 +3,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ConfigService } from '@gsrs-core/config';
 import { SdfGuideComponent } from './sdf-guide.component';
 import {
+  SDF_INCLUDED_SUBSTANCE_TYPES,
+  SDF_ONLINE_RESOURCES,
   SDF_QUICK_GUIDE_FILENAME,
   SDF_RECOMMENDED_HEADERS,
   SDF_SAMPLE_FILENAME
@@ -53,5 +55,22 @@ describe('SdfGuideComponent', () => {
   it('should expose the FDA support contacts', () => {
     expect(component.supportContacts.length).toBeGreaterThan(0);
     expect(component.supportContacts[0].email).toContain('@fda.hhs.gov');
+  });
+
+  it('should list the substance types an SD File should represent', () => {
+    expect(component.includedSubstanceTypes).toBe(SDF_INCLUDED_SUBSTANCE_TYPES);
+    const items: Array<string> = Array.from(
+      fixture.nativeElement.querySelectorAll('.guide-list li') as NodeListOf<HTMLElement>
+    ).map(li => li.textContent.trim());
+    SDF_INCLUDED_SUBSTANCE_TYPES.forEach(substanceType => expect(items).toContain(substanceType));
+  });
+
+  it('should render every online resource as an external link', () => {
+    const links: Array<HTMLAnchorElement> = Array.from(
+      fixture.nativeElement.querySelectorAll('a[target="_blank"][rel~="noopener"]')
+    );
+    SDF_ONLINE_RESOURCES.forEach(resource =>
+      expect(links.some(link => link.getAttribute('href') === resource.url)).toBe(true)
+    );
   });
 });
