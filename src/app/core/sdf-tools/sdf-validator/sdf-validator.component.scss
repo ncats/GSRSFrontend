@@ -1,0 +1,69 @@
+.sdf-validator {
+  padding-top: 16px;
+}
+
+.validator-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.validator-intro {
+  flex: 1 1 420px;
+
+  p {
+    margin: 0;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.72);
+  }
+}
+
+.validator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.validator-frame-container {
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.validator-frame {
+  display: block;
+  width: 100%;
+  height: 72vh;
+  min-height: 520px;
+  border: 0;
+}
+
+.validator-notice {
+  padding: 24px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.validator-disclaimer {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-left: 4px solid #b0b0b0;
+  background: #f6f6f6;
+  border-radius: 3px;
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.68);
+  }
+}
+
+@media (max-width: 700px) {
+  .validator-frame {
+    height: 60vh;
+  }
+}

@@ -48,14 +48,14 @@
                   </a>
                 </mat-nav-list>
               </mat-expansion-panel>
-              <mat-expansion-panel [expanded]="false" *ngIf="loadedComponents">
+              <mat-expansion-panel [expanded]="false">
                 <mat-expansion-panel-header>
                   <mat-panel-title class="panel-header">
                     Other
                   </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-nav-list>
-                  <span>
+                  <span *ngIf="loadedComponents">
                     <span *ngIf="loadedComponents.applications">
                       <mat-divider></mat-divider>
                       <a mat-list-item routerLink="/browse-applications">
@@ -106,6 +106,11 @@
                       </a>
                     </span>
                   </span>
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/sdf-tools">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    SD File Tools
+                  </a>
                 </mat-nav-list>
                 <ng-container> </ng-container>
               </mat-expansion-panel>
