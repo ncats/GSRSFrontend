@@ -103,6 +103,7 @@ export interface Config {
     phpIdUrl?: string;
     rxNormUrl?: string;
     roleSortingConfig?: roleSortConfig;
+    textEditorOptions?: TextEditorOptions;
 }
 
 
@@ -214,3 +215,13 @@ export interface DownloadAsPDF {
 export interface roleSortConfig {
   [key: string]: number;
 }
+
+export interface TextEditorOptions {
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strike?: boolean;
+  subscript?: boolean;
+  superscript?: boolean;
+}
+

@@ -21,6 +21,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { SubstanceFormService } from "@gsrs-core/substance-form/substance-form.service";
 import { SubstanceFormNamesService } from "@gsrs-core/substance-form/names/substance-form-names.service";
 import { AuthService } from "@gsrs-core/auth";
+import { TextEditorOptions } from "@gsrs-core/config";
+import { ConfigService } from "@gsrs-core/config";
 
 @Component({
   selector: "app-name-form",
@@ -44,11 +46,14 @@ export class NameFormComponent implements OnInit, OnDestroy {
   substanceStatus: string = "";
 
   editorModules = {
-    toolbar: [
-      ['italic'],
-      [{ script: 'sub' }, { script: 'super' }],
-      ['clean']
-    ],
+    toolbar: this.buildToolbar({
+    bold: true,
+    italic: true,
+    underline: true,
+    strike: true,
+    subscript: true,
+    superscript: true
+  }),
     keyboard: {
       bindings: {
         preventEnter: {
@@ -61,7 +66,10 @@ export class NameFormComponent implements OnInit, OnDestroy {
 
   allowedFormats = [
     'italic',
-    'script'
+    'script',
+    'bold',
+    'strike',
+    'underline'
   ];
 
   constructor(
@@ -72,6 +80,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private nameFormService: SubstanceFormNamesService,
     private authService: AuthService,
+    private configService: ConfigService,
   ) {}
 
   async ngOnInit() {
@@ -95,6 +104,12 @@ export class NameFormComponent implements OnInit, OnDestroy {
     this.substanceStatus = this.substanceFormService
       .getSubstanceStatus()
       .toUpperCase();
+    if( this.configService &&
+      this.configService.configData &&
+      this.configService.configData.textEditorOptions) {
+      this.editorModules.toolbar = this.buildToolbar(this.configService.configData.textEditorOptions)
+    }
+
   }
 
   ngOnDestroy() {
@@ -233,4 +248,30 @@ export class NameFormComponent implements OnInit, OnDestroy {
         .replace(/<P>/gi, "")
         .replace(/<\/p>/gi, "");
   }
+
+  private buildToolbar(options: TextEditorOptions) {
+    const toolbar: any[] = [];
+
+    const textFormats = [];
+    if (options.bold) textFormats.push('bold');
+    if (options.italic) textFormats.push('italic');
+    if (options.underline) textFormats.push('underline');
+    if (options.strike) textFormats.push('strike');
+
+    if (textFormats.length) {
+      toolbar.push(textFormats);
+    }
+
+    const scriptFormats = [];
+    if (options.subscript) scriptFormats.push({ script: 'sub' });
+    if (options.superscript) scriptFormats.push({ script: 'super' });
+
+    if (scriptFormats.length) {
+      toolbar.push(scriptFormats);
+    }
+
+    toolbar.push(['clean']); // always include clean
+    return toolbar;
+  }
+
 }
