@@ -19,7 +19,6 @@ import { NameResolverDialogComponent } from "@gsrs-core/name-resolver/name-resol
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { MatDialog } from "@angular/material/dialog";
 import { SubstanceFormService } from "@gsrs-core/substance-form/substance-form.service";
-import { SubstanceFormNamesService } from "@gsrs-core/substance-form/names/substance-form-names.service";
 import { AuthService } from "@gsrs-core/auth";
 import { TextEditorOptions } from "@gsrs-core/config";
 import { ConfigService } from "@gsrs-core/config";
@@ -30,6 +29,7 @@ import { ConfigService } from "@gsrs-core/config";
   styleUrls: ["./name-form.component.scss"],
   standalone: false,
 })
+
 export class NameFormComponent implements OnInit, OnDestroy {
   private privateName: SubstanceName;
   @Output() priorityUpdate = new EventEmitter<SubstanceName>();
@@ -73,12 +73,10 @@ export class NameFormComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
-    private nameFormService: SubstanceFormNamesService,
     private authService: AuthService,
     private configService: ConfigService,
   ) {}
@@ -163,6 +161,10 @@ export class NameFormComponent implements OnInit, OnDestroy {
   }
 
   get name(): SubstanceName {
+    if(this.privateName && this.privateName.name) {
+      console.log(`get name activated with "${this.privateName.name}"`);
+
+    }
     return this.privateName || {};
   }
 
@@ -240,7 +242,8 @@ export class NameFormComponent implements OnInit, OnDestroy {
   }
 
   private normalizeNameHtml(html: string | null): string {
-   const value = (html ?? "").trim();
+   let value = (html ?? "").trim();
+   value = value.replaceAll('&nbsp;', ' ');
 
     return value === "<p><br></p>" || value === "<p></p>"
       ? ""
