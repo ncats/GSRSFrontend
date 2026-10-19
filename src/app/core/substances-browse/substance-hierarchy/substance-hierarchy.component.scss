@@ -2,6 +2,7 @@
 
 .mat-tree-node {
   min-height:30px !important;
+  min-width: 0;
 }
 .hierarchy-tree-invisible {
   display: none;
@@ -76,6 +77,7 @@ margin-bottom: 5px;
   align-items: center;
   display: flex;
   max-width: calc(100% - 300px);
+  min-width: 0;
 }
 
 .tree-label {
@@ -110,6 +112,7 @@ margin-bottom: 5px;
   color: var(--link-primary-color);
   font-style: unset;
   max-lines: 2;
+  min-width: 0;
 }
 .odd {
   background-color: var(--sub-hierarchy-odd-bg-color);
@@ -117,6 +120,7 @@ margin-bottom: 5px;
 .node-container {
   display:flex;
   width:calc(100% - 35px);
+  min-width: 0;
   justify-content: space-between;
 }
 
