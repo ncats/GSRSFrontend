@@ -126,7 +126,7 @@
    </div>
 </div>
 <div *ngIf="!download.enabled" class = "bottom-button" >
-   <button mat-flat-button color = "primary"  (click)="deleteDownload()" [disabled]="!download.cancelled && download.status !== 'COMPLETE'" matTooltip="{{ (!download.cancelled && download.status !== 'COMPLETE') ? 'You must cancel the download before deleting it' : null }}">
+   <button mat-flat-button color = "primary"  (click)="deleteDownload()" [disabled]="!download.cancelled && !download.complete" matTooltip="{{ (!download.cancelled && !download.complete) ? 'You must cancel or finish the download before deleting it' : null }}">
        <mat-icon svgIcon="delete_forever"></mat-icon>
        Delete
    </button>

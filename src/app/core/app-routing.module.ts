@@ -25,6 +25,7 @@ import { SubstanceSsg4ManufactureFormComponent } from './substance-ssg4m/substan
 import { ImportBrowseComponent } from '@gsrs-core/admin/import-browse/import-browse.component';
 import { CanImportData } from './admin/can-import-data';
 import { ImportManagementComponent } from './admin/import-management/import-management.component';
+import { SdfToolsComponent } from './sdf-tools/sdf-tools.component';
 
 const childRoutes: Routes = [
   {
@@ -81,6 +82,12 @@ const childRoutes: Routes = [
     path: 'staging',
     component: ImportBrowseComponent
 
+  },
+  {
+    // Public on purpose: the SD File Validator targets external Sponsors who have no GSRS
+    // account. Per-tab access control lives inside SdfToolsComponent.
+    path: 'sdf-tools',
+    component: SdfToolsComponent
   },
   {
     path: 'login',

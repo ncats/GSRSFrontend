@@ -78,7 +78,7 @@
           ></mat-icon> </a
         >&nbsp;&nbsp;&nbsp;
 
-        <span *ngIf="canDelete">
+        <span *ngIf="canDelete && !isPfdaVersion">
           <button
             mat-flat-button
             color="primary"
@@ -167,12 +167,7 @@
           (click)="submit()"
           [disabled]="isLoading || this.validationResult === false"
         >
-          {{
-            validationMessages && validationMessages.length > 0
-              ? "Dismiss All and "
-              : ""
-          }}
-          Submit
+          {{ getSubmitButtonText() }}
         </button>
       </div>
     </div>

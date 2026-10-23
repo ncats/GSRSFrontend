@@ -11,6 +11,8 @@ export class SubmitSuccessDialogComponent implements OnInit {
   dialogTitle: string;
   dialogMessage: string = "Update was performed.";
   fileUrl: string = null;
+  browseLabel: string = "Go to Browse";
+  viewLabel: string = "View Substance";
 
   public isCoreSubstance = 'true';
   public staging = false;
@@ -36,6 +38,20 @@ export class SubmitSuccessDialogComponent implements OnInit {
       this.fileUrl = data.fileUrl;
       this.dialogTitle = 'Substance Saved';
       this.dialogMessage = 'The substance was saved successfully as a file in your pFDA My Home area.';
+    }
+
+    // Optional overrides, so entities other than substances (e.g. products) can reuse this dialog
+    if (data.dialogTitle) {
+      this.dialogTitle = data.dialogTitle;
+    }
+    if (data.dialogMessage) {
+      this.dialogMessage = data.dialogMessage;
+    }
+    if (data.browseLabel) {
+      this.browseLabel = data.browseLabel;
+    }
+    if (data.viewLabel) {
+      this.viewLabel = data.viewLabel;
     }
    }
 
