@@ -11,6 +11,11 @@ import { UtilsService } from '@gsrs-core/utils';
 import { DataSource } from '@angular/cdk/table';
 import { FormControl } from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
+import { format } from 'util';
+import { concatMap, map, take } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { LoadingService } from '@gsrs-core/loading';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-user-management',
@@ -28,7 +33,7 @@ export class UserManagementComponent implements OnInit {
   showAll = false;
   showInactive = false;
   private overlayContainer: HTMLElement;
-  displayedColumns: string[] = ['checkbox', 'name', 'email', 'created', 'modified', 'active'];
+  displayedColumns: string[] = ['checkbox', 'name', 'email', 'created', 'modified', 'active', 'actions'];
   page = 0;
   pageSize = 10000;
   paged: Array< any >;
@@ -43,8 +48,9 @@ constructor(
     private overlayContainerService: OverlayContainer,
     private adminService: AdminService,
     private utilsService: UtilsService,
-    private authService: AuthService
-
+    private authService: AuthService,
+    private router: Router,
+    private loadingService: LoadingService
   ) { }
 
   ngOnInit() {
@@ -61,6 +67,7 @@ constructor(
 toggleActions() {
   this.showHideActions = !this.showHideActions;
 }
+
 
 selectUnselectAll(): void {
   if(this.checkedList.length === this.paged.length) { // all are selected, need to deselect all
@@ -254,7 +261,7 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
     });
   }
   }
-
+  
   // identical to deleteUser but no warning since warning is combined in mark selected
   // only used when user selects multiple users to set inactive
   deleteUsers(username: string, index: number): void {
@@ -381,4 +388,158 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
     }
 }
 
+  regenerateApiKeyConfirm(username: string, index: number, message: string): void {
+    if (confirm(message)) { 
+      this.regenerateApiKey(username, index);
+    }
+  }
+
+  regenerateApiKey(username: string, index: number): void {
+    this.adminService.regenerateUserApiKey(username).subscribe( response => {
+      // copied from approach used above
+      const dialogRef = this.dialog.open(UserEditDialogComponent, {
+        data: {userID: response.id, submission: true},
+        width: '800px',
+        autoFocus: false,
+        disableClose: true,
+        panelClass: 'user-edit-dialog'
+      });
+      this.overlayContainer.style.zIndex = '1002';
+      const dialogSubscription = dialogRef.afterClosed().subscribe(response1 => {
+        this.overlayContainer.style.zIndex = null;
+        if (response) {
+          this.updateLocalData(response, index, null, username);
+            const backup = this.filtered.data;
+          backup[index] = response;
+          this.filtered.data = backup;
+        }
+      });
+    });
+  }
+
+   expireUserSessionsConfirm(username: string, index: number, params: any, message: string): void {
+    if (confirm(message)) { 
+      this.expireUserSessions(username, index, params);
+    }
+  }
+
+  _expireUserSessions(username: string, index: number, params: any): void {
+    this.adminService.expireSessions(username, params).subscribe( response => {
+      // copied from approach used above
+      const dialogRef = this.dialog.open(UserEditDialogComponent, {
+        data: {userID: response.id, submission: true},
+        width: '800px',
+        autoFocus: false,
+        disableClose: true,
+        panelClass: 'user-edit-dialog'
+      });
+      this.overlayContainer.style.zIndex = '1002';
+      const dialogSubscription = dialogRef.afterClosed().subscribe(response1 => {
+        this.adminService.getUserByName(username).subscribe( response2 => {
+        if (response1) {
+          console.log("here1");
+          this.overlayContainer.style.zIndex = null;
+            if (response2) {
+          console.log("here2")
+
+              console.log(JSON.stringify(response2, null, 2));
+              this.updateLocalData(response2, index, null, username);
+                const backup = this.filtered.data;
+              backup[index] = response2;
+              this.filtered.data = backup;
+            }
+        }
+      });
+    });
+  });
+  }
+
+  expireUserSessions(username: string, index: number, params: any): void {
+
+
+
+      // First check if current user is expiring their own sessions (in Admin panel)
+      // If so logout the user weather or not revokeTokens is used.
+      // This may reduce some edge cases.
+
+      const loggedInUsername = this.authService.auth?.user?.username || this.authService.getUser();
+      const isCurrentUser = loggedInUsername.trim().toLowerCase() === username.trim().toLowerCase();
+      if (isCurrentUser) {
+        this.adminService
+          .expireSessions(username, params)
+          .pipe(take(1))
+          .subscribe(
+            () => {
+              this.authService.checkAuth()
+                .pipe(take(1))
+                .subscribe(
+                  () => {
+                    this.authService.logout();
+                    this.loadingService.setLoading(false);
+
+                    this.router.navigate(['/login'], {
+                      queryParams: { path: '/home' }
+                    });
+                  },
+                  error => {
+                    this.authService.logout();
+                    this.loadingService.setLoading(false);
+                    if (error.status === 403) {
+                      this.router.navigateByUrl('/unauthorized');
+                    } else if (error.status === 401) {
+                      this.router.navigate(['/login'], {
+                        queryParams: { path: '/home' }
+                      });
+                    } else {
+                      console.error(
+                        'Unable to determine authentication status:',
+                        error
+                      );
+                    }
+                  }
+                );
+            },
+
+            error => {
+              this.loadingService.setLoading(false);
+              alert('Unable to expire sessions.');
+              console.error('Unable to expire sessions:', error);
+            }
+          );
+
+        return;
+      }
+
+      // If we got here, the user is managing another user's session in Admin panel 
+      this.adminService.expireSessions(username, params).pipe(
+        concatMap(response1 => {
+          return this.adminService.getUserByName(username).pipe(
+            map(response2 => ({ response1, response2 }))
+          );
+        }))
+      .subscribe(data => {
+        const dialogRef = this.dialog.open(UserEditDialogComponent, {
+          data: {userID: data.response2.id, submission: true},
+          width: '800px',
+          autoFocus: false,
+          disableClose: true,
+          panelClass: 'user-edit-dialog'
+        });
+        const dialogSubscription = dialogRef.afterClosed().subscribe(dialogResponse => {
+          this.adminService.getUserByName(username).subscribe( response2 => {
+            this.overlayContainer.style.zIndex = null;
+            if (data.response2) {
+              this.updateLocalData(data.response2, index, null, username);
+              const backup = this.filtered.data;
+              backup[index] = data.response2;
+              this.filtered.data = backup;
+            }
+          });
+      });
+    });
+  }
+
 }
+
+  
+

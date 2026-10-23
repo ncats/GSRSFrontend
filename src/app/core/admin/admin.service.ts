@@ -109,6 +109,18 @@ export class AdminService extends BaseHttpService {
       return this.http.delete< Auth >(`${url}users/${user}`);
     }
 
+    public regenerateUserApiKey(user: string): Observable< Auth > {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return this.http.post< Auth >(`${url}users/${user}/@keygen`, null);
+    }
+
+    public expireSessions(user: string, params: any): Observable< Auth > {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      const options = {'params': params};
+      return this.http.post< Auth >(`${url}users/${user}/@expireSessions`, null, options);
+    }
+
+
     public getGroups(): Observable< any > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
       return this.http.get< any >(`${url}admin/groups/@names`);

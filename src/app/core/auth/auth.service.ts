@@ -193,12 +193,13 @@ export class AuthService {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
   }
 
-  logout(): void {
+  old_logout(): void {
     this._privileges = [];
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem("authToken");
       const cookies = document.cookie.split(";");
       for (const cookie of cookies) {
+        // note httpOnly cookies seem to be ignored.
         const eqPos = cookie.indexOf("=");
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
@@ -224,6 +225,44 @@ export class AuthService {
         this.deleteCookie("sessionExpiredAt");
       },
     );
+  }
+
+
+  // Changes made in session management branch
+  // We'll have to evaluate and test for implications in SSO scenarios
+  // and requirements for normal/passive session expiry 
+    logout(): void {
+    this._privileges = [];
+
+    this._auth = null;
+    this._authUpdate.next(null);
+
+    if (isPlatformBrowser(this.platformId)) {
+      sessionStorage.removeItem('authToken');
+    }
+
+    let url = `${this.configService.configData.apiBaseUrl}logout`;
+    let method = "GET";
+
+    if (this.configService.configData.isPfdaVersion) {
+      url = "/logout";
+      method = "DELETE";
+    }
+
+    this.http.request(method, url).subscribe(
+      () => {
+        this._auth = null;
+        this._authUpdate.next(null);
+        this.deleteCookie("sessionExpiredAt");
+      },
+      (error) => {
+        this._auth = null;
+        this._authUpdate.next(null);
+        this.deleteCookie("sessionExpiredAt");
+      },
+    );
+
+
   }
 
   public getUser(): string {
