@@ -51,7 +51,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <button *ngIf="versionControl.value && substance.version?.toString() !== versionControl.value"
+      <button *ngIf="versionControl.value && substance.version?.toString() !== versionControl.value.toString()"
         mat-raised-button color="primary" class="view-version" (click)="changeVersion()">View</button>
     </div>
     <div *ngIf="substance.version && latestVersion && +substance.version < latestVersion && !substance.$$source" class="indent">
