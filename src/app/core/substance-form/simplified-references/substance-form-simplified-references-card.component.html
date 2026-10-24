@@ -1,17 +1,27 @@
 <div class="flex-row">
-  <mat-form-field [floatLabel]="'never'" class="search" *ngIf="references && references.length > pageSize">
-    <input matInput placeholder="Search" [formControl]="searchControl">
-  </mat-form-field>
+  @if (references && references.length > pageSize) {
+    <mat-form-field [floatLabel]="'never'" class="search">
+      <input matInput placeholder="Search" [formControl]="searchControl">
+    </mat-form-field>
+  }
   <span class="middle-fill"></span>
 </div>
-<mat-paginator *ngIf="references && references.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
+@if (references && references.length > 5) {
+  <mat-paginator [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
     [pageSizeOptions]="[5, 10, 25, 100]">
   </mat-paginator>
-<div class="reference" *ngFor="let reference of paged; last as isLast" [id]="reference.uuid" appScrollToTarget>
-  <app-simplified-reference-form [reference]="reference" (referenceDeleted)="deleteReference($event)"></app-simplified-reference-form>
-  <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
-</div>
-<mat-paginator *ngIf="references && references.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
-  [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>
+}
+@for (reference of paged; track reference; let isLast = $last) {
+  <div class="reference" [id]="reference.uuid" appScrollToTarget>
+    <app-simplified-reference-form [reference]="reference" (referenceDeleted)="deleteReference($event)"></app-simplified-reference-form>
+    @if (!isLast) {
+      <mat-divider class="form-divider" [inset]="true"></mat-divider>
+    }
+  </div>
+}
+@if (references && references.length > 5) {
+  <mat-paginator [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
+    [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+}
 

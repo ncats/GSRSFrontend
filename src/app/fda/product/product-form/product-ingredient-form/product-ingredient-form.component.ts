@@ -20,12 +20,34 @@ import { SubstanceSearchSelectorComponent } from '../../../substance-search-sele
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { GeneralService } from '../../../service/general.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-product-ingredient-form',
     templateUrl: './product-ingredient-form.component.html',
     styleUrls: ['./product-ingredient-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatButtonModule,
+      MatCheckboxModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatTooltipModule,
+      CvInputComponent,
+      SubstanceSelectorComponent
+    ]
 })
 export class ProductIngredientFormComponent implements OnInit {
 

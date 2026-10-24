@@ -1,17 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
 import { LoadingService } from '@gsrs-core/loading';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
     selector: 'app-data-management',
     templateUrl: './data-management.component.html',
     styleUrls: ['./data-management.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatOptionModule, MatProgressSpinnerModule, MatSelectModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataManagementComponent implements OnInit {
   uploadForm: FormGroup;
@@ -25,8 +34,8 @@ export class DataManagementComponent implements OnInit {
     public adminService: AdminService,
     private router: Router,
     private route: ActivatedRoute,
-    private loadingService: LoadingService
-
+    private loadingService: LoadingService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -53,6 +62,7 @@ export class DataManagementComponent implements OnInit {
    }, error => {
     this.message = 'File could not be uploaded';
     this.loadingService.setLoading(false);
+    this.cdr.markForCheck();
    });
 }
 

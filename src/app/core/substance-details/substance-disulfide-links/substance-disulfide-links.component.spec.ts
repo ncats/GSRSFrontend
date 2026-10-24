@@ -1,24 +1,19 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SubstanceDisulfideLinksComponent } from './substance-disulfide-links.component';
-import { MatTableModule } from '@angular/material/table';
-import { CdkTableModule } from '@angular/cdk/table';
 
 describe('SubstanceDisulfideLinksComponent', () => {
   let component: SubstanceDisulfideLinksComponent;
   let fixture: ComponentFixture<SubstanceDisulfideLinksComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MatTableModule,
-        CdkTableModule
-      ],
-      declarations: [
-        SubstanceDisulfideLinksComponent
-      ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule, SubstanceDisulfideLinksComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceDisulfideLinksComponent);

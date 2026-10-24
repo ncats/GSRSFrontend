@@ -5,6 +5,14 @@ import {
   HostListener,
   OnDestroy,
 } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { BreakpointObserver } from "@angular/cdk/layout";
 import {
   Router,
@@ -22,6 +30,7 @@ import { SessionExpirationComponent } from "../auth/session-expiration/session-e
 import { ConfigService } from "../config/config.service";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { LoadingService } from "../loading/loading.service";
+import { LoadingModule } from "../loading/loading.module";
 import { HighlightedSearchActionComponent } from "../highlighted-search-action/highlighted-search-action.component";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -31,23 +40,39 @@ import {
 import { Observable, Subscription } from "rxjs";
 import { UserProfileComponent } from "@gsrs-core/auth/user-profile/user-profile.component";
 import { SubstanceTextSearchService } from "@gsrs-core/substance-text-search/substance-text-search.service";
+import { SubstanceTextSearchComponent } from "@gsrs-core/substance-text-search/substance-text-search.component";
 import { NavItem, LoadedComponents } from "../config/config.model";
 import { UtilsService } from "@gsrs-core/utils";
 import { take } from "rxjs/operators";
-import * as moment from "moment";
+import moment from "moment";
 import { SubstanceEditImportDialogComponent } from "@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component";
 import { WildcardService } from "@gsrs-core/utils/wildcard.service";
 import { SubstanceDraftsComponent } from "@gsrs-core/substance-form/substance-drafts/substance-drafts.component";
 import { sprintf } from "sprintf-js";
 import { BulkSearchService } from "@gsrs-core/bulk-search/service/bulk-search.service";
 import { UserQueryListDialogComponent } from "@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component";
+import { PfdaToolbarComponent } from "./pfda-toolbar/pfda-toolbar.component";
 
 @Component({
   selector: "app-base",
   templateUrl: "./base.component.html",
   styleUrls: ["./base.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatToolbarModule,
+    MatDividerModule,
+    MatIconModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatTooltipModule,
+    LoadingModule,
+    PfdaToolbarComponent,
+    SessionExpirationComponent,
+    SubstanceTextSearchComponent
+  ],
 })
 export class BaseComponent implements OnInit, OnDestroy {
   mainPathSegment = "";
@@ -58,9 +83,6 @@ export class BaseComponent implements OnInit, OnDestroy {
   baseDomain: string;
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
-  canConfigureSystem: boolean = false;
-  canUserImportData: boolean = false;
-  canManageCVs: boolean = false;
   contactEmail: string;
   version?: string;
   versionTooltipMessage = "";
@@ -69,8 +91,6 @@ export class BaseComponent implements OnInit, OnDestroy {
   navItems: Array<NavItem>;
   isPfdaVersion: boolean = false;
   customToolbarComponent: string = "";
-  canRegister = false;
-  registerNav: Array<NavItem>;
   searchNav: Array<NavItem>;
   adverseEventShinyHomepageDisplay = false;
   loadedComponents: LoadedComponents;
@@ -146,7 +166,33 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  async ngOnInit() {
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canConfigureSystem(): boolean {
+    return this.authService.hasPrivilege('Configure System');
+  }
+
+  get canUserImportData(): boolean {
+    return this.authService.hasPrivilege('Import Data');
+  }
+
+  get canManageCVs(): boolean {
+    return this.authService.hasPrivilege('Manage CVs');
+  }
+
+  get canRegister(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  // Derived purely from canRegister + already-loaded navItems, no side effects, so a live getter is safe here too.
+  get registerNav(): Array<NavItem> {
+    if (!this.canRegister || !this.navItems) {
+      return [];
+    }
+    const registerItem = this.navItems.find((item) => item.display === 'Register');
+    return registerItem?.children || [];
+  }
+
+  ngOnInit() {
     const breakpointSub = this.breakpointObserver
       .observe(['(min-width: 1611px)', '(min-width: 1501px)'])
       .subscribe(result => {
@@ -163,19 +209,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.contactEmail = this.configService.configData.contactEmail || null;
     this.navItems = this.configService.configData.navItems || null;
 
-    // CRITICAL: Subscribe to auth FIRST, before any await calls that might fail
-    // This ensures UI updates reactively when auth state changes
     const authSubscription = this.authService.getAuth().subscribe((auth) => {
       this.auth = auth;
-      // Re-check privileges when auth changes
-      if (auth) {
-        this.updatePrivileges();
-      } else {
-        this.canConfigureSystem = false;
-        this.canUserImportData = false;
-        this.canRegister = false;
-        this.canManageCVs = false;
-      }
     });
     this.subscriptions.push(authSubscription);
 
@@ -200,8 +235,6 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Initial privilege check with error handling
-    await this.updatePrivileges();
     //not sure if we need this.
     //  TODO: remove it and test that the component works.
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -215,12 +248,7 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.versionTooltipMessage = `V${this.version}`;
         this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format("ddd MMM D YYYY HH:mm:ss z")}`;
       });
-    let okToRegister: boolean = await this.authService.canEditData();
-    
     this.navItems.forEach((item) => {
-      if (item.display === "Register" && okToRegister) {
-        this.registerNav = item.children;
-      }
       if (item.display === "Search") {
         this.searchNav = item.children;
       }
@@ -617,25 +645,4 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Updates privilege flags based on current auth state.
-   * Called on init and whenever auth changes.
-   */
-  private async updatePrivileges(): Promise<void> {
-    try {
-      this.canConfigureSystem =
-        await this.authService.hasSpecificPrivilege("Configure System");
-      this.canUserImportData =
-        await this.authService.hasSpecificPrivilege("Import Data");
-      this.canRegister = await this.authService.canEditData();
-      this.canManageCVs =
-        await this.authService.hasSpecificPrivilege("Manage CVs");
-    } catch (e) {
-      // Not authenticated or error - all privileges default to false
-      this.canConfigureSystem = false;
-      this.canUserImportData = false;
-      this.canRegister = false;
-      this.canManageCVs = false;
-    }
-  }
 }

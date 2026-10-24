@@ -1,17 +1,37 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import * as moment from 'moment';
+// import * as moment from 'moment';
+import moment from 'moment';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { NavigationExtras } from '@angular/router';
 import { UtilsService } from '@gsrs-core/utils';
 import { remove } from 'lodash';
+import { DecodeUriPipe } from './decodeURI.pipe';
+import { FileSizePipe } from './fileSize.pipe';
 
 @Component({
     selector: 'app-download-monitor',
     templateUrl: './download-monitor.component.html',
     styleUrls: ['./download-monitor.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatProgressSpinnerModule,
+      MatIconModule,
+      MatButtonModule,
+      MatTooltipModule,
+      DecodeUriPipe,
+      FileSizePipe
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DownloadMonitorComponent implements OnInit, OnDestroy {
   @Input() id: string;
@@ -26,8 +46,10 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   displayOrder: string;
   type?: string;
   killed = false;
+  private refreshTimeout?: ReturnType<typeof setTimeout>;
   constructor(
     private authService: AuthService,
+    private cdr: ChangeDetectorRef,
     private utilsService: UtilsService,
     private configService: ConfigService
   ) { }
@@ -63,13 +85,16 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
         }
         if (this.download.status === 'RUNNING' || this.download.status === 'PREPARING' || this.download.status === 'INITIALIZED') {
           if (!this.killed) {
-            setTimeout(() => {
+            clearTimeout(this.refreshTimeout);
+            this.refreshTimeout = setTimeout(() => {
               this.refresh();
             }, 1400);
           }
         }
+        this.cdr.markForCheck();
       }, error => {
         this.exists = false;
+        this.cdr.markForCheck();
       });
     }
   }
@@ -77,30 +102,61 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.killed = true;
     this.exists = false;
-    this.refresh(true);
+    clearTimeout(this.refreshTimeout);
   }
 
   cancel() {
+    // Clear any already-scheduled poll so it can't overwrite the optimistic update below.
+    clearTimeout(this.refreshTimeout);
     const restApiPrefix = this.configService.configData.restApiPrefix || '';
     if(this.download?.cancelUrl?.url !== undefined) {
        this.download.cancelUrl.url=this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, this.download.cancelUrl.url);
     }
     this.authService.changeDownload(this.download.cancelUrl.url).pipe(take(1)).subscribe(response => {
+      this.setDownload(response);
+      this.cdr.markForCheck();
+      // Re-poll: the backend's cancel acknowledgment isn't always authoritative.
+      this.refresh();
+    }, error => {
+      console.error('Failed to cancel download', error);
       this.refresh();
     });
   }
 
-  // seems like this is not used
   downloadExport() {
     this.authService.changeDownload(this.download.downloadUrl).pipe(take(1)).subscribe(response => {
       this.refresh();
+    }, error => {
+      console.error('Failed to update download', error);
     });
   }
 
   deleteDownload() {
     this.authService.deleteDownload(this.download.removeUrl?.url || this.download.cancelUrl.url.replace('/@cancel', '')).pipe(take(1)).subscribe(response => {
       this.deleted = true;
+      this.cdr.markForCheck();
+    }, error => {
+      console.error('Failed to delete download', error);
     });
+  }
+
+  private setDownload(response: any) {
+    this.download = response;
+    if (response.originalQuery) {
+      this.processQuery(response.originalQuery);
+    }
+
+    this.exists = true;
+    if (this.download.started) {
+      this.download.startedHuman = moment(this.download.started).fromNow();
+    }
+    if (this.download.finished) {
+      this.download.finishedHuman = moment(this.download.finished).fromNow();
+    }
+  }
+
+  private isRunningStatus(status?: string): boolean {
+    return status === 'RUNNING' || status === 'PREPARING' || status === 'INITIALIZED';
   }
 
   processQuery(url: string) {

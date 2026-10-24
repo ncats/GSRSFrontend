@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList,  SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {Link, Linkage, Site, Subunit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -6,12 +6,20 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormLinksService } from './substance-form-links.service';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { LinkFormComponent } from './link-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-links',
     templateUrl: './substance-form-links_card.component.html',
     styleUrls: ['./substance-form-links_card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, LinkFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredList<Linkage>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -26,9 +34,10 @@ export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredLi
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form links';
   }
 
@@ -41,11 +50,13 @@ export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredLi
     const linksSubscription = this.substanceFormLinksService.substanceLinks.subscribe(links => {
       this.links = links;
       this.getRemainingSites();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(linksSubscription);
     const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
       this.subunits = subunits;
       this.getRemainingSites();
+      this.cdr?.markForCheck();
     });
    this.subscriptions.push(subunitsSubscription);
 
@@ -73,7 +84,8 @@ export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredLi
         linkArray = linkArray.concat(link.sites);
       });
     }
-    this.remainingSites = subunitArray.filter(item => {return !linkArray.some(function(obj2) {
+    this.remainingSites = subunitArray.filter(item => {
+return !linkArray.some(function(obj2) {
       return (item.subunitIndex === obj2.subunitIndex && item.residueIndex === obj2.residueIndex);
      });
     });

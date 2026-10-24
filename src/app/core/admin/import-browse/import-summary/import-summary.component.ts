@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild, TemplateRef, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   SubstanceDetail,
   SubstanceName,
@@ -13,24 +14,64 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AuthService } from '@gsrs-core/auth';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { StructureService } from '@gsrs-core/structure';
-import {Router} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {Alignment, UtilsService} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
-import * as lodash from 'lodash';
+import join from 'lodash/join';
 import { CardDynamicSectionDirective } from '@gsrs-core/substances-browse/card-dynamic-section/card-dynamic-section.directive';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
 import { PageEvent } from '@angular/material/paginator';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NamesDisplayStagingPipe } from '@gsrs-core/admin/import-browse/name-display.pipe';
+import { TakeImportPipe } from '@gsrs-core/admin/import-browse/take-import.pipe';
+import { SequenceAlignmentComponent } from '@gsrs-core/substances-browse/sequence-alignment/sequence-alignment.component';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
+import { TrackLinkEventDirective } from '@gsrs-core/google-analytics/track-link-event/track-link-event.directive';
 @Component({
     selector: 'app-import-summary',
     templateUrl: './import-summary.component.html',
     styleUrls: ['./import-summary.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatCheckboxModule,
+      MatChipsModule,
+      MatDialogModule,
+      MatIconModule,
+      MatMenuModule,
+      MatPaginatorModule,
+      MatProgressSpinnerModule,
+      MatTabsModule,
+      MatTableModule,
+      MatButtonModule,
+      MatTooltipModule,
+      NamesDisplayStagingPipe,
+      TakeImportPipe,
+      SequenceAlignmentComponent,
+      ElementLabelDisplayModule,
+      SubstanceImageDirective,
+      TrackLinkEventDirective
+    ]
 })
 export class ImportSummaryComponent implements OnInit {
   private privateSubstance: any;
@@ -39,7 +80,6 @@ export class ImportSummaryComponent implements OnInit {
   @Output() bulkSelect = new EventEmitter < any > ();
   privateDummyID: string;
   showAudit = false;
-  canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
  codeSystemNames?: Array<string> = [];
@@ -69,7 +109,7 @@ export class ImportSummaryComponent implements OnInit {
   showLessCodes = true;
   privateNames?: Array<SubstanceName>;
   nameLoading = true;
-  _ = lodash;
+  join = join;
   codeSystems = [];
   displayedColumns = ['name', 'source', 'keys', 'merge'];
   displayedColumns2 = ['type', 'message'];
@@ -81,6 +121,7 @@ export class ImportSummaryComponent implements OnInit {
   performedAction: string;
   @ViewChild('infoDialog', { static: true }) infoDialog: TemplateRef<any>;
   dialogRef: MatDialogRef<any>;
+  private destroyRef = inject(DestroyRef);
 
 
   constructor(
@@ -98,12 +139,15 @@ export class ImportSummaryComponent implements OnInit {
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.getMatchSummary();
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
       this.getAlignments();
@@ -206,13 +250,13 @@ export class ImportSummaryComponent implements OnInit {
 
     this.privateMatches.forEach(record => {
       if (record.source && record.source === 'Staging Area'){
-        this.adminService.GetStagedRecord(record.ID).subscribe(response => {
+        this.adminService.GetStagedRecord(record.ID).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           record._name = response._name;
         }, error => {
           console.log(error);
         })
       } else {
-        this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
+        this.substanceService.getSubstanceSummary(record.ID).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           record.uuid = response.uuid;
           record._name = response._name;
         }, error => {
@@ -264,7 +308,7 @@ export class ImportSummaryComponent implements OnInit {
 
   getStructureID() {
     if(this.privateSubstance && this.privateSubstance.structure && this.privateSubstance.structure.molfile) {
-        this.structureService.interpretStructure(this.privateSubstance.structure.molfile).subscribe(response => {
+        this.structureService.interpretStructure(this.privateSubstance.structure.molfile).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           this.privateSubstance.structureID = response.structure.id;
           this.substance.structureID = response.structure.id;
         });
@@ -292,7 +336,7 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   deleteRecord() {
-    this.adminService.deleteStagedRecord([this.privateSubstance._metadata.recordId]).subscribe(response => {
+    this.adminService.deleteStagedRecord([this.privateSubstance._metadata.recordId]).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.message = "Successfully deleted staging area record data. Closing dialog.";
       this.deleted = true;
       setTimeout(() => {
@@ -307,7 +351,7 @@ export class ImportSummaryComponent implements OnInit {
   doAction(action: string, mergeID?: string) {
     this.displayAction = action;
     this.loadingService.setLoading(true);
-    this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {
+    this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if (result.jobStatus === 'completed') {
         this.loadingService.setLoading(false);
         this.doneAction.emit(this.privateSubstance.uuid);
@@ -321,7 +365,7 @@ export class ImportSummaryComponent implements OnInit {
         this.dialogRef =  this.dialog.open(this.infoDialog,
           {data: {'message': 'Record successfuly Created', 'action': action},
         width: '600px'});
-         const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+         const dialogSubscription = this.dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
          });
 
@@ -330,21 +374,21 @@ export class ImportSummaryComponent implements OnInit {
           this.processingstatus(result.id, action, result);
         }, 200);
       }
-     
+
     }, error => {
       this.message = "Error: failed to " + action + " record";
       this.loadingService.setLoading(false);
       this.dialogRef =  this.dialog.open(this.infoDialog,
         {data: {'message': 'Error: failed to', 'action': action},
       width: '600px'});
-       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+       const dialogSubscription = this.dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
 
        });
     });
   }
 
   processingstatus(id: string, action?: any, result?: any): void {
-    this.adminService.processingstatus(id).subscribe(response => {
+    this.adminService.processingstatus(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       if (response.jobStatus === 'completed') {
              this.loadingService.setLoading(false);
               this.doneAction.emit(this.privateSubstance.uuid);
@@ -358,7 +402,7 @@ export class ImportSummaryComponent implements OnInit {
       this.dialogRef =  this.dialog.open(this.infoDialog,
         {data: {'message': 'Record successfuly Created', 'action': action},
       width: '600px'});
-       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+       const dialogSubscription = this.dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
         this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
        });
       } else {
@@ -444,13 +488,13 @@ export class ImportSummaryComponent implements OnInit {
     this.router.navigate(['/substances/' + this.substance.uuid + '/edit']);
   }
   getFasta(id: string, filename: string): void {
-    this.substanceService.getFasta(id).subscribe(response => {
+    this.substanceService.getFasta(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.downloadFile(response, filename);
     });
   }
 
   getMol(id: string, filename: string): void {
-    this.structureService.downloadMolfile(id).subscribe(response => {
+    this.structureService.downloadMolfile(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.downloadFile(response, filename);
     });
   }
@@ -467,7 +511,7 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   downloadJson() {
-    this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1)).subscribe(response => {
+    this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
         this.downloadFile(JSON.stringify(response), this.substance.uuid + '.json');
     });
   }
@@ -502,7 +546,7 @@ export class ImportSummaryComponent implements OnInit {
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       this.overlayContainer.style.zIndex = null;
     });
   }

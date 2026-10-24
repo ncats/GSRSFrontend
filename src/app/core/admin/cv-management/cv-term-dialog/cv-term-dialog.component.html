@@ -1,29 +1,31 @@
 <h1 mat-dialog-title class="title">Add Term to CV - {{ vocabulary.domain }}</h1>
 <mat-dialog-content class="content-fix" #scroller>
-  <div *ngFor="let term of terms; index as index; last as last">
-    <div
-      class="form-row"
-      *ngIf="
+  @for (term of terms; track term; let index = $index; let last = $last) {
+    <div>
+      @if (
         toggled[index] &&
         vocabulary.vocabularyTermType ===
-          'ix.ginas.models.v1.FragmentControlledVocabulary'
-      "
-    >
-      <hr style="width: 100%" />
-    </div>
-    <ng-template #index>
-      <div class="form-row">
-        <app-fragment-wizard
-          [vocab]="vocabulary.domain"
-          style="margin: auto"
-          [term]="term"
-          (termUpdated)="updateStructure(term, index)"
-        ></app-fragment-wizard>
-      </div>
-    </ng-template>
-    <!-- <div class = "form-row" *ngIf = "toggled[index] && vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'"> 
-                          <app-fragment-wizard [vocab] = "vocabulary.domain" style = "margin:auto" [term] = "term" (termUpdated) = "updateStructure(term,index)"></app-fragment-wizard>
-                  </div>-->
+        'ix.ginas.models.v1.FragmentControlledVocabulary'
+        ) {
+        <div
+          class="form-row"
+          >
+          <hr style="width: 100%" />
+        </div>
+      }
+      <ng-template #index>
+        <div class="form-row">
+          <app-fragment-wizard
+            [vocab]="vocabulary.domain"
+            style="margin: auto"
+            [term]="term"
+            (termUpdated)="updateStructure(term, index)"
+          ></app-fragment-wizard>
+        </div>
+      </ng-template>
+      <!-- <div class = "form-row" *ngIf = "toggled[index] && vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'">
+      <app-fragment-wizard [vocab] = "vocabulary.domain" style = "margin:auto" [term] = "term" (termUpdated) = "updateStructure(term,index)"></app-fragment-wizard>
+    </div>-->
     <div class="form-row" [id]="last ? 'latest-term' : null">
       <button mat-icon-button (click)="deleteTerm(index)" class="delete-icon">
         <mat-icon svgIcon="delete_forever"></mat-icon>
@@ -36,12 +38,10 @@
         <mat-label>Value</mat-label>
         <input matInput [(ngModel)]="term.value" required name="value" />
       </mat-form-field>
-
       <mat-form-field class="group">
         <mat-label>Description</mat-label>
         <input matInput [(ngModel)]="term.description" name="Description" />
       </mat-form-field>
-
       <mat-form-field class="group">
         <mat-label>Origin</mat-label>
         <input matInput [(ngModel)]="term.origin" name="origin" />
@@ -56,95 +56,105 @@
           Selected
         </mat-checkbox>
       </div>
-      <div
-        class="checkbox"
-        *ngIf="
-          vocabulary.vocabularyTermType ===
-          'ix.ginas.models.v1.FragmentControlledVocabulary'
-        "
-      >
-        <button matButton (click)="editTerms(term, index)">
-          Edit Structure
-        </button>
-
-        <!-- <button mat-button (click) = "!toggled[index]? toggled[index] = true : toggled[index] = !toggled[index]">{{toggled[index]?"Hide": "Edit Structure"}}</button>-->
-      </div>
-    </div>
-    <div
-      class="form-row double-row"
-      *ngIf="
-        vocabulary.vocabularyTermType ===
-        'ix.ginas.models.v1.CodeSystemControlledVocabulary'
-      "
-    >
-      <mat-form-field class="group">
-        <mat-label>Format Regex</mat-label>
-        <input matInput [(ngModel)]="term.regex" name="Regex" />
-      </mat-form-field>
-
-      <mat-form-field class="group">
-        <mat-label>System Category</mat-label>
-        <input
-          matInput
-          [(ngModel)]="term.systemCategory"
-          name="systemCategory"
-        />
-      </mat-form-field>
-    </div>
-    <div
-      class="form-row double-row"
-      *ngIf="
+      @if (
         vocabulary.vocabularyTermType ===
         'ix.ginas.models.v1.FragmentControlledVocabulary'
-      "
-    >
-      <div class="str-column">
-        <div>
-          <mat-form-field class="group">
-            <mat-label>Simplified Structure</mat-label>
-            <input
-              matInput
-              [(ngModel)]="term.simplifiedStructure"
-              (input)="checkImg(term, event)"
-              name="simplifiedStructure"
-            />
-          </mat-form-field>
+        ) {
+        <div
+          class="checkbox"
+          >
+          <button matButton (click)="editTerms(term, index)">
+            Edit Structure
+          </button>
+          <!-- <button mat-button (click) = "!toggled[index]? toggled[index] = true : toggled[index] = !toggled[index]">{{toggled[index]?"Hide": "Edit Structure"}}</button>-->
         </div>
-        <div *ngIf="term.simpleSrc">
-          <img [src]="term.simpleSrc" />
-        </div>
-      </div>
-      <div class="str-column">
-        <div>
-          <mat-form-field class="group">
-            <mat-label>Fragment Structure</mat-label>
-            <input
-              matInput
-              [(ngModel)]="term.fragmentStructure"
-              (input)="checkImg(term, event)"
-              name="fragmentStructure"
-            />
-          </mat-form-field>
-        </div>
-        <div *ngIf="term.fragmentSrc">
-          <img [src]="term.fragmentSrc" />
-        </div>
-      </div>
+      }
     </div>
+    @if (
+      vocabulary.vocabularyTermType ===
+      'ix.ginas.models.v1.CodeSystemControlledVocabulary'
+      ) {
+      <div
+        class="form-row double-row"
+        >
+        <mat-form-field class="group">
+          <mat-label>Format Regex</mat-label>
+          <input matInput [(ngModel)]="term.regex" name="Regex" />
+        </mat-form-field>
+        <mat-form-field class="group">
+          <mat-label>System Category</mat-label>
+          <input
+            matInput
+            [(ngModel)]="term.systemCategory"
+            name="systemCategory"
+            />
+        </mat-form-field>
+      </div>
+    }
+    @if (
+      vocabulary.vocabularyTermType ===
+      'ix.ginas.models.v1.FragmentControlledVocabulary'
+      ) {
+      <div
+        class="form-row double-row"
+        >
+        <div class="str-column">
+          <div>
+            <mat-form-field class="group">
+              <mat-label>Simplified Structure</mat-label>
+              <input
+                matInput
+                [(ngModel)]="term.simplifiedStructure"
+                (input)="checkImg(term, event)"
+                name="simplifiedStructure"
+                />
+            </mat-form-field>
+          </div>
+          @if (term.simpleSrc) {
+            <div>
+              <img [src]="term.simpleSrc" />
+            </div>
+          }
+        </div>
+        <div class="str-column">
+          <div>
+            <mat-form-field class="group">
+              <mat-label>Fragment Structure</mat-label>
+              <input
+                matInput
+                [(ngModel)]="term.fragmentStructure"
+                (input)="checkImg(term, event)"
+                name="fragmentStructure"
+                />
+            </mat-form-field>
+          </div>
+          @if (term.fragmentSrc) {
+            <div>
+              <img [src]="term.fragmentSrc" />
+            </div>
+          }
+        </div>
+      </div>
+    }
   </div>
+}
 </mat-dialog-content>
 
 <mat-dialog-actions class="actions">
-  <div class="validation" *ngIf="validationMessages.length > 0">
-    <div><b>CV not valid:</b></div>
-    <div class="message" *ngFor="let message of validationMessages">
-      <span class="{{ message.messageType }} type"
-        >{{ message.messageType }} :</span
-      >{{ message.message }}
-    </div>
-  </div>
-  <button matButton (click)="addTerm()">Add term</button>
-  <span class="middle-fill"></span>
-  <button matButton (click)="cancel()">Cancel</button>
-  <button matButton (click)="submit()">Save</button>
-</mat-dialog-actions>
+  @if (validationMessages.length > 0) {
+    <div class="validation">
+      <div><b>CV not valid:</b></div>
+      @for (message of validationMessages; track message) {
+        <div class="message">
+          <span class="{{ message.messageType }} type"
+            >{{ message.messageType }} :</span
+            >{{ message.message }}
+          </div>
+        }
+      </div>
+    }
+    <button matButton (click)="addTerm()">Add term</button>
+    <span class="middle-fill"></span>
+    <button matButton (click)="cancel()">Cancel</button>
+    <button matButton (click)="submit()">Save</button>
+  </mat-dialog-actions>

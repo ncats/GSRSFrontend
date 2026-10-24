@@ -1,18 +1,25 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 import {SubstanceDetail, SubstanceRelated, SubstanceService} from '@gsrs-core/substance';
+
+// __aw__sb41ang21 not sure
 import {UtilsService} from '@gsrs-core/utils';
 import {take} from 'rxjs/operators';
-import * as _ from 'lodash';
+import { chain as lodashChain } from 'lodash';
+import lodashRemove from 'lodash/remove';
 import jp from 'jsonpath';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
     selector: 'app-merge-concept-dialog',
     templateUrl: './merge-concept-dialog.component.html',
     styleUrls: ['./merge-concept-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, MatProgressBarModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MergeConceptDialogComponent implements OnInit {
   public dialogRef: MatDialogRef<MergeConceptDialogComponent>;
@@ -32,8 +39,9 @@ export class MergeConceptDialogComponent implements OnInit {
     private substanceFormService: SubstanceFormService,
     private substanceService: SubstanceService,
     private sanitizer: DomSanitizer,
-    private utilsService: UtilsService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private cdr: ChangeDetectorRef,
+    private utilsService: UtilsService
   ) {
   }
 
@@ -49,13 +57,14 @@ export class MergeConceptDialogComponent implements OnInit {
     this.loading = true;
     this.substanceService.getSubstanceDetails(this.data.uuid).pipe(take(1)).subscribe(sub => {
       this.copy = sub;
-      this.subconcepts = _.chain(sub.relationships).filter(relationship => {
+      this.subconcepts = lodashChain(sub.relationships).filter(relationship => {
         return relationship.type === 'SUB_CONCEPT->SUBSTANCE';
       }).map(relationship => {
         return relationship.relatedSubstance;
       }).map(relationship => {
         this.substanceService.getBDNUM(relationship).subscribe(resp => {
           relationship['$$bdnum'] = resp;
+          this.cdr.markForCheck();
         });
 
 
@@ -69,7 +78,7 @@ export class MergeConceptDialogComponent implements OnInit {
         this.text = 'No sub-concepts were found for this record';
       }
 
-
+      this.cdr.markForCheck();
     });
     this.loading = true;
   }
@@ -78,7 +87,7 @@ export class MergeConceptDialogComponent implements OnInit {
     this.loading = true;
 
     function BDNUM_MAPPER(oldSub) {
-      return _.chain(oldSub.codes).filter(function (code) {
+      return lodashChain(oldSub.codes).filter(function (code) {
         return code.codeSystem === 'BDNUM';
       }).filter(function (code) {
         return code.type === 'PRIMARY';
@@ -115,7 +124,7 @@ export class MergeConceptDialogComponent implements OnInit {
         'access': ['protected']
       };
 
-      const oldref = _.chain(oldSub.relationships).filter(r => {
+      const oldref = lodashChain(oldSub.relationships).filter(r => {
         return r.relatedSubstance.refuuid === uuid;
       }).value();
 
@@ -124,7 +133,7 @@ export class MergeConceptDialogComponent implements OnInit {
       }
 
 
-      newSub.relationships = _.chain(newSub.relationships).filter(r => {
+      newSub.relationships = lodashChain(newSub.relationships).filter(r => {
         return r.type !== 'SUBSTANCE->SUB_CONCEPT';
       }).value();
       newSub.references.push(bdref);
@@ -158,6 +167,7 @@ export class MergeConceptDialogComponent implements OnInit {
       this.addmergebutton = true;
       this.text = 'Fields merged. Click \'Confirm Deprecate old record\' to to prevent duplicate collision';
       this.oldBdnum = oldBdnum;
+      this.cdr.markForCheck();
     });
   }
 
@@ -188,13 +198,13 @@ export class MergeConceptDialogComponent implements OnInit {
     'access': ['admin', 'protected'],
     'references': [depRef.uuid]
   }];
-  concept.codes = _.chain(concept.codes).filter(function (c) {
+  concept.codes = lodashChain(concept.codes).filter(function (c) {
     return c.codeSystem === 'BDNUM';
   }).value();
   concept.notes = [{
     'note': 'Data migrated to record:' + this.oldBdnum
   }];
-  concept.relationships = _.chain(concept.relationships).filter(function (r) {
+  concept.relationships = lodashChain(concept.relationships).filter(function (r) {
     return r.type === 'SUBSTANCE->SUB_CONCEPT';
   }).value();
   concept.deprecated = true;
@@ -212,14 +222,24 @@ export class MergeConceptDialogComponent implements OnInit {
     this.text = 'Old record deprecated, please save this record to complete the merge.';
     this.subconcepts = undefined;
     this.addmergebutton = false; 
+    this.cdr.markForCheck();
   }, error => {
     this.loading = false;
     this.text = 'There was a problem deprecating the old record. Refresh the page to undo the changes to the parent record.';
+    this.cdr.markForCheck();
   });
 }
 
   scrub(oldraw: any, importType?: string): SubstanceDetail {
-    const guid = () => this.utilsService.newUUID();
+    function guid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+    }
     const old = JSON.parse(JSON.stringify(oldraw)); 
     const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const map = {};
@@ -246,11 +266,13 @@ export class MergeConceptDialogComponent implements OnInit {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
-        if (typeof or === 'object') { continue; }
+        if (typeof or === 'object') {
+ continue; 
+}
         refs[j] = map[or];
       }
     }
-    _.remove(old.codes, {
+    lodashRemove(old.codes, {
       codeSystem: 'BDNUM'
     });
     const createHolders = jp.query(old, '$..[?(@.created)]');
@@ -295,12 +317,14 @@ export class MergeConceptDialogComponent implements OnInit {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
           const or = refs[j];
-          if (typeof or === 'object') { continue; }
+          if (typeof or === 'object') {
+ continue; 
+}
           refSet[or] = true;
         }
       }
 
-      const nrefs = _.chain(old.references)
+      const nrefs = lodashChain(old.references)
         .filter(function(ref) {
           if (refSet[ref.uuid]) {
             return true;
@@ -318,8 +342,19 @@ export class MergeConceptDialogComponent implements OnInit {
     return old;
   }
 
+// __aw__sb41ang21 not sure if use this or the below
+//  guid(): string {
+//    return this.utilsService.newUUID();
+//  }
+
   guid(): string {
-    return this.utilsService.newUUID();
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
   }
   
 }

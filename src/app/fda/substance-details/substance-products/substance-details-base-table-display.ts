@@ -8,8 +8,7 @@ import { SubstanceCardBaseFilteredList } from "@gsrs-core/substance-details";
 @Directive()
 export class SubstanceDetailsBaseTableDisplay
   extends SubstanceCardBaseFilteredList<any>
-  implements OnInit
-{
+  implements OnInit {
   totalRecords: number = 0;
   public results: Array<any> = [];
   exportUrl: string;

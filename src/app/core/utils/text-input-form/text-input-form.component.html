@@ -1,20 +1,26 @@
 <div class="text-input-form">
-    <p>{{instruction}}</p>
+  <p>{{instruction}}</p>
+  <div>
     <div>
-        <div>
-            <mat-form-field class="textarea-form-field">
-                <textarea matInput
-                    placeholder="{{placeholder}}"
-                    [formControl]="textControl"
-                ></textarea>
-            </mat-form-field>
-        </div>
+      <mat-form-field class="textarea-form-field">
+        <textarea matInput
+          placeholder="{{placeholder}}"
+          [formControl]="textControl"
+        ></textarea>
+      </mat-form-field>
     </div>
-    <div class="file-reader" *ngIf="showLoadTextFileIntoTextarea"> 
-        Select file: <input type="file" (change)="loadTextFileIntoTextareaChangeListener($event)">
-    </div>  
-    <div>
-        <button *ngIf="showCancelButton" mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
-        <button *ngIf="showSubmitButton" mat-flat-button color="primary" (click) = "submit()">Submit</button>
+  </div>
+  @if (showLoadTextFileIntoTextarea) {
+    <div class="file-reader">
+      Select file: <input type="file" (change)="loadTextFileIntoTextareaChangeListener($event)">
     </div>
+  }
+  <div>
+    @if (showCancelButton) {
+      <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
+    }
+    @if (showSubmitButton) {
+      <button mat-flat-button color="primary" (click) = "submit()">Submit</button>
+    }
+  </div>
 </div>

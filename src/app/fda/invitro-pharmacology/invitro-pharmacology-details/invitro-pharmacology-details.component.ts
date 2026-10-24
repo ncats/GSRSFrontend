@@ -1,12 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import * as moment from 'moment';
-import * as _ from 'lodash';
+import moment from 'moment';
+import lodashCloneDeep from 'lodash/cloneDeep';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -26,7 +32,8 @@ import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
   selector: 'app-invitro-pharmacology-details',
   templateUrl: './invitro-pharmacology-details.component.html',
   styleUrls: ['./invitro-pharmacology-details.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatCardModule, MatExpansionModule, MatIconModule, MatButtonModule, MatTooltipModule]
 })
 export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
@@ -46,7 +53,6 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
   jsonFileName: string;
   flagIconSrcPath: string;
 
-  canUpdate: boolean = false;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
@@ -65,11 +71,15 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.loadingService.setLoading(true);
 
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
       this.getInvitroPharmacology();
@@ -128,7 +138,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    const copyAssay = _.cloneDeep(this.assay);
+    const copyAssay = lodashCloneDeep(this.assay);
     let cleanAssay = this.scrub(copyAssay);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanAssay)));
@@ -142,7 +152,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     const date = new Date();
     let jsonFilename = 'invitro_pharm_assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    const copyAssay = _.cloneDeep(this.assay);
+    const copyAssay = lodashCloneDeep(this.assay);
     let cleanAssay = this.scrub(copyAssay);
 
     let data = { jsonData: cleanAssay, jsonFilename: jsonFilename };

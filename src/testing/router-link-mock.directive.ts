@@ -6,7 +6,8 @@ import { Directive, Input } from '@angular/core';
 /* eslint-disable @angular-eslint/no-input-rename */
 @Directive({
     selector: '[routerLink]',
-    host: { '(click)': 'onClick()' }
+    host: { '(click)': 'onClick()' },
+    standalone: false
 })
 export class RouterLinkDirectiveMock {
     @Input('routerLink') linkParams: any;

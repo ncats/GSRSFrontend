@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   AfterViewInit,
@@ -6,6 +8,13 @@ import {
   ViewChild,
   OnDestroy,
 } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatCardModule } from "@angular/material/card";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
+import { MatOptionModule } from "@angular/material/core";
+import { MatSliderModule } from "@angular/material/slider";
+import { MatButtonModule } from "@angular/material/button";
 import { NavigationExtras, Router, ActivatedRoute } from "@angular/router";
 import { InterpretStructureResponse } from "../structure/structure-post-response.model";
 import { MatDialog } from "@angular/material/dialog";
@@ -19,19 +28,30 @@ import { GoogleAnalyticsService } from "../google-analytics/google-analytics.ser
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { StructureExportComponent } from "@gsrs-core/structure/structure-export/structure-export.component";
 import { Title } from "@angular/platform-browser";
-import * as _ from "lodash";
-import { take } from "rxjs";
-import { StructureEditorComponent } from "@gsrs-core/structure-editor";
+import { Subscription, take } from "rxjs";
+import { StructureEditorComponent, StructureEditorModule } from "@gsrs-core/structure-editor";
+import { NameResolverModule } from "../name-resolver/name-resolver.module";
 
 @Component({
   selector: "app-structure-search",
   templateUrl: "./structure-search.component.html",
   styleUrls: ["./structure-search.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatSliderModule,
+    MatButtonModule,
+    StructureEditorModule,
+    NameResolverModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StructureSearchComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   private editor: Editor;
   private searchType: string;
   _searchtype: string;
@@ -42,6 +62,8 @@ export class StructureSearchComponent
   @ViewChild(StructureEditorComponent)
   structureEditor!: StructureEditorComponent;
   private overlayContainer: HTMLElement;
+  private editorLoadTimer?: ReturnType<typeof setTimeout>;
+  private queryParamSubscription?: Subscription;
 
   constructor(
     public router: Router,
@@ -53,6 +75,7 @@ export class StructureSearchComponent
     private gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private titleService: Title,
+    private cdr: ChangeDetectorRef,
   ) {
     this.searchType = "substructure";
     this._searchtype = "substructure";
@@ -72,7 +95,10 @@ export class StructureSearchComponent
     );
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    clearTimeout(this.editorLoadTimer);
+    this.queryParamSubscription?.unsubscribe();
+  }
 
   molvecUpdate(mol: any) {
     this.editor.setMolecule(mol);
@@ -81,8 +107,10 @@ export class StructureSearchComponent
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);
     this.editor = editor;
-    setTimeout(() => {
-      this.activatedRoute.queryParamMap.subscribe((params) => {
+    clearTimeout(this.editorLoadTimer);
+    this.queryParamSubscription?.unsubscribe();
+    this.editorLoadTimer = setTimeout(() => {
+      this.queryParamSubscription = this.activatedRoute.queryParamMap.subscribe((params) => {
         if (params.has("structure")) {
           this.structureService
             .getMolfile(params.get("structure"))
@@ -102,6 +130,7 @@ export class StructureSearchComponent
         }
 
         this.searchTypeControl.setValue(this.searchType);
+        this.cdr.markForCheck();
       });
     });
   }

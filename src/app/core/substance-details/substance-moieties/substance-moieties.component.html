@@ -1,54 +1,58 @@
-<div class="moiety" *ngFor="let moiety of moieties">
-  <div class="moiety-image">
+@for (moiety of moieties; track moiety) {
+  <div class="moiety">
+    <div class="moiety-image">
       <a tabindex="0" role="link" class="zoom" (click)="openImageModal(moiety)">
-    <img class="structure-image" appSubstanceImage [entityId]="moiety.uuid" [stagingId] = "stagingId" stereo = "true">
-    </a>
-  </div>
-  <div class="moiety-details-container">
-    <div class="moiety-details">
-      <div class="name-value">
-        <div class="name">Molecular Formula:</div>
-        <div class="value blue-font" [innerHTML] = "moiety.formula"></div>
-      </div>
-      <div class="name-value">
-        <div class="name">Molecular Weight:</div>
-        <div class="value">{{moiety.mwt | number: rounding}}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">Charge:</div>
-        <div class="value">{{moiety.charge}}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">Count:</div>
-        <div class="value">
-          <div *ngIf="moiety.countAmount">
-            <div>{{moiety.countAmount.type}}</div>
-            <div>{{moiety.countAmount.average}}&nbsp;{{moiety.countAmount.units}}&nbsp;(average)</div>
+        <img class="structure-image" appSubstanceImage [entityId]="moiety.uuid" [stagingId] = "stagingId" stereo = "true">
+      </a>
+    </div>
+    <div class="moiety-details-container">
+      <div class="moiety-details">
+        <div class="name-value">
+          <div class="name">Molecular Formula:</div>
+          <div class="value blue-font" [innerHTML] = "moiety.formula"></div>
+        </div>
+        <div class="name-value">
+          <div class="name">Molecular Weight:</div>
+          <div class="value">{{moiety.mwt | number: rounding}}</div>
+        </div>
+        <div class="name-value">
+          <div class="name">Charge:</div>
+          <div class="value">{{moiety.charge}}</div>
+        </div>
+        <div class="name-value">
+          <div class="name">Count:</div>
+          <div class="value">
+            @if (moiety.countAmount) {
+              <div>
+                <div>{{moiety.countAmount.type}}</div>
+                <div>{{moiety.countAmount.average}}&nbsp;{{moiety.countAmount.units}}&nbsp;(average)</div>
+              </div>
+            }
           </div>
         </div>
       </div>
-    </div>
-    <div class="moiety-details">
-      <div class="name-value">
-        <div class="name">Stereochemistry:</div>
-        <div class="value">{{moiety.stereochemistry}}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">Additional Stereochemistry:</div>
-        <div class="value">{{moiety.atropisomerism}}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">Defined Stereocenters:</div>
-        <div class="value">{{moiety.stereoCenters}}/{{moiety.definedStereo}}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">E/Z Centers:</div>
-        <div class="value">{{moiety.ezCenters}}</div>
-      </div>
-      <div class="name-value">
-        <div class="name">Optical Activity:</div>
-        <div class="value">{{moiety.opticalActivity}}</div>
+      <div class="moiety-details">
+        <div class="name-value">
+          <div class="name">Stereochemistry:</div>
+          <div class="value">{{moiety.stereochemistry}}</div>
+        </div>
+        <div class="name-value">
+          <div class="name">Additional Stereochemistry:</div>
+          <div class="value">{{moiety.atropisomerism}}</div>
+        </div>
+        <div class="name-value">
+          <div class="name">Defined Stereocenters:</div>
+          <div class="value">{{moiety.stereoCenters}}/{{moiety.definedStereo}}</div>
+        </div>
+        <div class="name-value">
+          <div class="name">E/Z Centers:</div>
+          <div class="value">{{moiety.ezCenters}}</div>
+        </div>
+        <div class="name-value">
+          <div class="name">Optical Activity:</div>
+          <div class="value">{{moiety.opticalActivity}}</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+}

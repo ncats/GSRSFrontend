@@ -1,19 +1,39 @@
-import { Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
 import { ConfigService } from '@gsrs-core/config';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { ApplicationService } from '../service/application.service';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'app-application-text-search',
     templateUrl: './application-text-search.component.html',
     styleUrls: ['./application-text-search.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatAutocompleteModule,
+      MatOptionModule,
+      MatButtonModule,
+      MatIconModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -36,13 +56,16 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
   @Input() source?: string;
   private CasDisplay = 'CAS';
   codeSystemVocab?: any;
+  private deactivateSearchTimer?: ReturnType<typeof setTimeout>;
+  private destroy$ = new Subject<void>();
 
   constructor(
     public applicationService: ApplicationService,
     private element: ElementRef,
     public gaService: GoogleAnalyticsService,
     public configService: ConfigService,
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -56,7 +79,8 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
         const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         this.gaService.sendEvent(eventCategory, 'search:enter-term', eventLabel);
         return this.applicationService.getApplicationSearchSuggestions(searchValue.toUpperCase());
-      })
+      }),
+      takeUntil(this.destroy$)
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
       let showTypes = ['root_applicationID', 'Application_Type', 'Product_Name', 'Sponsor_Name', 'Title', 'Ingredient_Name', 'Division_Class_Division', 'Indication'];
@@ -87,10 +111,12 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
         this.matOpen = true;
         this.opened.emit();
       }
+      this.cdr.markForCheck();
 
     }, error => {
       this.gaService.sendException('search suggestion error from API call');
       console.log(error);
+      this.cdr.markForCheck();
     });
 
   }
@@ -117,7 +143,11 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
     return this.privateErrorMessage;
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    clearTimeout(this.deactivateSearchTimer);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   autoCompleteClosed(): void {
     this.matOpen = false;
@@ -189,7 +219,11 @@ export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, On
 
   deactivateSearch(): void {
     this.searchContainerElement.classList.add('deactivate-search');
-    setTimeout(() => {
+    clearTimeout(this.deactivateSearchTimer);
+    this.deactivateSearchTimer = setTimeout(() => {
+      if (!this.searchContainerElement) {
+        return;
+      }
       if (this.source) {
 
         this.searchContainerElement.classList.remove('active-' + this.source);

@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Editor } from '@gsrs-core/structure-editor';
+import { Component, OnInit, Inject, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type { Editor } from '@gsrs-core/structure-editor';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -8,17 +9,54 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { ConfigService } from '@gsrs-core/config';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { searchSortValues } from '@gsrs-core/utils';
 import { take } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { StructureEditorModule } from '@gsrs-core/structure-editor';
+import { NameResolverComponent } from '@gsrs-core/name-resolver/name-resolver.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
+import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 @Component({
     selector: 'app-advanced-selector-dialog',
     templateUrl: './advanced-selector-dialog.component.html',
     styleUrls: ['./advanced-selector-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatIconModule,
+      MatButtonModule,
+      MatTooltipModule,
+      StructureEditorModule,
+      NameResolverComponent,
+      MatOptionModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatCardModule,
+      MatRadioModule,
+      MatPaginatorModule,
+      MatTabsModule,
+      MatSliderModule,
+      MatExpansionModule,
+      MatChipsModule,
+      SubstanceTextSearchComponent,
+      SubstanceImageDirective
+    ]
 })
 export class AdvancedSelectorDialogComponent implements OnInit {
 
@@ -77,6 +115,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   private privateSequenceSearchKey?: string;
+  private destroyRef = inject(DestroyRef);
 
 
   constructor(
@@ -129,9 +168,9 @@ export class AdvancedSelectorDialogComponent implements OnInit {
 
   standardize(standard: string): void {
     let mol = ''
-    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+    this.editor.getMolfile().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       mol = response;
-      this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
+      this.structureService.interpretStructure(mol, '', standard).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((response: InterpretStructureResponse) => {
         if (response && response.structure && response.structure.molfile) {
           this.editor.setMolecule(response.structure.molfile);
         }
@@ -196,7 +235,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
     this.loadingService.setLoading(false);
     this.editor = editor;
     if(this.dat && this.dat.uuid) {
-      this.structureService.getMolfile(this.data.uuid).subscribe( response => {
+      this.structureService.getMolfile(this.data.uuid).pipe(takeUntilDestroyed(this.destroyRef)).subscribe( response => {
         this.editor.setMolecule(response);
         this.overlayContainer.style.zIndex = '1003';
 
@@ -220,9 +259,9 @@ export class AdvancedSelectorDialogComponent implements OnInit {
 
   search(): void {
     let mol = '';
-    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+    this.editor.getMolfile().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       mol = response;
-      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+      this.structureService.interpretStructure(mol).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((response: InterpretStructureResponse) => {
         this.smiles = response.structure.smiles;
         this.response = response.structure.id;
         this.searchSubstances(response.structure.id, response.structure.smiles);
@@ -345,6 +384,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
       sequenceSearchKey: this.privateSequenceSearchKey,
       deprecated: false
     })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(pagingResponse => {
 
           if(type && type === 'name') {
@@ -395,7 +435,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
     });
     //  this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((structurePostResponse?: InterpretStructureResponse) => {
       setTimeout(() => {
         this.overlayContainer.style.zIndex = '1003';
         this.overlayContainer.style.zIndex = '10003';
@@ -416,10 +456,10 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   openStructureExportDialog(): void {
     let mol = '';
     let smiles = '';
-    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+    this.editor.getMolfile().pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       mol = response;
 
-      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+      this.structureService.interpretStructure(mol).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((response: InterpretStructureResponse) => {
         smiles = response.structure.smiles;
 
         const dialogRef = this.dialog.open(StructureExportComponent, {
@@ -431,7 +471,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
           }
         });
 
-        dialogRef.afterClosed().subscribe(() => {
+        dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
           setTimeout(() => {
             this.overlayContainer.style.zIndex = '1003';
             this.overlayContainer.style.zIndex = '10003';
@@ -491,7 +531,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
 
     this.overlayContainer.style.zIndex = '1002';
 
-    const subscription = dialogRef.afterClosed().subscribe(response => {
+    const subscription = dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       if (response && response === 'molfile') {
         this.panelOpenState = true;
         if (this.activeTab === 1) {

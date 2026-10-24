@@ -4,9 +4,6 @@ import { RelationshipDisplayPipe } from '@gsrs-core/utils/relationship-display.p
 
 @NgModule({
     imports: [
-      // dep modules
-    ],
-    declarations: [
       CodeSystemDisplayPipe,
       RelationshipDisplayPipe
     ],

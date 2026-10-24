@@ -6,7 +6,7 @@ import { Title, DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as moment from 'moment';
+import moment from 'moment';
 
 /* GSRS Core Imports */
 import { LoadingService } from '@gsrs-core/loading';
@@ -20,17 +20,49 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import jp from 'jsonpath';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
+import '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 
 /* GSRS Product Imports */
 import { ProductService } from '../service/product.service';
 import { Product, ValidationMessage } from '../model/product.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ProductComponentFormComponent } from './product-component/product-component-form.component';
 
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatBadgeModule,
+    MatTooltipModule,
+    CvInputComponent,
+    ProductComponentFormComponent
+  ]
 })
 
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -72,8 +104,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   validationResult = false;
   disableMarketingCategoryCode = true;
   serverError: boolean;
-  canDelete: boolean = false;
-  canCreate: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -90,9 +120,16 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private titleService: Title,
     private sanitizer: DomSanitizer) { }
 
-  async ngOnInit() {
-    this.canDelete = await this.authService.hasSpecificPrivilege("Delete Lower Level Items");
-    this.canCreate = await this.authService.hasSpecificPrivilege("Create");
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canDelete(): boolean {
+    return this.authService.hasPrivilege('Delete Lower Level Items');
+  }
+
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
+
+  ngOnInit() {
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
@@ -1017,8 +1054,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           if (elementName != null) {
             if (prodNameIndex == index) {
               elementName.displayName = $event.checked;
-            }
-            else {
+            } else {
               elementName.displayName = false;
             }
           }

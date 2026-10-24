@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { SubstanceTextSearchModule } from './substance-text-search.module';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: SubstanceTextSearchModule
+  providedIn: 'root'
 })
 export class SubstanceTextSearchService {
   private registeredSearchComponents: { [id: string]: Subject<string> } = {};

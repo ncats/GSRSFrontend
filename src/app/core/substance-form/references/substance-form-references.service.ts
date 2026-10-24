@@ -7,7 +7,9 @@ import { SubstanceFormServiceBase } from '../base-classes/substance-form-service
 import { SubstanceFormService } from '../substance-form.service';
 import { UtilsService } from '@gsrs-core/utils';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Array<SubstanceReference>> {
   private privateDomainsWithReferences: DomainsWithReferences;
   private domainsWithReferencesEmitter = new ReplaySubject<DomainsWithReferences>();

@@ -1,13 +1,30 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { SubstanceService } from "@gsrs-core/substance/substance.service";
 import { SubstanceSummary } from "@gsrs-core/substance/substance.model";
 import { ConfigService } from "@gsrs-core/config";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { SubstanceTextSearchComponent } from "@gsrs-core/substance-text-search/substance-text-search.component";
+import { SubstanceImageDirective } from "@gsrs-core/substance/substance-image.directive";
 
 @Component({
   selector: "app-substance-search-selector",
   templateUrl: "./substance-search-selector.component.html",
   styleUrls: ["./substance-search-selector.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    SubstanceTextSearchComponent,
+    SubstanceImageDirective
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceSearchSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
@@ -30,6 +47,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   constructor(
     public substanceService: SubstanceService,
     public configService: ConfigService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -47,6 +65,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
       this.substanceService.getSubstanceSummary(uuid).subscribe(
         (response) => {
           this.selectedSubstance = response;
+          this.cdr.markForCheck();
         },
         (error) => {
           console.log(error);
@@ -56,6 +75,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
             this.selectedSubstance = { _name: "" };
           }
           this.errorMessage = "Not in database";
+          this.cdr.markForCheck();
         },
       );
     } else {
@@ -92,6 +112,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
           this.showMessage.emit("No substances found for " + this.searchValue);
         }
         this.loadingStructure = false;
+        this.cdr.markForCheck();
       });
   }
 

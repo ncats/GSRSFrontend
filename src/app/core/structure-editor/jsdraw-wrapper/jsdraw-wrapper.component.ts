@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   AfterViewInit,
   Output,
@@ -10,13 +11,14 @@ import {
   HostListener,
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
-import { JSDraw } from "@gsrs-core/structure-editor";
+import type { JSDraw } from "@gsrs-core/structure-editor";
 
 @Component({
   selector: "ncats-jsdraw-wrapper",
   template: `<div [id]="randomId" dataformat="molfile"></div>`,
   styles: [":host { display: block; } :host([hidden]) { display: none; }"],
-  standalone: false,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsdrawWrapperComponent implements AfterViewInit {
   randomId: string;
@@ -61,8 +63,12 @@ export class JsdrawWrapperComponent implements AfterViewInit {
   }
 
   private scheduleResize(): void {
-    if (!isPlatformBrowser(this.platformId)) { return; }
-    if (this.resizeFrame != null) { return; }
+    if (!isPlatformBrowser(this.platformId)) {
+ return; 
+}
+    if (this.resizeFrame != null) {
+ return; 
+}
 
     this.resizeFrame = window.requestAnimationFrame(() => {
       this.resizeFrame = undefined;
@@ -102,21 +108,29 @@ export class JsdrawWrapperComponent implements AfterViewInit {
   private doResize(): void {
     const editor = this.jsdraw as any;
     // Skip if not initialised, hidden (display:none), or resize API absent
-    if (!editor || !this.el.nativeElement.offsetParent || typeof editor.resize !== "function") { return; }
+    if (!editor || !this.el.nativeElement.offsetParent || typeof editor.resize !== "function") {
+ return; 
+}
 
     const availableWidth = Math.floor(this.el.nativeElement.getBoundingClientRect().width);
-    if (availableWidth <= 0) { return; }
+    if (availableWidth <= 0) {
+ return; 
+}
 
     const svg = this.el.nativeElement.querySelector("svg") as SVGSVGElement | null;
     const height = this.getSvgDimension(svg, "height");
-    if (height <= 0) { return; }
+    if (height <= 0) {
+ return; 
+}
 
     const editorRoot = this.el.nativeElement.firstElementChild as HTMLElement | null;
     const svgWidth = this.getSvgDimension(svg, "width");
     const editorWidth = Math.floor(editorRoot?.getBoundingClientRect().width ?? 0) || availableWidth;
     const chromeWidth = svgWidth > 0 ? Math.max(0, editorWidth - svgWidth) : 0;
     const drawingWidth = Math.max(1, availableWidth - chromeWidth);
-    if (drawingWidth === this.lastDrawingWidth && height === this.lastHeight) { return; }
+    if (drawingWidth === this.lastDrawingWidth && height === this.lastHeight) {
+ return; 
+}
 
     editor.resize(drawingWidth, height);
     this.lastDrawingWidth = drawingWidth;
@@ -124,13 +138,19 @@ export class JsdrawWrapperComponent implements AfterViewInit {
   }
 
   private getSvgDimension(svg: SVGSVGElement | null, dimension: "width" | "height"): number {
-    if (!svg) { return 0; }
+    if (!svg) {
+ return 0; 
+}
 
     const baseValue = svg[dimension]?.baseVal?.value;
-    if (baseValue > 0) { return baseValue; }
+    if (baseValue > 0) {
+ return baseValue; 
+}
 
     const attributeValue = parseInt(svg.getAttribute(dimension) ?? "0", 10);
-    if (attributeValue > 0) { return attributeValue; }
+    if (attributeValue > 0) {
+ return attributeValue; 
+}
 
     return Math.floor(svg.getBoundingClientRect()[dimension]);
   }

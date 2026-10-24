@@ -1,18 +1,24 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubstanceDetail, SubstanceService } from '@gsrs-core/substance';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import { LoadingService } from '@gsrs-core/loading/index';
 import { UtilsService } from '@gsrs-core/utils/index';
 import jp from 'jsonpath';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RouterModule } from '@angular/router';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component( {
     selector: 'app-definition-switch-dialog',
     templateUrl: './definition-switch-dialog.component.html',
     styleUrls: ['./definition-switch-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, MatIconModule, MatProgressBarModule, RouterModule, SubstanceImageDirective]
 })
 export class DefinitionSwitchDialogComponent implements OnInit {
   public dialogRef: MatDialogRef < DefinitionSwitchDialogComponent >;
@@ -106,7 +112,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
     this.showButtons = false;
     console.log('Temporarily changing primary type');
     this.substanceService.getSubstanceDetails(this.sub.uuid).subscribe(c => {
-      this.oldPrime = _.cloneDeep(c);
+      this.oldPrime = lodashCloneDeep(c);
       if (!this.fieldGetter[this.oldPrime.substanceClass]) {
         this.text = 'The selected alternative is incompatible with the definition switch function';
         return;
@@ -173,7 +179,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
       this.substanceService.getSubstanceDetails(uuid).subscribe(d => {
         this.test2 = jp.query(d, '$..[?(@.references)]');
          
-        this.oldAlt = _.cloneDeep(d);
+        this.oldAlt = lodashCloneDeep(d);
         if (!this.fieldGetter[this.oldAlt.substanceClass]) {
          this.text = 'The selected alternative is incompatible with the definition switch function';
           return;
@@ -195,9 +201,9 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         this.didStep5 = true;
         this.text = 'Step 1 complete. Running step 2a...';
         this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(d => {
-            alt = _.cloneDeep(d);
+            alt = lodashCloneDeep(d);
 
-            const altSwitch = _.cloneDeep(d);
+            const altSwitch = lodashCloneDeep(d);
 
             this.fieldGetter[altSwitch.substanceClass].forEach(x => {
               if (alt[x]) {
@@ -264,7 +270,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         // get server version for server-side updates
           this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(d => {
 
-          alt = _.cloneDeep(d);
+          alt = lodashCloneDeep(d);
           this.fieldGetter[alt.substanceClass].forEach(x => {
             if (alt[x]) {
               delete alt[x];
@@ -314,7 +320,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
               }
             });
           }
-          const temp = _.cloneDeep(alt);
+          const temp = lodashCloneDeep(alt);
           if (this.didStep5 === true) {
             this.text = 'Step 2a complete. Sending update for 2b...';
           } else {
@@ -332,7 +338,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
         this.substanceService.getSubstanceDetails(this.sub.uuid).subscribe(e => {
 
           this.substanceService.getSubstanceDetails(this.oldAlt.uuid).subscribe(f => {
-            const newSub = _.cloneDeep(e);
+            const newSub = lodashCloneDeep(e);
 
             newSub.substanceClass = this.oldAlt.substanceClass;
             this.fieldGetter[newSub.substanceClass].forEach(x => {
@@ -464,10 +470,13 @@ export class DefinitionSwitchDialogComponent implements OnInit {
 
   _typeof2(obj) {
     if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-      this. _typeof2 = function _typeof2(_obj) { return typeof _obj; };
+      this. _typeof2 = function _typeof2(_obj) {
+ return typeof _obj; 
+};
     } else {
       this._typeof2 = function _typeof2(_obj) {
-        return _obj && typeof Symbol === 'function' && _obj.constructor === Symbol && _obj !== Symbol.prototype ? 'symbol' : typeof _obj; };
+        return _obj && typeof Symbol === 'function' && _obj.constructor === Symbol && _obj !== Symbol.prototype ? 'symbol' : typeof _obj; 
+};
     }
     return this._typeof2(obj);
   }

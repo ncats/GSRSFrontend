@@ -18,12 +18,21 @@ import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { impuritiesSearchSortValues } from '../../../impurities/impurities-search-sort-values';
+import { RouterLink } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-substance-impurities',
     templateUrl: './substance-impurities.component.html',
     styleUrls: ['./substance-impurities.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterLink, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
@@ -59,8 +68,6 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     'relatedSubstance'
   ];
 
-  canUpdate:boolean = false;
-  canExport:boolean = false;
 
   constructor(
     private router: Router,
@@ -74,10 +81,16 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     super(gaService, impuritiesService);
   }
 
-  async ngOnInit() {
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     if (this.substanceUuid) {
       this.getImpuritiesBySubstanceUuid();
       this.impuritiesListExportUrl();

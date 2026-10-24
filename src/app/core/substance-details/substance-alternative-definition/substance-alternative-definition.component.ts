@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 import { SubstanceDetail, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 import { Subject } from 'rxjs';
 import { SubstanceCardBase } from '@gsrs-core/substance-details/substance-card-base';
@@ -7,7 +9,8 @@ import { SubstanceCardBase } from '@gsrs-core/substance-details/substance-card-b
     selector: 'app-substance-alternative-definition',
     templateUrl: './substance-alternative-definition.component.html',
     styleUrls: ['./substance-alternative-definition.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterModule, SubstanceImageDirective]
 })
 export class SubstanceAlternativeDefinitionComponent extends SubstanceCardBase implements OnInit {
   definition: string;

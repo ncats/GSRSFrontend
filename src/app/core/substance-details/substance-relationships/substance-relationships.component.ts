@@ -1,8 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
+import { RelationshipsDownloadButtonComponent } from '@gsrs-core/substance-form/relationships/relationships-download-button/relationships-download-button.component';
 import {SubstanceDetail, SubstanceRelationship} from '../../substance/substance.model';
 import { UtilsService } from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
@@ -13,7 +27,25 @@ import {Sort} from '@angular/material/sort';
     selector: 'app-substance-relationships',
     templateUrl: './substance-relationships.component.html',
     styleUrls: ['./substance-relationships.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      ReactiveFormsModule,
+      RouterModule,
+      MatTableModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatPaginatorModule,
+      MatButtonModule,
+      MatSortModule,
+      MatTooltipModule,
+      MatDialogModule,
+      ReferencesManagerModule,
+      SubstanceImageDirective,
+      RelationshipsDownloadButtonComponent
+    ]
 })
 export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship> implements OnInit {
   type: string;

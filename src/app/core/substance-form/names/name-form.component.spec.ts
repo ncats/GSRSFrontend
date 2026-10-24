@@ -1,17 +1,44 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
+import { UtilsService } from '../../utils/utils.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { SubstanceFormNamesService } from '@gsrs-core/substance-form/names/substance-form-names.service';
+import { AuthService } from '@gsrs-core/auth';
+import { ConfigService } from '@gsrs-core/config';
+import { DataDictionaryService } from '@gsrs-core/utils/data-dictionary.service';
+import { SubstanceFormReferencesService } from '@gsrs-core/substance-form/references/substance-form-references.service';
 import { NameFormComponent } from './name-form.component';
 
 describe('NameFormComponent', () => {
   let component: NameFormComponent;
   let fixture: ComponentFixture<NameFormComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ NameFormComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule, NameFormComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: ConfigService, useValue: { configData: {} } },
+        { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of(new Proxy({}, { get: () => ({ list: [], dictionary: {} }) })), getVocabularies: () => of({ content: [] }) } },
+        { provide: UtilsService, useValue: { getBuildInfo: () => of({}), handleMatSidenavOpen: () => null, handleMatSidenavClose: () => null } },
+        { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => of(null) }) } },
+        { provide: SubstanceFormService, useValue: { definition: of({ substanceClass: 'chemical' }), getSubstanceStatus: () => 'draft' } },
+        { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
+        { provide: SubstanceFormNamesService, useValue: {} },
+        { provide: AuthService, useValue: { getAuth: () => of(null), checkAuth: () => of(null), canEditData: () => Promise.resolve(false), hasSpecificPrivilege: () => Promise.resolve(false), hasPrivilege: () => false, getUser: () => null, logout: () => {} } },
+        // also injected by the real, standalone app-cv-input/app-domain-references
+        // children this component's template now renders for real.
+        { provide: DataDictionaryService, useValue: { getDictionaryRow: () => ({ fieldName: 'test', CVDomain: 'test' }) } },
+        { provide: SubstanceFormReferencesService, useValue: { substanceReferences: of([]) } },
+      ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NameFormComponent);

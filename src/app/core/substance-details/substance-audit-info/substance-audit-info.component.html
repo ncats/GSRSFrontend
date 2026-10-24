@@ -1,31 +1,38 @@
-<div *ngIf="substance">
-  <div class="name-value">
-    <div class="name">Created</div>
-    <div class="value">{{substance.created | date : 'short'}}</div>
+@if (substance) {
+  <div>
+    <div class="name-value">
+      <div class="name">Created</div>
+      <div class="value">{{substance.created | date : 'short'}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Created By</div>
+      <div class="value">{{substance.createdBy}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Last Edited</div>
+      <div class="value">{{substance.lastEdited | date : 'short'}}</div>
+    </div>
+    <div class="name-value">
+      <div class="name">Last Edited By</div>
+      <div class="value">{{substance.lastEditedBy}}</div>
+    </div>
+    @if (substance.approved) {
+      <div class="name-value">
+        <div class="name">Approved</div>
+        <div class="value">{{substance.approved| date : 'short'}}</div>
+      </div>
+    }
+    @if (substance.approved) {
+      <div class="name-value">
+        <div class="name">Approved By</div>
+        <div class="value">{{substance.approvedBy}}</div>
+      </div>
+    }
+    @if (substance.changeReason) {
+      <div class="name-value">
+        <div class="name">Version Comments</div>
+        <div class="value">{{substance.changeReason}}</div>
+      </div>
+    }
   </div>
-  <div class="name-value">
-    <div class="name">Created By</div>
-    <div class="value">{{substance.createdBy}}</div>
-  </div>
-  <div class="name-value">
-    <div class="name">Last Edited</div>
-    <div class="value">{{substance.lastEdited | date : 'short'}}</div>
-  </div>
-  <div class="name-value">
-    <div class="name">Last Edited By</div>
-    <div class="value">{{substance.lastEditedBy}}</div>
-  </div>
-
-  <div class="name-value" *ngIf = "substance.approved">
-    <div class="name">Approved</div>
-    <div class="value">{{substance.approved| date : 'short'}}</div>
-  </div>
-  <div class="name-value" *ngIf = "substance.approved">
-    <div class="name">Approved By</div>
-    <div class="value">{{substance.approvedBy}}</div>
-  </div>
-  <div class="name-value" *ngIf = "substance.changeReason">
-    <div class="name">Version Comments</div>
-    <div class="value">{{substance.changeReason}}</div>
-  </div>
-</div>
+}

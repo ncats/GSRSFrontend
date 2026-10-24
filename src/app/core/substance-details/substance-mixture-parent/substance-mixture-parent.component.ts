@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { Subject } from 'rxjs';
 import { SubstanceCardBase } from '@gsrs-core/substance-details/substance-card-base';
@@ -7,7 +9,8 @@ import { SubstanceCardBase } from '@gsrs-core/substance-details/substance-card-b
     selector: 'app-substance-mixture-parent',
     templateUrl: './substance-mixture-parent.component.html',
     styleUrls: ['./substance-mixture-parent.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterModule, SubstanceImageDirective]
 })
 export class SubstanceMixtureParentComponent extends SubstanceCardBase implements OnInit {
   substanceUpdated = new Subject<SubstanceDetail>();

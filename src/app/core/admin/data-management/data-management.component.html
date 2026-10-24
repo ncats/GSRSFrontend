@@ -17,7 +17,7 @@
           (change)="onFileSelect($event)"
           name="file1"
           accept=".gsrs, .ginas, .txt.gz"
-        />
+          />
       </div>
 
       <div class="options-row">
@@ -28,7 +28,7 @@
               name="fileType"
               formControlName="fileType"
               [(ngModel)]="fileType"
-            >
+              >
               <mat-option value="JSON" selected> GSRS Dump File </mat-option>
               <mat-option value="SD-default" disabled> SD File </mat-option>
               <mat-option value="SD" disabled> SD File (custom) </mat-option>
@@ -40,7 +40,7 @@
             name="audit"
             [checked]="audit"
             (change)="audit = !audit"
-          >
+            >
             Preserve Audit Information
           </mat-checkbox>
         </div>
@@ -58,17 +58,18 @@
         (click)="onSubmit()"
         type="submit"
         [disabled]="processing || !filename"
-      >
+        >
         Upload
       </button>
       <div class="loading-spinner">
-        <mat-progress-spinner
-          [color]="accent"
-          mode="indeterminate"
-          diameter="44"
-          *ngIf="processing"
-        >
-        </mat-progress-spinner>
+        @if (processing) {
+          <mat-progress-spinner
+            [color]="accent"
+            mode="indeterminate"
+            diameter="44"
+            >
+          </mat-progress-spinner>
+        }
       </div>
     </div>
   </form>

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {Mixture, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -7,12 +7,17 @@ import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
+import { CommonModule } from '@angular/common';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-substance-form-mixture-details',
     templateUrl: './substance-form-mixture-details.component.html',
     styleUrls: ['./substance-form-mixture-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, AuditInfoComponent, SubstanceSelectorComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len
 export class SubstanceFormMixtureDetailsComponent  extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
@@ -25,7 +30,8 @@ export class SubstanceFormMixtureDetailsComponent  extends SubstanceFormBase imp
   constructor(
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
     this.analyticsEventCategory = 'substance form Mixture Details';
@@ -43,6 +49,7 @@ export class SubstanceFormMixtureDetailsComponent  extends SubstanceFormBase imp
       this.parent = substance.mixture.parentSubstance;
       this.relatedSubstanceUuid = this.mixture.parentSubstance && this.mixture.parentSubstance.refuuid || '';
       this.substanceFormService.resetState();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(substanceSubscription);
   }

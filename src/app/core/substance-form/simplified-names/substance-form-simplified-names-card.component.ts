@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
@@ -8,12 +8,22 @@ import {combineLatest, first, last, Subscription} from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substance-form-names.service";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { SimplifiedNameFormComponent } from './simplified-name-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-simplified-substance-form-names-card',
     templateUrl: './substance-form-simplified-names-card.component.html',
     styleUrls: ['./substance-form-simplified-names-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatPaginatorModule, MatInputModule, SimplifiedNameFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormSimplifiedNamesCardComponent
   extends SubstanceCardBaseFilteredList<SubstanceName>
@@ -31,9 +41,10 @@ export class SubstanceFormSimplifiedNamesCardComponent
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private configService: ConfigService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form names';
   }
 
@@ -62,6 +73,7 @@ export class SubstanceFormSimplifiedNamesCardComponent
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(namesSubscription);
 

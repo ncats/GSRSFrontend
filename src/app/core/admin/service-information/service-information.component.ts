@@ -1,16 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSelectChange } from '@angular/material/select';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
+import lodashFilter from 'lodash/filter';
+import lodashMap from 'lodash/map';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @Component({
     selector: 'app-service-information',
     templateUrl: './service-information.component.html',
     styleUrls: ['./service-information.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatOptionModule, MatProgressSpinnerModule, MatSelectModule, NgxJsonViewerModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServiceInformationComponent implements OnInit {
 
@@ -27,7 +39,8 @@ export class ServiceInformationComponent implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private cdr: ChangeDetectorRef
   ) { }
      onServiceSelectionChange(event: MatSelectChange) {
       this.currentService=event.value;
@@ -38,6 +51,7 @@ export class ServiceInformationComponent implements OnInit {
       this.adminService.fetchServiceInfoEndpointPaths(this.currentService).pipe(take(1)).subscribe( resp => {
         this.loading = false;
         this.endpoints = resp.endpoints;
+        this.cdr.markForCheck();
       });
     }
 
@@ -71,6 +85,7 @@ export class ServiceInformationComponent implements OnInit {
             this.content = resp.body;
           }
         }
+        this.cdr.markForCheck();
       });
     }
 
@@ -89,14 +104,15 @@ export class ServiceInformationComponent implements OnInit {
     }
 
     ngOnInit() {
-      let activeServices = _.filter(this.configService.configData?.services || [], {  'active': true });
-      this.services = _.map(activeServices, "name", ).sort();
+      let activeServices = lodashFilter(this.configService.configData?.services || [], {  'active': true });
+      this.services = lodashMap(activeServices, "name", ).sort();
       this.loading = false;
       if(this.currentService) {
         setTimeout(() => {
           this.adminService.fetchServiceInfoEndpointPaths(this.currentService).pipe(take(1)).subscribe( resp => {
             this.loading = false;
             this.endpoints = resp.endpoints;
+            this.cdr.markForCheck();
           });
         }, 1000);
       }

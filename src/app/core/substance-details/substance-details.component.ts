@@ -8,6 +8,11 @@ import {
   ViewChild,
   OnDestroy
 } from '@angular/core';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ScrollToModule } from '../scroll-to/scroll-to.module';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail } from '../substance/substance.model';
@@ -35,7 +40,8 @@ import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
     selector: 'app-substance-details',
     templateUrl: './substance-details.component.html',
     styleUrls: ['./substance-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatSidenavModule, MatListModule, MatIconModule, MatExpansionModule, ScrollToModule]
 })
 export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   id: string;
@@ -79,7 +85,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.source = this.activatedRoute.snapshot.queryParams['source'] || 'substances';
     this.loadingService.setLoading(true);
     if(this.source !== 'staging'){
-      this.checkVersion().subscribe((result: number) => {this.latestVersion = result;
+      this.checkVersion().subscribe((result: number) => {
+this.latestVersion = result;
         this.activeRoute.params.subscribe(routeParams => {
           this.id = routeParams.id;
           this.version = routeParams.version;
@@ -123,13 +130,13 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
           if (!substanceProperty.isLoaded) {
             substanceProperty.isLoaded = true;
             this.dynamicComponentLoader
-              .getComponentFactory<any>(substanceProperty.dynamicComponentId)
-              .subscribe(componentFactory => {
+              .getDynamicComponent<any>(substanceProperty.dynamicComponentId)
+              .subscribe(componentType => {
                 if (this.source === 'staging') {
                   this.substance.$$source = 'staging';
                   this.substance.uuid =  this.id;
                 }
-                const ref = cRef.createComponent(componentFactory);
+                const ref = cRef.createComponent(componentType);
                 if(substanceProperty.dynamicComponentId === "substance-overview"){
                   ref.instance.downloadPDF.subscribe(()=>{
                    this.generatePDF();

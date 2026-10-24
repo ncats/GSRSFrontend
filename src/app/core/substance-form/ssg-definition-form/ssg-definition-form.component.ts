@@ -6,12 +6,19 @@ import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import { DomainReferencesComponent } from '@gsrs-core/substance-form/references/domain-references/domain-references.component';
 
 @Component({
     selector: 'app-ssg-definition-form',
     templateUrl: './ssg-definition-form.component.html',
     styleUrls: ['./ssg-definition-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, AccessManagerComponent, DomainReferencesComponent]
 })
 
 export class SsgDefinitionFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {

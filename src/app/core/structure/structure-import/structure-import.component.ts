@@ -1,14 +1,20 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { StructureService } from '../structure.service';
+import { CommonModule } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { FileSelectDirective } from '@gsrs-core/file-select/file-select.directive';
 
 @Component({
     selector: 'app-structure-import',
     templateUrl: './structure-import.component.html',
     styleUrls: ['./structure-import.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatProgressBarModule, MatButtonModule, FileSelectDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureImportComponent implements OnInit {
   isLoading = false;
@@ -20,7 +26,8 @@ export class StructureImportComponent implements OnInit {
     public dialogRef: MatDialogRef<StructureImportComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public gaService: GoogleAnalyticsService,
-    private structureService: StructureService
+    private structureService: StructureService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -40,12 +47,14 @@ export class StructureImportComponent implements OnInit {
           this.message = 'Please enter a valid v2000 molfile or smiles';
           this.gaService.sendException('wrong structure data imported');
         }
+        this.cdr.markForCheck();
 
       }, error => {
         this.isLoading = false;
         this.messageClass = 'error';
         this.message = 'There was an error importing your structure. Please refresh and try again.';
         this.gaService.sendException('postSubstanceStructure error');
+        this.cdr.markForCheck();
       });
     } else {
       this.messageClass = 'error';

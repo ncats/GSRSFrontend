@@ -10,13 +10,12 @@ import {
   ViewChild,
   ElementRef, AfterViewInit, HostListener
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { EditorImplementation } from './structure-editor-implementation.model';
 import { environment } from '../../../environments/environment';
 import { StructureService } from '@gsrs-core/structure';
 import { LoadingService } from '@gsrs-core/loading';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
 import { ConfigService } from '@gsrs-core/config';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.component';
@@ -24,6 +23,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JSDraw, Ketcher } from './structure.editor.model';
 import { Subscription } from 'rxjs';
+import { DragDropPasteDirective } from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
+import { JsdrawWrapperComponent } from './jsdraw-wrapper/jsdraw-wrapper.component';
+import { KetcherWrapperComponent } from './ketcher-wrapper/ketcher-wrapper.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 
 export type StructureEditorName = 'jsdraw' | 'ketcher';
 
@@ -49,7 +54,16 @@ export function resolveStructureEditorPreference(
     selector: 'app-structure-editor',
     templateUrl: './structure-editor.component.html',
     styleUrls: ['./structure-editor.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      DragDropPasteDirective,
+      JsdrawWrapperComponent,
+      KetcherWrapperComponent,
+      MatButtonModule,
+      MatMenuModule,
+      MatIconModule
+    ]
 })
 export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   editor: EditorImplementation;
@@ -540,7 +554,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
               if (!isLoadCanvas && this.editor) {
                 this.editor.getMolfile().pipe(take(1)).subscribe((result: string) => {
                   const jsdraw = this.getSketcher();
-                  if (jsdraw) { jsdraw.setFile(result, 'mol'); }
+                  if (jsdraw) {
+ jsdraw.setFile(result, 'mol'); 
+}
                 });
               }
             }
@@ -613,8 +629,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.loadingService.setLoading(false);
         });
 
-      }
-      else {
+      } else {
         this.jsdraw.setMolfile(mol);
         this.loadingService.setLoading(false);
         this.loadedMolfile.emit(mol);
@@ -754,7 +769,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.editor.setMolecule(response.structure.molfile);
         }
         this.loadingService.setLoading(false);
-      }, () => { this.loadingService.setLoading(false); });
+      }, () => {
+ this.loadingService.setLoading(false); 
+});
     });
   }
 

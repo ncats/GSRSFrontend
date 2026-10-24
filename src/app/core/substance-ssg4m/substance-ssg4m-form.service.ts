@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { Ssg4mSyntheticPathway, Ssg4mSyntheticPathwayDetail } from './model/substance-ssg4m.model';
