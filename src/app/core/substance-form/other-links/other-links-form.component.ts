@@ -64,13 +64,13 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
     return this.privateLink;
   }
 
-// __aw__ sb41ang21 ang21 not sure
+// __aw__sb41ang21 ang21 not sure
 //  updateDisplay(): void {
 //    this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
 //  }
 
 
-// __aw__ sb41ang21 springBoot41 not sure
+// __aw__sb41ang21 springBoot41 not sure
   updateDisplay(): void {
     // Paired-linkage types (e.g. Cys-linker-Cys) use pairedSiteString(), which keeps site pairing instead of sorting/range-compressing like siteString().
     if (isPairedLinkageType(this.privateLink.linkageType)) {
@@ -82,7 +82,7 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
 
 
 
-// __aw__ sb41ang21 springBoot41 not sure
+// __aw__sb41ang21 springBoot41 not sure
   onLinkageTypeChange(value: string): void {
     this.privateLink.linkageType = value;
     // Re-render siteDisplay since the paired-vs-flat format depends on the type.
@@ -113,10 +113,10 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   openDialog(): void {
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
-// __aw__ sb41ang21 ang21 not sure
+// __aw__sb41ang21 ang21 not sure
 //      data: {'card': 'other', 'link': this.privateLink.sites},
 
-// __aw__ sb41ang21 springBoot41 not sure
+// __aw__sb41ang21 springBoot41 not sure
       // preserveSiteOrder stops the selector from re-sorting sites after each click, which would lose pairing before the dialog closes.
       data: {'card': 'other', 'link': this.privateLink.sites, 'preserveSiteOrder': isPairedLinkageType(this.privateLink.linkageType)},
 
