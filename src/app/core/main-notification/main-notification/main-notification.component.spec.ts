@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MainNotificationComponent } from './main-notification.component';
 import { MainNotificationService } from '../main-notification.service';
@@ -15,7 +15,7 @@ describe('MainNotificationComponent', () => {
     milisecondsToShow: 4000
   };
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     notificationServiceStub = {
       notificationEvent: new Subject(),
       fireNotificationEvent(): void {
@@ -23,14 +23,14 @@ describe('MainNotificationComponent', () => {
       }
     };
 
-    TestBed.configureTestingModule({
-      declarations: [ MainNotificationComponent ],
+    await TestBed.configureTestingModule({
+      imports: [ MainNotificationComponent ],
       providers: [
         { provide: MainNotificationService, useValue: notificationServiceStub }
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MainNotificationComponent);
@@ -42,9 +42,9 @@ describe('MainNotificationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show notification on notification event and should hide it after set time', async(() => {
+  it('should show notification on notification event and should hide it after set time', async () => {
     notificationServiceStub.fireNotificationEvent();
-    fixture.detectChanges();
+    fixture.detectChanges(false);
     let notificationElement: HTMLElement = fixture.nativeElement.querySelector('.main-notification');
     expect(notificationElement.classList).not.toContain('hidden', 'should have removed hidden css class');
     expect(notificationElement.classList).toContain('showing', 'should have added showing css class');
@@ -58,5 +58,5 @@ describe('MainNotificationComponent', () => {
       expect(notificationElement.classList)
         .not.toContain(NotificationType[appNotification.type], 'should have removed the right css type class');
     }, 4001);
-  }));
+  });
 });

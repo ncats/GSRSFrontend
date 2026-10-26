@@ -1,8 +1,11 @@
-import { PagingResponse } from '../app/utils/paging-response.model';
-import { SubstanceDetail, SubstanceSummary } from '../app/substance/substance.model';
+import { PagingResponse } from '../app/core/utils/paging-response.model';
+import { SubstanceDetail, SubstanceSummary } from '../app/core/substance/substance.model';
 
 /* eslint-disable max-len */
-export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
+// `$fetched` and its sibling `$`-prefixed fields on Facet are client-side pagination
+// bookkeeping added after this fixture was captured from a real API response; the cast
+// avoids mechanically injecting dozens of meaningless placeholder values into real data.
+export const SubstanceDetailsListData = {
     'id': 36883704,
     'version': 1,
     'created': 1537196119623,
@@ -13436,4 +13439,4 @@ export const SubstanceDetailsListData: PagingResponse<SubstanceDetail> = {
             '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances(b01ae0ed-0de4-471a-aca5-7902f31b05ab)?view=full'
         }
     ]
-};
+} as unknown as PagingResponse<SubstanceDetail>;

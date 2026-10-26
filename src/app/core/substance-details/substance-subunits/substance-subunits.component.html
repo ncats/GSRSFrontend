@@ -9,34 +9,43 @@
   </mat-button-toggle-group>
 </div>
 <div [ngClass]="view">
-  <div class="subunit-sequence" *ngFor="let subunitSequence of subunitSequences">
-  <div class = "form-row subunit-row">
-    <div class = "subunit-label"> Subunit {{subunitSequence.subunitIndex}}</div>
-    <div>
-      <a class = "subunit-title" [routerLink]="['/sequence-search']" target="_blank"
-         [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: substanceType}">similarity search
-         <mat-icon class = "icon small-icon" svgIcon="open_in_new"></mat-icon>
-      </a>
-    </div>
-
-  </div>
-    <div class = "subunit-sequence">
-    <div class="responsive">
-      <div class="sequence-section-group" *ngFor="let sequencesSectionGroup of subunitSequence.sequencesSectionGroups;last as last1">
-        <div class="sequence-section" *ngFor="let sequencesSectionGroup of sequencesSectionGroup.sequenceSections;last as last2" class= "sequence-section"  [ngClass] = "last1 && last2? 'last-section' : ''" >
-          <div class="section-number">{{sequencesSectionGroup.sectionNumber}}</div>
-          <div class="section-units-container">
-            <span class="section-unit  selectedSite siteref" [ngClass] = "sectionUnit.class? 'error':''" *ngFor="let sectionUnit of sequencesSectionGroup.sectionUnits" [matTooltip]="getTooltipMessage(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue)">
-              {{sectionUnit.unitValue}}
-            </span>
-          </div>
+  @for (subunitSequence of subunitSequences; track subunitSequence) {
+    <div class="subunit-sequence">
+      <div class = "form-row subunit-row">
+        <div class = "subunit-label"> Subunit {{subunitSequence.subunitIndex}}</div>
+        <div>
+          <a class = "subunit-title" [routerLink]="['/sequence-search']" target="_blank"
+            [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: substanceType}">similarity search
+            <mat-icon class = "icon small-icon" svgIcon="open_in_new"></mat-icon>
+          </a>
+        </div>
+      </div>
+      <div class = "subunit-sequence">
+        <div class="responsive">
+          @for (sequencesSectionGroup of subunitSequence.sequencesSectionGroups; track sequencesSectionGroup; let last1 = $last) {
+            <div class="sequence-section-group">
+              @for (sequencesSectionGroup of sequencesSectionGroup.sequenceSections; track sequencesSectionGroup; let last2 = $last) {
+                <div class="sequence-section" class= "sequence-section"  [ngClass] = "last1 && last2? 'last-section' : ''" >
+                  <div class="section-number">{{sequencesSectionGroup.sectionNumber}}</div>
+                  <div class="section-units-container">
+                    @for (sectionUnit of sequencesSectionGroup.sectionUnits; track sectionUnit) {
+                      <span class="section-unit  selectedSite siteref" [ngClass] = "sectionUnit.class? 'error':''" [matTooltip]="getTooltipMessage(subunitSequence.subunitIndex, sectionUnit.unitIndex, sectionUnit.unitValue)">
+                        {{sectionUnit.unitValue}}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
       </div>
     </div>
+  }
+  @for (subunit of subunits; track subunit) {
+    <div class="subunit">
+      <h4>Subunit {{subunit.subunitIndex}}</h4>
+      <div class="raw-sequence">{{subunit.sequence}}</div>
     </div>
-  </div>
-  <div class="subunit" *ngFor="let subunit of subunits">
-    <h4>Subunit {{subunit.subunitIndex}}</h4>
-    <div class="raw-sequence">{{subunit.sequence}}</div>
-  </div>
+  }
 </div>

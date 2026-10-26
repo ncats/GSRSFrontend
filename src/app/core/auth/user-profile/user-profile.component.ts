@@ -1,5 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Auth } from '@gsrs-core/auth/auth.model';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
@@ -13,7 +18,9 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-user-profile',
     templateUrl: './user-profile.component.html',
     styleUrls: ['./user-profile.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [FormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserProfileComponent implements OnInit {
 
@@ -27,7 +34,6 @@ export class UserProfileComponent implements OnInit {
 
   */
 
-  user: Auth;
   newPassword = '';
   oldPassword = '';
   newPasswordConfirm = '';
@@ -38,24 +44,22 @@ export class UserProfileComponent implements OnInit {
 
   constructor(
     public configService: ConfigService,
-    private authService: AuthService,
+    public authService: AuthService,
     private adminService: AdminService,
     private router: Router,
     public dialogRef: MatDialogRef<UserProfileComponent>,
     private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
 
   ) { }
 
   ngOnInit() {
-    this.showChangeUserPasswordButton = this.configService.configData?.userProfile?.showChangeUserPasswordButton;    
+    this.showChangeUserPasswordButton = this.configService.configData?.userProfile?.showChangeUserPasswordButton;
     if (!this.showChangeUserPasswordButton && this.showChangeUserPasswordButton===false) {
       this.showChangeUserPasswordButton=false;
-    } else { 
+    } else {
       this.showChangeUserPasswordButton=true;
     }
-    this.authService.getAuth().pipe(take(1)).subscribe( response => {
-      this.user = response;
-    });
   }
 
   viewDownloads(): void {
@@ -82,6 +86,7 @@ export class UserProfileComponent implements OnInit {
           this.newPasswordConfirm = '';
           this.oldPassword = '';
           this.changePassword = false;
+          this.cdr.markForCheck();
         }, error => {
           this.loading = false;
           if (error.error && isString(error.error) ) {
@@ -92,6 +97,7 @@ export class UserProfileComponent implements OnInit {
             this.changePassword = !this.changePassword;
             this.message = 'Error: unknown error';
           }
+          this.cdr.markForCheck();
         });
     }
   }

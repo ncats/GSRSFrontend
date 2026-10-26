@@ -4,7 +4,9 @@ import { SubstanceFormService } from '../substance-form.service';
 import { Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../base-classes/substance-form-service-base';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormCodesService extends SubstanceFormServiceBase<Array<SubstanceCode>> {
 
   constructor(

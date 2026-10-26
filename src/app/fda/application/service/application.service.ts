@@ -232,7 +232,9 @@ export class ApplicationService extends BaseHttpService {
 
       params = params.append('bulkQID', bulkQID.toString());
       let v = "false";
-      if (searchOnIdentifiers === true) { v = "true"; }
+      if (searchOnIdentifiers === true) {
+ v = "true"; 
+}
       params = params.append('searchOnIdentifiers', v);
       params = params.append('searchEntity', searchEntity);
 

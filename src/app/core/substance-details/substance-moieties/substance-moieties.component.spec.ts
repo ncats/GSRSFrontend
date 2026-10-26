@@ -1,24 +1,23 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceMoietiesComponent } from './substance-moieties.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { UtilsService } from '../../utils/utils.service';
-import { UtilsServiceStub } from '../../../testing/utils-service-stub';
+import { UtilsServiceStub } from '../../../../testing/utils-service-stub';
+import { vi } from 'vitest';
 
 describe('SubstanceMoietiesComponent', () => {
   let component: SubstanceMoietiesComponent;
   let fixture: ComponentFixture<SubstanceMoietiesComponent>;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(async(() => {
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+  beforeEach(async () => {
+    const configServiceSpy = { configData: vi.fn() };
     utilsServiceStub = new UtilsServiceStub();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
-      ],
-      declarations: [
+        HttpClientTestingModule,
         SubstanceMoietiesComponent
       ],
       providers: [
@@ -27,7 +26,7 @@ describe('SubstanceMoietiesComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceMoietiesComponent);

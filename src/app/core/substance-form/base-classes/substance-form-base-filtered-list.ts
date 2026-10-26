@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { SubstanceFormBase } from './substance-form-base';
 import { PageEvent } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
@@ -12,8 +13,10 @@ export class SubstanceCardBaseFilteredList<T> extends SubstanceFormBase {
     private searchTimer: any;
     searchControl = new FormControl();
 
+    // cdr is optional so subclasses that don't need OnPush's markForCheck() (or aren't OnPush) don't have to pass it.
     constructor(
-        public gaService: GoogleAnalyticsService
+        public gaService: GoogleAnalyticsService,
+        protected cdr?: ChangeDetectorRef
     ) {
         super();
     }
@@ -72,6 +75,7 @@ export class SubstanceCardBaseFilteredList<T> extends SubstanceFormBase {
             this.searchTimer = null;
             this.page = 0;
             this.pageChange();
+            this.cdr?.markForCheck();
         }, 700);
     }
 }

@@ -1,32 +1,46 @@
 <div class="flex-row">
-  <mat-form-field [floatLabel]="'never'" class="search" *ngIf="relationships && relationships.length > pageSize">
-    <input matInput placeholder="Search" [formControl]="searchControl">
-  </mat-form-field>
+  @if (relationships && relationships.length > pageSize) {
+    <mat-form-field [floatLabel]="'never'" class="search">
+      <input matInput placeholder="Search" [formControl]="searchControl">
+    </mat-form-field>
+  }
   <span class="middle-fill"></span>
-  <button *ngIf="relationships && relationships.length > 0" class = 'standardize' mat-button (click)="collapse()">{{expanded? 'Collapse':'Expand'}} All</button>
+  @if (relationships && relationships.length > 0) {
+    <button class = 'standardize' mat-button (click)="collapse()">{{expanded? 'Collapse':'Expand'}} All</button>
+  }
 
   <!-- <button mat-button (click)="addRelationship()">
-    Add relationship <mat-icon svgIcon="add_circle_outline"></mat-icon>
-  </button> -->
+  Add relationship <mat-icon svgIcon="add_circle_outline"></mat-icon>
+</button> -->
 </div>
-<mat-paginator *ngIf="relationships && relationships.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="pageSize" showFirstLastButtons="true"
+@if (relationships && relationships.length > 5) {
+  <mat-paginator [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="pageSize" showFirstLastButtons="true"
     (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="pageSizeOptions">
   </mat-paginator>
-<div class="relationship" *ngFor="let relationship of paged; last as isLast; index as index" appScrollToTarget
-  [id]="'substance-relationship-' + index">
-  <app-relationship-form [relationship]="relationship" (relationshipDeleted)="deleteRelationship($event)"  [show] = "expanded">
-  </app-relationship-form>
-  <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
-</div>
-<mat-paginator *ngIf="relationships && relationships.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="pageSize" showFirstLastButtons="true"
-  (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="pageSizeOptions">
-</mat-paginator>
+}
+@for (relationship of paged; track relationship; let isLast = $last; let index = $index) {
+  <div class="relationship" appScrollToTarget
+    [id]="'substance-relationship-' + index">
+    <app-relationship-form [relationship]="relationship" (relationshipDeleted)="deleteRelationship($event)"  [show] = "expanded">
+    </app-relationship-form>
+    @if (!isLast) {
+      <mat-divider class="form-divider" [inset]="true"></mat-divider>
+    }
+  </div>
+}
+@if (relationships && relationships.length > 5) {
+  <mat-paginator [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="pageSize" showFirstLastButtons="true"
+    (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="pageSizeOptions">
+  </mat-paginator>
+}
 
 
 
-<div *ngIf = "relationships && relationships.length > 0" style = "display: flex;">
+@if (relationships && relationships.length > 0) {
+  <div style = "display: flex;">
     <span class="middle-fill"></span>
     <button mat-button (click)="addRelationship()">
-        Add relationship <mat-icon svgIcon="add_circle_outline"></mat-icon>
-      </button>
+      Add relationship <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    </button>
   </div>
+}

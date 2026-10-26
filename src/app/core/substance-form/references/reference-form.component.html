@@ -1,10 +1,12 @@
 <div class="reference-form-container">
-  <div *ngIf="reference.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
+  @if (reference.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+  }
   <div class="form-row">
     <app-cv-input
       required="true"
@@ -14,7 +16,7 @@
       [model]="reference.docType"
       (valueChange)="setSourceType($event)"
       name="docType"
-    >
+      >
     </app-cv-input>
     <mat-form-field class="citation">
       <mat-label>Source Text/Citation</mat-label>
@@ -23,7 +25,7 @@
         [(ngModel)]="reference.citation"
         required
         name="citation"
-      />
+        />
     </mat-form-field>
     <div class="checkbox-container">
       <mat-checkbox [(ngModel)]="reference.publicDomain" name="publicDomain">
@@ -34,116 +36,134 @@
       <app-access-manager
         (accessOut)="updateAccess($event)"
         [access]="reference.access"
-      >
+        >
       </app-access-manager>
     </div>
   </div>
-  <div *ngIf="!reference.$$deletedCode">
-    <div class="form-row">
-      <mat-form-field class="url">
-        <mat-label>URL</mat-label>
-        <input matInput [(ngModel)]="reference.url" name="refUrl" />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Source Id</mat-label>
-        <input matInput [(ngModel)]="reference.id" name="refId" />
-      </mat-form-field>
-      <app-tag-selector
-        class="tags"
-        (tagsUpdate)="updateTags($event)"
-        [tags]="reference.tags"
-        cvDomain="DOCUMENT_COLLECTION"
-      ></app-tag-selector>
-    </div>
-    <div class="form-row form-actions">
-      <div *ngIf="reference.uuid && !hideDelete">
-        <button mat-button (click)="deleteReference()">
-          <span>Delete</span>&nbsp;
-          <mat-icon svgIcon="delete_forever"></mat-icon>
-        </button>
+  @if (!reference.$$deletedCode) {
+    <div>
+      <div class="form-row">
+        <mat-form-field class="url">
+          <mat-label>URL</mat-label>
+          <input matInput [(ngModel)]="reference.url" name="refUrl" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Source Id</mat-label>
+          <input matInput [(ngModel)]="reference.id" name="refId" />
+        </mat-form-field>
+        <app-tag-selector
+          class="tags"
+          (tagsUpdate)="updateTags($event)"
+          [tags]="reference.tags"
+          cvDomain="DOCUMENT_COLLECTION"
+        ></app-tag-selector>
       </div>
-      <div *ngIf="!(disableReferenceDocumentUpload || reference.uploadedFile)">
-        <button matButton ncatsFileSelect (selectedFile)="fileSelected($event)">
-          <span>Upload Document</span>&nbsp;
-          <mat-icon svgIcon="cloud_upload"></mat-icon>
-        </button>
-      </div>
-      <div *ngIf="reference.uploadedFile">
-        <button matButton [matMenuTriggerFor]="documentMenu">
-          Attachment
-          <mat-icon svgIcon="attachment"></mat-icon>
-        </button>
-        <mat-menu #documentMenu="matMenu">
-          <a mat-menu-item (click)="downloadDocument(reference.uploadedFile)"
-            >Download</a
-          >
-          <button
-            mat-menu-item
-            ncatsFileSelect
-            (selectedFile)="fileSelected($event)"
-          >
-            Replace
-          </button>
-          <button mat-menu-item (click)="reference.uploadedFile = null">
-            Delete
-          </button>
-        </mat-menu>
-      </div>
-      <div class="loading-container" *ngIf="loading === true">
-        <div class="spinner-container">
-          <mat-progress-spinner
-            class="progress-spinner spinner"
-            [color]="primary"
-            mode="indeterminate"
-          >
-          </mat-progress-spinner>
+      <div class="form-row form-actions">
+        @if (reference.uuid && !hideDelete) {
+          <div>
+            <button mat-button (click)="deleteReference()">
+              <span>Delete</span>&nbsp;
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        }
+        @if (!(disableReferenceDocumentUpload || reference.uploadedFile)) {
+          <div>
+            <button matButton ncatsFileSelect (selectedFile)="fileSelected($event)">
+              <span>Upload Document</span>&nbsp;
+              <mat-icon svgIcon="cloud_upload"></mat-icon>
+            </button>
+          </div>
+        }
+        @if (reference.uploadedFile) {
+          <div>
+            <button matButton [matMenuTriggerFor]="documentMenu">
+              Attachment
+              <mat-icon svgIcon="attachment"></mat-icon>
+            </button>
+            <mat-menu #documentMenu="matMenu">
+              <a mat-menu-item (click)="downloadDocument(reference.uploadedFile)"
+                >Download</a
+                >
+                <button
+                  mat-menu-item
+                  ncatsFileSelect
+                  (selectedFile)="fileSelected($event)"
+                  >
+                  Replace
+                </button>
+                <button mat-menu-item (click)="reference.uploadedFile = null">
+                  Delete
+                </button>
+              </mat-menu>
+            </div>
+          }
+          @if (loading === true) {
+            <div class="loading-container">
+              <div class="spinner-container">
+                <mat-progress-spinner
+                  class="progress-spinner spinner"
+                  [color]="primary"
+                  mode="indeterminate"
+                  >
+                </mat-progress-spinner>
+              </div>
+              <span>Uploading</span>
+            </div>
+          }
+          @if (loading === false && error === true) {
+            <div
+              class="loading-container"
+              >
+              Error: There was a problem uploading this document
+            </div>
+          }
+          @if (!reference.uuid) {
+            <div>
+              <button
+                matButton
+                (click)="showPrev = !showPrev"
+                matTooltip="use a previously submitted reference"
+                >
+                <span
+                  >{{ showPrev ? "Hide" : "Use" }} Previous Substance Reference</span
+                  >&nbsp;
+                </button>
+              </div>
+            }
+            @if (reference.uuid && !reference.docType && !reference.citation) {
+              <div>
+                <button
+                  matButton
+                  (click)="openPreviousDialog()"
+                  matTooltip="use a previously submitted reference"
+                  >
+                  <span
+                    >{{ showPrev ? "Hide" : "Use" }} Previous Substance Reference</span
+                    >&nbsp;
+                  </button>
+                </div>
+              }
+              <span class="middle-fill"></span>
+              @if (reference.uuid) {
+                <div>
+                  <app-apply-reference
+                    [subReferenceUuid]="reference.uuid"
+                  ></app-apply-reference>
+                </div>
+              }
+            </div>
+          </div>
+        }
+        @if (showPrev) {
+          <div class="form-row">
+            <app-previous-references
+              class="previous-ref"
+              (selectedReference)="fillReference($event)"
+            ></app-previous-references>
+          </div>
+        }
+        <div class="form-row">
+          <app-audit-info [source]="reference"></app-audit-info>
         </div>
-
-        <span>Uploading</span>
       </div>
-      <div
-        class="loading-container"
-        *ngIf="loading === false && error === true"
-      >
-        Error: There was a problem uploading this document
-      </div>
-      <div *ngIf="!reference.uuid">
-        <button
-          matButton
-          (click)="showPrev = !showPrev"
-          matTooltip="use a previously submitted reference"
-        >
-          <span
-            >{{ showPrev ? "Hide" : "Use" }} Previous Substance Reference</span
-          >&nbsp;
-        </button>
-      </div>
-      <div *ngIf="reference.uuid && !reference.docType && !reference.citation">
-        <button
-          matButton
-          (click)="openPreviousDialog()"
-          matTooltip="use a previously submitted reference"
-        >
-          <span
-            >{{ showPrev ? "Hide" : "Use" }} Previous Substance Reference</span
-          >&nbsp;
-        </button>
-      </div>
-      <span class="middle-fill"></span>
-      <div *ngIf="reference.uuid">
-        <app-apply-reference
-          [subReferenceUuid]="reference.uuid"
-        ></app-apply-reference>
-      </div>
-    </div>
-  </div>
-  <div class="form-row" *ngIf="showPrev">
-    <app-previous-references
-      class="previous-ref"
-      (selectedReference)="fillReference($event)"
-    ></app-previous-references>
-  </div>
-  <div class="form-row">
-    <app-audit-info [source]="reference"></app-audit-info>
-  </div>
-</div>

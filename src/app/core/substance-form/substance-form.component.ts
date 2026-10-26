@@ -26,7 +26,8 @@ import {Subscription, Observable, Subject} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import * as _ from 'lodash';
+import { chain as lodashChain } from 'lodash';
+import lodashRemove from 'lodash/remove';
 import {Title} from '@angular/platform-browser';
 import {AuthService} from '@gsrs-core/auth';
 import {take, map, filter} from 'rxjs/operators';
@@ -52,12 +53,36 @@ import {MatButtonToggleChange} from "@angular/material/button-toggle";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
 import { Location } from '@angular/common';
 import jp from 'jsonpath';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @Component({
     selector: 'app-substance-form',
     templateUrl: './substance-form.component.html',
     styleUrls: ['./substance-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatButtonModule,
+      MatDialogModule,
+      MatExpansionModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatTooltipModule,
+      SubstanceImageModule
+    ]
 })
 export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
   private static simplifiedSuffix = '-simplified';
@@ -92,15 +117,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   private overlayContainer: HTMLElement;
   serverError: boolean;
   canApprove: boolean;
-  userCanApprove: boolean;
-  userCanMakePublic: boolean = false;
   approving: boolean;
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
   isPfdaVersion: boolean = false;
-  canUpdate: boolean;
-  canMakeAdvancedEdits: boolean;
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -129,7 +150,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   previousState: number;
   useApprovalAPI = false;
   featuresOnly = false;
-  userCanChangeDefinitionVisibility = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -154,6 +174,27 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     this.substanceService.imagePopupUnit.subscribe(data => {
       this.unit = data;
     })
+  }
+
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canMakeAdvancedEdits(): boolean {
+    return this.authService.hasPrivilege('Edit Public Data');
+  }
+
+  get userCanApprove(): boolean {
+    return this.authService.hasPrivilege('Approve Records');
+  }
+
+  get userCanMakePublic(): boolean {
+    return this.authService.hasPrivilege('Make Records Public');
+  }
+
+  get userCanChangeDefinitionVisibility(): boolean {
+    return this.authService.hasPrivilege('Change Definition Visibility');
   }
 
   // Angular 19 FIX: trackBy function for *ngFor stability
@@ -303,7 +344,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   }
 
 
-  async ngOnInit() {
+  ngOnInit() {
     if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
       this.featuresOnly = true;
     }
@@ -321,11 +362,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
     this.isPfdaVersion = this.configService.configData.isPfdaVersion;
-    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
-    this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
-    this.userCanApprove = await this.authService.hasSpecificPrivilege("Approve Records");
-    this.userCanMakePublic = await this.authService.hasSpecificPrivilege('Make Records Public');
-    this.userCanChangeDefinitionVisibility = await this.authService.hasSpecificPrivilege('Change Definition Visibility');
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
@@ -606,11 +642,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
 
     this.dynamicComponents.forEach((cRef, index) => {
       this.dynamicComponentLoader
-        .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-        .subscribe(componentFactory => {
+        .getDynamicComponent<any>(this.formSections[index].dynamicComponentName)
+        .subscribe(componentType => {
           this.loadingService.setLoading(true);
           cRef.clear();
-          this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+          this.formSections[index].dynamicComponentRef = cRef.createComponent(componentType);
           this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
 
           this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
@@ -935,10 +971,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
             this.forceChange = true;
             this.dynamicComponents.forEach((cRef, index) => {
               this.dynamicComponentLoader
-                .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-                .subscribe(componentFactory => {
+                .getDynamicComponent<any>(this.formSections[index].dynamicComponentName)
+                .subscribe(componentType => {
                   cRef.clear();
-                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentType);
                   this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
                   this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
                     this.formSections[index].menuLabel = label;
@@ -1324,7 +1360,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       remove = this.configService.configData.filteredDuplicationCodes;
     }
     remove.forEach(code => {
-      _.remove(old.codes, {
+      lodashRemove(old.codes, {
         codeSystem: code
       });
     })
@@ -1378,7 +1414,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       }
     }
 
-    const nrefs = _.chain(old.references)
+    const nrefs = lodashChain(old.references)
       .filter(function (ref) {
         if (refSet[ref.uuid]) {
           return true;
@@ -1408,7 +1444,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       this.substanceFormService.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances', this.id, 'edit']);
-        setTimeout(()=>{window.location.reload();},50);
+        setTimeout(()=>{
+window.location.reload();
+},50);
       } else if (response === 'browse') {
         this.router.navigate(['/browse-substance']);
       } else if (response === 'staging') {

@@ -1,11 +1,15 @@
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, OnInit } from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { DragDropPasteDirective } from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
 
 @Component({
     selector: 'app-molvec-modal',
     templateUrl: './molvec-modal.component.html',
     styleUrls: ['./molvec-modal.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule, DragDropPasteDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MolvecModalComponent implements OnInit {
 
@@ -14,9 +18,10 @@ export class MolvecModalComponent implements OnInit {
   invalidFlag = false;
   message: string;
 
-  constructor(   
+  constructor(
     public dialogRef: MatDialogRef<MolvecModalComponent>,
-     @Inject(MAT_DIALOG_DATA) public data: any
+     @Inject(MAT_DIALOG_DATA) public data: any,
+     private cdr: ChangeDetectorRef
 ) { }
 
   ngOnInit(): void {
@@ -25,7 +30,7 @@ export class MolvecModalComponent implements OnInit {
      window.addEventListener('paste', this.checkPaste);
   }
 
-  @HostListener('paste', ['$event']) private paster(event: any) {
+  @HostListener('paste', ['$event']) paster(event: any) {
     // console.log('host paste');
      event.preventDefault();
      event.stopPropagation();
@@ -33,7 +38,7 @@ export class MolvecModalComponent implements OnInit {
      this.catchPaste(event);
    }
  
-   @HostListener('drop', ['$event']) private dropper(event: any) {
+   @HostListener('drop', ['$event']) dropper(event: any) {
      console.log('drop');
      console.log(event);
     // this.onDropHandler(event);
@@ -43,7 +48,7 @@ export class MolvecModalComponent implements OnInit {
      this.handleInputChange(event);
    }
  
-   @HostListener('dragover', ['$event']) private dragger(event: DragEvent) {
+   @HostListener('dragover', ['$event']) dragger(event: DragEvent) {
      console.log('drag');
      event.preventDefault();
      event.stopPropagation();
@@ -88,6 +93,9 @@ export class MolvecModalComponent implements OnInit {
 
    catchPaste(event: ClipboardEvent): void {
     this.message = null;
+    // Also reachable via a raw window.addEventListener('paste', ...), which doesn't
+    // auto-mark this OnPush component dirty the way a template/host event binding does.
+    this.cdr.markForCheck();
 
     console.log('paste intercept');
     const send: any = {};

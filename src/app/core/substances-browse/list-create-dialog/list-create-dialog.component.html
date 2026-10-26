@@ -1,18 +1,22 @@
-<h2 *ngIf="newList" mat-dialog-title>Create List from {{ record._name }}</h2>
+@if (newList) {
+  <h2 mat-dialog-title>Create List from {{ record._name }}</h2>
+}
 
 <mat-dialog-content class="list-dialog">
-  <div *ngIf="newList">
-    <input mat-input placeholder="New List Name" [(ngModel)]="listName" />
-    &nbsp; &nbsp;
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="addList()"
-      [disabled]="!listName || listName === ''"
-    >
-      Add List
-    </button>
-  </div>
+  @if (newList) {
+    <div>
+      <input mat-input placeholder="New List Name" [(ngModel)]="listName" />
+      &nbsp; &nbsp;
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="addList()"
+        [disabled]="!listName || listName === ''"
+        >
+        Add List
+      </button>
+    </div>
+  }
   {{ message }}
 </mat-dialog-content>
 <mat-dialog-actions class="actions">

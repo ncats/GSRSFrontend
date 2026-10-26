@@ -1,6 +1,6 @@
 import { CommandTypesDict, CommandDict } from '../queryable-substance-dictionary.model';
 import { EventEmitter } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { QueryStatement } from './query-statement.model';
 
 

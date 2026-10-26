@@ -1,214 +1,235 @@
 <div class="container">
-    <!-- Add SMILES input form -->
-    <div class="input-form">
-        <form (ngSubmit)="evaluateSmiles($event)" #smilesForm="ngForm">
-            <div class="form-group">
-                <label for="smilesInput">Enter SMILES Formula:</label>
-                <input type="text" id="smilesInput" name="smilesInput" [(ngModel)]="smilesInput"
-                       placeholder="e.g., CN(N=O)C1=CC=NC=C1" required>
-            </div>
-            <div class="form-group">
-                <button type="submit" [disabled]="buttonPressed || !smilesInput">
-                    {{buttonPressed ? "Evaluating..." : "Evaluate Structure"}}
-                </button>
-            </div>
-        </form>
+  <!-- Add SMILES input form -->
+  <div class="input-form">
+    <form (ngSubmit)="evaluateSmiles($event)" #smilesForm="ngForm">
+      <div class="form-group">
+        <label for="smilesInput">Enter SMILES Formula:</label>
+        <input type="text" id="smilesInput" name="smilesInput" [(ngModel)]="smilesInput"
+          placeholder="e.g., CN(N=O)C1=CC=NC=C1" required>
+      </div>
+      <div class="form-group">
+        <button type="submit" [disabled]="buttonPressed || !smilesInput">
+          {{buttonPressed ? "Evaluating..." : "Evaluate Structure"}}
+        </button>
+      </div>
+    </form>
 
-        <!-- Loading indicator -->
-        <div *ngIf="isLoading" class="loading">Processing...</div>
-        
-        <!-- Error message -->
-        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-        
-        <!-- Results panel -->
-        <div class="results-panel" id="resultsPanel" [style.display]="showResults ? 'block' : 'none'">
-            <!-- Warning for multiple nitrosamines -->
-            <div *ngIf="responseData?.multipleNitrosamines" class="multiple-nitrosamine-banner" style="display: block;">
-                <strong>Warning:</strong> {{ responseData.nitrosamineCount }} N-nitroso groups found in the structure. 
-                The flowchart shows the calculation for the most potent category.
-                <span *ngIf="responseData.nitrosamineCount >= 3">
-                    Please contact the health authority at fda-toxicology-Consulting&#64;fda.hhs.gov.
-                </span>
-            </div>
-            
-            <!-- Warning for potent groups -->
-            <div *ngIf="structureDetails?.includes('Most potent of multiple N-nitroso groups')" class="warning-banner" style="display: block;">
-                <strong>Note:</strong> This structure contains multiple N-nitroso groups. The analysis <u>only</u> shows the most potent category.
-            </div>
-            
-            <!-- No nitrosamine found warning -->
-            <div *ngIf="responseData?.error?.includes('No valid nitrosamine structure found')" class="multiple-nitrosamine-banner" style="display: block;">
-                <strong>Warning:</strong> No N-nitroso group found in the structure. Please check the SMILES formula and try again.
-            </div>
-            
-            <!-- Structure Details -->
-            <div *ngIf="structureDetails && structureDetails !== ''" class="structure-details">
-                <h3>Structure Analysis Results</h3>
-                <table class="details-table">
-                    <thead>
-                        <tr>
-                            <th>Feature</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Essential properties -->
-                        <ng-container *ngFor="let key of ['AI Limit (US)', 'Potency Category', 'Potency Score', 'Type', 'Alpha-hydrogen score', 'Alpha-Hydrogens']">
-                            <tr *ngIf="summaryData[key]">
-                                <td>{{ key }}</td>
-                                <td [ngClass]="{'value-yes': summaryData[key] === 'YES', 'value-no': summaryData[key] === 'NO'}">
-                                    {{ summaryData[key] }}
-                                </td>
-                            </tr>
-                        </ng-container>
-                        
-                        <!-- Potency category row -->
-                        <tr *ngIf="potencyScore">
-                            <td>Potency Category</td>
-                            <td class="value-yes">{{ potencyScore }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Potency score display -->
-            <div *ngIf="potencyScore" class="potency-score">
-                <h3>Final Assessment</h3>
-                <div class="score-value" [attr.data-category]="potencyScore">
-                    <div style="font-size: 24px; font-weight: bold;">
-                        Category {{ potencyScore }}
-                    </div>
-                    <div style="margin-top: 5px;">
-                        Acceptable Intake: {{ summaryData['AI Limit (US)'] || 'Not specified' }}
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Error message -->
-            <div *ngIf="responseData?.error && !responseData?.error.includes('No valid nitrosamine structure found')" class="error-message">
-                {{ responseData.error }}
-            </div>
+    <!-- Loading indicator -->
+    @if (isLoading) {
+      <div class="loading">Processing...</div>
+    }
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <div class="error-message">{{ errorMessage }}</div>
+    }
+
+    <!-- Results panel -->
+    <div class="results-panel" id="resultsPanel" [style.display]="showResults ? 'block' : 'none'">
+      <!-- Warning for multiple nitrosamines -->
+      @if (responseData?.multipleNitrosamines) {
+        <div class="multiple-nitrosamine-banner" style="display: block;">
+          <strong>Warning:</strong> {{ responseData.nitrosamineCount }} N-nitroso groups found in the structure.
+          The flowchart shows the calculation for the most potent category.
+          @if (responseData.nitrosamineCount >= 3) {
+            <span>
+              Please contact the health authority at fda-toxicology-Consulting&#64;fda.hhs.gov.
+            </span>
+          }
         </div>
+      }
+
+      <!-- Warning for potent groups -->
+      @if (structureDetails?.includes('Most potent of multiple N-nitroso groups')) {
+        <div class="warning-banner" style="display: block;">
+          <strong>Note:</strong> This structure contains multiple N-nitroso groups. The analysis <u>only</u> shows the most potent category.
+        </div>
+      }
+
+      <!-- No nitrosamine found warning -->
+      @if (responseData?.error?.includes('No valid nitrosamine structure found')) {
+        <div class="multiple-nitrosamine-banner" style="display: block;">
+          <strong>Warning:</strong> No N-nitroso group found in the structure. Please check the SMILES formula and try again.
+        </div>
+      }
+
+      <!-- Structure Details -->
+      @if (structureDetails && structureDetails !== '') {
+        <div class="structure-details">
+          <h3>Structure Analysis Results</h3>
+          <table class="details-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Essential properties -->
+              @for (key of ['AI Limit (US)', 'Potency Category', 'Potency Score', 'Type', 'Alpha-hydrogen score', 'Alpha-Hydrogens']; track key) {
+                @if (summaryData[key]) {
+                  <tr>
+                    <td>{{ key }}</td>
+                    <td [ngClass]="{'value-yes': summaryData[key] === 'YES', 'value-no': summaryData[key] === 'NO'}">
+                      {{ summaryData[key] }}
+                    </td>
+                  </tr>
+                }
+              }
+              <!-- Potency category row -->
+              @if (potencyScore) {
+                <tr>
+                  <td>Potency Category</td>
+                  <td class="value-yes">{{ potencyScore }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- Potency score display -->
+      @if (potencyScore) {
+        <div class="potency-score">
+          <h3>Final Assessment</h3>
+          <div class="score-value" [attr.data-category]="potencyScore">
+            <div style="font-size: 24px; font-weight: bold;">
+              Category {{ potencyScore }}
+            </div>
+            <div style="margin-top: 5px;">
+              Acceptable Intake: {{ summaryData['AI Limit (US)'] || 'Not specified' }}
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Error message -->
+      @if (responseData?.error && !responseData?.error.includes('No valid nitrosamine structure found')) {
+        <div class="error-message">
+          {{ responseData.error }}
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="flowchart">
+    <!-- Left Column -->
+    <div class="column left-column">
+      <!-- First Question -->
+      <div class="box-with-arrow">
+        <div class="box" id="q1">
+          Does N-nitrosamine have any hydrogens on its α-carbons?
+          <div class="arrow-right"></div>
+          <span class="yes-no-label yes-no-down-label">Yes</span>
+          <span class="yes-no-label yes-no-right-label">No</span>
+        </div>
+      </div>
+      <div class="arrow-down"></div>
+
+      <!-- Second Question -->
+      <div class="box-with-arrow">
+        <div class="box" id="q2">
+          Does N-nitrosamine have more than one α-hydrogen on one or both sides of the N-nitroso group?
+          <div class="arrow-right"></div>
+          <span class="yes-no-label yes-no-down-label">Yes</span>
+          <span class="yes-no-label yes-no-right-label">No</span>
+        </div>
+      </div>
+      <div class="arrow-down"></div>
+
+      <!-- Third Question -->
+      <div class="box-with-arrow">
+        <div class="box" id="q3">
+          Does N-nitrosamine have a tertiary α-carbon?
+          <div class="arrow-right"></div>
+          <span class="yes-no-label yes-no-down-label">No</span>
+          <span class="yes-no-label yes-no-right-label">Yes</span>
+        </div>
+      </div>
+      <div class="arrow-down"></div>
+
+      <!-- Calculate Score Box -->
+      <div class="box" id="calc">
+        Calculate Potency Score
+      </div>
+      <div class="arrow-down"></div>
+
+      <!-- Score Questions -->
+      <div class="box-with-arrow">
+        <div class="box" id="score4">
+          Is score ≥4?
+          <div class="arrow-right"></div>
+          <span class="yes-no-label yes-no-down-label">No</span>
+          <span class="yes-no-label yes-no-right-label">Yes</span>
+        </div>
+      </div>
+      <div class="arrow-down"></div>
+
+      <div class="box-with-arrow">
+        <div class="box" id="score3">
+          Is Potency Score =3?
+          <div class="arrow-right"></div>
+          <span class="yes-no-label yes-no-down-label">No</span>
+          <span class="yes-no-label yes-no-right-label">Yes</span>
+        </div>
+      </div>
+      <div class="arrow-down"></div>
+
+      <div class="box-with-arrow">
+        <div class="box" id="score2">
+          Is Potency Score =2?
+          <div class="arrow-right"></div>
+          <span class="yes-no-label yes-no-down-label">No</span>
+          <span class="yes-no-label yes-no-right-label">Yes</span>
+        </div>
+      </div>
+      <div class="arrow-down"></div>
+
+      <div class="box" id="score1">
+        Is Potency Score ≤1?
+        <div class="arrow-right"></div>
+        <span class="yes-no-label yes-no-right-label">Yes</span>
+      </div>
     </div>
 
-    <div class="flowchart">
-        <!-- Left Column -->
-        <div class="column left-column">
-            <!-- First Question -->
-            <div class="box-with-arrow">
-                <div class="box" id="q1">
-                    Does N-nitrosamine have any hydrogens on its α-carbons?
-                    <div class="arrow-right"></div>
-                    <span class="yes-no-label yes-no-down-label">Yes</span>
-                    <span class="yes-no-label yes-no-right-label">No</span>
-                </div>
-            </div>
-            <div class="arrow-down"></div>
+    <!-- Right Column -->
+    <div class="column right-column">
+      <div class="result-box" id="cat5-1">
+        Potency Category 5<br>
+        AI = 1500 ng/day
+      </div>
 
-            <!-- Second Question -->
-            <div class="box-with-arrow">
-                <div class="box" id="q2">
-                    Does N-nitrosamine have more than one α-hydrogen on one or both sides of the N-nitroso group?
-                    <div class="arrow-right"></div>
-                    <span class="yes-no-label yes-no-down-label">Yes</span>
-                    <span class="yes-no-label yes-no-right-label">No</span>
-                </div>
-            </div>
-            <div class="arrow-down"></div>
+      <div class="result-box" id="cat5-2">
+        Potency Category 5<br>
+        AI = 1500 ng/day
+      </div>
 
-            <!-- Third Question -->
-            <div class="box-with-arrow">
-                <div class="box" id="q3">
-                    Does N-nitrosamine have a tertiary α-carbon?
-                    <div class="arrow-right"></div>
-                    <span class="yes-no-label yes-no-down-label">No</span>
-                    <span class="yes-no-label yes-no-right-label">Yes</span>
-                </div>
-            </div>
-            <div class="arrow-down"></div>
+      <div class="result-box" id="cat5-3">
+        Potency Category 5<br>
+        AI = 1500 ng/day
+      </div>
 
-            <!-- Calculate Score Box -->
-            <div class="box" id="calc">
-                Calculate Potency Score
-            </div>
-            <div class="arrow-down"></div>
+      <div class="spacer"></div>  <!-- Add extra space here -->
 
-            <!-- Score Questions -->
-            <div class="box-with-arrow">
-                <div class="box" id="score4">
-                    Is score ≥4?
-                    <div class="arrow-right"></div>
-                    <span class="yes-no-label yes-no-down-label">No</span>
-                    <span class="yes-no-label yes-no-right-label">Yes</span>
-                </div>
-            </div>
-            <div class="arrow-down"></div>
+      <div class="result-box" id="cat4">
+        Potency Category 4<br>
+        AI = 1500 ng/day
+      </div>
 
-            <div class="box-with-arrow">
-                <div class="box" id="score3">
-                    Is Potency Score =3?
-                    <div class="arrow-right"></div>
-                    <span class="yes-no-label yes-no-down-label">No</span>
-                    <span class="yes-no-label yes-no-right-label">Yes</span>
-                </div>
-            </div>
-            <div class="arrow-down"></div>
+      <div class="result-box" id="cat3">
+        Potency Category 3<br>
+        AI = 400 ng/day
+      </div>
 
-            <div class="box-with-arrow">
-                <div class="box" id="score2">
-                    Is Potency Score =2?
-                    <div class="arrow-right"></div>
-                    <span class="yes-no-label yes-no-down-label">No</span>
-                    <span class="yes-no-label yes-no-right-label">Yes</span>
-                </div>
-            </div>
-            <div class="arrow-down"></div>
+      <div class="result-box" id="cat2">
+        Potency Category 2<br>
+        AI = 100 ng/day
+      </div>
 
-            <div class="box" id="score1">
-                Is Potency Score ≤1?
-                <div class="arrow-right"></div>
-                <span class="yes-no-label yes-no-right-label">Yes</span>
-            </div>
-        </div>
-
-        <!-- Right Column -->
-        <div class="column right-column">
-            <div class="result-box" id="cat5-1">
-                Potency Category 5<br>
-                AI = 1500 ng/day
-            </div>
-
-            <div class="result-box" id="cat5-2">
-                Potency Category 5<br>
-                AI = 1500 ng/day
-            </div>
-
-            <div class="result-box" id="cat5-3">
-                Potency Category 5<br>
-                AI = 1500 ng/day
-            </div>
-            
-            <div class="spacer"></div>  <!-- Add extra space here -->
-
-            <div class="result-box" id="cat4">
-                Potency Category 4<br>
-                AI = 1500 ng/day
-            </div>
-
-            <div class="result-box" id="cat3">
-                Potency Category 3<br>
-                AI = 400 ng/day
-            </div>
-
-            <div class="result-box" id="cat2">
-                Potency Category 2<br>
-                AI = 100 ng/day
-            </div>
-
-            <div class="result-box" id="cat1">
-                Potency Category 1<br>
-                AI = 18 or 26.5* ng/day
-            </div>
-        </div>
+      <div class="result-box" id="cat1">
+        Potency Category 1<br>
+        AI = 18 or 26.5* ng/day
+      </div>
     </div>
+  </div>
 </div>

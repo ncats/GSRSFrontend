@@ -5,12 +5,22 @@ import {Subject} from 'rxjs';
 import { UtilsService } from '@gsrs-core/utils';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
+import { ReferencesManagerModule } from '@gsrs-core/references-manager';
 
 @Component({
     selector: 'app-substance-properties',
     templateUrl: './substance-properties.component.html',
     styleUrls: ['./substance-properties.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatTableModule, MatDialogModule, MatIconModule, MatTooltipModule, MatButtonModule, RouterModule, SubstanceImageDirective, ReferencesManagerModule]
 })
 export class SubstancePropertiesComponent extends SubstanceCardBase implements OnInit {
   properties: Array<SubstanceProperty> = [];

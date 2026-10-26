@@ -1,8 +1,14 @@
 <div mat-dialog-header>
   <div class="form-row head">
-    <div class="title" *ngIf="formState == FormState.DRAFT_LIST">Saved Drafts</div>
-    <div class="title" *ngIf="formState == FormState.VALIDATION_RESULTS">Drafts Validation</div>
-    <div class="title" *ngIf="formState == FormState.SUBMISSION">Submission Results</div>
+    @if (formState === FormState.DRAFT_LIST) {
+      <div class="title">Saved Drafts</div>
+    }
+    @if (formState === FormState.VALIDATION_RESULTS) {
+      <div class="title">Drafts Validation</div>
+    }
+    @if (formState === FormState.SUBMISSION) {
+      <div class="title">Submission Results</div>
+    }
     <span class="middle-fill"></span>
     <button
       mat-icon-button
@@ -14,14 +20,18 @@
     </button>
   </div>
 </div>
-<div class="spinner-overlay" *ngIf="isLoading">
+@if (isLoading) {
+  <div class="spinner-overlay">
   <mat-progress-spinner
     mode="indeterminate"
     color="primary"
   ></mat-progress-spinner>
 </div>
-<div *ngIf="formState == FormState.DRAFT_LIST">
+}
+@if (formState === FormState.DRAFT_LIST) {
+  <div>
   <mat-dialog-content>
+      @if (filtered.length > 0) {
     <table
       mat-table
       matSort
@@ -59,14 +69,15 @@
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let draft">{{ draft.name }}</td>
       </ng-container>
-
       <ng-container matColumnDef="date">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Date Saved</th>
         <td mat-cell *matCellDef="let draft">
           <span>{{ draft.date | date : "medium" }} </span
-          ><span *ngIf="draft.auto" style="margin-left: 8px"
+                >@if (draft.auto) {
+                <span style="margin-left: 8px"
             ><b>[AUTOSAVE]</b></span
-          ><span
+                  >
+                  }<span
             ><br />
             {{ draft.fromNow }}</span
           >
@@ -85,9 +96,10 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
+          }
+          @if (filtered.length === 0) {
     <div
       class="form-row"
-      *ngIf="filtered.length == 0"
       style="padding: 50px; font-size: 17px"
     >
       No drafts were found for these conditions under local storage. Substance
@@ -95,10 +107,12 @@
       clearing cache will clear or not allow access to drafts. You can save and
       load stored record drafts using the buttons below.
     </div>
+          }
   </mat-dialog-content>
   <div mat-dialog-actions>
     <div class="form-row">
-      <div class="checkbox" *ngIf="data.uuid" style="padding: 10px">
+            @if (data.uuid) {
+              <div class="checkbox" style="padding: 10px">
         <mat-checkbox
           [ngModel]="onlyCurrent"
           (change)="filterToggle('current')"
@@ -107,7 +121,7 @@
           Show only current record
         </mat-checkbox>
       </div>
-
+            }
       <div class="checkbox" style="padding: 10px">
         <mat-checkbox
           [ngModel]="onlyRegister"
@@ -118,7 +132,6 @@
         </mat-checkbox>
       </div>
     </div>
-
     <div class="form-row buttons">
       <button
         mat-flat-button
@@ -149,11 +162,8 @@
         >
           Load A Backup
         </button>
-        <div
-          class="file-name"
-          [ngClass]="loadError ? 'error' : (filename ? 'test' : 'italics')"
-        >
-          {{ loadError ? loadError : (filename ? filename : "no file chosen") }}
+        <div class="file-name" [ngClass]="filename ? 'test' : 'italics'">
+          {{ filename ? filename : "no file chosen" }}
         </div>
         <input
           id="fileInput"
@@ -164,7 +174,6 @@
           accept=".json"
         />
       </div>
-
       <span class="middle-fill"></span>
       <button
         mat-flat-button
@@ -177,28 +186,38 @@
     </div>
   </div>
 </div>
+    }
 
 
-<div *ngIf="formState == FormState.VALIDATION_RESULTS">
+    @if (formState === FormState.VALIDATION_RESULTS) {
+      <div>
   <mat-dialog-content>
-    <div class="draft-block" *ngFor="let draft of validatedDrafts; let i=index">
+          @for (draft of validatedDrafts; track draft; let i = $index) {
+            <div class="draft-block">
       <div>
         <strong>Type:</strong> {{draft.json.type}}, <strong>Name:</strong> {{ draft.json.name ? draft.json.name : '-' }}
-        <em *ngIf="!draft.validationResult">This substance cannot be submitted</em>
+                @if (!draft.validationResult) {
+                  <em>This substance cannot be submitted</em>
+                }
       </div>
-      <div class="message-row" *ngFor="let message of draft.validationMessages; index as i">
-        <span class="label" [ngClass]="{'label-error': message.messageType == 'ERROR' || message.messageType == 'SERVER ERROR', 'label-warning': message.messageType == 'WARNING', 'label-notice': message.messageType == 'NOTICE'}">
+              @for (message of draft.validationMessages; track message; let i = $index) {
+                <div class="message-row">
+                  <span class="label" [ngClass]="{'label-error': message.messageType === 'ERROR' || message.messageType === 'SERVER ERROR', 'label-warning': message.messageType === 'WARNING', 'label-notice': message.messageType === 'NOTICE'}">
           {{ message.messageType }}
         </span>
         <span>
           {{ message.message }}
-          <span *ngFor="let link of message.links"><br/>
+                    @for (link of message.links; track link) {
+                      <span><br/>
                 <a [href]="fixLink(link.href)" class="internal-link"
                    target="_blank">{{ link.text }}</a>
           </span>
+                    }
         </span>
       </div>
+              }
     </div>
+          }
   </mat-dialog-content>
   <div class="form-row">
     <button mat-flat-button [disabled]="!hasValidDrafts()" color="primary" (click)="submitValid()" matTooltip="Submit valid drafts">
@@ -206,22 +225,38 @@
     </button>
   </div>
 </div>
+    }
 
-<div *ngIf="formState == FormState.SUBMISSION">
+    @if (formState === FormState.SUBMISSION) {
+      <div>
   <mat-dialog-content>
-    <div class="draft-block" *ngFor="let draft of validatedDrafts; let i=index">
+          @for (draft of validatedDrafts; track draft; let i = $index) {
+            <div class="draft-block">
       <div>
         <strong>Type:</strong> {{draft.json.type}}, <strong>Name:</strong> {{ draft.json.name ? draft.json.name : '-' }}
       </div>
       <div class="message-row">
-        <span class="label label-error" *ngIf="draft.submitStatus == SubmissionStatus.CANNOT_BE_SUBMITTED || draft.submitStatus == SubmissionStatus.ERROR">ERROR</span>
-        <span class="label label-success" *ngIf="draft.submitStatus == SubmissionStatus.SUCCESS">SUCCESS</span>
-
-        <span *ngIf="draft.submitStatus == SubmissionStatus.CANNOT_BE_SUBMITTED">Could not be submitted due to validation errors</span>
-        <em *ngIf="draft.submitStatus == SubmissionStatus.IN_PROGRESS">Submission in progress</em>
-        <span *ngIf="draft.submitStatus == SubmissionStatus.SUCCESS"><em><a href="{{draft.fileUrl}}" target="_blank">View Substance</a></em></span>
-        <span *ngIf="draft.submitStatus == SubmissionStatus.ERROR">Error during submission process</span>
+                @if (draft.submitStatus === SubmissionStatus.CANNOT_BE_SUBMITTED || draft.submitStatus === SubmissionStatus.ERROR) {
+                  <span class="label label-error">ERROR</span>
+                }
+                @if (draft.submitStatus === SubmissionStatus.SUCCESS) {
+                  <span class="label label-success">SUCCESS</span>
+                }
+                @if (draft.submitStatus === SubmissionStatus.CANNOT_BE_SUBMITTED) {
+                  <span>Could not be submitted due to validation errors</span>
+                }
+                @if (draft.submitStatus === SubmissionStatus.IN_PROGRESS) {
+                  <em>Submission in progress</em>
+                }
+                @if (draft.submitStatus === SubmissionStatus.SUCCESS) {
+                  <span><em><a href="{{draft.fileUrl}}" target="_blank">View Substance</a></em></span>
+                }
+                @if (draft.submitStatus === SubmissionStatus.ERROR) {
+                  <span>Error during submission process</span>
+                }
       </div>
     </div>
+          }
   </mat-dialog-content>
 </div>
+    }

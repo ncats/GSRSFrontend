@@ -12,7 +12,6 @@ import {
   createMouseEvent,
   createTouchEvent
 } from './event-objects';
-import { TestGestureConfig } from './test-gesture-config';
 
 /** Utility to dispatch any event on a Node. */
 export function dispatchEvent(node: Node | Window, event: Event): Event {
@@ -48,17 +47,4 @@ export function dispatchMouseenterEvent(element: HTMLElement): void {
   const x = dimensions.left;
 
   dispatchMouseEvent(element, 'mouseenter', x, y);
-}
-
-export function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
-  gestureConfig: TestGestureConfig): void {
-  const trackElement = sliderElement.querySelector('.mat-slider-wrapper');
-  const dimensions = trackElement.getBoundingClientRect();
-  const x = dimensions.left + (dimensions.width * percent);
-  const y = dimensions.top + (dimensions.height * percent);
-
-  gestureConfig.emitEventForElement('slide', sliderElement, {
-    center: { x: x, y: y },
-    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
-  });
 }

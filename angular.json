@@ -15,14 +15,17 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular/build:application",
           "options": {
             "sourceMap": true,
             "optimization": false,
-            "outputPath": "dist/browser",
+            "outputPath": {
+              "base": "dist"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               {
@@ -41,9 +44,20 @@
                 "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
               },
               "src/styles/main.scss"
-            ]
+            ],
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "22mb",
+                "maximumError": "26mb"
+              }
+            ],
+            "browser": "src/main.ts"
           },
           "configurations": {
+            "unit-test": {
+              "polyfills": ["src/polyfills.ts", "zone.js/testing"]
+            },
             "gsrs.prod": {
               "assets": [
                 {
@@ -67,8 +81,7 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false
+              "extractLicenses": true
             },
             "gsrs.pre-prod": {
               "assets": [
@@ -93,8 +106,7 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false
+              "extractLicenses": true
             },
             "gsrs.dev": {
               "assets": [
@@ -152,8 +164,7 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false
+              "extractLicenses": true
             },
             "fda.pre-prod": {
               "assets": [
@@ -183,8 +194,7 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false
+              "extractLicenses": true
             },
             "fda.dev": {
               "assets": [
@@ -235,11 +245,37 @@
                   "with": "src/environments/environment.fda.local.ts"
                 }
               ]
+            },
+            "fda.local4x": {
+              "baseHref": "/ginas/app/ui/",
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "src/app/core/assets/",
+                  "output": "/assets/"
+                },
+                {
+                  "glob": "config.json",
+                  "input": "src/app/fda/config/",
+                  "output": "/assets/data/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "src/app/fda/assets",
+                  "output": "/assets/"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fda.local4x.ts"
+                }
+              ]
             }
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "gsrs-client:build"
           },
@@ -248,7 +284,11 @@
               "buildTarget": "gsrs-client:build:fda.dev"
             },
             "fda.local": {
-              "buildTarget": "gsrs-client:build:fda.local"
+              "buildTarget": "gsrs-client:build:fda.local",
+              "servePath": "/ginas/app/ui/"
+            },
+            "fda.local4x": {
+              "buildTarget": "gsrs-client:build:fda.local4x"
             },
             "fda.pre-prod": {
               "buildTarget": "gsrs-client:build:fda.pre-prod"
@@ -260,7 +300,8 @@
               "buildTarget": "gsrs-client:build:gsrs.dev"
             },
             "gsrs.local": {
-              "buildTarget": "gsrs-client:build:gsrs.local"
+              "buildTarget": "gsrs-client:build:gsrs.local",
+              "servePath": "/ginas/app/ui/"
             },
             "gsrs.pre-prod": {
               "buildTarget": "gsrs-client:build:gsrs.pre-prod"
@@ -271,16 +312,15 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "gsrs-client:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts", "zone.js/testing"],
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
@@ -293,122 +333,18 @@
             "assets": ["src/favicon.ico", "src/app/core/assets"]
           }
         },
+        "test-vitest": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "runner": "vitest",
+            "buildTarget": "gsrs-client:build:unit-test",
+            "tsConfig": "src/tsconfig.spec.json"
+          }
+        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
-          }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/server",
-            "main": "src/main.server.ts",
-            "tsConfig": "src/tsconfig.server.json"
-          }
-        }
-      }
-    },
-    "jsdraw-wrapper": {
-      "root": "projects/jsdraw-wrapper",
-      "sourceRoot": "projects/jsdraw-wrapper/src",
-      "projectType": "library",
-      "prefix": "ncats",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/jsdraw-wrapper/tsconfig.lib.json",
-            "project": "projects/jsdraw-wrapper/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "projects/jsdraw-wrapper/ng-package.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/jsdraw-wrapper/src/test.ts",
-            "tsConfig": "projects/jsdraw-wrapper/tsconfig.spec.json",
-            "karmaConfig": "projects/jsdraw-wrapper/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "projects/jsdraw-wrapper/**/*.ts",
-              "projects/jsdraw-wrapper/**/*.html"
-            ]
-          }
-        }
-      }
-    },
-    "ketcher-wrapper": {
-      "root": "projects/ketcher-wrapper",
-      "sourceRoot": "projects/ketcher-wrapper/src",
-      "projectType": "library",
-      "prefix": "ncats",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/ketcher-wrapper/tsconfig.lib.json",
-            "project": "projects/ketcher-wrapper/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "projects/ketcher-wrapper/ng-package.prod.json"
-            }
-          }
-        },
-
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "projects/ketcher-wrapper/**/*.ts",
-              "projects/ketcher-wrapper/**/*.html"
-            ]
-          }
-        }
-      }
-    },
-    "file-select": {
-      "root": "projects/file-select",
-      "sourceRoot": "projects/file-select/src",
-      "projectType": "library",
-      "prefix": "ncats",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/file-select/tsconfig.lib.json",
-            "project": "projects/file-select/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "projects/file-select/ng-package.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/file-select/src/test.ts",
-            "tsConfig": "projects/file-select/tsconfig.spec.json",
-            "karmaConfig": "projects/file-select/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "projects/file-select/**/*.ts",
-              "projects/file-select/**/*.html"
-            ]
           }
         }
       }

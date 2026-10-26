@@ -1,17 +1,25 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog.component';
 
 describe('SubmitSuccessDialogComponent', () => {
   let component: SubmitSuccessDialogComponent;
   let fixture: ComponentFixture<SubmitSuccessDialogComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SubmitSuccessDialogComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule, SubmitSuccessDialogComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: MatDialogRef, useValue: { close: () => {}, afterClosed: () => of(null) } },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+      ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubmitSuccessDialogComponent);

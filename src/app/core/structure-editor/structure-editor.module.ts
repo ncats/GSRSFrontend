@@ -34,11 +34,9 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     KetcherWrapperModule,
     JsdrawWrapperModule,
     FileSelectModule,
-    StructureModule
-  ],
-  declarations: [
-    StructureEditorComponent,
+    StructureModule,
     DragDropPasteDirective,
+    StructureEditorComponent,
     MolvecModalComponent
   ],
   exports: [

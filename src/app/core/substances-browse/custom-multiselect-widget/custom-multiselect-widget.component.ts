@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectWidget } from 'ngx-schema-form';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { SelectWidget, SchemaFormModule } from 'ngx-schema-form';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -7,7 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
     selector: 'app-custom-multiselect-widget',
     templateUrl: './custom-multiselect-widget.component.html',
     styleUrls: ['./custom-multiselect-widget.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatSelectModule, MatOptionModule, MatIconModule, SchemaFormModule]
 })
 export class CustomMultiselectWidgetComponent extends SelectWidget implements OnInit {
   options = [];

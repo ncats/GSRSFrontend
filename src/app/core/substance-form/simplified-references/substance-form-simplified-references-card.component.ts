@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '../base-classes/substance-form-base-filtered-list';
 import {SubstanceReference} from '@gsrs-core/substance/substance.model';
 import {MatDialog} from '@angular/material/dialog';
@@ -14,12 +14,22 @@ import {SubstanceFormService} from "@gsrs-core/substance-form/substance-form.ser
 import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substance-form-names.service";
 import {SubstanceFormCodesService} from "@gsrs-core/substance-form/codes/substance-form-codes.service";
 import {SubstanceFormStructureService} from "@gsrs-core/substance-form/structure/substance-form-structure.service";
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { SimplifiedReferenceFormComponent } from './simplified-reference-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-simplified-substance-form-references-card',
     templateUrl: './substance-form-simplified-references-card.component.html',
     styleUrls: ['./substance-form-simplified-references-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatPaginatorModule, MatInputModule, SimplifiedReferenceFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCardBaseFilteredList<SubstanceReference>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -38,9 +48,10 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
     private dialog: MatDialog,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form references';
   }
 
@@ -65,6 +76,7 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
 
     // Ensure all simplified references are added to all elements.

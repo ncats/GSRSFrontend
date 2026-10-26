@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceModificationsComponent } from './substance-modifications.component';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SubstanceModificationsComponent', () => {
   let component: SubstanceModificationsComponent;
   let fixture: ComponentFixture<SubstanceModificationsComponent>;
 
-  beforeEach(async(() => {
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+  beforeEach(async () => {
+    const configServiceSpy = { configData: {} };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
         MatTableModule,
         CdkTableModule,
-        HttpClientTestingModule
-      ],
-      declarations: [
+        HttpClientTestingModule,
+        RouterTestingModule,
         SubstanceModificationsComponent
       ],
       providers: [
@@ -26,7 +26,7 @@ describe('SubstanceModificationsComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceModificationsComponent);

@@ -4,7 +4,9 @@ import { SubstanceFormService } from '../substance-form.service';
 import { Observable } from 'rxjs';
 import { StructuralModification } from '@gsrs-core/substance/substance.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormStructuralModificationsService extends SubstanceFormServiceBase<Array<StructuralModification>> {
 
   constructor(

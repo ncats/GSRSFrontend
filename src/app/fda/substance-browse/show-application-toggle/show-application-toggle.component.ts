@@ -1,5 +1,9 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 import { GeneralService } from '../../service/general.service';
 import { ConfigService } from '../../../core/config/config.service';
@@ -15,12 +19,13 @@ import { Subscription } from 'rxjs';
   selector: 'app-show-application-toggle',
   templateUrl: './show-application-toggle.component.html',
   styleUrls: ['./show-application-toggle.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [MatCheckboxModule, MatTooltipModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];
   test: any;
-  canUpdate: boolean = false;
   privateExport = false;
   displayMatchApplicationConfig = false;
   displayMatchAppCheckBoxValue = false;
@@ -41,14 +46,20 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     private router: Router,
     public activatedRoute: ActivatedRoute,
     public loadingService: LoadingService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) { }
+
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
 
   async ngOnInit() {
 
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-
-    if (this.canUpdate === true) {
+    // Awaited check (not canUpdate) since this gates a one-time side effect with no re-trigger.
+    if (await this.authService.hasSpecificPrivilege('Edit')) {
       this.isDisplayAppToMatchConfig();
+      this.cdr.markForCheck();
     }
 
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
@@ -172,6 +183,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
           }
         });
       }
+      this.cdr.markForCheck();
     });
   }
 

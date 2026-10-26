@@ -16,12 +16,20 @@ import { SubstanceDetailsBaseTableDisplay } from '../substance-details-base-tabl
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { SubstanceSsg4mService } from '@gsrs-core/substance-ssg4m/substance-ssg4m-form.service';
+import { RouterLink } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-substance-ssg4m',
     templateUrl: './substance-ssg4m.component.html',
     styleUrls: ['./substance-ssg4m.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterLink, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatPaginatorModule]
 })
 export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
@@ -44,7 +52,6 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
     'substanceReaction'
   ];
 
-  canUpdate: boolean = false;
 
   constructor(
     private router: Router,
@@ -58,9 +65,12 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
     super(gaService, ssg4mService);
   }
 
-  async ngOnInit() {
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-   
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     if (this.substanceUuid) {
       this.getSsg4mBySubstanceUuid();
     }

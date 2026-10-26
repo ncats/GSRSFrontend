@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ControlledVocabularyService, Vocabulary, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
@@ -6,14 +6,23 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { CvTermDialogComponent } from '@gsrs-core/admin/cv-management/cv-term-dialog/cv-term-dialog.component';
 import { UtilsService } from '@gsrs-core/utils';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DataDictionaryService } from '@gsrs-core/utils/data-dictionary.service';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 @Component({
     selector: 'app-cv-management',
     templateUrl: './cv-management.component.html',
     styleUrls: ['./cv-management.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, MatButtonModule, MatTableModule, MatSortModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvManagementComponent implements OnInit {
   vocabularies: Array< Vocabulary > = [];
@@ -33,7 +42,8 @@ export class CvManagementComponent implements OnInit {
     private overlayContainerService: OverlayContainer,
     private utilsService: UtilsService,
     private sanitizer: DomSanitizer,
-    private dictionaryService: DataDictionaryService
+    private dictionaryService: DataDictionaryService,
+    private cdr: ChangeDetectorRef
 
 
 
@@ -58,8 +68,10 @@ export class CvManagementComponent implements OnInit {
           }
           this.searchControl.valueChanges.subscribe(value => {
             this.filterList(value, this.vocabularies);
+            this.cdr.markForCheck();
           }, error => {
             this.loading = false;
+            this.cdr.markForCheck();
             alert('The controlled vocabulary has failed to load from the server' +
              (error && error.message ? 'with the following message \n\n' + error.message : ''));
           });
@@ -67,6 +79,7 @@ export class CvManagementComponent implements OnInit {
         this.downloadHref = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' +
          encodeURIComponent(JSON.stringify(this.vocabularies)));
          this.sortData({active: 'domain', direction: 'asc'});
+        this.cdr.markForCheck();
       });
   }
 
@@ -149,6 +162,7 @@ export class CvManagementComponent implements OnInit {
         });
         clearTimeout(this.searchTimer);
         this.searchTimer = null;
+        this.cdr.markForCheck();
     }, 700);
 }
 

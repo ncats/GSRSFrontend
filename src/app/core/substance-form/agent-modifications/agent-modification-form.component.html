@@ -1,10 +1,12 @@
 <div class="code-form-container">
-  <div *ngIf="mod.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button matIconButton matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
+  @if (mod.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+      <button matIconButton matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+  }
   <div class="delete-container">
     <button matIconButton matTooltip="Delete code" (click)="deleteCode()">
       <mat-icon svgIcon="delete_forever"></mat-icon>
@@ -17,7 +19,7 @@
       placeholder="Agent Substance"
       header="Agent Substance"
       [subuuid]="relatedSubstanceUuid"
-    >
+      >
     </app-substance-selector>
   </div>
   <div class="flex-column form-content">
@@ -48,9 +50,11 @@
           <mat-icon svgIcon="add_circle_outline"></mat-icon>
         </button>
         <div class="amount-display">
-          <div *ngIf="mod.amount">
-            {{ displayAmount(mod.amount) }}
-          </div>
+          @if (mod.amount) {
+            <div>
+              {{ displayAmount(mod.amount) }}
+            </div>
+          }
         </div>
       </div>
 
@@ -61,13 +65,13 @@
           [(ngModel)]="mod.modificationGroup"
           required
           name="group"
-        />
+          />
       </mat-form-field>
       <div class="access">
         <app-access-manager
           (accessOut)="updateAccess($event)"
           [access]="mod.access"
-        >
+          >
         </app-access-manager>
       </div>
     </div>

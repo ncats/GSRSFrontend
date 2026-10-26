@@ -3,12 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {ConfigService} from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-substance-relationships-visualization',
     templateUrl: './substance-relationships-visualization.component.html',
     styleUrls: ['./substance-relationships-visualization.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatButtonModule]
 })
 export class SubstanceRelationshipsVisualizationComponent extends SubstanceCardBase implements OnInit {
   visualizationUri: SafeResourceUrl;

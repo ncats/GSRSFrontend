@@ -1,25 +1,31 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileSelectDirective } from './file-select.directive';
 
-describe('FileSelectComponent', () => {
-  let component: FileSelectDirective;
-  let fixture: ComponentFixture<FileSelectDirective>;
+@Component({
+  template: '<div ncatsFileSelect></div>',
+  standalone: true,
+  imports: [FileSelectDirective]
+})
+class TestHostComponent {}
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FileSelectDirective ]
+describe('FileSelectComponent', () => {
+  let fixture: ComponentFixture<TestHostComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ TestHostComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FileSelectDirective);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });

@@ -2,11 +2,13 @@
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
 
-    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0">
-      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
-      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
-    </button>
+    @if (validationMessages && validationMessages.length > 0) {
+      <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+        >
+        {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+        <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+      </button>
+    }
 
     <span class="middle-fill"></span>
 
@@ -20,26 +22,26 @@
 
 
 
-  <!--
-  <!- - Display Invitro Pharmacology Form Fields - ->
+<!--
+<!- - Display Invitro Pharmacology Form Fields - ->
 
-  <div class="form-content-container mat-form-field-style">
-    <div class="scrollable-container">
-      <div class="cards-container">
+<div class="form-content-container mat-form-field-style">
+  <div class="scrollable-container">
+    <div class="cards-container">
 
-        <div class="" *ngIf="application">
-          <div class="title_box">
-            <div class="title">
-              {{title}}
+      <div class="" *ngIf="application">
+        <div class="title_box">
+          <div class="title">
+            {{title}}
+          </div>
+
+          <div class="font11px" *ngIf="application.id">
+            <div class="textalignright">
+              <span *ngIf="isDisableData" class="font11px colorred">
+                Provenance: DARRTS (some fields are non-editable)
+              </span>
             </div>
-
-            <div class="font11px" *ngIf="application.id">
-              <div class="textalignright">
-                <span *ngIf="isDisableData" class="font11px colorred">
-                  Provenance: DARRTS (some fields are non-editable)
-                </span>
-              </div>
-              <br>
+            <br>
               <div>
                 <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
                 <span class="colorgray">Create Date:</span> {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
@@ -150,22 +152,22 @@
                     </mat-icon>
                   </button>
                   <br>
-                </div>
-              </div> <!- - Indication Loop- ->
+                  </div>
+                </div> <!- - Indication Loop- ->
 
-              <!- - Product Form - ->
-              <app-application-product-form [application]="application" (ingredientMessageOut)="ingredientMessageOutChange($event)"
-              (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"></app-application-product-form>
+                <!- - Product Form - ->
+                <app-application-product-form [application]="application" (ingredientMessageOut)="ingredientMessageOutChange($event)"
+                (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"></app-application-product-form>
 
-            </mat-card-content>
+              </mat-card-content>
 
-          </mat-card>
+            </mat-card>
+            <br>
+              <br>
+              </div>
+            </div>
+          </div>
+
           <br>
-          <br>
-        </div>
-      </div>
-    </div>
-
-  <br>
-  </div>
--->
+          </div>
+          -->

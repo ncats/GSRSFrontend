@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '@gsrs-core/substance';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { UtilsService } from '@gsrs-core/utils';
@@ -8,12 +8,23 @@ import { MatDialog } from '@angular/material/dialog';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { Subscription } from 'rxjs';
 import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/references/substance-form-references.service";
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatInputModule} from '@angular/material/input';
+import {AccessManagerComponent} from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-simplified-reference-form',
     templateUrl: './simplified-reference-form.component.html',
     styleUrls: ['./simplified-reference-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatTooltipModule, MatInputModule, AccessManagerComponent, CvInputComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reference: SubstanceReference;
@@ -30,7 +41,8 @@ export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, 
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -111,10 +123,12 @@ export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, 
       this.utilsService.uploadFile(file).subscribe(response => {
         this.reference.uploadedFile = response;
         this.loading = false;
+        this.cdr.markForCheck();
 
       }, error => {
         this.loading = false;
         this.error = true;
+        this.cdr.markForCheck();
 
       });
     }

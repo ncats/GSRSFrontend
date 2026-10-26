@@ -4,7 +4,9 @@ import { SubstanceFormService } from '../substance-form.service';
 import { Observable } from 'rxjs';
 import { PhysicalModification } from '@gsrs-core/substance/substance.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormPhysicalModificationsService extends SubstanceFormServiceBase<Array<PhysicalModification>> {
 
   constructor(

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceCodesComponent } from './substance-codes.component';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -8,14 +8,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconMock } from '../../../testing/mat-icon-mock.component';
 
 describe('SubstanceCodesComponent', () => {
   let component: SubstanceCodesComponent;
   let fixture: ComponentFixture<SubstanceCodesComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         MatTableModule,
         CdkTableModule,
@@ -25,15 +24,12 @@ describe('SubstanceCodesComponent', () => {
         FormsModule,
         MatTreeModule,
         RouterTestingModule,
-        NoopAnimationsModule
-      ],
-      declarations: [
-        SubstanceCodesComponent,
-        MatIconMock
+        NoopAnimationsModule,
+        SubstanceCodesComponent
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceCodesComponent);

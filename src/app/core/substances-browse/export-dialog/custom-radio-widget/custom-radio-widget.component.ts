@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-import { SelectWidget } from 'ngx-schema-form';
+import { SelectWidget, SchemaFormModule } from 'ngx-schema-form';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-custom-radio-widget',
     templateUrl: './custom-radio-widget.component.html',
     styleUrls: ['./custom-radio-widget.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatTooltipModule, SchemaFormModule]
 })
 export class CustomRadioWidgetComponent  extends SelectWidget implements OnInit {
   options = [];

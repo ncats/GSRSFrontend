@@ -1,11 +1,17 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConfigService } from '@gsrs-core/config';
 
 import { ProductService } from './product.service';
 
 describe('ProductService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ProductService]
+      imports: [ HttpClientTestingModule ],
+      providers: [
+        ProductService,
+        { provide: ConfigService, useValue: { configData: {} } }
+      ]
     });
   });
 

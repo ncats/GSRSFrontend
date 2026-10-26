@@ -1,269 +1,360 @@
 <div class="example-container mat-elevation-z8 clinical-trial-edit-page">
-	<div *ngIf="!clinicalTrial">
-		<p>Clinical Trial with Trial Number supplied not found for editing.</p>
-		<p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p>
-	</div>
+  @if (!clinicalTrial) {
+    <div>
+      <p>Clinical Trial with Trial Number supplied not found for editing.</p>
+      <p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p>
+    </div>
+  }
 
-	<div *ngIf="clinicalTrial">
-
-	<div *ngIf="clinicalTrial">
-		<p *ngIf="clinicalTrial.trialNumber">
-			<a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.trialNumber}}</a>
-			&nbsp;<span *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</span>
-		</p>
-	</div>
-
-	<div *ngIf="clinicalTrial">
-		<span>
-			<mat-checkbox class='match-complete-checkbox' [disabled]="!canUpdate" [value]="clinicalTrial.gsrsMatchingComplete" [(ngModel)]="clinicalTrial.gsrsMatchingComplete">
-				<label>Matching Complete</label>
-			</mat-checkbox>
-		</span>
-	</div>
-
-	<div *ngIf="canUpdate" class="full-width button-align-two">
-		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
-	</div>
-
-	<mat-expansion-panel [expanded]="true">
-		<mat-expansion-panel-header>
-			<mat-panel-title>
-				<h3>Substances in Clinical Trial <span *ngIf="clinicalTrial && clinicalTrial.clinicalTrialUSDrug"> ({{ clinicalTrial.clinicalTrialUSDrug.length}})</span></h3>
-			</mat-panel-title>
-		</mat-expansion-panel-header>
-	
-		<div *ngIf="canUpdate" class="full-width button-align-two">
-			<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add Substance <mat-icon svgIcon="add_circle_outline"></mat-icon></button>
-		</div>
-
-
-		<mat-table #table [dataSource]="dataSource">
-
-			<ng-container matColumnDef="id" class='id-container'>
-				<mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
-				<mat-cell *matCellDef="let element">
-					<mat-form-field floatLabel="never">
-						<input disabled matInput placeholder="id" [value]="element.id" [(ngModel)]="element.id">
-					</mat-form-field>
-				</mat-cell>
-			</ng-container>
-			<!-- name -->
-			<ng-container matColumnDef="name">
-				<mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-				<mat-cell *matCellDef="let element; let i = index;" title="{{element.name}}">
-					<span *ngIf="!canUpdate">
-						{{element.name}}
-					</span>
-					<span *ngIf="canUpdate">
-						<app-mini-search [myIndex]="i" [myInitialSearch]="element && element.name" (miniSearchOutput)="reportMiniSearchOutput($event)"></app-mini-search>
-					</span>
-				</mat-cell>
-			</ng-container>
-			<!-- substanceKey -->
-			<ng-container matColumnDef="substanceKey">
-				<mat-header-cell *matHeaderCellDef>Substance Key</mat-header-cell>
-				<mat-cell *matCellDef="let element">
-					<span *ngIf="!canUpdate">
-						{{element.substanceKey}}
-					</span>
-					<span *ngIf="canUpdate">
-						<mat-form-field floatLabel="never">
-							<input matInput placeholder="substanceKey" [value]="element.substanceKey" [(ngModel)]="element.substanceKey">
-						</mat-form-field>
-					</span>
-				</mat-cell>
-			</ng-container>
-
-			<ng-container matColumnDef="protectedMatch">
-				<mat-header-cell *matHeaderCellDef> Protected Match </mat-header-cell>
-				<mat-cell *matCellDef="let element">
-					<span *ngIf="!canUpdate">
-						{{element.protectedMatch}}
-					</span>
-					<span>
-						<mat-checkbox class="protected-match-checkbox" [disabled]="!canUpdate" [value]="element.protectedMatch" [(ngModel)]="element.protectedMatch">
-							<label><mat-icon class="mat-icon material-icons protected-match-icon" role="img" aria-hidden="true">lock</mat-icon></label>
-						</mat-checkbox>
-					</span>
-				</mat-cell>
-			</ng-container>
-
-			<ng-container matColumnDef="substanceRoles">
-				<mat-header-cell *matHeaderCellDef> Roles </mat-header-cell>
-				<mat-cell *matCellDef="let element, let i = index">
-					<app-clinical-trial-edit-substance-roles [tableRowIndex]="i" [disabled]="!canUpdate" [initialSubstanceRoles]="element.substanceRoles"
-					(substanceRolesEventOutput)="reportSubstanceRolesOutput($event)"
-					></app-clinical-trial-edit-substance-roles>
-				</mat-cell>
-			</ng-container>
-
-			<!-- orgSubstanceKey -->
-			<ng-container matColumnDef="orgSubstanceKey">
-				<mat-header-cell *matHeaderCellDef>Org. Substance Key</mat-header-cell>
-				<mat-cell *matCellDef="let element">
-					{{element.orgSubstanceKey}}
-				</mat-cell>
-			</ng-container>
-
-			<!-- link -->
-			<ng-container matColumnDef="link">
-				<mat-header-cell *matHeaderCellDef></mat-header-cell>
-				<mat-cell *matCellDef="let element">
-					<a target="_blank" [routerLink]="['/substances', element.substanceKey]" title="Open substance details in new page">
-						<mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
-					</a>
-				</mat-cell>
-			</ng-container>
-
-			<!-- delete -->
-			<ng-container matColumnDef="delete">
-				<mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
-				<mat-cell *matCellDef="let element; let i = index">
-					<button mat-flat-button color="primary" matSuffix aria-label="Del" (click)="removeRow(i);">Del</button>
-				</mat-cell>
-			</ng-container>
-			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-		</mat-table>
-	</mat-expansion-panel>
-
-	<div class="full-width">&nbsp;</div>
-
-	<mat-expansion-panel>
-		<mat-expansion-panel-header>
-		  <mat-panel-title>
-			<h3>Outcome Result Notes</h3>
-		  </mat-panel-title>
-		</mat-expansion-panel-header>
-		<div class="button-align-two">
-			<button *ngIf="canUpdate" mat-flat-button color="primary" aria-label="Add Note"
-			(click)="addOutcomeResultNote();">Add Note <mat-icon svgIcon="add_circle_outline"></mat-icon></button>
-		</div>
-		<div *ngIf="clinicalTrial.outcomeResultNotes">
-			<div>&nbsp;</div>
-			<div class="outcome-result-note" *ngFor="let outcomeResultNote of clinicalTrial.outcomeResultNotes, let i = index">
-				<div class="note-index">Note: {{i+1}}</div>
-				<div *ngIf="canUpdate" class="button-align-two">
-					<button mat-flat-button color="primary" matSuffix aria-label="Remove Note" (click)="removeOutcomeResultNote(i);">Del</button>	
-				</div>
-				<app-clinical-trial-edit-outcome-result-note [disabled]="!canUpdate" [index]=i [outcomeResultNote]="outcomeResultNote"></app-clinical-trial-edit-outcome-result-note>
-			</div>
-			<div class="full-width">&nbsp;</div>
-
-		</div>
-	</mat-expansion-panel>
-
-	<div class="full-width">&nbsp;</div>
-
-	<mat-expansion-panel [expanded]="true">
-		<mat-expansion-panel-header>
-		  <mat-panel-title>
-			<div class="trial-detailsheader">
-				<span class="emphasize">Trial Details</span>&nbsp;
-				<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.trialNumber}}</a></span>&nbsp;
-				<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see XML on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber + '?displayxml=true'">XML</a></span>&nbsp;
-				<span *ngIf="clinicalTrial.trialNumber"><a target="_blank" title="see history on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/history/' + clinicalTrial.trialNumber">History</a></span>&nbsp;
-			</div>		
-		</mat-panel-title>
-		</mat-expansion-panel-header>
-
-
-	<div class="container">
-		<div class="trial-detailsone">
-			<div *ngIf="clinicalTrial">
-				<div>
-					<p *ngIf="clinicalTrial.title">{{clinicalTrial.title}}</p>
-					<div *ngIf="clinicalTrial.intervention">
-						<p><span class="emphasize">Intervention</span>:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.intervention.split('\|')">{{ content }}</div>
-					</div>
-					<p *ngIf="clinicalTrial.recruitment">Recruitment: {{clinicalTrial.recruitment}}</p>
-					<div *ngIf="clinicalTrial.conditions">
-						<p>Conditions:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.conditions.split('\|')">{{ content }}</div>
-					</div>
-					<div *ngIf="clinicalTrial.sponsor">
-						<p>Sponsors:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.sponsor.split('\|')">{{ content }}</div>
-					</div>
-					<div *ngIf="clinicalTrial.locations">
-						<p>Locations:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.locations.split('\|')">{{ content }}</div>
-					</div>
-					<div *ngIf="clinicalTrial.fundedBys">
-						<p>Sponsor:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.fundedBys.split('\|')">{{ content }}</div>
-					</div>
-
-					<div *ngIf="clinicalTrial.phases">
-						<p>Phases:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.phases.split('\|')">{{ content }}</div>
-					</div>
-
-					<div *ngIf="clinicalTrial.studyTypes">
-						<p>Study Types:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.studyTypes.split('\|')">{{ content }}</div>
-					</div>
-
-					<div *ngIf="clinicalTrial.ageGroups">
-						<p>Age Groups:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.ageGroups.split('\|')">{{ content }}</div>
-					</div>
-					<p *ngIf="clinicalTrial.gender">Gender: {{clinicalTrial.gender}}</p>
-					<p *ngIf="clinicalTrial.allocation">Allocation: {{clinicalTrial.allocation}}</p>
-					<p *ngIf="clinicalTrial.studyResults">Study Results: {{clinicalTrial.studyResults}}</p>
-					<p *ngIf="clinicalTrial.enrollment">Enrollment: {{clinicalTrial.enrollment}}</p>
-					<div *ngIf="clinicalTrial.otherIds">
-						<p>Other Ids:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.otherIds.split('\|')">{{ content }}</div>
-					</div>
-					<p *ngIf="clinicalTrial.acronym">Acronym: {{clinicalTrial.acronym}}</p>
-					<div *ngIf="clinicalTrial.outcomeMeasures">
-						<p>Outcome Measures:</p>
-						<div class="indent-list" *ngFor="let content of clinicalTrial.outcomeMeasures.split('\|')">{{ content }}</div>
-					</div>
-					<p *ngIf="clinicalTrial.trialNumber">Url: <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.url}}</a></p>
-
-				</div>
-			</div>
-		</div>
-
-		<div class="trial-detailstwo">
-
-			<div *ngIf="clinicalTrial.lastUpdated || clinicalTrial.lastUpdated">
-				<p>Updated:</p>
-				<div class="indent-list" *ngIf="clinicalTrial.lastUpdated" title="Last updated by CT.gov">{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">ct.gov</span></div>
-				<div class="indent-list" *ngIf="clinicalTrial.gsrsUpdated" title="Last updated on gsrs">{{clinicalTrial.gsrsUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">gsrs</span></div>
-			</div>
-			<p *ngIf="clinicalTrial.firstReceived">First Received: {{clinicalTrial.firstReceived|date : "MM/dd/yyyy" : "UTC"}}</p>
-			<p *ngIf="clinicalTrial.startDate">Study Start Date: {{clinicalTrial.startDate|date : "MM/dd/yyyy" : "UTC"}}</p>
-			<p *ngIf="clinicalTrial.lastVerified">Last Verified: {{clinicalTrial.lastVerified}}</p>
-			<p *ngIf="clinicalTrial.primaryCompletionDate">Primary Completion Date: {{clinicalTrial.primaryCompletionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
-			<p *ngIf="clinicalTrial.completionDate">Study Completion Date: {{clinicalTrial.completionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
-		</div>
-	</div>
-	</mat-expansion-panel>
-
-  	<div><p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p></div>
-
-	<div *ngIf="isTesting">
-		<div class="top-spacer">canUpdate: {{canUpdate}}</div>
-
-		<div *ngIf="clinicalTrial">
-			<div>&nbsp;</div>
-
-			<div>clinicalTrial: {{clinicalTrial|json}}</div>
-		</div>
-
-		<div *ngIf="dataSource.data">
-			<div>&nbsp;</div>
-			<div>datasource.data: {{dataSource.data|json}}</div>
-		</div>
-
-		<div *ngIf="miniSearchOutputReported">
-			<div>&nbsp;</div>
-			<div>miniSearchOutputReported: {{miniSearchOutputReported}}</div>
-		</div>
-	</div>
-</div>
+  @if (clinicalTrial) {
+    <div>
+      @if (clinicalTrial) {
+        <div>
+          @if (clinicalTrial.trialNumber) {
+            <p>
+              <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.trialNumber}}</a>
+              &nbsp;@if (clinicalTrial.title) {
+              <span>{{clinicalTrial.title}}</span>
+            }
+          </p>
+        }
+      </div>
+    }
+    @if (clinicalTrial) {
+      <div>
+        <span>
+          <mat-checkbox class='match-complete-checkbox' [disabled]="!canUpdate" [value]="clinicalTrial.gsrsMatchingComplete" [(ngModel)]="clinicalTrial.gsrsMatchingComplete">
+            <label>Matching Complete</label>
+          </mat-checkbox>
+        </span>
+      </div>
+    }
+    @if (canUpdate) {
+      <div class="full-width button-align-two">
+        <button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
+      </div>
+    }
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h3>Substances in Clinical Trial @if (clinicalTrial && clinicalTrial.clinicalTrialUSDrug) {
+            <span> ({{ clinicalTrial.clinicalTrialUSDrug.length}})</span>
+          }</h3>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      @if (canUpdate) {
+        <div class="full-width button-align-two">
+          <button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add Substance <mat-icon svgIcon="add_circle_outline"></mat-icon></button>
+        </div>
+      }
+      <mat-table #table [dataSource]="dataSource">
+        <ng-container matColumnDef="id" class='id-container'>
+          <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-form-field floatLabel="never">
+              <input disabled matInput placeholder="id" [value]="element.id" [(ngModel)]="element.id">
+            </mat-form-field>
+          </mat-cell>
+        </ng-container>
+        <!-- name -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index;" title="{{element.name}}">
+            @if (!canUpdate) {
+              <span>
+                {{element.name}}
+              </span>
+            }
+            @if (canUpdate) {
+              <span>
+                <app-mini-search [myIndex]="i" [myInitialSearch]="element && element.name" (miniSearchOutput)="reportMiniSearchOutput($event)"></app-mini-search>
+              </span>
+            }
+          </mat-cell>
+        </ng-container>
+        <!-- substanceKey -->
+        <ng-container matColumnDef="substanceKey">
+          <mat-header-cell *matHeaderCellDef>Substance Key</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            @if (!canUpdate) {
+              <span>
+                {{element.substanceKey}}
+              </span>
+            }
+            @if (canUpdate) {
+              <span>
+                <mat-form-field floatLabel="never">
+                  <input matInput placeholder="substanceKey" [value]="element.substanceKey" [(ngModel)]="element.substanceKey">
+                </mat-form-field>
+              </span>
+            }
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="protectedMatch">
+          <mat-header-cell *matHeaderCellDef> Protected Match </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            @if (!canUpdate) {
+              <span>
+                {{element.protectedMatch}}
+              </span>
+            }
+            <span>
+              <mat-checkbox class="protected-match-checkbox" [disabled]="!canUpdate" [value]="element.protectedMatch" [(ngModel)]="element.protectedMatch">
+                <label><mat-icon class="mat-icon material-icons protected-match-icon" role="img" aria-hidden="true">lock</mat-icon></label>
+              </mat-checkbox>
+            </span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="substanceRoles">
+          <mat-header-cell *matHeaderCellDef> Roles </mat-header-cell>
+          <mat-cell *matCellDef="let element, let i = index">
+            <app-clinical-trial-edit-substance-roles [tableRowIndex]="i" [disabled]="!canUpdate" [initialSubstanceRoles]="element.substanceRoles"
+              (substanceRolesEventOutput)="reportSubstanceRolesOutput($event)"
+            ></app-clinical-trial-edit-substance-roles>
+          </mat-cell>
+        </ng-container>
+        <!-- orgSubstanceKey -->
+        <ng-container matColumnDef="orgSubstanceKey">
+          <mat-header-cell *matHeaderCellDef>Org. Substance Key</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{element.orgSubstanceKey}}
+          </mat-cell>
+        </ng-container>
+        <!-- link -->
+        <ng-container matColumnDef="link">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <a target="_blank" [routerLink]="['/substances', element.substanceKey]" title="Open substance details in new page">
+              <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
+            </a>
+          </mat-cell>
+        </ng-container>
+        <!-- delete -->
+        <ng-container matColumnDef="delete">
+          <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index">
+            <button mat-flat-button color="primary" matSuffix aria-label="Del" (click)="removeRow(i);">Del</button>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </mat-expansion-panel>
+    <div class="full-width">&nbsp;</div>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h3>Outcome Result Notes</h3>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="button-align-two">
+        @if (canUpdate) {
+          <button mat-flat-button color="primary" aria-label="Add Note"
+            (click)="addOutcomeResultNote();">Add Note <mat-icon svgIcon="add_circle_outline"></mat-icon></button>
+          }
+        </div>
+        @if (clinicalTrial.outcomeResultNotes) {
+          <div>
+            <div>&nbsp;</div>
+            @for (outcomeResultNote of clinicalTrial.outcomeResultNotes; track outcomeResultNote; let i = $index) {
+              <div class="outcome-result-note">
+                <div class="note-index">Note: {{i+1}}</div>
+                @if (canUpdate) {
+                  <div class="button-align-two">
+                    <button mat-flat-button color="primary" matSuffix aria-label="Remove Note" (click)="removeOutcomeResultNote(i);">Del</button>
+                  </div>
+                }
+                <app-clinical-trial-edit-outcome-result-note [disabled]="!canUpdate" [index]=i [outcomeResultNote]="outcomeResultNote"></app-clinical-trial-edit-outcome-result-note>
+              </div>
+            }
+            <div class="full-width">&nbsp;</div>
+          </div>
+        }
+      </mat-expansion-panel>
+      <div class="full-width">&nbsp;</div>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div class="trial-detailsheader">
+              <span class="emphasize">Trial Details</span>&nbsp;
+              @if (clinicalTrial.trialNumber) {
+                <span><a target="_blank" title="see on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.trialNumber}}</a></span>
+                }&nbsp;
+                @if (clinicalTrial.trialNumber) {
+                  <span><a target="_blank" title="see XML on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber + '?displayxml=true'">XML</a></span>
+                  }&nbsp;
+                  @if (clinicalTrial.trialNumber) {
+                    <span><a target="_blank" title="see history on clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/history/' + clinicalTrial.trialNumber">History</a></span>
+                    }&nbsp;
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="container">
+                <div class="trial-detailsone">
+                  @if (clinicalTrial) {
+                    <div>
+                      <div>
+                        @if (clinicalTrial.title) {
+                          <p>{{clinicalTrial.title}}</p>
+                        }
+                        @if (clinicalTrial.intervention) {
+                          <div>
+                            <p><span class="emphasize">Intervention</span>:</p>
+                            @for (content of clinicalTrial.intervention.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.recruitment) {
+                          <p>Recruitment: {{clinicalTrial.recruitment}}</p>
+                        }
+                        @if (clinicalTrial.conditions) {
+                          <div>
+                            <p>Conditions:</p>
+                            @for (content of clinicalTrial.conditions.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.sponsor) {
+                          <div>
+                            <p>Sponsors:</p>
+                            @for (content of clinicalTrial.sponsor.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.locations) {
+                          <div>
+                            <p>Locations:</p>
+                            @for (content of clinicalTrial.locations.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.fundedBys) {
+                          <div>
+                            <p>Sponsor:</p>
+                            @for (content of clinicalTrial.fundedBys.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.phases) {
+                          <div>
+                            <p>Phases:</p>
+                            @for (content of clinicalTrial.phases.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.studyTypes) {
+                          <div>
+                            <p>Study Types:</p>
+                            @for (content of clinicalTrial.studyTypes.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.ageGroups) {
+                          <div>
+                            <p>Age Groups:</p>
+                            @for (content of clinicalTrial.ageGroups.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.gender) {
+                          <p>Gender: {{clinicalTrial.gender}}</p>
+                        }
+                        @if (clinicalTrial.allocation) {
+                          <p>Allocation: {{clinicalTrial.allocation}}</p>
+                        }
+                        @if (clinicalTrial.studyResults) {
+                          <p>Study Results: {{clinicalTrial.studyResults}}</p>
+                        }
+                        @if (clinicalTrial.enrollment) {
+                          <p>Enrollment: {{clinicalTrial.enrollment}}</p>
+                        }
+                        @if (clinicalTrial.otherIds) {
+                          <div>
+                            <p>Other Ids:</p>
+                            @for (content of clinicalTrial.otherIds.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.acronym) {
+                          <p>Acronym: {{clinicalTrial.acronym}}</p>
+                        }
+                        @if (clinicalTrial.outcomeMeasures) {
+                          <div>
+                            <p>Outcome Measures:</p>
+                            @for (content of clinicalTrial.outcomeMeasures.split('\|'); track content) {
+                              <div class="indent-list">{{ content }}</div>
+                            }
+                          </div>
+                        }
+                        @if (clinicalTrial.trialNumber) {
+                          <p>Url: <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinicalTrial.trialNumber">{{clinicalTrial.url}}</a></p>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+                <div class="trial-detailstwo">
+                  @if (clinicalTrial.lastUpdated || clinicalTrial.lastUpdated) {
+                    <div>
+                      <p>Updated:</p>
+                      @if (clinicalTrial.lastUpdated) {
+                        <div class="indent-list" title="Last updated by CT.gov">{{clinicalTrial.lastUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">ct.gov</span></div>
+                      }
+                      @if (clinicalTrial.gsrsUpdated) {
+                        <div class="indent-list" title="Last updated on gsrs">{{clinicalTrial.gsrsUpdated|date : "MM/dd/yyyy": 'UTC'}} <span class="small-text">gsrs</span></div>
+                      }
+                    </div>
+                  }
+                  @if (clinicalTrial.firstReceived) {
+                    <p>First Received: {{clinicalTrial.firstReceived|date : "MM/dd/yyyy" : "UTC"}}</p>
+                  }
+                  @if (clinicalTrial.startDate) {
+                    <p>Study Start Date: {{clinicalTrial.startDate|date : "MM/dd/yyyy" : "UTC"}}</p>
+                  }
+                  @if (clinicalTrial.lastVerified) {
+                    <p>Last Verified: {{clinicalTrial.lastVerified}}</p>
+                  }
+                  @if (clinicalTrial.primaryCompletionDate) {
+                    <p>Primary Completion Date: {{clinicalTrial.primaryCompletionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
+                  }
+                  @if (clinicalTrial.completionDate) {
+                    <p>Study Completion Date: {{clinicalTrial.completionDate|date : "MM/dd/yyyy" : "UTC"}}</p>
+                  }
+                </div>
+              </div>
+            </mat-expansion-panel>
+            <div><p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p></div>
+            @if (isTesting) {
+              <div>
+                <div class="top-spacer">canUpdate: {{canUpdate}}</div>
+                @if (clinicalTrial) {
+                  <div>
+                    <div>&nbsp;</div>
+                    <div>clinicalTrial: {{clinicalTrial|json}}</div>
+                  </div>
+                }
+                @if (dataSource.data) {
+                  <div>
+                    <div>&nbsp;</div>
+                    <div>datasource.data: {{dataSource.data|json}}</div>
+                  </div>
+                }
+                @if (miniSearchOutputReported) {
+                  <div>
+                    <div>&nbsp;</div>
+                    <div>miniSearchOutputReported: {{miniSearchOutputReported}}</div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }

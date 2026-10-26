@@ -9,12 +9,18 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AuthService } from '@gsrs-core/auth';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-substance-dependencies-image',
     templateUrl: './substance-dependencies-image.component.html',
     styleUrls: ['./substance-dependencies-image.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatTableModule, MatPaginatorModule, RouterModule, SubstanceImageDirective]
 })
 
 export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilteredList<SubstanceDependenciesImageNode> implements OnInit {
@@ -31,7 +37,9 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog
-  ) { super(gaService); }
+  ) {
+ super(gaService); 
+}
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();

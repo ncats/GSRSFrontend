@@ -36,12 +36,40 @@ import { SubstanceDetail } from "@gsrs-core/substance/substance.model";
 import { SubstanceFormSsg4mStagesService } from "./substance-form-ssg4m-stages.service";
 import { SpecifiedSubstanceG4mStage } from "@gsrs-core/substance/substance.model";
 import { ConfirmDialogComponent } from "../../../fda/confirm-dialog/confirm-dialog.component";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatBadgeModule } from "@angular/material/badge";
+import { CvInputComponent } from "@gsrs-core/substance-form/cv-input/cv-input.component";
+import { Ssg4mStartingMaterialsFormComponent } from "../ssg4m-starting-materials/ssg4m-starting-materials-form.component";
+import { Ssg4mProcessingMaterialsFormComponent } from "../ssg4m-processing-materials/ssg4m-processing-materials-form.component";
+import { Ssg4mResultingMaterialsFormComponent } from "../ssg4m-resulting-materials/ssg4m-resulting-materials-form.component";
+import { Ssg4mCriticalParameterFormComponent } from "../ssg4m-critical-parameter/ssg4m-critical-parameter-form.component";
 
 @Component({
   selector: "app-ssg4m-stages-form",
   templateUrl: "./ssg4m-stages-form.component.html",
   styleUrls: ["./ssg4m-stages-form.component.scss"],
-  standalone: false
+  standalone: true,
+  imports: [
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatBadgeModule,
+    CvInputComponent,
+    Ssg4mStartingMaterialsFormComponent,
+    Ssg4mProcessingMaterialsFormComponent,
+    Ssg4mResultingMaterialsFormComponent,
+    Ssg4mCriticalParameterFormComponent
+  ]
 })
 export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
   public configSettingsDisplay = {};

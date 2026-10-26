@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AgentModification, Constituent, SubstanceAmount, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {Subscription} from 'rxjs';
@@ -6,12 +6,22 @@ import {MatDialog} from '@angular/material/dialog';
 import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
+import {CommonModule} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {AccessManagerComponent} from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import {DomainReferencesComponent} from '@gsrs-core/substance-form/references/domain-references/domain-references.component';
+import {SubstanceSelectorComponent} from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-constituent-form',
     templateUrl: './constituent-form.component.html',
     styleUrls: ['./constituent-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, AccessManagerComponent, CvInputComponent, DomainReferencesComponent, SubstanceSelectorComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConstituentFormComponent implements OnInit {
    privateConstituent: Constituent;
@@ -27,7 +37,8 @@ export class ConstituentFormComponent implements OnInit {
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private cdr: ChangeDetectorRef
   ) { }
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -76,6 +87,7 @@ export class ConstituentFormComponent implements OnInit {
         this.privateConstituent.amount = newAmount;
         this.amountUpdated.emit(this.privateConstituent.amount);
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }

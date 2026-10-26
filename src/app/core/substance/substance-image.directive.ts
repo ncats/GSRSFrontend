@@ -5,7 +5,7 @@ import { ConfigService } from "@gsrs-core/config/config.service";
 
 @Directive({
   selector: "[appSubstanceImage]",
-  standalone: false,
+  standalone: true,
 })
 export class SubstanceImageDirective implements AfterViewInit {
   private privateEntityId: string;

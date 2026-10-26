@@ -1,16 +1,24 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {Link, Linkage, Site, Subunit, Sugar} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import {CommonModule} from '@angular/common';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {SugarFormComponent} from '@gsrs-core/substance-form/sugar-form/sugar-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-sugars',
     templateUrl: './substance-form-sugars.component.html',
     styleUrls: ['./substance-form-sugars.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, SugarFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<Sugar>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList  {
@@ -24,9 +32,10 @@ export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form sugars';
   }
 
@@ -39,11 +48,13 @@ export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<
     const sugarsSubscription = this.substanceFormService.substanceSugars.subscribe(sugars => {
       this.sugars = sugars;
       this.getRemainingSites();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(sugarsSubscription);
     const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
       this.subunits = subunits;
       this.getRemainingSites();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(subunitsSubscription);
 
@@ -71,7 +82,8 @@ export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<
         sugarArray = sugarArray.concat(sugar.sites);
       });
     }
-    this.remainingSites = subunitArray.filter(item => {return !sugarArray.some(function(obj2) {
+    this.remainingSites = subunitArray.filter(item => {
+return !sugarArray.some(function(obj2) {
         return (item.subunitIndex === obj2.subunitIndex && item.residueIndex === obj2.residueIndex);
       });
     });

@@ -2,7 +2,7 @@ import { Directive, Output, HostListener, EventEmitter, Input , OnInit } from '@
 
 @Directive({
     selector: '[appDragDropPaste]',
-    standalone: false
+    standalone: true
 })
 export class DragDropPasteDirective {
 
