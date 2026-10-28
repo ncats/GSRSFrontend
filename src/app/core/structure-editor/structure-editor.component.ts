@@ -11,6 +11,7 @@ import {
   ElementRef, AfterViewInit, HostListener
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EditorImplementation } from './structure-editor-implementation.model';
 import { environment } from '../../../environments/environment';
 import { StructureService } from '@gsrs-core/structure';
@@ -81,6 +82,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     private configService: ConfigService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnDestroy(): void {
@@ -299,6 +301,12 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.3fc9c0f8.css`;
       node2.rel = "stylesheet";
       document.getElementsByTagName('head')[0].appendChild(node2);
+    }
+
+    // get value for paramerter imageUrl
+    let imageUrl = this.activatedRoute.snapshot.queryParams['url'] || null;
+    if (imageUrl) {
+      this.createImage(imageUrl);
     }
   }
 

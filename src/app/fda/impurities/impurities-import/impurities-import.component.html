@@ -1,106 +1,52 @@
 <div>
+  <!--
   <div class="top-fixed bordergray">
+  </div> 
+  -->
+  <div class="margintop50px scrollable-container">
+    <div class="cards-container">
 
-    <!--
-    <div class="actions-container">
-
-      <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-        *ngIf="validationMessages && validationMessages.length > 0">
-        {{ showSubmissionMessages ? "Hide" : "Show" }} messages
-        <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
-      </button>
-      <span class="middle-fill"></span>
-
-    </div>  --> <!-- class=action-container -->
-
-    <!-- Validation Message Display -->
-    <!--
-    <div [ngClass]="{
-        'submission-messages': true,
-        collapsed: !showSubmissionMessages,
-        expanded: showSubmissionMessages,
-      }">
-      <div class="submission-message" *ngIf="submissionMessage">
-        {{ submissionMessage }}
-      </div>
-      -->
-    <!-- Validation Message Display and Submit Button -->
-    <!--
-      <div *ngIf="validationMessages">
-        <span *ngIf="validationMessages.length > 0">
-          <div class="submission-message" *ngIf="!serverError && !approving">
-            Please correct or dismiss the following errors and submit again:
+      <div class="">
+        <div class="title_box">
+          <div class="title">
+            Impurities Extractor
           </div>
-          <div class="validation-message" *ngFor="let message of validationMessages; index as i">
-            <div class="message-type" [ngClass]="
-                message.messageType == 'ERROR'
-                  ? 'error-message'
-                  : 'warning-message'
-              ">
-              {{ message.messageType }}
-            </div>
-            <div class="message">
-              {{ message.message
-              }}<span *ngFor="let link of message.links"><br /><a [href]="link.href" target="_blank">{{
-                  link.text
-                  }}</a></span>
-            </div>
-            <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-              (click)="dismissValidationMessage(i)">
-              <mat-icon svgIcon="cancel"></mat-icon>
-            </button>
-          </div>
-        </span>
+        </div> <!-- title_box-->
 
-        <div class="dismiss-container">
-          <span class="middle-fill"></span>
-          <button mat-flat-button color="primary" (click)="submit()"
-            [disabled]="isLoading || this.validationResult === false">
-            {{
-            validationMessages && validationMessages.length > 0
-            ? "Dismiss All and "
-            : ""
-            }}
-            Submit
-          </button>
-        </div>
+        <mat-card class="margintop20px">
+          <mat-card-content>
+            <br>
+            <b>Select PDF (USP or EP) file to extract monograph data and save into Database:</b>&nbsp;&nbsp;
+
+            <!-- Import EXCEL DATA and convert to JSON -->
+            <input type="file" (change)="onFileChange($event)" />
+
+            <br><br><br><br><br>
+
+       
+            <!-- DISPLAY STRUCTURE DEBUG  BEGIN -->
+             
+            <!--
+            <div *ngIf="debugStructureImages.length > 0"
+              style="margin-top: 20px; border: 2px solid blue; padding: 10px;">
+              <h3>Debug: Extracted Structure Images</h3>
+              <div *ngFor="let img of debugStructureImages" style="margin-bottom: 20px;">
+                <h4>Impurity {{ img.code }}</h4>
+                <img [src]="img.url" style="border: 1px solid #ccc; max-width: 400px;" />
+              </div>
+            </div>
+            -->
+
+            <!-- DISPLAY STRUCTURE DEBUG  END END  -->
+
+          </mat-card-content>
+        </mat-card>
+        <br />
+        <br />
       </div>
 
-    </div>
-    -->
-    <!-- Validation Message and Submit Button END -->
-  </div> <!-- class=top-fixed -->
-
-    <div class="margintop50px scrollable-container">
-      <div class="cards-container">
-
-        <div class="">
-          <div class="title_box">
-            <div class="title">
-              Import Impurities
-            </div>
-
-          </div> <!-- title_box-->
-
-          <mat-card class="margintop20px">
-            <mat-card-content>
-              <b>Select PDF (USP or EP) file to Import Impurities data into Database:</b>&nbsp;&nbsp;
-
-              <!-- Import EXCEL DATA and convert to JSON -->
-              <input type="file" (change)="onFileChange($event)" />
-
-              <br />
-              <br />
-              <br>
-            </mat-card-content>
-          </mat-card>
-          <br />
-          <br />
-
-        </div>
-
-      </div> <!-- class=cards-container -->
-    </div> <!-- class=scrollable-container -->
+    </div> <!-- class=cards-container -->
+  </div> <!-- class=scrollable-container -->
 
 </div>
 <br /><br /><br />

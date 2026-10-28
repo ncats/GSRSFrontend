@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import {
   SubstanceDetail,
   SubstanceName,
@@ -20,20 +20,20 @@ import {
   SubstanceFormDefinition,
   SubstanceFormResults, SubunitSequence, ValidationResults, ValidationMessage
 } from './substance-form.model';
-import {Observable, Subject, ReplaySubject, Subscription} from 'rxjs';
-import {SubstanceService} from '../substance/substance.service';
-import {UtilsService} from '../utils/utils.service';
-import {StructureService} from '@gsrs-core/structure';
+import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
+import { SubstanceService } from '../substance/substance.service';
+import { UtilsService } from '../utils/utils.service';
+import { StructureService } from '@gsrs-core/structure';
 import * as _ from 'lodash';
 import jp from 'jsonpath';
 
-import {take} from 'rxjs/operators';
-import {AdminService} from '@gsrs-core/admin/admin.service';
+import { take } from 'rxjs/operators';
+import { AdminService } from '@gsrs-core/admin/admin.service';
 
 @Injectable()
 export class SubstanceFormService implements OnDestroy {
-   privateSubstance: SubstanceDetail;
-   originalSubstanceSnapshot: SubstanceDetail | null = null;
+  privateSubstance: SubstanceDetail;
+  originalSubstanceSnapshot: SubstanceDetail | null = null;
   private substanceStateHash?: number;
   private substanceEmitter: ReplaySubject<SubstanceDetail>;
   private substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
@@ -111,23 +111,23 @@ export class SubstanceFormService implements OnDestroy {
         // the second case happens in the forms sometimes but really shouldn't
         if (substanceClass === 'chemical' || substanceClass === 'structure') {
           this.privateSubstance =
-            {
-              substanceClass: 'chemical',
-              references: [],
-              names: [],
-              structure: {
-                molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
-              },
-              codes: [],
-              relationships: [],
-              properties: []
-            };
+          {
+            substanceClass: 'chemical',
+            references: [],
+            names: [],
+            structure: {
+              molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
+            },
+            codes: [],
+            relationships: [],
+            properties: []
+          };
         } else if (substanceClass === 'protein') {
           this.privateSubstance = {
             substanceClass: 'protein',
             references: [],
             names: [],
-            protein: {proteinType: ''},
+            protein: { proteinType: '' },
             codes: [],
             relationships: [],
             properties: []
@@ -199,8 +199,8 @@ export class SubstanceFormService implements OnDestroy {
             names: [],
             specifiedSubstanceG3: {
               parentSubstance: {},
-              definition: {references: []},
-              grade: {references: []}
+              definition: { references: [] },
+              grade: { references: [] }
             },
             codes: [],
             properties: []
@@ -350,6 +350,22 @@ export class SubstanceFormService implements OnDestroy {
     });
   }
 
+  setSubstanceName(name: string) {
+     if (this.privateSubstance) {
+      if (name) {
+        if (!this.privateSubstance.names || this.privateSubstance.names.length === 0) {
+          // Initialize the array with the first name object
+          this.privateSubstance.names = [{ name: name }];
+        } else {
+          // Update existing first name object
+          this.privateSubstance.names[0].name = name;
+        }
+      }
+    }
+
+    this.substanceEmitter.next(this.privateSubstance);
+  }
+
   setDefinitionFromDefRef(access: any) {
 
     if (this.privateSubstance.structurallyDiverse) {
@@ -424,7 +440,7 @@ export class SubstanceFormService implements OnDestroy {
     if (newClass === 'chemical') {
       substance.structure = {};
     } else if (newClass === 'protein') {
-      substance.protein = {proteinType: ''};
+      substance.protein = { proteinType: '' };
 
     } else if (newClass === 'nucleicAcid') {
       substance.nucleicAcid = {};
@@ -757,7 +773,7 @@ export class SubstanceFormService implements OnDestroy {
           if (link.sites) {
             link.sites.forEach(site => {
               if (site.subunitIndex && site.residueIndex) {
-                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
+                const newLink: DisplaySite = { residue: site.residueIndex, subunit: site.subunitIndex, type: 'other' };
                 allSitesArr.push(newLink);
               }
             });
@@ -825,7 +841,7 @@ export class SubstanceFormService implements OnDestroy {
             const sites = f.split('-');
             const subunitIndex = Number(sites[0].split('_')[0]);
             for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++) {
-              const newLink: DisplaySite = {residue: Number(i), subunit: subunitIndex, type: 'feature'};
+              const newLink: DisplaySite = { residue: Number(i), subunit: subunitIndex, type: 'feature' };
               allSitesArr.push(newLink);
             }
           });
@@ -859,7 +875,7 @@ export class SubstanceFormService implements OnDestroy {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.privateSubstance.nucleicAcid == null) {
-          this.privateSubstance.nucleicAcid = {nucleicAcidType: ''};
+          this.privateSubstance.nucleicAcid = { nucleicAcidType: '' };
 
         }
         observer.next(this.privateSubstance.nucleicAcid);
@@ -1216,7 +1232,7 @@ export class SubstanceFormService implements OnDestroy {
           for (let j = 0; j < sequence.length; j++) {
             const site = sequence[j];
             if (site.toUpperCase() === 'C') {
-              available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
+              available.push({ 'residueIndex': (j + 1), 'subunitIndex': (i + 1) });
             }
           }
         }
@@ -1501,9 +1517,9 @@ export class SubstanceFormService implements OnDestroy {
     //TODO - recalculate sitesShorthand instead of deleting / determine when backend uses sitesShorthand over sites array
     if (this.privateSubstance.protein && this.privateSubstance.protein.disulfideLinks
       && this.privateSubstance.protein.disulfideLinks.length > 0) {
-      for (let i = this.privateSubstance.protein.disulfideLinks.length -1; i >= 0; i--) {
+      for (let i = this.privateSubstance.protein.disulfideLinks.length - 1; i >= 0; i--) {
         if (this.privateSubstance.protein.disulfideLinks[i].sitesShorthand) {
-           delete this.privateSubstance.protein.disulfideLinks[i].sitesShorthand;
+          delete this.privateSubstance.protein.disulfideLinks[i].sitesShorthand;
         }
         if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
           this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
@@ -1516,16 +1532,16 @@ export class SubstanceFormService implements OnDestroy {
 
     if (this.privateSubstance.nucleicAcid) {
       if (this.privateSubstance.nucleicAcid.linkages && this.privateSubstance.nucleicAcid.linkages.length > 0) {
-        for (let i = this.privateSubstance.nucleicAcid.linkages.length -1; i >= 0; i--) {
+        for (let i = this.privateSubstance.nucleicAcid.linkages.length - 1; i >= 0; i--) {
           if (this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand) {
-             delete this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand;
+            delete this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand;
           }
         }
       }
       if (this.privateSubstance.nucleicAcid.sugars && this.privateSubstance.nucleicAcid.sugars.length > 0) {
-        for (let i = this.privateSubstance.nucleicAcid.sugars.length -1; i >= 0; i--) {
+        for (let i = this.privateSubstance.nucleicAcid.sugars.length - 1; i >= 0; i--) {
           if (this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand) {
-             delete this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand;
+            delete this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand;
           }
         }
       }
@@ -1543,7 +1559,7 @@ export class SubstanceFormService implements OnDestroy {
 
       deletedUuids.forEach(uuid => {
         const pattern = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
-        if(pattern.test(uuid)) {
+        if (pattern.test(uuid)) {
           substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
         }
       });
@@ -1603,9 +1619,9 @@ export class SubstanceFormService implements OnDestroy {
     if (this.privateSubstance.polymer && this.privateSubstance.polymer.displayStructure) {
       return this.privateSubstance.polymer.displayStructure.molfile;
     } else {
-      return (this.privateSubstance.structure && this.privateSubstance.structure.molfile )? this.privateSubstance.structure.molfile : null;
+      return (this.privateSubstance.structure && this.privateSubstance.structure.molfile) ? this.privateSubstance.structure.molfile : null;
     }
-    
+
   }
 
   structureDuplicateCheck(): any {
@@ -1699,7 +1715,7 @@ export class SubstanceFormService implements OnDestroy {
     const substanceCopy = this.cleanSubstance();
     return new Observable(observer => {
 
-    this.adminService.updateStagingArea(id, substanceCopy).subscribe(response => {
+      this.adminService.updateStagingArea(id, substanceCopy).subscribe(response => {
         observer.next(response);
         observer.complete();
       }, error => {
@@ -1857,7 +1873,7 @@ export class SubstanceFormService implements OnDestroy {
         this.privateSubstance.protein.glycosylation.OGlycosylationSites.concat(data.links);
       this.emitGlycosylationUpdate();
     } else if (data.siteType === 'disulfide') {
-      const newLink: Link = {sites: data.links};
+      const newLink: Link = { sites: data.links };
       this.privateSubstance.protein.disulfideLinks.unshift(newLink);
       this.emitDisulfideLinkUpdate();
 
@@ -1989,16 +2005,16 @@ export class SubstanceFormService implements OnDestroy {
     ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' +
       'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' +
       'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
-      const tup = s.split('\t');
+        const tup = s.split('\t');
 
-      const list = _.chain(tup[1].split(',')).map(function (t) {
-        return _.map(t.split('-'), function (temp) {
-          return +temp - 0;
-        });
-      }).value();
+        const list = _.chain(tup[1].split(',')).map(function (t) {
+          return _.map(t.split('-'), function (temp) {
+            return +temp - 0;
+          });
+        }).value();
 
-      KNOWN_DISULFIDE_PATTERNS[tup[0]] = list;
-    });
+        KNOWN_DISULFIDE_PATTERNS[tup[0]] = list;
+      });
     const proteinSubstance = this.privateSubstance;
     const prot = proteinSubstance.protein;
     const pattern = KNOWN_DISULFIDE_PATTERNS[prot.proteinSubType];
@@ -2153,8 +2169,8 @@ export class SubstanceFormService implements OnDestroy {
     const _map = {};
     old.references.forEach(ref => {
       const nid = this.guid();
-        _map[ref.uuid] = nid;
-        ref.uuid = nid;
+      _map[ref.uuid] = nid;
+      ref.uuid = nid;
     });
 
     const refHolders = jp.query(old, '$..[?(@.references)]');
@@ -2192,7 +2208,7 @@ export class SubstanceFormService implements OnDestroy {
         })
         .value();
 
-     // old.references = nrefs;
+      // old.references = nrefs;
 
     }
 
@@ -2200,7 +2216,7 @@ export class SubstanceFormService implements OnDestroy {
     this.substanceEmitter.next(this.privateSubstance);
   }
 
- 
+
 
 
   //by Tyler, convert smiles, single, and 3 letter amino acids. convert 3 to 1, 1 to 3, and 1 to SMILES
@@ -2228,79 +2244,79 @@ export class SubstanceFormService implements OnDestroy {
       "Y": "TYR"
     };
 
-    
-    const aaSmilesLookup={
-        "A": "N[C@@H](C)C(=O)",
-        "a": "N[C@H](C)C(=O)",
-        "C": "N[C@@H](CS)C(=O)",
-        "c": "N[C@H](CS)C(=O)",       
-        "D": "N[C@@H](CC(=O)O)C(=O)",
-        "d": "N[C@H](CC(=O)O)C(=O)",        
-        "E": "N[C@@H](CCC(=O)O)C(=O)",
-        "e": "N[C@H](CCC(=O)O)C(=O)",          
-        "F": "N[C@@H](CC$1C=CC=CC=$1)C(=O)",
-        "f": "N[C@H](CC$1C=CC=CC=$1)C(=O)",
-        "G": "NCC(=O)",
-        "g": "NCC(=O)",
-        "H": "N[C@@H](CC$1=CNC=N$1)C(=O)",
-        "h": "N[C@H](CC$1=CNC=N$1)C(=O)",
-        "I": "N[C@@H]([C@@H](C)CC)C(=O)",
-        "i": "N[C@H]([C@@H](C)CC)C(=O)",
-        "K": "N[C@@H](CCCCN)C(=O)",
-        "k": "N[C@H](CCCCN)C(=O)",
-        "L": "N[C@@H](CC(C)C)C(=O)",
-        "l": "N[C@H](CC(C)C)C(=O)",
-        "M": "N[C@@H](CCSC)C(=O)",
-        "m": "N[C@H](CCSC)C(=O)",
-        "N": "N[C@@H](CC(=O)N)C(=O)",
-        "n": "N[C@H](CC(=O)N)C(=O)",
-        "P": "N$1[C@@H](CCC$1)C(=O)",
-        "p": "N$1[C@H](CCC$1)C(=O)",
-        "Q": "N[C@@H](CCC(=O)N)C(=O)",
-        "q": "N[C@H](CCC(=O)N)C(=O)",
-        "R": "N[C@@H](CCCNC(=N)N)C(=O)",
-        "r": "N[C@H](CCCNC(=N)N)C(=O)",
-        "S": "N[C@@H](CO)C(=O)",
-        "s": "N[C@H](CO)C(=O)",
-        "T": "N[C@@H]([C@H](O)C)C(=O)",
-        "t": "N[C@H]([C@H](O)C)C(=O)",
-        "V": "N[C@@H](C(C)C)C(=O)",
-        "v": "N[C@H](C(C)C)C(=O)",
-        "W": "N[C@@H](CC$1=CNC$2=C$1C=CC=C$2)C(=O)",
-        "w": "N[C@H](CC$1=CNC$2=C$1C=CC=C$2)C(=O)",
-        "Y": "N[C@@H](CC$1C=CC(O)=CC=$1)C(=O)",
-        "y": "N[C@H](CC$1C=CC(O)=CC=$1)C(=O)",
-        ".": "O.",
-        ";": "O."
+
+    const aaSmilesLookup = {
+      "A": "N[C@@H](C)C(=O)",
+      "a": "N[C@H](C)C(=O)",
+      "C": "N[C@@H](CS)C(=O)",
+      "c": "N[C@H](CS)C(=O)",
+      "D": "N[C@@H](CC(=O)O)C(=O)",
+      "d": "N[C@H](CC(=O)O)C(=O)",
+      "E": "N[C@@H](CCC(=O)O)C(=O)",
+      "e": "N[C@H](CCC(=O)O)C(=O)",
+      "F": "N[C@@H](CC$1C=CC=CC=$1)C(=O)",
+      "f": "N[C@H](CC$1C=CC=CC=$1)C(=O)",
+      "G": "NCC(=O)",
+      "g": "NCC(=O)",
+      "H": "N[C@@H](CC$1=CNC=N$1)C(=O)",
+      "h": "N[C@H](CC$1=CNC=N$1)C(=O)",
+      "I": "N[C@@H]([C@@H](C)CC)C(=O)",
+      "i": "N[C@H]([C@@H](C)CC)C(=O)",
+      "K": "N[C@@H](CCCCN)C(=O)",
+      "k": "N[C@H](CCCCN)C(=O)",
+      "L": "N[C@@H](CC(C)C)C(=O)",
+      "l": "N[C@H](CC(C)C)C(=O)",
+      "M": "N[C@@H](CCSC)C(=O)",
+      "m": "N[C@H](CCSC)C(=O)",
+      "N": "N[C@@H](CC(=O)N)C(=O)",
+      "n": "N[C@H](CC(=O)N)C(=O)",
+      "P": "N$1[C@@H](CCC$1)C(=O)",
+      "p": "N$1[C@H](CCC$1)C(=O)",
+      "Q": "N[C@@H](CCC(=O)N)C(=O)",
+      "q": "N[C@H](CCC(=O)N)C(=O)",
+      "R": "N[C@@H](CCCNC(=N)N)C(=O)",
+      "r": "N[C@H](CCCNC(=N)N)C(=O)",
+      "S": "N[C@@H](CO)C(=O)",
+      "s": "N[C@H](CO)C(=O)",
+      "T": "N[C@@H]([C@H](O)C)C(=O)",
+      "t": "N[C@H]([C@H](O)C)C(=O)",
+      "V": "N[C@@H](C(C)C)C(=O)",
+      "v": "N[C@H](C(C)C)C(=O)",
+      "W": "N[C@@H](CC$1=CNC$2=C$1C=CC=C$2)C(=O)",
+      "w": "N[C@H](CC$1=CNC$2=C$1C=CC=C$2)C(=O)",
+      "Y": "N[C@@H](CC$1C=CC(O)=CC=$1)C(=O)",
+      "y": "N[C@H](CC$1C=CC(O)=CC=$1)C(=O)",
+      ".": "O.",
+      ";": "O."
     };
 
     Object.keys(aminoLookups)
-        .map(k => {
-          aminoLookups[aminoLookups[k]] = k;
-        });
+      .map(k => {
+        aminoLookups[aminoLookups[k]] = k;
+      });
 
-        if (direction === 'toSmiles') {
-          let smi = value.split("")
-              .map(am=>aaSmilesLookup[am].replace(/[$]/g,""))
-              .join("") + "O";
-      
-        return smi;
-        } else if (direction === 'toThree') {
-          return value.split("")
-          .map(aa => aminoLookups[aa.toUpperCase()])
-          .map(aa => (aa) ? aa : "UNK")
-          .map(aa => aa[0] + (aa[1] + aa[2]).toLowerCase())
-          .join("-");
-        } else {
-          return value.split("-")
-          .map(aa => aminoLookups[aa.toUpperCase()])
-          .map(aa => (aa) ? aa : "X")
-          .join("");
-        }
+    if (direction === 'toSmiles') {
+      let smi = value.split("")
+        .map(am => aaSmilesLookup[am].replace(/[$]/g, ""))
+        .join("") + "O";
+
+      return smi;
+    } else if (direction === 'toThree') {
+      return value.split("")
+        .map(aa => aminoLookups[aa.toUpperCase()])
+        .map(aa => (aa) ? aa : "UNK")
+        .map(aa => aa[0] + (aa[1] + aa[2]).toLowerCase())
+        .join("-");
+    } else {
+      return value.split("-")
+        .map(aa => aminoLookups[aa.toUpperCase()])
+        .map(aa => (aa) ? aa : "X")
+        .join("");
+    }
   }
 
   getSubstanceStatus(): string {
-    if(this.privateSubstance && this.privateSubstance.status) {
+    if (this.privateSubstance && this.privateSubstance.status) {
       return this.privateSubstance.status;
     }
     return "";

@@ -112,43 +112,16 @@
   overflow-wrap: break-word;
 }
 
-.row-property-3 {
-  display: flex;
-  width: 100%;
-}
-
-.row-property-key-3 {
-  min-width: 20%;
-  max-width: 20%;
-  padding: 6px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.row-property-value-3 {
-  min-width: 80%;
-  max-width: 80%;
-  padding: 6px;
-  font-size: 12px;
-  word-wrap: break-word;
-  text-align: left;
-  word-wrap: break-word;
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
-
 .title_box {
-  width: 1140px;
+  width: 1220px;
   display: flex;
-  /*justify-content: space-between; */
-  margin-bottom: 10px;
-  margin-left: 150px; 
+  margin: 0 auto 10px auto;
 }
 
 .title {
-  min-width: 330px;
-  max-width: 330px;
-  font-size: 24px;
+  min-width: 400px;
+  max-width: 400px;
+  font-size: 23px;
   font-weight: 600;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -176,16 +149,24 @@
   margin-left: 5px;
 }
 
+.marginleft20px {
+  margin-left: 20px;
+}
+
 .marginleft90px {
   margin-left: 90px;
+}
+
+.marginleft150px {
+  margin-left: 150px;
 }
 
 .marginright10px {
   margin-right: 10px;
 }
 
-.margintopneg10px {
-  margin-top: -10px;
+.margintop5px {
+  margin-top: 5px;
 }
 
 .margintop10px {
@@ -208,14 +189,6 @@
   margin-top: 90px;
 }
 
-.marginleft20px {
-  margin-left: 20px;
-}
-
-.marginleft150px {
-  margin-left: 150px;
-}
-
 .marginbottom20px {
   margin-bottom: 20px;
 }
@@ -226,6 +199,14 @@
 
 .marginbottom80px {
   margin-bottom: 80px;
+}
+
+.margintopneg10px {
+  margin-top: -10px;
+}
+
+.marginleftneg15px {
+  margin-left: -15px;
 }
 
 .padtop17px {
@@ -336,6 +317,11 @@
   color: var(--orange-color);
 }
 
+.width30px {
+  width: 30px;
+  max-width: 30px;
+}
+
 .width40px {
   width: 40px;
   max-width: 40px;
@@ -348,6 +334,7 @@
 
 .width200px {
   width: 200px;
+  min-width: 200px;
   max-width: 200px;
 }
 
@@ -377,6 +364,11 @@
 .width100percent {
   width: 100%;
   max-width: 100%;
+}
+
+.height300px {
+  height: 300px;
+  max-height: 300px;
 }
 
 .textalignleft {
@@ -492,6 +484,50 @@ table.blueTable tfoot .links a{
   color: var(--white-color);
   padding: 2px 8px;
   border-radius: 5px;
+}
+
+/* STRUCTURE IMAGE POPUP */
+/* The Modal (background overlay) */
+.image-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 9999; /* Ensures it sits on top of everything else */
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+}
+
+/* Modal Content (The enlarged image) */
+.modal-content {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  background-color: white; /* Optional: adds a white background behind transparent PNGs */
+}
+
+/* The Close Button */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 @media(max-width: 700px) {

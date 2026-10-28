@@ -5,12 +5,8 @@
     </div>
   </div>
   <div class="padleft185px margintopneg10px">
-    <button
-      mat-icon-button
-      color="primary"
-      (click)="confirmDeleteImpuritiesSubstance()"
-      matTooltip="Delete Substance {{ impuritiesSubstanceIndex + 1 }}"
-    >
+    <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesSubstance()"
+      matTooltip="Delete Substance {{ impuritiesSubstanceIndex + 1 }}">
       <mat-icon>delete_forever</mat-icon>
     </button>
   </div>
@@ -20,28 +16,15 @@
   <mat-card-content>
     <div class="flex-container marginleftneg7px padbottom10px">
       <!-- Left Side -->
-      <div
-        class="width25percent textaligncenter marginright30px"
-        *ngIf="
+      <div class="width25percent textaligncenter marginright30px" *ngIf="
           configSettingsDisplay['substanceUuid'] ||
           (configSettingsDisplay['substanceUuid'] === undefined && true)
-        "
-      >
-        <app-substance-selector
-          class="textaligncenter"
-          (selectionUpdated)="relatedSubstanceUpdated($event)"
-          eventCategory="substanceRelationshipRelatedSub"
-          placeholder="Substance Name *"
-          [hideImage]="false"
-          header="Substance Name"
-          [subuuid]="impuritiesSubstance.substanceUuid"
-          [showMorelinks]="true"
-        >
+        ">
+        <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name *" [hideImage]="false"
+          header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid" [showMorelinks]="true">
         </app-substance-selector>
-        <div
-          class="textaligncenter font11px"
-          *ngIf="impuritiesSubstance.approvalID"
-        >
+        <div class="textaligncenter font11px" *ngIf="impuritiesSubstance.approvalID">
           {{ impuritiesSubstance.approvalID }}
         </div>
       </div>
@@ -49,66 +32,37 @@
       <!-- Right Side -->
       <div class="flex-item width75percent padleft20px padright20px">
         <div class="form-row">
-          <mat-form-field
-            class="col-3-1"
-            *ngIf="
+          <mat-form-field class="col-3-1" *ngIf="
               configSettingsDisplay['low'] ||
               (configSettingsDisplay['low'] === undefined && true)
-            "
-          >
+            ">
             <mat-label>Assay Low</mat-label>
-            <input
-              matInput
-              [(ngModel)]="impuritiesSubstance.low"
-              name="low"
-            />
+            <input matInput [(ngModel)]="impuritiesSubstance.low" name="low" />
           </mat-form-field>
 
-          <mat-form-field
-            class="col-3-1"
-            *ngIf="
+          <mat-form-field class="col-3-1" *ngIf="
               configSettingsDisplay['high'] ||
               (configSettingsDisplay['high'] === undefined && true)
-            "
-          >
+            ">
             <mat-label>Assay High</mat-label>
-            <input
-              matInput
-              [(ngModel)]="impuritiesSubstance.high"
-              name="high"
-            />
+            <input matInput [(ngModel)]="impuritiesSubstance.high" name="high" />
           </mat-form-field>
 
-          <app-cv-input
-            class="col-3-1"
-            *ngIf="
+          <app-cv-input class="col-3-1" *ngIf="
               configSettingsDisplay['unit'] ||
               (configSettingsDisplay['unit'] === undefined && true)
-            "
-            domain="PROD_UNIT"
-            title="Unit"
-            name="unit"
-            [model]="impuritiesSubstance.unit"
-            (valueChange)="impuritiesSubstance.unit = $event"
-          >
+            " domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesSubstance.unit"
+            (valueChange)="impuritiesSubstance.unit = $event">
           </app-cv-input>
         </div>
 
         <div class="form-row">
-          <mat-form-field
-            class="col-6-6"
-            style="width: 100%"
-            *ngIf="
+          <mat-form-field class="col-6-6" style="width: 100%" *ngIf="
               configSettingsDisplay['comments'] ||
               (configSettingsDisplay['comments'] === undefined && true)
-            "
-          >
+            ">
             <mat-label>Comments</mat-label>
-            <textarea
-              matInput
-              [(ngModel)]="impuritiesSubstance.comments"
-              name="comments"
-            ></textarea>
+            <textarea matInput [(ngModel)]="impuritiesSubstance.comments" name="comments"></textarea>
           </mat-form-field>
         </div>
       </div>
@@ -123,37 +77,21 @@
         <mat-panel-title>
           <div class="divflex">
             <div class="margintop5px">
-              <span class="titleblue"><b>Test</b></span
-              >&nbsp;
+              <span class="titleblue"><b>Test</b></span>&nbsp;
             </div>
-            <div
-              class="margintop15px custom-badge"
-              matBadge="{{ impuritiesSubstance.impuritiesTestList.length }}"
-              matBadgeColor="warn"
-              matBadgeSize="medium"
-              matBadgeOverlap="false"
-              matBadgePosition="top"
-            ></div>
+            <div class="margintop15px custom-badge" matBadge="{{ impuritiesSubstance.impuritiesTestList.length }}"
+              matBadgeColor="warn" matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top"></div>
           </div>
         </mat-panel-title>
         <mat-panel-description>
           <div>
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="addNewTest($event)"
-              matTooltip="Add New Test"
-            >
+            <button mat-raised-button color="primary" (click)="addNewTest($event)" matTooltip="Add New Test">
               <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Test
             </button>
           </div>
           <div class="width200px marginleft30px">
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="getExistingImpuritiesFromSubstance($event)"
-              matTooltip="Get Impurities for Substance"
-            >
+            <button mat-raised-button color="primary" (click)="getExistingImpuritiesFromSubstance($event)"
+              matTooltip="Get Impurities for Substance">
               Get Existing Impurities from Substance
             </button>
             <div *ngIf="errorMessage" class="">
@@ -164,117 +102,89 @@
           </div>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <div
-        class="marginbottom10px"
-        *ngFor="
+      <div class="marginbottom10px" *ngFor="
           let impuritiesTest of impuritiesSubstance.impuritiesTestList;
           let impuritiesTestIndex = index
-        "
-      >
-        <app-impurities-test-form
-          [impuritiesTest]="impuritiesTest"
-          [impuritiesTestIndex]="impuritiesTestIndex"
-          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
-          [showAdvancedSettings]="showAdvancedSettings"
-        >
+        ">
+        <app-impurities-test-form [impuritiesTest]="impuritiesTest" [impuritiesTestIndex]="impuritiesTestIndex"
+          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex" [showAdvancedSettings]="showAdvancedSettings">
         </app-impurities-test-form>
       </div>
     </mat-expansion-panel>
     <!-- IMPURITIES TEST LIST END -->
 
-    <!-- IMPURITIES RESIDUAL SOLVENT LIST BEGIN -->
-    <!-- ORIGINAL Jan, 2023 -->
-    <!--
-    <br>
-    <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <div class="divflex">
-            <div class="margintop5px">
-              <span class="titleblue"><b>Residual Solvents</b></span>&nbsp;
-            </div>
-            <div class="margintop15px custom-badge"
-              matBadge="{{impuritiesSubstance.impuritiesResidualSolventsList.length}}" matBadgeColor="warn"
-              matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top">
-            </div>
-          </div>
-        </mat-panel-title>
-        <mat-panel-description>
-          <button mat-raised-button color="primary" (click)="addNewImpuritiesResidualSolvents($event)"
-            matTooltip="Add New Residual Solvent">
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Residual Solvents
-          </button>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
 
-      <div class="marginbottom10px"
-        *ngFor="let impuritiesResidualSolvents of impuritiesSubstance.impuritiesResidualSolventsList; let impuritiesResidualIndex = index">
-        <app-impurities-residual-solvents-form [impuritiesResidualSolvents]="impuritiesResidualSolvents"
-          [impuritiesResidualIndex]="impuritiesResidualIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
-        </app-impurities-residual-solvents-form>
-      </div>
-    </mat-expansion-panel>
-    -->
-    <!-- IMPURITIES RESIDUAL SOLVENT LIST END -->
-
-    <!-- IMPURITIES RESIDUAL SOLVENT TEST LIST BEGIN -->
-    <!-- //new 3.1 -->
+    <!-- IMPURITIES INORGANICE TEST LIST BEGIN -->
     <br />
     <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <div class="divflex">
             <div class="margintop5px">
-              <span class="titleblue"><b>Residual Solvents Test</b></span
-              >&nbsp;
+              <span class="titleblue"><b>Inorganic Impurities Test</b></span>&nbsp;
             </div>
-            <div
-              class="margintop15px custom-badge"
-              matBadge="{{
-                impuritiesSubstance.impuritiesResidualSolventsTestList.length
-              }}"
-              matBadgeColor="warn"
-              matBadgeSize="medium"
-              matBadgeOverlap="false"
-              matBadgePosition="top"
-            ></div>
+            <div class="margintop15px custom-badge" matBadge="{{
+                impuritiesSubstance.impuritiesInorganicTestList.length
+              }}" matBadgeColor="warn" matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top"></div>
           </div>
         </mat-panel-title>
-        <!--
+
         <mat-panel-description>
-          <button mat-raised-button color="primary" (click)="addNewImpuritiesResidualSolvents($event)"
-            matTooltip="Add New Residual Solvent">
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Residual Solvents
+          <button mat-raised-button color="primary" (click)="addNewInorganicTest($event)"
+            matTooltip="Add New Inorganic Test">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Inorganic
+            Impurities Test
           </button>
         </mat-panel-description>
-        -->
+      </mat-expansion-panel-header>
+
+      <div class="marginbottom10px" *ngFor="
+          let impuritiesInorganicTest of impuritiesSubstance.impuritiesInorganicTestList;
+          let inorganicTestIndex = index">
+
+        <app-impurities-inorganic-form-test [impuritiesInorganicTest]="impuritiesInorganicTest"
+          [inorganicTestIndex]="inorganicTestIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
+          [showAdvancedSettings]="showAdvancedSettings">
+        </app-impurities-inorganic-form-test>
+
+      </div>
+
+    </mat-expansion-panel>
+    <!-- IMPURITIES INORGANIC LIST END -->
+
+
+    <!-- IMPURITIES RESIDUAL SOLVENT TEST LIST BEGIN -->
+    <br />
+    <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <div class="divflex">
+            <div class="margintop5px">
+              <span class="titleblue"><b>Residual Solvents Test</b></span>&nbsp;
+            </div>
+            <div class="margintop15px custom-badge" matBadge="{{
+                impuritiesSubstance.impuritiesResidualSolventsTestList.length
+              }}" matBadgeColor="warn" matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top">
+            </div>
+          </div>
+        </mat-panel-title>
+
         <mat-panel-description>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="addNewResidualSolventsTest($event)"
-            matTooltip="Add New Residual Solvents Test"
-          >
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Residual
-            Solvents Test
+          <button mat-raised-button color="primary" class="marginleft10px" (click)="addNewResidualSolventsTest($event)"
+            matTooltip="Add New Residual Solvents Test">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Residual Solvents Test
           </button>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
       <!-- Residual Solvents Test form -->
-      <div
-        class="marginbottom10px"
-        *ngFor="
+      <div class="marginbottom10px" *ngFor="
           let impuritiesResidualSolventsTest of impuritiesSubstance.impuritiesResidualSolventsTestList;
           let residualSolventsTestIndex = index
-        "
-      >
-        <app-impurities-residual-solvents-test
-          [impuritiesResidualSolventsTest]="impuritiesResidualSolventsTest"
-          [residualSolventsTestIndex]="residualSolventsTestIndex"
-          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
-          [showAdvancedSettings]="showAdvancedSettings"
-        >
+        ">
+        <app-impurities-residual-solvents-test [impuritiesResidualSolventsTest]="impuritiesResidualSolventsTest"
+          [residualSolventsTestIndex]="residualSolventsTestIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
+          [showAdvancedSettings]="showAdvancedSettings">
         </app-impurities-residual-solvents-test>
       </div>
 
@@ -289,111 +199,115 @@
     </mat-expansion-panel>
     <!-- IMPURITIES RESIDUAL SOLVENT TEST LIST END -->
 
-    <!-- IMPURITIES INORGANICE LIST BEGIN -->
-    <!-- ORIGINAL Jan, 2023 -->
-    <!--
-    <br>
-    <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <div class="divflex">
-            <div class="margintop5px">
-              <span class="titleblue"><b>Inorganic Impurities</b></span>&nbsp;
-            </div>
-            <div class="margintop15px custom-badge" matBadge="{{impuritiesSubstance.impuritiesInorganicList.length}}"
-              matBadgeColor="warn" matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top">
-            </div>
-          </div>
-        </mat-panel-title>
-        <mat-panel-description>
-          <button mat-raised-button color="primary" (click)="addNewImpuritiesInorganic($event)"
-            matTooltip="Add New Inorganic">
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Inorganic Impurities
-          </button>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
 
-      <div class="marginbottom10px"
-        *ngFor="let impuritiesInorganic of impuritiesSubstance.impuritiesInorganicList; let impuritiesInorganicIndex = index">
-        <app-impurities-inorganic-form [impuritiesInorganic]="impuritiesInorganic"
-          [impuritiesInorganicIndex]="impuritiesInorganicIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
-        </app-impurities-inorganic-form>
-      </div>
-
-    </mat-expansion-panel>
-    -->
-    <!-- IMPURITIES INORGANIC LIST END -->
-
-    <!-- IMPURITIES INORGANICE TEST LIST BEGIN -->
-    <!-- //new 3.1 -->
+    <!-- IMPURITIES SPECIFIC TEST LIST BEGIN -->
     <br />
     <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <div class="divflex">
             <div class="margintop5px">
-              <span class="titleblue"><b>Inorganic Impurities Test</b></span
-              >&nbsp;
+              <span class="titleblue"><b>Other Specific Test</b></span>&nbsp;
             </div>
-            <div
-              class="margintop15px custom-badge"
-              matBadge="{{
-                impuritiesSubstance.impuritiesInorganicTestList.length
-              }}"
-              matBadgeColor="warn"
-              matBadgeSize="medium"
-              matBadgeOverlap="false"
-              matBadgePosition="top"
-            ></div>
+            <div class="margintop15px custom-badge" matBadge="{{
+                impuritiesSubstance.impuritiesSpecificTestList.length
+              }}" matBadgeColor="warn" matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top"></div>
           </div>
         </mat-panel-title>
-        <!--
+
         <mat-panel-description>
-          <button mat-raised-button color="primary" (click)="addNewImpuritiesInorganic($event)"
-            matTooltip="Add New Inorganic">
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Inorganic Impurities
-          </button>
-        </mat-panel-description>
-        -->
-        <mat-panel-description>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="addNewInorganicTest($event)"
-            matTooltip="Add New Inorganic Test"
-          >
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Inorganic
-            Impurities Test
+          <button mat-raised-button color="primary" (click)="addNewSpecificTest($event)"
+            matTooltip="Add New Specific Test">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Specific Test
           </button>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <div
-        class="marginbottom10px"
-        *ngFor="
-          let impuritiesInorganicTest of impuritiesSubstance.impuritiesInorganicTestList;
-          let inorganicTestIndex = index
-        "
-      >
-        <app-impurities-inorganic-form-test
-          [impuritiesInorganicTest]="impuritiesInorganicTest"
-          [inorganicTestIndex]="inorganicTestIndex"
-          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
-          [showAdvancedSettings]="showAdvancedSettings"
-        >
-        </app-impurities-inorganic-form-test>
-      </div>
+      <div class="marginbottom10px" *ngFor="
+          let impuritiesSpecificTest of impuritiesSubstance.impuritiesSpecificTestList;
+          let specTestIndex = index">
 
-      <!--
-      <div class="marginbottom10px"
-        *ngFor="let impuritiesInorganic of impuritiesSubstance.impuritiesInorganicList; let impuritiesInorganicIndex = index">
-        <app-impurities-inorganic-form [impuritiesInorganic]="impuritiesInorganic"
-          [impuritiesInorganicIndex]="impuritiesInorganicIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
-        </app-impurities-inorganic-form>
-      </div>
-      -->
+        <span *ngIf="specTestIndex > 0">
+          <hr>
+        </span>
+
+        <div class="marginleftneg20px">
+          {{specTestIndex+1}}
+        </div>
+
+        <div>
+          <div class="form-row">
+            <app-cv-input class="col-2-1"
+              *ngIf="configSettingsDisplay['testType'] || (configSettingsDisplay['testType'] === undefined && true)"
+              domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType" [model]="impuritiesSpecificTest.testType"
+              (valueChange)="impuritiesSpecificTest.testType = $event">
+            </app-cv-input>
+
+            <mat-form-field class="col-2-1"
+              *ngIf="configSettingsDisplay['sampleSolution'] || (configSettingsDisplay['sampleSolution'] === undefined && true)">
+              <mat-label>Other Descriptions</mat-label>
+              <textarea matInput [(ngModel)]="impuritiesSpecificTest.otherDescription" name="otherDescription"
+                rows="1"></textarea>
+            </mat-form-field>
+
+            <!--
+            <app-cv-input class="col-4-1"
+              *ngIf="configSettingsDisplay['limitType'] || (configSettingsDisplay['limitType'] === undefined && true)"
+              domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
+              [model]="impuritiesSpecificTest.limitType" (valueChange)="impuritiesSpecificTest.limitType = $event">
+            </app-cv-input>
+
+            <mat-form-field class="col-4-1"
+              *ngIf="configSettingsDisplay['limitValue'] || (configSettingsDisplay['limitValue'] === undefined && true)">
+              <mat-label>Limit Value</mat-label>
+              <input matInput [(ngModel)]="impuritiesSpecificTest.limitValue" name="limitValue" />
+            </mat-form-field>
+
+            <app-cv-input class="col-4-1"
+              *ngIf="configSettingsDisplay['unit'] || (configSettingsDisplay['unit'] === undefined && true)"
+              domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesSpecificTest.unit"
+              (valueChange)="impuritiesSpecificTest.unit = $event">
+            </app-cv-input>
+            -->
+          </div>
+
+          <div class="form-row">
+            <mat-form-field class="col-2-1"
+              *ngIf="configSettingsDisplay['sampleSolution'] || (configSettingsDisplay['sampleSolution'] === undefined && true)">
+              <mat-label>Sample Solution</mat-label>
+              <textarea matInput [(ngModel)]="impuritiesSpecificTest.sampleSolution" name="sampleSolution"
+                rows="1"></textarea>
+            </mat-form-field>
+
+            <mat-form-field class="col-2-1"
+              *ngIf="configSettingsDisplay['analysis'] || (configSettingsDisplay['analysis'] === undefined && true)">
+              <mat-label>Analysis</mat-label>
+              <textarea matInput [(ngModel)]="impuritiesSpecificTest.analysis" name="analysis" rows="1"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field class="col-2-1"
+              *ngIf="configSettingsDisplay['acceptanceCriteria'] || (configSettingsDisplay['acceptanceCriteria'] === undefined && true)">
+              <mat-label>Acceptance Criteria</mat-label>
+              <textarea matInput [(ngModel)]="impuritiesSpecificTest.acceptanceCriteria" name="acceptanceCriteria"
+                rows="1"></textarea>
+            </mat-form-field>
+
+            <mat-form-field class="col-2-1"
+              *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && true)">
+              <mat-label>Comments</mat-label>
+              <textarea matInput [(ngModel)]="impuritiesSpecificTest.comments" name="comments" rows="1"></textarea>
+            </mat-form-field>
+          </div>
+
+        </div>
+
+      </div> <!-- for loop Specific Tests -->
+
     </mat-expansion-panel>
-    <!-- IMPURITIES INORGANIC LIST END -->
+    <!-- IMPURITIES SPECIFIC TEST LIST END -->
+
   </mat-card-content>
 </mat-card>
 <br /><br />

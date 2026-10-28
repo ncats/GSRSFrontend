@@ -69,9 +69,7 @@ export class ImpuritiesTextSearchComponent implements OnInit, OnDestroy {
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
       let showTypes = ['Source', 'Source_Type', 'Source_ID', 'System', 'Test', 'Test_Type',
-        'Elution_Type', 'Ingredient_Name', 'Ingredient_Name_(Preferred)', 'Ingredient_Type',
-        'Route_of_Administration', 'Labeler_Name', 'Labeler_Code', 'Labeler_State', 'Company_Role', 'Company_Country',
-        'Manufacturer_Name', 'Manufacturer_Role', 'Application_Type', 'Application_Number', 'Application_Type_Number'];
+        'Elution_Type', 'Substance_Name', 'Substance_Name_(Preferred)', 'Ingredient_Type'];
 
       this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup).filter(function (item) {
         return showTypes.indexOf(item) > -1;
@@ -88,36 +86,6 @@ export class ImpuritiesTextSearchComponent implements OnInit, OnDestroy {
           this.suggestionsFields[index] = { value: 'System', display: 'System' };
         } else if (value === 'Test') {
           this.suggestionsFields[index] = { value: 'Test', display: 'Test' };
-        } else if (value === 'Test_Type') {
-          this.suggestionsFields[index] = { value: 'Test_Type', display: 'Test Type' };
-        } else if (value === 'Ingredient_Name') {
-          this.suggestionsFields[index] = { value: 'Ingredient_Name', display: 'Ingredient Name' };
-        } else if (value === 'Ingredient_Name_(Preferred)') {
-          this.suggestionsFields[index] = { value: 'Ingredient_Name_(Preferred)', display: 'Ingredient Name (Preferred)' };
-        } else if (value === 'Elution_Type') {
-          this.suggestionsFields[index] = { value: 'Elution_Type', display: 'Elution Type' };
-        } else if (value === 'Route_of_Administration') {
-          this.suggestionsFields[index] = { value: 'Route_of_Administration', display: 'Route of Administration' };
-        } else if (value === 'Labeler_Name') {
-          this.suggestionsFields[index] = { value: 'Labeler_Name', display: 'Labeler Name' };
-        } else if (value === 'Labeler_Code') {
-          this.suggestionsFields[index] = { value: 'Labeler_Code', display: 'Labeler Code' };
-        } else if (value === 'Labeler_State') {
-          this.suggestionsFields[index] = { value: 'Labeler_State', display: 'Labeler State' };
-        } else if (value === 'Company_Role') {
-          this.suggestionsFields[index] = { value: 'Company_Role', display: 'Company Role' };
-        } else if (value === 'Company_Country') {
-          this.suggestionsFields[index] = { value: 'Company_Country', display: 'Company Country' };
-        } else if (value === 'Manufacturer_Name') {
-          this.suggestionsFields[index] = { value: 'Manufacturer_Name', display: 'Manufacturer Name' };
-        } else if (value === 'Manufacturer_Role') {
-          this.suggestionsFields[index] = { value: 'Manufacturer_Role', display: 'Manufacturer Role' };
-        } else if (value === 'Application_Type') {
-          this.suggestionsFields[index] = { value: 'Application_Type', display: 'Application Type' };
-        } else if (value === 'Application_Number') {
-          this.suggestionsFields[index] = { value: 'Application_Number', display: 'Application Number' };
-        } else if (value === 'Application_Type_Number') {
-          this.suggestionsFields[index] = { value: 'Application_Type_Number', display: 'Application Type Number' };
         } else {
           this.suggestionsFields[index] = { value: value, display: value };
         }

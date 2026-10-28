@@ -104,10 +104,6 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  addNewElutionSolvent($event) {
-    this.impuritiesService.addNewImpuritiesElutionSolvent(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
-  }
-
   addNewSolution() {
     if (this.impuritiesTest.impuritiesSolutionList) {
       // Only allowed to add up to 10 Solutiions. Up to Solution K
@@ -279,22 +275,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.deleteImpuritiesTest(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
   }
 
-  confirmDeleteImpuritiesElutionSolvent(elutionIndex: number) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Elution Solvent ' + (elutionIndex + 1) + '?' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteImpuritiesElutionSolvent(elutionIndex);
-      }
-    });
-  }
-
-  deleteImpuritiesElutionSolvent(elutionIndex: number) {
-    this.impuritiesService.deleteImpuritiesElutionSolvent(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, elutionIndex);
-  }
-
+  /*
   nameSearch(event: any, impuritiesTestIndex: number, impuritiesElutionIndex: number): void {
     this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolvent = event;
 
@@ -314,6 +295,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(substanceSubscribe);
   }
+  */
 
   copyImpuritiesTest() {
     this.impuritiesService.copyImpuritiesTest(this.impuritiesSubstanceIndex, this.impuritiesTest);

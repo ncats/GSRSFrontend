@@ -3,7 +3,7 @@
   <div class="tabStyle">
     <div class="tabStyleHeader">Residual Solvent/Loss of Drying&nbsp;{{(impuritiesResidualIndex+1)}}</div>
   </div>
-  <div class="padleft105px margintopneg10px">
+  <div class="padleft115px margintopneg10px">
     <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesResidualSolvents()"
       matTooltip="Delete Impurities Residual Solvents {{impuritiesResidualIndex + 1}}">
       <mat-icon>delete_forever</mat-icon>
@@ -26,9 +26,9 @@
           {{impuritiesResidualSolvents.relatedSubstanceUnii}}
         </div>
       </div>
-
+    
       <!-- Right Side -->
-      <div class="flex-item width75percent padleft20px padright20px">
+      <div class="flex-item padleft20px padright20px">
 
         <div class="form-row">
           <app-cv-input class="col-3-1"
@@ -49,7 +49,14 @@
             domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesResidualSolvents.unit"
             (valueChange)="impuritiesResidualSolvents.unit = $event">
           </app-cv-input>
+        </div>
 
+        <div class="form-row">
+          <mat-form-field class="col-3-1"
+            *ngIf="configSettingsDisplay['analysis'] || (configSettingsDisplay['analysis'] === undefined && true)">
+            <mat-label>Analysis</mat-label>
+            <input matInput [(ngModel)]="impuritiesResidualSolvents.analysis" name="analysis" />
+          </mat-form-field>
         </div>
 
         <div class="form-row">
@@ -58,23 +65,21 @@
             <mat-label>Test Type</mat-label>
             <input matInput [(ngModel)]="impuritiesResidualSolvents.testType" name="testType" />
           </mat-form-field>
-
+          
           <mat-form-field class="col-3-1"
             *ngIf="configSettingsDisplay['pharmaceuticalLimit'] || (configSettingsDisplay['pharmaceuticalLimit'] === undefined && true)">
             <mat-label>Pharmaceutical Limit</mat-label>
             <input matInput [(ngModel)]="impuritiesResidualSolvents.pharmaceuticalLimit" name="pharmaceuticalLimit" />
           </mat-form-field>
-
+   
           <mat-form-field class="col-3-1"
             *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && true)">
             <mat-label>Comments</mat-label>
             <textarea matInput [(ngModel)]="impuritiesResidualSolvents.comments" name="comments" rows="1"></textarea>
           </mat-form-field>
         </div>
-
       </div>
       <!-- Right Side -->
-
 
     </div>
 

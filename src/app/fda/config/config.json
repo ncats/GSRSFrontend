@@ -1244,22 +1244,22 @@
         "Record Last Edited By"
       ]
     },
-     "impurities": {
+    "impurities": {
       "default": [
-      "Source",
-      "Source Type",
-      "Source ID",
-      "Spec Type",
-      "Product Substance ID",
-      "Ingredient Approval ID",
-      "Ingredient Name (Preferred)",
-      "Ingredient Name",
-      "Impurities",
-      "Test",
-      "Test Type",
-      "System",
-      "Elution Type",
-      "Type"
+        "Source",
+        "Source Type",
+        "Source ID",
+        "Spec Type",
+        "Product Substance ID",
+        "Ingredient Approval ID",
+        "Substance (Preferred)",
+        "Substance Name",
+        "Impurities",
+        "Test",
+        "Test Type",
+        "System",
+        "Elution Type",
+        "Type"
       ],
       "admin": [
         "root_creationDate",
@@ -1356,7 +1356,7 @@
         },
         {
           "component": "impurities",
-          "display": "Impurities Import",
+          "display": "Impurities PDF Extractor",
           "path": "impurities/import",
           "order": 221
         },
@@ -1785,14 +1785,14 @@
   "impuritiesForm": {
     "settingsDisplay": {
       "overview": {
-        "sourceType": "simple",
         "source": "simple",
+        "sourceType": "simple",
         "sourceId": "simple",
         "type": "simple",
-        "productId": "simple",
         "specType": "simple",
+        "productSubstanceName": "simple",
+        "productId": "simple",
         "submitterName": "advanced",
-        "productSubstanceName": "advanced",
         "dateType": "advanced",
         "dateTypeDate": "advanced"
       },
@@ -1810,34 +1810,37 @@
         "test": "simple",
         "testType": "simple",
         "buffer": "simple",
+        "mobilePhase": "simple",
         "flowRate": "simple",
-        "columnPackingType": "advanced",
-        "columnPackingSize": "advanced",
-        "columnSize": "advanced",
-        "columnTemperature": "advanced",
-        "autosamplerTemperature": "simple",
-        "injectionVolumeAmount": "advanced",
         "diluent": "advanced",
         "system": "advanced",
         "mode": "advanced",
         "detectionType": "advanced",
         "detectorWavelength": "advanced",
         "detectionDetails": "advanced",
+        "columnPackingType": "advanced",
+        "columnPackingSize": "advanced",
+        "columnSize": "advanced",
+        "columnTemperature": "advanced",
+        "autosamplerTemperature": "simple",
+        "injectionVolumeAmount": "advanced",
+        "elutionType": "simple",
+        "testDescription": "advanced",
+        "comments": "advanced",
+        "systemSuitabilityStockSolution": "simple",
+        "systemSuitabilitySolution": "advanced",
+        "standardStockSolution": "advanced",
+        "standardSolution": "advanced",
+        "sampleStockSolution": "advanced",
+        "sampleSolution": "advanced",
+        "sensitivitySolution": "advanced",
+        "otherSolution": "advanced",
+        "solutionDescription": "simple",
         "systemSuitabilitySample": "simple",
         "suitabilityReqRelStandardDeviation": "simple",
         "suitabilityReqResolution": "simple",
         "systemSuitabilityReqTailingFactor": "simple",
         "systemSuitabilitySignalToNoiseRatio": "sample",
-        "testDescription": "advanced",
-        "comments": "advanced",
-        "sampleSolution": "advanced",
-        "systemSuitabilitySolution": "advanced",
-        "standardSolution": "advanced",
-        "sensitivitySolution": "advanced",
-        "otherSolution": "advanced",
-        "elutionType": "simple",
-        "solutionDescription": "simple",
-        "mobilePhase": "simple",
         "analysisSample": "simple",
         "analysisDescription": "simple",
         "analysisResultFormula": "simple",
@@ -1846,7 +1849,9 @@
         "analysisFormulaCS": "simple",
         "analysisFormulaCU": "simple",
         "analysisFormulaP": "simple",
-        "analysisFormulaF": "simple"
+        "analysisFormulaF": "simple",
+        "analysisFormulaMR1": "simple",
+        "analysisFormulaMR2": "simple"
       },
       "impurities": {
         "relatedSubstanceUnii": "simple",
@@ -1872,21 +1877,22 @@
         "criteriaUnit": "advanced"
       },
       "residualSolventsTest": {
-        "sourceType": "simple",
         "source": "simple",
+        "sourceType": "simple",
         "sourceId": "simple",
-        "test": "advanced",
+        "test": "simple",
         "testType": "advanced",
         "testDescription": "advanced",
         "comments": "advanced"
       },
       "residualSolvents": {
         "relatedSubstanceUuid": "simple",
-        "pharmaceuticalLimit": "advanced",
-        "testType": "advanced",
-        "limitType": "advanced",
-        "limitValue": "advanced",
-        "unit": "advanced",
+        "pharmaceuticalLimit": "simple",
+        "analysis": "simple",
+        "testType": "simple",
+        "limitType": "simple",
+        "limitValue": "simple",
+        "unit": "simple",
         "comments": "advanced"
       },
       "inorganicImpuritiesTest": {
@@ -1906,11 +1912,19 @@
         "unit": "advanced",
         "comments": "advanced"
       },
+      "specificTest": {
+        "testType": "advanced",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "sampleSolution": "simple",
+        "analysis": "advanced",
+        "comments": "advanced"
+      },
       "impuritiesTotal": {
         "testType": "simple",
         "limitType": "simple",
         "limitValue": "simple",
-        "amountValue": "simple",
         "unit": "simple",
         "comments": "simple"
       }

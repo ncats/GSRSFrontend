@@ -14,9 +14,11 @@ import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestion
 
 /* GSRS Impurities Imports */
 import {
-  Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting, ImpuritiesElutionSolvent,
-  ImpuritiesSolution, ImpuritiesSolutionTable, ImpuritiesAnalysis, ImpuritiesUnspecified, ImpuritiesResidualSolventsTest, ImpuritiesResidualSolvents, ImpuritiesInorganicTest,
-  ImpuritiesInorganic, ImpuritiesTotal, ValidationResults, IdentityCriteria
+  Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting, ImpuritiesSolution,
+  ImpuritiesSolutionTable, ImpuritiesAnalysis, ImpuritiesUnspecified, ImpuritiesResidualSolventsTest,
+  ImpuritiesResidualSolvents, ImpuritiesInorganicTest, ImpuritiesInorganic, 
+  ImpuritiesSpecificTest, ImpuritiesAdditionalRequirements, ImpuritiesTotal,
+  ValidationResults, IdentityCriteria
 } from '../model/impurities.model';
 
 @Injectable(
@@ -255,6 +257,7 @@ export class ImpuritiesService extends BaseHttpService {
     } else {
       this.impurities = {
         impuritiesSubstanceList: [],
+        impuritiesAdditionalRequirements: {},
         impuritiesTotal: {}
       };
     }
@@ -311,21 +314,13 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewImpuritiesSubstance(): void {
-    //new 3.1
-    const newSubstance: ImpuritiesSubstance = { impuritiesTestList: [], impuritiesResidualSolventsTestList: [], impuritiesInorganicTestList: [] };
+    const newSubstance: ImpuritiesSubstance = { impuritiesTestList: [], impuritiesResidualSolventsTestList: [], impuritiesInorganicTestList: [], impuritiesSpecificTestList: [] };
     this.impurities.impuritiesSubstanceList.unshift(newSubstance);
   }
 
   addNewTest(impuritiesSubstanceIndex: number): void {
-    const newTest: ImpuritiesTesting = { impuritiesElutionSolventList: [], impuritiesSolutionList: [], impuritiesSolutionTableList: [], impuritiesAnalysisList: [], impuritiesDetailsList: [], impuritiesUnspecifiedList: [] };
+    const newTest: ImpuritiesTesting = { impuritiesSolutionList: [], impuritiesSolutionTableList: [], impuritiesAnalysisList: [], impuritiesDetailsList: [], impuritiesUnspecifiedList: [] };
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList.unshift(newTest);
-  }
-
-  addNewImpuritiesElutionSolvent(impuritiesSubstanceIndex: number, impuritiesTestIndex: number) {
-    const newElution: ImpuritiesElutionSolvent = {};
-    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex]
-      .impuritiesTestList[impuritiesTestIndex]
-      .impuritiesElutionSolventList.push(newElution);
   }
 
   addNewSolution(impuritiesSubstanceIndex: number, impuritiesTestIndex: number) {
@@ -350,7 +345,6 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewImpuritiesDetails(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesDetails: ImpuritiesDetails): void {
-    // const newImpuritiesDetails: ImpuritiesDetails = { identityCriteriaList: [] };
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex]
       .impuritiesTestList[impuritiesTestIndex]
       .impuritiesDetailsList.unshift(impuritiesDetails);
@@ -368,13 +362,11 @@ export class ImpuritiesService extends BaseHttpService {
       .impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.push(newIdentityCriteria);
   }
 
-  //new 3.1
   addNewResidualSolventsTest(impuritiesSubstanceIndex: number): void {
     const newTest: ImpuritiesResidualSolventsTest = { impuritiesResidualSolventsList: [] };
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesResidualSolventsTestList.unshift(newTest);
   }
 
-  // new 3.1
   addNewInorganicTest(impuritiesSubstanceIndex: number): void {
     const newTest: ImpuritiesInorganicTest = { impuritiesInorganicList: [] };
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesInorganicTestList.unshift(newTest);
@@ -382,21 +374,24 @@ export class ImpuritiesService extends BaseHttpService {
 
   addNewImpuritiesResidualSolvents(impuritiesSubstanceIndex: number, impuritiesResidualTestIndex: number): void {
     const newImpuritiesResidual: ImpuritiesResidualSolvents = {};
-    //new 3.1
+
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesResidualSolventsTestList[impuritiesResidualTestIndex].impuritiesResidualSolventsList.unshift(newImpuritiesResidual);
-    // this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesResidualSolventsList.unshift(newImpuritiesResidual);
   }
 
   addNewImpuritiesInorganic(impuritiesSubstanceIndex: number, inorganicTestIndex: number): void {
     const newImpuritiesInorganic: ImpuritiesInorganic = {};
-    //new 3.1
+
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesInorganicTestList[inorganicTestIndex].impuritiesInorganicList.unshift(newImpuritiesInorganic);
-    // this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesInorganicList.unshift(newImpuritiesInorganic);
+  }
+
+  addNewSpecificTest(impuritiesSubstanceIndex: number): void {
+    const newSpecificTest: ImpuritiesSpecificTest = {};
+    
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesSpecificTestList.unshift(newSpecificTest);
   }
 
   addNewImpuritiesTotal(): void {
     const newImpuritiesTotal: ImpuritiesTotal = {};
-    //  this.impurities.impuritiesTotalList.unshift(newImpuritiesTotal);
   }
 
   deleteImpurities(): Observable<any> {
@@ -423,11 +418,6 @@ export class ImpuritiesService extends BaseHttpService {
 
   deleteImpuritiesSolutionTable(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, solutionTableIndex: number): void {
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesSolutionTableList.splice(solutionTableIndex, 1);
-  }
-
-  deleteImpuritiesElutionSolvent(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, elutionIndex: number): void {
-    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
-      .impuritiesElutionSolventList.splice(elutionIndex, 1);
   }
 
   deleteImpuritiesAnalysis(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, analysisIndex: number): void {

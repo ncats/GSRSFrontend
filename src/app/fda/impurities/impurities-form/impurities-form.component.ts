@@ -116,6 +116,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
             this.gaService.sendPageView(`Impurity Edit`);
             this.titleService.setTitle(`Update Impurities`);
+            this.title = 'Update Impurities';
 
             this.getImpurities();
           }

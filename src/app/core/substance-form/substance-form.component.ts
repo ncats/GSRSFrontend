@@ -426,12 +426,20 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
                 this.substanceClass = type;
                 this.titleService.setTitle('Register - ' + this.subClass);
 
+
                 this.substanceFormService.loadSubstance(this.subClass,undefined,undefined,undefined, simplified).pipe(take(1)).subscribe(() => {
                   if(this.simplifiedForm) {
                     this.setFormSections(formSections['chemicalSimplified']);
                   } else {
                     this.setFormSections(formSections[this.subClass]);
                   }
+
+                  // Import Structure from Url
+                  this.loadStructureFromUrl();
+
+                  // Import Name from Url
+                  this.loadNameFromUrl();
+
                   this.loadingService.setLoading(false);
                   this.isLoading = false;
                 });
@@ -535,9 +543,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     this.draftCount = temp;
   }
 
-  ngAfterViewInit(): void {
-    this.getDrafts();
+  loadNameFromUrl(): void {
+    // set or import Name from Url
+    const importName = this.activatedRoute.snapshot.queryParams['importName'] || null;
+    if (importName) {
+       this.substanceFormService.setSubstanceName(importName);
+    }  
+  }
 
+  loadStructureFromUrl(): void {
     // set structure based on smiles or molfile
     const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
     if (structure) {
@@ -558,6 +572,35 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       // Components will be loaded in ngAfterViewChecked
       // This just marks that formSections are populated
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.getDrafts();
+
+    this.loadStructureFromUrl();
+
+    /*
+    // set structure based on smiles or molfile
+    const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
+    if (structure) {
+      let decode = decodeURIComponent(structure);
+      setTimeout(() => {
+        this.setStructureFromUrl(decode, 'molfile');
+      });
+    }
+    const json = this.activatedRoute.snapshot.queryParams['jsonStructure'] || null;
+    // TODO add json support
+    //   this.setStructureFromUrl(structure, 'json');
+    if (json) {
+      let decode = decodeURI(json);
+    }
+
+    // Subscribe to formSections being ready
+    this.componentLoadingSubscription = this.formSectionsReady$.subscribe(() => {
+      // Components will be loaded in ngAfterViewChecked
+      // This just marks that formSections are populated
+    });
+    */
   }
 
   /**

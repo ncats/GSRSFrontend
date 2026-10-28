@@ -1,12 +1,12 @@
 <div *ngIf="impurities">
+  
   <div class="top-fixed">
     <div class="actions-container">
 
-      <button mat-flat-button color="primary" (click)="showJSON()">
+      <button mat-flat-button color="primary" (click)="showJSON()" class="marginright10px">
         Show JSON
       </button>
-      &nbsp;&nbsp;&nbsp;
-
+ 
       <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
         download="{{ jsonFileName }}.json">
         <span>Export JSON</span>
@@ -124,11 +124,13 @@
               {{ title }}
             </div>
 
+            <!--
             <div *ngIf="isImportFromFile">
               <button mat-flat-button color="primary" (click)="previewImpurities()">
                 Preview
               </button>
             </div>
+            -->
 
             <div class="font11px" *ngIf="impurities.id">
               <br />
@@ -156,9 +158,10 @@
           </div>
           <!-- title_box-->
 
+          <!-- Impurities FORM BEGIN  -->
+
           <mat-card class="bordergray" *ngIf="impurities">
             <mat-card-content>
-              <!-- Impurities Form -->
 
               <div class="form-row">
                 <app-cv-input class="col-6-1" *ngIf="
@@ -303,8 +306,36 @@
                 </app-impurities-total-form>
               </mat-expansion-panel>
               <!-- IMPURITIES TOTAL END -->
+
+
+              <!-- IMPURITIES ADDITIONAL REQUIREMENTS BEGIN -->
+              <br />
+              <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
+                <mat-expansion-panel-header class="">
+                  <mat-panel-title>
+                    <div class="titleblue">
+                      <b>Additional Requirements</b>
+                    </div>
+                  </mat-panel-title>
+                  <mat-panel-description class="marginleft25px">
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="form-row">
+                  <mat-form-field class="width100percent">
+                    <mat-label>Reference Standards</mat-label>
+                      <textarea matInput [(ngModel)]="impurities.impuritiesAdditionalRequirements.referenceStandards" name="referenceStandards" row="6"></textarea>
+                  </mat-form-field>
+                </div> <!-- form-row -->
+
+              </mat-expansion-panel>
+              <!-- IMPURITIES ADDITIONAL REQUIREMENTS END -->
+
+
             </mat-card-content>
           </mat-card>
+          <!-- Impurities Form END -->
+
           <br />
           <br />
         </div>
