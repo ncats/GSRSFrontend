@@ -4,6 +4,8 @@ import * as moment from 'moment';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { NavigationExtras } from '@angular/router';
+import { UtilsService } from '@gsrs-core/utils';
+import { remove } from 'lodash';
 
 @Component({
     selector: 'app-download-monitor',
@@ -25,7 +27,9 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   type?: string;
   killed = false;
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private utilsService: UtilsService,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
@@ -37,10 +41,19 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
       this.authService.getUpdateStatus(this.id).pipe(take(1)).subscribe(response => {
         //    console.log((this.exists? this.exists : 't') + '---' + this.download.status);
         this.download = response;
+        const restApiPrefix = this.configService.configData.restApiPrefix || '';
+
+        if (this.download?.downloadUrl?.url !== undefined) {
+          this.download.downloadUrl.url = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, this.download.downloadUrl.url);
+        }
+
+        if (this.download?.removeUrl?.url !== undefined) {
+          this.download.removeUrl.url = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, this.download.removeUrl.url);
+        }
+
         if (response.originalQuery) {
           this.processQuery(response.originalQuery);
         }
-
         this.exists = true;
         if (this.download.started) {
           this.download.startedHuman = moment(this.download.started).fromNow();
@@ -68,11 +81,16 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
+    const restApiPrefix = this.configService.configData.restApiPrefix || '';
+    if(this.download?.cancelUrl?.url !== undefined) {
+       this.download.cancelUrl.url=this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, this.download.cancelUrl.url);
+    }
     this.authService.changeDownload(this.download.cancelUrl.url).pipe(take(1)).subscribe(response => {
       this.refresh();
     });
   }
 
+  // seems like this is not used
   downloadExport() {
     this.authService.changeDownload(this.download.downloadUrl).pipe(take(1)).subscribe(response => {
       this.refresh();

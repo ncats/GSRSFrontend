@@ -21,9 +21,6 @@
         ></app-fragment-wizard>
       </div>
     </ng-template>
-    <!-- <div class = "form-row" *ngIf = "toggled[index] && vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'"> 
-                          <app-fragment-wizard [vocab] = "vocabulary.domain" style = "margin:auto" [term] = "term" (termUpdated) = "updateStructure(term,index)"></app-fragment-wizard>
-                  </div>-->
     <div class="form-row" [id]="last ? 'latest-term' : null">
       <button mat-icon-button (click)="deleteTerm(index)" class="delete-icon">
         <mat-icon svgIcon="delete_forever"></mat-icon>
