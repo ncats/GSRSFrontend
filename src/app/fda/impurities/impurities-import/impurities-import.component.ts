@@ -104,7 +104,6 @@ export class ImpuritiesImportComponent implements OnInit, OnDestroy {
   showTotalImpurities = false;
   configSettingsDisplay = {};
 
-  // FOR DEBUGGING ******
   debugStructureImages: Array<{ code: string, url: string }> = [];
 
   constructor(
@@ -177,7 +176,7 @@ export class ImpuritiesImportComponent implements OnInit, OnDestroy {
 
   private detectPharmacopoeia(text: string): 'USP' | 'EP' | 'UNKNOWN' {
 
-    // Check EP first — more specific identifiers
+    // Check EP
     if (/EUROPEAN\s+PHARMACOPOEIA/i.test(text)) return 'EP';
     if (/Ph\.?\s*Eur\.?/i.test(text)) return 'EP';
     if (/\d{2}\/\d{4}:\d{4}/.test(text)) return 'EP';
@@ -226,7 +225,7 @@ export class ImpuritiesImportComponent implements OnInit, OnDestroy {
 
   }
 
-  // Main mapping entry point - read USP Monograph from pdf
+  // Main mapping entry point. Read USP Monograph from pdf
   async mapToImpuritiesModel(extractedDoc: ExtractedDocument): Promise<Impurities> {
     const sourceId = '';
 
@@ -242,14 +241,13 @@ export class ImpuritiesImportComponent implements OnInit, OnDestroy {
       const snippet = extractedDoc.fullText.slice(rawPHIndex - 5, rawPHIndex + 15);
     }
 
-    // ADD THIS:
     const phlIndex = extractedDoc.fullText.indexOf('pHL');
     if (phlIndex > -1) {
       const snippet = extractedDoc.fullText.slice(phlIndex - 5, phlIndex + 10);
       const charCodes = Array.from(snippet).map(c => `${c}(${c.charCodeAt(0)})`).join(' ');
     }
 
-    // Slice SECTIONS - Assay, Impurities, Specific Tests, Additional Requirements
+    // Slice SECTIONS for Assay, Impurities, Specific Tests, Additional Requirements
     const {
       assayText,
       impuritiesText,
