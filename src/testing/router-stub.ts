@@ -1,11 +1,13 @@
 import { ReplaySubject } from 'rxjs';
-import { NavigationEnd } from '@angular/router';
+import { Event as RouterEvent, NavigationEnd, ResolveEnd } from '@angular/router';
 import { Routes } from '@angular/router';
+import { vi } from 'vitest';
 
 export class RouterStub {
-    private subject = new ReplaySubject<NavigationEnd>();
+    private subject = new ReplaySubject<RouterEvent>();
     readonly routerState: any;
     readonly events = this.subject.asObservable();
+    routeReuseStrategy: any = { shouldReuseRoute: () => false };
 
     constructor() {
         this.routerState = {
@@ -15,16 +17,21 @@ export class RouterStub {
         };
     }
 
-    navigate = jasmine.createSpy('navigate').and.returnValue(new Promise((resolve, reject) => {
+    navigate = vi.fn().mockReturnValue(new Promise((resolve, reject) => {
     }));
 
-    createUrlTree = jasmine.createSpy('createUrlTree');
+    createUrlTree = vi.fn();
 
-    serializeUrl = jasmine.createSpy('serializeUrl');
+    serializeUrl = vi.fn();
 
     fireNavigationEndEvent(url: string): void {
         const navigationEnd = new NavigationEnd(0, url, '');
         this.subject.next(navigationEnd);
+    }
+
+    fireResolveEndEvent(url: string): void {
+        const resolveEnd = new ResolveEnd(0, url, url, {} as any);
+        this.subject.next(resolveEnd);
     }
 
     setSnapshotUrl(url: string): void {

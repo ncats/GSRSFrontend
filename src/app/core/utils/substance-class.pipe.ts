@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
     name: 'classDisplay',
-    standalone: false
+    standalone: true
 })
 export class SubstanceClassPipe implements PipeTransform {
   transform(name: string, item2?: string): string {

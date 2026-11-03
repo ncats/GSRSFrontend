@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
 import {SubstanceCardBase} from '../substance-card-base';
 import {SubstanceDetail, SubstanceRelated} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
@@ -7,7 +9,8 @@ import {Subject} from 'rxjs';
     selector: 'app-substance-primary-definition',
     templateUrl: './substance-primary-definition.component.html',
     styleUrls: ['./substance-primary-definition.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterModule, SubstanceImageDirective]
 })
 export class SubstancePrimaryDefinitionComponent extends SubstanceCardBase implements OnInit {
   definition: string;

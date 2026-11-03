@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   ElementRef,
@@ -8,8 +10,9 @@ import {
   EventEmitter,
   OnDestroy,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import {
+  MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
   MatAutocomplete,
 } from "@angular/material/autocomplete";
@@ -18,22 +21,40 @@ import {
   distinctUntilChanged,
   switchMap,
   take,
+  takeUntil,
 } from "rxjs/operators";
+import { Subject } from "rxjs";
 import { SubstanceSuggestionsGroup } from "../utils/substance-suggestions-group.model";
 import { UtilsService } from "../utils/utils.service";
 import { GoogleAnalyticsService } from "../google-analytics/google-analytics.service";
 import { ConfigService } from "@gsrs-core/config";
 import { ControlledVocabularyService } from "@gsrs-core/controlled-vocabulary";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatOptionModule } from "@angular/material/core";
+import { MatButtonModule } from "@angular/material/button";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-substance-text-search",
   templateUrl: "./substance-text-search.component.html",
   styleUrls: ["./substance-text-search.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatOptionModule,
+    MatButtonModule
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceTextSearchComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnDestroy {
   searchControl = new FormControl();
   substanceSuggestionsGroup: SubstanceSuggestionsGroup;
   suggestionsFields: Array<any>;
@@ -54,6 +75,8 @@ export class SubstanceTextSearchComponent
   @Input() source?: string;
   private CasDisplay = "CAS";
   codeSystemVocab?: any;
+  private deactivateSearchTimer?: ReturnType<typeof setTimeout>;
+  private destroy$ = new Subject<void>();
 
   get formFieldClasses(): string[] {
     return [this.source, this.styling].filter((c): c is string => !!c);
@@ -65,6 +88,7 @@ export class SubstanceTextSearchComponent
     public gaService: GoogleAnalyticsService,
     public configService: ConfigService,
     private cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -103,6 +127,7 @@ export class SubstanceTextSearchComponent
             searchValue.toUpperCase(),
           );
         }),
+        takeUntil(this.destroy$),
       )
       .subscribe(
         (response: SubstanceSuggestionsGroup) => {
@@ -169,7 +194,7 @@ export class SubstanceTextSearchComponent
                 value: "CAS",
                 display: this.CasDisplay,
               };
-            } else if (this.codeSystemVocab[value]) {
+            } else if (this.codeSystemVocab && this.codeSystemVocab[value]) {
               let disp = this.codeSystemVocab[value].display;
               this.suggestionsFields[index] = { value: value, display: disp };
             } else {
@@ -184,10 +209,12 @@ export class SubstanceTextSearchComponent
             this.matOpen = true;
             this.opened.emit();
           }
+          this.cdr.markForCheck();
         },
         (error) => {
           this.gaService.sendException("search suggestion error from API call");
           console.log(error);
+          this.cdr.markForCheck();
         },
       );
   }
@@ -214,7 +241,11 @@ export class SubstanceTextSearchComponent
     return this.privateErrorMessage;
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    clearTimeout(this.deactivateSearchTimer);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   autoCompleteClosed(): void {
     this.matOpen = false;
@@ -293,7 +324,11 @@ export class SubstanceTextSearchComponent
 
   deactivateSearch(): void {
     this.searchContainerElement.classList.add("deactivate-search");
-    setTimeout(() => {
+    clearTimeout(this.deactivateSearchTimer);
+    this.deactivateSearchTimer = setTimeout(() => {
+      if (!this.searchContainerElement) {
+        return;
+      }
       if (this.source) {
         this.searchContainerElement.classList.remove("active-" + this.source);
         this.searchContainerElement.classList.remove("deactivate-search");

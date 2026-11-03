@@ -1,15 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { PageEvent } from '@angular/material/paginator';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { Sort } from '@angular/material/sort';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import * as moment from 'moment';
-import { Location, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -17,14 +17,11 @@ import { UtilsService } from '../../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { GeneralService } from '../../../service/general.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-import { environment } from '../../../../../environments/environment';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service'
@@ -35,10 +32,12 @@ import { invitroPharmacologySearchSortValues } from '../../invitro-pharmacology-
     selector: 'app-invitro-pharmacology-details-testagent',
     templateUrl: './invitro-pharmacology-details-testagent.component.html',
     styleUrls: ['./invitro-pharmacology-details-testagent.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, RouterModule, MatIconModule, MatButtonModule, MatTooltipModule, MatTableModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
+export class InvitroPharmacologyDetailsTestagentComponent implements OnInit, OnDestroy {
 
   allAssaysList: Array<InvitroAssayInformation> = [];
   allScreeningTestAgents: Array<any> = [];
@@ -95,7 +94,6 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
   isLoading = true;
   isError = false;
-  canUpdate: boolean;
   isLoggedIn = false;
   dataSource = [];
   hasBackdrop = false;
@@ -174,12 +172,22 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     private location: Location,
     private locationStrategy: LocationStrategy,
     private sanitizer: DomSanitizer,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
 
   public assays: Array<InvitroAssayInformation>;
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     // Check Login
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
@@ -197,7 +205,6 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     } else {
       this.getAllAssays();
     }
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
   }
 
   getAllAssays(): void {
@@ -232,6 +239,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
         assay._totalSummaryRecords = this.totalSummaryRecords;
 
       }); // LOOP: assay
+      this.cdr.markForCheck();
 
     }, error => {
       this.loadingService.setLoading(false);
@@ -376,6 +384,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
         }  // if assay exists
 
       });  // LOOP: assays
+      this.cdr.markForCheck();
 
     }, error => {
       this.loadingService.setLoading(false);

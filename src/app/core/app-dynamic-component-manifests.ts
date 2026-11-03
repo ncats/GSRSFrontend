@@ -1,452 +1,307 @@
 import {
-    LazyLoadedComponentManifest
+    LazyLoadedComponentDefinition
 } from './dynamic-component-loader/dynamic-component-manifest';
 
-export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
+/**
+ * Maps a componentId to the standalone component it lazily loads, consumed via
+ * DynamicComponentLoader.getDynamicComponent()/LAZY_LOADED_COMPONENT_DEFINITIONS.
+ */
+export const dynamicComponentDefinitions: LazyLoadedComponentDefinition[] = [
     {
         componentId: 'structure-details',
-        path: 'structure-details',
-        loadChildren: () => import('./substance-details/structure-details/structure-details.module')
-            .then(m => m.StructureDetailsModule),
+        loadComponent: () => import('./substance-details/structure-details/structure-details.component').then(m => m.StructureDetailsComponent),
     },
     {
         componentId: 'substance-audit-info',
-        path: 'substance-audit-info',
-        loadChildren: () => import('./substance-details/substance-audit-info/substance-audit-info.module')
-            .then(m => m.SubstanceAuditInfoModule),
+        loadComponent: () => import('./substance-details/substance-audit-info/substance-audit-info.component').then(m => m.SubstanceAuditInfoComponent),
     },
     {
         componentId: 'substance-codes',
-        path: 'substance-codes',
-        loadChildren: () => import('./substance-details/substance-codes/substance-codes.module')
-            .then(m => m.SubstanceCodesModule),
+        loadComponent: () => import('./substance-details/substance-codes/substance-codes.component').then(m => m.SubstanceCodesComponent),
     },
     {
         componentId: 'substance-subunits',
-        path: 'substance-subunits',
-        loadChildren: () => import('./substance-details/substance-subunits/substance-subunits.module')
-            .then(m => m.SubstanceSubunitsModule),
+        loadComponent: () => import('./substance-details/substance-subunits/substance-subunits.component').then(m => m.SubstanceSubunitsComponent),
     },
     {
         componentId: 'substance-moieties',
-        path: 'substance-moieties',
-        loadChildren: () => import('./substance-details/substance-moieties/substance-moieties.module')
-            .then(m => m.SubstanceMoietiesModule),
+        loadComponent: () => import('./substance-details/substance-moieties/substance-moieties.component').then(m => m.SubstanceMoietiesComponent),
     },
     {
         componentId: 'substance-names',
-        path: 'substance-names',
-        loadChildren: () => import('./substance-details/substance-names/substance-names.module')
-            .then(m => m.SubstanceNamesModule),
+        loadComponent: () => import('./substance-details/substance-names/substance-names.component').then(m => m.SubstanceNamesComponent),
     },
     {
         componentId: 'substance-notes',
-        path: 'substance-notes',
-        loadChildren: () => import('./substance-details/substance-notes/substance-notes.module')
-            .then(m => m.SubstanceNotesModule),
+        loadComponent: () => import('./substance-details/substance-notes/substance-notes.component').then(m => m.SubstanceNotesComponent),
     },
     {
         componentId: 'substance-overview',
-        path: 'substance-overview',
-        loadChildren: () => import('./substance-details/substance-overview/substance-overview.module')
-            .then(m => m.SubstanceOverviewModule),
+        loadComponent: () => import('./substance-details/substance-overview/substance-overview.component').then(m => m.SubstanceOverviewComponent),
     },
     {
         componentId: 'substance-references',
-        path: 'substance-references',
-        loadChildren: () => import('./substance-details/substance-references/substance-references.module')
-            .then(m => m.SubstanceReferencesModule),
+        loadComponent: () => import('./substance-details/substance-references/substance-references.component').then(m => m.SubstanceReferencesComponent),
     },
     {
         componentId: 'substance-relationships-visualization',
-        path: 'substance-relationships-visualization',
-        loadChildren: () => import('./substance-details/substance-relationships-visualization/substance-relationships-visualization.module')
-            .then(m => m.SubstanceRelationshipsVisualizationModule),
+        loadComponent: () => import('./substance-details/substance-relationships-visualization/substance-relationships-visualization.component').then(m => m.SubstanceRelationshipsVisualizationComponent),
     },
     {
         componentId: 'substance-relationships',
-        path: 'substance-relationships',
-        loadChildren: () => import('./substance-details/substance-relationships/substance-relationships.module')
-            .then(m => m.SubstanceRelationshipsModule),
+        loadComponent: () => import('./substance-details/substance-relationships/substance-relationships.component').then(m => m.SubstanceRelationshipsComponent),
     },
     {
         componentId: 'substance-concept-definition',
-        path: 'substance-concept-definition',
-        loadChildren: () => import('./substance-details/substance-concept-definition/substance-concept-definition.module')
-            .then(m => m.SubstanceConceptDefinitionModule),
+        loadComponent: () => import('./substance-details/substance-concept-definition/substance-concept-definition.component').then(m => m.SubstanceConceptDefinitionComponent),
     },
     {
         componentId: 'substance-polymer-structure',
-        path: 'substance-polymer-structure',
-        loadChildren: () => import('./substance-details/substance-polymer-structure/substance-polymer-structure.module')
-            .then(m => m.SubstancePolymerStructureModule),
+        loadComponent: () => import('./substance-details/substance-polymer-structure/substance-polymer-structure.component').then(m => m.SubstancePolymerStructureComponent),
     },
     {
         componentId: 'substance-monomers',
-        path: 'substance-monomers',
-        loadChildren: () => import('./substance-details/substance-monomers/substance-monomers.module')
-            .then(m => m.SubstanceMonomersModule),
+        loadComponent: () => import('./substance-details/substance-monomers/substance-monomers.component').then(m => m.SubstanceMonomersComponent),
     },
     {
         componentId: 'substance-structural-units',
-        path: 'substance-structural-units',
-        loadChildren: () => import('./substance-details/substance-structural-units/substance-structural-units.module')
-            .then(m => m.SubstanceStructuralUnitsModule),
+        loadComponent: () => import('./substance-details/substance-structural-units/substance-structural-units.component').then(m => m.SubstanceStructuralUnitsComponent),
     },
     {
         componentId: 'substance-mixture-components',
-        path: 'substance-mixture-components',
-        loadChildren: () => import('./substance-details/substance-mixture-components/substance-mixture-components.module')
-            .then(m => m.SubstanceMixtureComponentsModule),
+        loadComponent: () => import('./substance-details/substance-mixture-components/substance-mixture-components.component').then(m => m.SubstanceMixtureComponentsComponent),
     },
     {
         componentId: 'substance-modifications',
-        path: 'substance-modifications',
-        loadChildren: () => import('./substance-details/substance-modifications/substance-modifications.module')
-            .then(m => m.SubstanceModificationsModule),
+        loadComponent: () => import('./substance-details/substance-modifications/substance-modifications.component').then(m => m.SubstanceModificationsComponent),
     },
     {
         componentId: 'substance-disulfide-links',
-        path: 'substance-disulfide-links',
-        loadChildren: () => import('./substance-details/substance-disulfide-links/substance-disulfide-links.module')
-            .then(m => m.SubstanceDisulfideLinksModule),
+        loadComponent: () => import('./substance-details/substance-disulfide-links/substance-disulfide-links.component').then(m => m.SubstanceDisulfideLinksComponent),
     },
     {
         componentId: 'substance-other-links',
-        path: 'substance-other-links',
-        loadChildren: () => import('./substance-details/substance-other-links/substance-other-links.module')
-            .then(m => m.SubstanceOtherLinksModule),
+        loadComponent: () => import('./substance-details/substance-other-links/substance-other-links.component').then(m => m.SubstanceOtherLinksComponent),
     },
     {
         componentId: 'substance-glycosylation',
-        path: 'substance-glycosylation',
-        loadChildren: () => import('./substance-details/substance-glycosylation/substance-glycosylation.module')
-            .then(m => m.SubstanceGlycosylationModule),
+        loadComponent: () => import('./substance-details/substance-glycosylation/substance-glycosylation.component').then(m => m.SubstanceGlycosylationComponent),
     },
     {
         componentId: 'substance-na-sugars',
-        path: 'substance-na-sugars',
-        loadChildren: () => import('./substance-details/substance-na-sugars/substance-na-sugars.module')
-            .then(m => m.SubstanceNaSugarsModule),
+        loadComponent: () => import('./substance-details/substance-na-sugars/substance-na-sugars.component').then(m => m.SubstanceNaSugarsComponent),
     },
     {
         componentId: 'substance-na-linkages',
-        path: 'substance-na-linkages',
-        loadChildren: () => import('./substance-details/substance-na-linkages/substance-na-linkages.module')
-            .then(m => m.SubstanceNaLinkagesModule),
+        loadComponent: () => import('./substance-details/substance-na-linkages/substance-na-linkages.component').then(m => m.SubstanceNaLinkagesComponent),
     },
     {
         componentId: 'substance-properties',
-        path: 'substance-properties',
-        loadChildren: () => import('./substance-details/substance-properties/substance-properties.module')
-            .then(m => m.SubstancePropertiesModule),
+        loadComponent: () => import('./substance-details/substance-properties/substance-properties.component').then(m => m.SubstancePropertiesComponent),
     },
     {
         componentId: 'substance-constituents',
-        path: 'substance-constituents',
-        loadChildren: () => import('./substance-details/substance-constituents/substance-constituents.module')
-            .then(m => m.SubstanceConstituentsModule),
+        loadComponent: () => import('./substance-details/substance-constituents/substance-constituents.component').then(m => m.SubstanceConstituentsComponent),
     },
     {
         componentId: 'substance-primary-definition',
-        path: 'substance-primary-definition',
-        loadChildren: () => import('./substance-details/substance-primary-definition/substance-primary-definition.module')
-            .then(m => m.SubstancePrimaryDefinitionModule),
+        loadComponent: () => import('./substance-details/substance-primary-definition/substance-primary-definition.component').then(m => m.SubstancePrimaryDefinitionComponent),
     },
     {
         componentId: 'substance-alternative-definition',
-        path: 'substance-alternative-definition',
-        loadChildren: () => import('./substance-details/substance-alternative-definition/substance-alternative-definition.module')
-            .then(m => m.SubstanceAlternativeDefinitionModule),
+        loadComponent: () => import('./substance-details/substance-alternative-definition/substance-alternative-definition.component').then(m => m.SubstanceAlternativeDefinitionComponent),
     },
     {
         componentId: 'substance-variant-concepts',
-        path: 'substance-variant-concepts',
-        loadChildren: () => import('./substance-details/substance-variant-concepts/substance-variant-concepts.module')
-            .then(m => m.SubstanceVariantConceptsModule),
+        loadComponent: () => import('./substance-details/substance-variant-concepts/substance-variant-concepts.component').then(m => m.SubstanceVariantConceptsComponent),
     },
     {
         componentId: 'substance-mixture-source',
-        path: 'substance-mixture-source',
-        loadChildren: () => import('./substance-details/substance-mixture-source/substance-mixture-source.module')
-            .then(m => m.SubstanceMixtureSourceModule),
+        loadComponent: () => import('./substance-details/substance-mixture-source/substance-mixture-source.component').then(m => m.SubstanceMixtureSourceComponent),
     },
     {
         componentId: 'substance-mixture-parent',
-        path: 'substance-mixture-parent',
-        loadChildren: () => import('./substance-details/substance-mixture-parent/substance-mixture-parent.module')
-            .then(m => m.SubstanceMixtureParentModule),
+        loadComponent: () => import('./substance-details/substance-mixture-parent/substance-mixture-parent.component').then(m => m.SubstanceMixtureParentComponent),
     },
     {
         componentId: 'substance-hierarchy',
-        path: 'substance-hierarchy',
-        loadChildren: () => import('./substance-details/substance-hierarchy/substance-hierarchy.module')
-            .then(m => m.SubstanceHierarchyModule),
+        loadComponent: () => import('./substance-details/substance-hierarchy/substance-hierarchy.component').then(m => m.SubstanceHierarchyComponent),
     },
     {
         componentId: 'substance-history',
-        path: 'substance-history',
-        loadChildren: () => import('./substance-details/substance-history/substance-history.module')
-            .then(m => m.SubstanceHistoryModule),
+        loadComponent: () => import('./substance-details/substance-history/substance-history.component').then(m => m.SubstanceHistoryComponent),
     },
     {
         componentId: 'substance-ssg-parent-substance',
-        path: 'substance-ssg-parent-substance',
-        loadChildren: () => import('./substance-details/substance-ssg-parent-substance/substance-ssg-parent-substance.module')
-            .then(m => m.SubstanceSsgParentSubstanceModule),
+        loadComponent: () => import('./substance-details/substance-ssg-parent-substance/substance-ssg-parent-substance.component').then(m => m.SubstanceSsgParentSubstanceComponent),
     },
     {
         componentId: 'substance-ssg1-parent',
-        path: 'substance-ssg1-parent',
-        loadChildren: () => import('./substance-details/substance-ssg1-parent/substance-ssg1-parent.module')
-            .then(m => m.SubstanceSsg1ParentModule),
+        loadComponent: () => import('./substance-details/substance-ssg1-parent/substance-ssg1-parent.component').then(m => m.SubstanceSsg1ParentComponent),
     },
     {
         componentId: 'substance-ssg-grade',
-        path: 'substance-ssg-grade',
-        loadChildren: () => import('./substance-details/substance-ssg-grade/substance-ssg-grade.module')
-            .then(m => m.SubstanceSsgGradeModule),
+        loadComponent: () => import('./substance-details/substance-ssg-grade/substance-ssg-grade.component').then(m => m.SubstanceSsgGradeComponent),
     },
     {
         componentId: 'substance-ssg-definition',
-        path: 'substance-ssg-definition',
-        loadChildren: () => import('./substance-details/substance-ssg-definition/substance-ssg-definition.module')
-            .then(m => m.SubstanceSsgDefinitionModule),
+        loadComponent: () => import('./substance-details/substance-ssg-definition/substance-ssg-definition.component').then(m => m.SubstanceSsgDefinitionComponent),
     },
     {
         componentId: 'substance-dependencies-image',
-        path: 'substance-dependencies-image',
-        loadChildren: () => import('./substance-details/substance-dependencies-image/substance-dependencies-image.module')
-            .then(m => m.SubstanceDependenciesImageModule),
+        loadComponent: () => import('./substance-details/substance-dependencies-image/substance-dependencies-image.component').then(m => m.SubstanceDependenciesImageComponent),
     },
     {
         componentId: 'substance-form-definition',
-        path: 'substance-form-definition',
-        loadChildren: () => import('./substance-form/substance-form-definition/substance-form-definition.module')
-            .then(m => m.SubstanceFormDefinitionModule),
+        loadComponent: () => import('./substance-form/substance-form-definition/substance-form-definition.component').then(m => m.SubstanceFormDefinitionComponent),
     },
     {
         componentId: 'substance-form-references',
-        path: 'substance-form-references',
-        loadChildren: () => import('./substance-form/references/substance-form-references.module')
-            .then(m => m.SubstanceFormReferencesModule),
+        loadComponent: () => import('./substance-form/references/substance-form-references-card.component').then(m => m.SubstanceFormReferencesCardComponent),
     },
-  {
-    componentId: 'substance-form-simplified-references',
-    path: 'substance-form-simplified-references',
-    loadChildren: () => import('./substance-form/simplified-references/substance-form-simplified-references.module')
-      .then(m => m.SubstanceFormSimplifiedReferencesModule),
-  },
+    {
+        componentId: 'substance-form-simplified-references',
+        loadComponent: () => import('./substance-form/simplified-references/substance-form-simplified-references-card.component').then(m => m.SubstanceFormSimplifiedReferencesCardComponent),
+    },
     {
         componentId: 'substance-form-names',
-        path: 'substance-form-names',
-        loadChildren: () => import('./substance-form/names/substance-form-names.module')
-            .then(m => m.SubstanceFormNamesModule),
+        loadComponent: () => import('./substance-form/names/substance-form-names-card.component').then(m => m.SubstanceFormNamesCardComponent),
     },
     {
         componentId: 'substance-form-simplified-names',
-        path: 'substance-form-simplified-names',
-        loadChildren: () => import('./substance-form/simplified-names/substance-form-simplified-names.module')
-            .then(m => m.SubstanceFormSimplifiedNamesModule),
+        loadComponent: () => import('./substance-form/simplified-names/substance-form-simplified-names-card.component').then(m => m.SubstanceFormSimplifiedNamesCardComponent),
     },
     {
         componentId: 'substance-form-structure',
-        path: 'substance-form-structure',
-        loadChildren: () => import('./substance-form/structure/substance-form-structure.module')
-            .then(m => m.SubstanceFormStructureModule),
+        loadComponent: () => import('./substance-form/structure/substance-form-structure-card.component').then(m => m.SubstanceFormStructureCardComponent),
     },
     {
         componentId: 'substance-form-moieties',
-        path: 'substance-form-moieties',
-        loadChildren: () => import('./substance-form/moieties/substance-form-moieties.module')
-            .then(m => m.SubstanceFormMoietiesModule),
+        loadComponent: () => import('./substance-form/moieties/substance-form-moieties.component').then(m => m.SubstanceFormMoietiesComponent),
     },
     {
         componentId: 'substance-form-codes-card',
-        path: 'substance-form-codes-card',
-        loadChildren: () => import('./substance-form/codes/substance-form-codes.module')
-            .then(m => m.SubstanceFormCodesModule),
+        loadComponent: () => import('./substance-form/codes/substance-form-codes-card.component').then(m => m.SubstanceFormCodesCardComponent),
     },
     {
-      componentId: 'substance-form-simplified-codes-card',
-      path: 'substance-form-simplified-codes-card',
-      loadChildren: () => import('./substance-form/simplified-codes/substance-form-simplified-codes.module')
-        .then(m => m.SubstanceFormSimplifiedCodesModule),
+        componentId: 'substance-form-simplified-codes-card',
+        loadComponent: () => import('./substance-form/simplified-codes/substance-form-simplified-codes-card.component').then(m => m.SubstanceFormSimplifiedCodesCardComponent),
     },
     {
         componentId: 'substance-form-relationships',
-        path: 'substance-form-relationships',
-        loadChildren: () => import('./substance-form/relationships/substance-form-relationships.module')
-            .then(m => m.SubstanceFormRelationshipsModule),
+        loadComponent: () => import('./substance-form/relationships/substance-form-relationships-card.component').then(m => m.SubstanceFormRelationshipsCardComponent),
     },
     {
         componentId: 'substance-form-notes',
-        path: 'substance-form-notes',
-        loadChildren: () => import('./substance-form/notes/substance-form-notes.module')
-            .then(m => m.SubstanceFormNotesModule),
+        loadComponent: () => import('./substance-form/notes/substance-form-notes-card.component').then(m => m.SubstanceFormNotesCardComponent),
     },
     {
         componentId: 'substance-form-properties',
-        path: 'substance-form-properties',
-        loadChildren: () => import('./substance-form/properties/substance-form-properties.module')
-            .then(m => m.SubstanceFormPropertiesModule)
+        loadComponent: () => import('./substance-form/properties/substance-form-properties-card.component').then(m => m.SubstanceFormPropertiesCardComponent),
     },
     {
         componentId: 'substance-form-subunits',
-        path: 'substance-form-subunits',
-        loadChildren: () => import('./substance-form/substance-form-subunits/substance-form-subunits.module')
-            .then(m => m.SubstanceFormSubunitsModule)
+        loadComponent: () => import('./substance-form/substance-form-subunits/substance-form-subunits.component').then(m => m.SubstanceFormSubunitsComponent),
     },
     {
         componentId: 'substance-form-other-links',
-        path: 'substance-form-other-links',
-        loadChildren: () => import('./substance-form/other-links/substance-form-other-links.module')
-            .then(m => m.SubstanceFormOtherLinksModule)
+        loadComponent: () => import('./substance-form/other-links/substance-form-other-links-card.component').then(m => m.SubstanceFormOtherLinksCardComponent),
     },
     {
         componentId: 'substance-form-disulfide-links',
-        path: 'substance-form-disulfide-links',
-        loadChildren: () => import('./substance-form/disulfide-links/substance-form-disulfide-links.module')
-            .then(m => m.SubstanceFormDisulfideLinksModule)
+        loadComponent: () => import('./substance-form/disulfide-links/substance-form-disulfide-links-card.component').then(m => m.SubstanceFormDisulfideLinksCardComponent),
     },
     {
         componentId: 'substance-form-glycosylation',
-        path: 'substance-form-glycosylation',
-        loadChildren: () => import('./substance-form/glycosylation/substance-form-glycosylation.module')
-            .then(m => m.SubstanceFormGlycosylationModule)
+        loadComponent: () => import('./substance-form/glycosylation/substance-form-glycosylation.component').then(m => m.SubstanceFormGlycosylationComponent),
     },
     {
         componentId: 'substance-form-structural-modifications',
-        path: 'substance-form-structural-modifications',
-        loadChildren: () => import('./substance-form/structural-modifications/substance-form-structural-modifications.module')
-            .then(m => m.SubstanceFormStructuralModificationsModule)
+        loadComponent: () => import('./substance-form/structural-modifications/substance-form-structural-modifications-card.component').then(m => m.SubstanceFormStructuralModificationsCardComponent),
     },
     {
         componentId: 'substance-form-agent-modifications-card',
-        path: 'substance-form-agent-modifications-card',
-        loadChildren: () => import('./substance-form/agent-modifications/substance-form-agent-modifications.module')
-            .then(m => m.SubstanceFormAgentModificationsModule)
+        loadComponent: () => import('./substance-form/agent-modifications/substance-form-agent-modifications-card.component').then(m => m.SubstanceFormAgentModificationsCardComponent),
     },
     {
         componentId: 'substance-form-physical-modifications',
-        path: 'substance-form-physical-modifications',
-        loadChildren: () => import('./substance-form/physical-modifications/substance-form-physical-modifications.module')
-            .then(m => m.SubstanceFormPhysicalModificationsModule)
+        loadComponent: () => import('./substance-form/physical-modifications/substance-form-physical-modifications-card.component').then(m => m.SubstanceFormPhysicalModificationsCardComponent),
     },
     {
         componentId: 'substance-form-protein-details',
-        path: 'substance-form-protein-details',
-        loadChildren: () => import('./substance-form/protein-details/substance-form-protein-details.module')
-            .then(m => m.SubstanceFormProteinDetailsModule)
+        loadComponent: () => import('./substance-form/protein-details/substance-form-protein-details.component').then(m => m.SubstanceFormProteinDetailsComponent),
     },
     {
         componentId: 'nucleic-acid-details-form',
-        path: 'nucleic-acid-details-form',
-        loadChildren: () => import('./substance-form/nucleic-acid-details-form/nucleic-acid-details-form.module')
-            .then(m => m.NucleicAcidDetailsFormModule)
+        loadComponent: () => import('./substance-form/nucleic-acid-details-form/nucleic-acid-details-form.component').then(m => m.NucleicAcidDetailsFormComponent),
     },
     {
         componentId: 'substance-form-links',
-        path: 'substance-form-links',
-        loadChildren: () => import('./substance-form/links/substance-form-links.module')
-            .then(m => m.SubstanceFormLinksModule)
+        loadComponent: () => import('./substance-form/links/substance-form-links_card.component').then(m => m.SubstanceFormLinksCardComponent),
     },
     {
         componentId: 'substance-form-sugars',
-        path: 'substance-form-sugars',
-        loadChildren: () => import('./substance-form/substance-form-sugars/substance-form-sugars.module')
-            .then(m => m.SubstanceFormSugarsModule)
+        loadComponent: () => import('./substance-form/substance-form-sugars/substance-form-sugars.component').then(m => m.SubstanceFormSugarsComponent),
     },
     {
         componentId: 'substance-form-mixture-details',
-        path: 'substance-form-mixture-details',
-        loadChildren: () => import('./substance-form/mixture-details/substance-form-mixture-details.module')
-            .then(m => m.SubstanceFormMixtureDetailsModule)
+        loadComponent: () => import('./substance-form/mixture-details/substance-form-mixture-details.component').then(m => m.SubstanceFormMixtureDetailsComponent),
     },
     {
         componentId: 'substance-form-mixture-components',
-        path: 'substance-form-mixture-components',
-        loadChildren: () => import('./substance-form/mixture-components/substance-form-mixture-components.module')
-            .then(m => m.SubstanceFormMixtureComponentsModule)
+        loadComponent: () => import('./substance-form/mixture-components/substance-form-mixture-components-card.component').then(m => m.SubstanceFormMixtureComponentsCardComponent),
     },
     {
         componentId: 'substance-form-structurally-diverse-source',
-        path: 'substance-form-structurally-diverse-source',
-        loadChildren: () =>
-            import('./substance-form/structurally-diverse/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.module')
-                .then(m => m.SubstanceFormStructurallyDiverseSourceModule)
+        loadComponent: () => import('./substance-form/structurally-diverse/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.component').then(m => m.SubstanceFormStructurallyDiverseSourceComponent),
     },
     {
         componentId: 'substance-form-structurally-diverse-organism',
-        path: 'substance-form-structurally-diverse-organism',
-        loadChildren: () =>
-            import('./substance-form/structurally-diverse/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module')
-                .then(m => m.SubstanceFormStructurallyDiverseOrganismModule)
+        loadComponent: () => import('./substance-form/structurally-diverse/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.component').then(m => m.SubstanceFormStructurallyDiverseOrganismComponent),
     },
     {
         componentId: 'substance-form-constituents',
-        path: 'substance-form-constituents',
-        loadChildren: () => import('./substance-form/constituents/substance-form-constituents.module')
-            .then(m => m.SubstanceFormConstituentsModule)
+        loadComponent: () => import('./substance-form/constituents/substance-form-constituents-card.component').then(m => m.SubstanceFormConstituentsCardComponent),
     },
     {
         componentId: 'substance-form-polymer-classification',
-        path: 'substance-form-polymer-classification',
-        loadChildren: () => import('./substance-form/polymer-classification/substance-form-polymer-classification.module')
-            .then(m => m.SubstanceFormPolymerClassificationModule)
+        loadComponent: () => import('./substance-form/polymer-classification/substance-form-polymer-classification.component').then(m => m.SubstanceFormPolymerClassificationComponent),
     },
     {
         componentId: 'substance-form-monomers',
-        path: 'substance-form-monomers',
-        loadChildren: () => import('./substance-form/monomers/substance-form-monomers.module')
-            .then(m => m.SubstanceFormMonomersModule)
+        loadComponent: () => import('./substance-form/monomers/substance-form-monomers-card.component').then(m => m.SubstanceFormMonomersCardComponent),
     },
     {
         componentId: 'substance-form-structural-units',
-        path: 'substance-form-structural-units',
-        loadChildren: () => import('./substance-form/structural-units/substance-form-structural-units.module')
-            .then(m => m.SubstanceFormStructuralUnitsModule)
+        loadComponent: () => import('./substance-form/structural-units/substance-form-structural-units-card.component').then(m => m.SubstanceFormStructuralUnitsCardComponent),
     },
     {
         componentId: 'substance-form-change-reason',
-        path: 'substance-form-change-reason',
-        loadChildren: () => import('./substance-form/substance-form-change-reason/substance-form-change-reason.module')
-            .then(m => m.SubstanceFormChangeReasonModule),
+        loadComponent: () => import('./substance-form/substance-form-change-reason/substance-form-change-reason.component').then(m => m.SubstanceFormChangeReasonComponent),
     },
     {
         componentId: 'substance-form-ssg-parent-substance',
-        path: 'ssg-parent-substance-form',
-        loadChildren: () => import('./substance-form/ssg-parent-substance-form/ssg-parent-substance-form.module')
-            .then(m => m.SsgParentSubstanceFormModule)
+        loadComponent: () => import('./substance-form/ssg-parent-substance-form/ssg-parent-substance-form.component').then(m => m.SsgParentSubstanceFormComponent),
     },
     {
         componentId: 'substance-form-ssg-grade',
-        path: 'ssg-grade-form',
-        loadChildren: () => import('./substance-form/ssg-grade-form/ssg-grade-form.module')
-            .then(m => m.SsgGradeFormModule)
+        loadComponent: () => import('./substance-form/ssg-grade-form/ssg-grade-form.component').then(m => m.SsgGradeFormComponent),
     },
     {
         componentId: 'substance-form-ssg-definition',
-        path: 'ssg-definition-form',
-        loadChildren: () => import('./substance-form/ssg-definition-form/ssg-definition-form.module')
-            .then(m => m.SsgDefinitionFormModule)
+        loadComponent: () => import('./substance-form/ssg-definition-form/ssg-definition-form.component').then(m => m.SsgDefinitionFormComponent),
     },
     {
         componentId: 'substance-form-ssg4m-process',
-        path: 'ssg4m-process-form',
-        loadChildren: () => import('./substance-ssg4m/ssg4m-process/substance-form-ssg4m-process.module')
-            .then(m => m.SubstanceSsg4mProcessModule)
+        loadComponent: () => import('./substance-ssg4m/ssg4m-process/substance-form-ssg4m-process-card.component').then(m => m.SubstanceFormSsg4mProcessCardComponent),
     },
     {
         componentId: 'substance-form-ssg2-manufacturing',
-        path: 'substance-form-ssg2-manufacturing',
-        loadChildren: () => import('./substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module')
-            .then(m => m.Ssg2ManufacturingModule)
+        loadComponent: () => import('./substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.component').then(m => m.Ssg2ManufacturingComponent),
     },
     {
         componentId: 'substance-form-ssg2-overview',
-        path: 'substance-form-ssg2-overview',
-        loadChildren: () => import('./substance-ssg2/ssg2-overview-form/ssg2-overview-form.module')
-            .then(m => m.Ssg2OverviewFormModule)
-    }
+        loadComponent: () => import('./substance-ssg2/ssg2-overview-form/ssg2-overview-form.component').then(m => m.Ssg2OverviewFormComponent),
+    },
 ];
+

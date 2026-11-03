@@ -1,15 +1,22 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-monitor',
     templateUrl: './monitor.component.html',
     styleUrls: ['./monitor.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatButtonModule, MatCardModule, MatProgressBarModule, MatTooltipModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonitorComponent implements OnInit, OnDestroy {
   jobId: any;
@@ -31,7 +38,8 @@ export class MonitorComponent implements OnInit, OnDestroy {
   constructor(
     private activeRoute: ActivatedRoute,
     public adminService: AdminService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -52,6 +60,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
       this.mixResultDisplay(response);
       this.changeEllipses();
       this.refresh(true);
+      this.cdr.markForCheck();
       });
     });
   }
@@ -93,9 +102,11 @@ export class MonitorComponent implements OnInit, OnDestroy {
           } else {
             this.monitor = false;
           }
+        this.cdr.markForCheck();
       }, error => {
         this.message = 'invalid Job ID';
         this.jobId = null;
+        this.cdr.markForCheck();
       });
   }
 
@@ -165,6 +176,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
     } else {
       this.ellipses = '';
     }
+    this.cdr.markForCheck();
   }
 
 }

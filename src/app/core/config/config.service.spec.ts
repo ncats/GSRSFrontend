@@ -3,6 +3,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { Config } from './config.model';
+import { environment } from '../../../environments/environment';
 
 describe('ConfigService', () => {
 
@@ -26,7 +27,7 @@ describe('ConfigService', () => {
 
   it('should get config data after load call', () => {
     let configData: Config;
-    configService.load().then(() => {
+    configService.load(environment).then(() => {
       configData = configService.configData;
       expect(configData.apiBaseUrl).toBeTruthy('should return a config object with an apiBaseUrl property');
     });

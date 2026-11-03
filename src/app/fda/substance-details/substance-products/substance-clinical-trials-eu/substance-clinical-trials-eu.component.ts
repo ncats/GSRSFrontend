@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
@@ -14,17 +14,25 @@ import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
+import lodashMap from 'lodash/map';
 import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-substance-clinical-trials-eu',
     templateUrl: './substance-clinical-trials-eu.component.html',
     styleUrls: ['./substance-clinical-trials-eu.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 
-export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
   private privateFacetParams: FacetParam;
   clinicalTrialEuCount = 0;
   showSpinner = false;
@@ -50,7 +58,6 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     'conditionsEU'
   ];
 
-  canExport: boolean = false;
 
   constructor(
     public gaService: GoogleAnalyticsService,
@@ -64,9 +71,13 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     super(gaService, clinicalTrialService);
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
     if (this.substanceUuid) {
      this.getSubstanceClinicalTrialsEurope(null, 'initial');
     }
@@ -174,7 +185,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
   joinMeddraTerms(cteu: any) {
     if(cteu) {
       // const a =[{"meddraTerm": "meddraTerm1"}, {"meddraTerm": "meddraTerm2"},{"meddraTerm": "meddraTerm3"},{"meddraTerm": "meddraTerm4"}];
-      return _.map(cteu.clinicalTrialEuropeMeddraList, 'meddraTerm').join("|");
+      return lodashMap(cteu.clinicalTrialEuropeMeddraList, 'meddraTerm').join("|");
     }
   }
 

@@ -8,7 +8,7 @@
 <div class="responsive">
   <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
-  <ng-container matColumnDef="relatedRecord">
+    <ng-container matColumnDef="relatedRecord">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Related Record</th>
       <td class="text-center" mat-cell *matCellDef="let relationship">
         <div class = "thumb-col">
@@ -43,8 +43,8 @@
           && !(relationship.interactionType)
           && !(relationship.comments)
           && (!relationship.amount || !relationship.amount.nonNumericValue)) ? 'mat-button-disabled':''"
-          > View</button>
-          <ng-template #detailTemplate>
+        > View</button>
+        <ng-template #detailTemplate>
 
           <h2 mat-dialog-title>Details</h2>
           <div mat-dialog-content>
@@ -59,50 +59,64 @@
               </tr>
               <tr>
                 <td class = "mat-cell">
-                  <div class = "thumb-col" *ngIf = "relationship.mediatorSubstance">
-                  <div>{{relationship.mediatorSubstance.linkingID}}</div>
-                  <img class="structure-image" appSubstanceImage [entityId]="relationship.mediatorSubstance.refuuid">
-                  <div>
-                    <a class="substance-name" target = "_blank" style = "height: 18px;" [routerLink]="['/substances', relationship.mediatorSubstance.refuuid]" >
-                     <span [innerHTML] = "relationship.mediatorSubstance.name"></span>  <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
-                    </a>
-                  </div>
-                </div>
-                  <div *ngIf = "!relationship.mediatorSubstance">
-                    <i>none</i>
-                  </div>
+                  @if (relationship.mediatorSubstance) {
+                    <div class = "thumb-col">
+                      <div>{{relationship.mediatorSubstance.linkingID}}</div>
+                      <img class="structure-image" appSubstanceImage [entityId]="relationship.mediatorSubstance.refuuid">
+                      <div>
+                        <a class="substance-name" target = "_blank" style = "height: 18px;" [routerLink]="['/substances', relationship.mediatorSubstance.refuuid]" >
+                          <span [innerHTML] = "relationship.mediatorSubstance.name"></span>  <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
+                        </a>
+                      </div>
+                    </div>
+                  }
+                  @if (!relationship.mediatorSubstance) {
+                    <div>
+                      <i>none</i>
+                    </div>
+                  }
                 </td>
                 <td class = "mat-cell">
-                  <div class = "detail" *ngIf ="relationship.interactionType ">
-                  <div class = "subhead">
-                    Interaction Type:
-                  </div>
-                  <div class = "subval">
-                    {{relationship.interactionType}}
-                  </div>
-                  </div>
-                  <div class = "detail" *ngIf ="relationship.comments">
-                  <div class = "subhead">
-                    Comments:
-                  </div>
-                  <div class = "subval">
-                    {{relationship.comments}}
-                  </div>
-                  </div>
-                    <div class = "detail" *ngIf ="relationship.qualification">
-                  <div class = "subhead">
-                    Qualification:
-                  </div>
-                  <div class = "subval">
-                    {{relationship.qualification}}
-                  </div>
-                    </div>  <div class = "detail" *ngIf ="relationship.amount ">
-                  <div class = "subhead">
-                    Amount:
-                  </div>
-                  <div class = "subval">
-                    {{displayAmount(relationship.amount)}} <i *ngIf = "relationship.amount.nonNumericValue">{{relationship.amount.nonNumericValue}}</i>
-                  </div></div>
+                  @if (relationship.interactionType ) {
+                    <div class = "detail">
+                      <div class = "subhead">
+                        Interaction Type:
+                      </div>
+                      <div class = "subval">
+                        {{relationship.interactionType}}
+                      </div>
+                    </div>
+                  }
+                  @if (relationship.comments) {
+                    <div class = "detail">
+                      <div class = "subhead">
+                        Comments:
+                      </div>
+                      <div class = "subval">
+                        {{relationship.comments}}
+                      </div>
+                    </div>
+                  }
+                  @if (relationship.qualification) {
+                    <div class = "detail">
+                      <div class = "subhead">
+                        Qualification:
+                      </div>
+                      <div class = "subval">
+                        {{relationship.qualification}}
+                      </div>
+                    </div>
+                    }  @if (relationship.amount ) {
+                    <div class = "detail">
+                      <div class = "subhead">
+                        Amount:
+                      </div>
+                      <div class = "subval">
+                        {{displayAmount(relationship.amount)}} @if (relationship.amount.nonNumericValue) {
+                        <i>{{relationship.amount.nonNumericValue}}</i>
+                      }
+                    </div></div>
+                  }
                 </td>
               </tr>
             </table>
@@ -141,5 +155,5 @@
   </table>
 </div>
 <mat-paginator [length]="filtered && filtered.length || 0" [pageSize]="pageSize" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
-               [pageSizeOptions]="pageSizeOptions">
+  [pageSizeOptions]="pageSizeOptions">
 </mat-paginator>

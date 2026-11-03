@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
@@ -13,12 +13,31 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ImpuritiesService } from '../service/impurities.service';
 import { GeneralService } from '../../service/general.service';
 import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-impurities-details',
     templateUrl: './impurities-details.component.html',
     styleUrls: ['./impurities-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatIconModule,
+      MatTooltipModule,
+      MatButtonModule,
+      MatTableModule,
+      SubstanceImageDirective
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
@@ -31,7 +50,6 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   impurities: Impurities;
   substanceName = '';
   flagIconSrcPath: string;
-  canEdit: boolean = false;
   updateApplicationUrl: string;
   message = '';
   subRelationship: any;
@@ -48,13 +66,18 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
     private mainNotificationService: MainNotificationService,
     private impuritiesService: ImpuritiesService,
     private generalService: GeneralService,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.loadingService.setLoading(true);
 
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
       this.getImpurities();
@@ -88,6 +111,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
                   elementRel.substanceName = substance._name;
                   elementRel.approvalID = substance.approvalID;
                 }
+                this.cdr.markForCheck();
               });
             this.subscriptions.push(impSubNameSubscription);
           }
@@ -106,6 +130,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
                       elementRelImpuDet.substanceName = substance._name;
                       elementRelImpuDet.relatedSubstanceUnii = substance.approvalID;
                     }
+                    this.cdr.markForCheck();
                   });
                 this.subscriptions.push(impDetNameSubscription);
               }
@@ -131,6 +156,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
                       elementResidual.substanceName = substance._name;
                       elementResidual.relatedSubstanceUnii = substance.approvalID;
                     }
+                    this.cdr.markForCheck();
                   });
                 this.subscriptions.push(impResidualNameSubscription);
               }
@@ -149,6 +175,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
                       elementInorganic.substanceName = substance._name;
                       elementInorganic.relatedSubstanceUnii = substance.approvalID;
                     }
+                    this.cdr.markForCheck();
                   });
                 this.subscriptions.push(impInorganicNameSubscription);
               }
@@ -157,6 +184,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
         });
 
       }
+      this.cdr.markForCheck();
     }, error => {
       this.handleSubstanceRetrivalError();
     });

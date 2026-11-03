@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ControlWidget } from 'ngx-schema-form';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -6,7 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
     selector: 'app-custom-textarea-widget',
     templateUrl: './custom-textarea-widget.component.html',
     styleUrls: ['./custom-textarea-widget.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatTooltipModule]
 })
 export class CustomTextareaWidgetComponent extends ControlWidget {
 

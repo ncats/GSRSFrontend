@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter } from "@angular/core";
+import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { Sort } from "@angular/material/sort";
@@ -13,16 +13,24 @@ import { AuthService } from "@gsrs-core/auth";
 import { LoadingService } from "@gsrs-core/loading/loading.service";
 import { Subscription } from "rxjs";
 import { adverseEventCvmSearchSortValues } from "../../../../adverse-event/adverse-events-cvm-browse/adverse-events-cvm-search-sort-values";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatTableModule } from "@angular/material/table";
+import { MatSortModule } from "@angular/material/sort";
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 @Component({
   selector: "app-substance-adverseeventcvm",
   templateUrl: "./substance-adverseeventcvm.component.html",
   styleUrls: ["./substance-adverseeventcvm.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule],
 })
 export class SubstanceAdverseEventCvmComponent
   extends SubstanceDetailsBaseTableDisplay
-  implements OnInit {
+  implements OnInit, OnDestroy {
   @Output() countAdvCvmOut: EventEmitter<number> = new EventEmitter<number>();
 
   localBdnum: string;
@@ -38,7 +46,6 @@ export class SubstanceAdverseEventCvmComponent
   loadingStatus = "";
   public sortValues = adverseEventCvmSearchSortValues;
   private subscriptions: Array<Subscription> = [];
-  canExport: boolean = false;
 
   displayedColumns: string[] = [
     "adverseEvent",
@@ -58,8 +65,12 @@ export class SubstanceAdverseEventCvmComponent
     super(gaService, adverseEventService);
   }
 
-  async ngOnInit() {
-    this.canExport = await this.authService.hasSpecificPrivilege("Export Data");
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     /* Commenting right now. Will remove later after everything works */
     /*
     if (this.bdnum) {

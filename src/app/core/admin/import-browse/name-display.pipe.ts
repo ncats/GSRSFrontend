@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'namesDisplay',
-    standalone: false
+    standalone: true
 })
   export class NamesDisplayStagingPipe implements PipeTransform {
     transform(names: Array<any>): Array<any> {

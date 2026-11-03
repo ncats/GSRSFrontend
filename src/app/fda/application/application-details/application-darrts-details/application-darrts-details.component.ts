@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../../service/application.service';
 import { GeneralService } from '../../../service/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,12 +9,21 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 // import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationDetailsBaseComponent } from '../application-details-base.component';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
     selector: 'app-application-darrts-details',
     templateUrl: './application-darrts-details.component.html',
     styleUrls: ['./application-darrts-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseComponent implements OnInit {
@@ -28,10 +37,11 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    titleService: Title
+    titleService: Title,
     // authService: AuthService,
+    cdr: ChangeDetectorRef
   ) {
-    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService);
+    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService, cdr);
     // , authService);
   }
 
@@ -55,10 +65,12 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
         this.getSubstanceBySubstanceKey();
       }
       this.loadingService.setLoading(false);
+      this.cdr.markForCheck();
     }, error => {
      // this.handleSubstanceRetrivalError();
       this.message = 'No Application (Darrts) record found';
       this.loadingService.setLoading(false);
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(appDarrtsSubscription);
 
@@ -77,6 +89,7 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
                 elementIngred._ingredientname = response._name;
                 elementIngred._approvalID = response._approvalIDDisplay;
               }
+              this.cdr.markForCheck();
             });
             this.subscriptions.push(subSubscription);
 
@@ -87,6 +100,7 @@ export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseCom
                 elementIngred._parentSubstanceKey = response.parentSubstanceKey;
                 elementIngred._parentDisplayTerm = response.parentDisplayTerm;
               }
+              this.cdr.markForCheck();
             });
             this.subscriptions.push(conceptSubscription);
 

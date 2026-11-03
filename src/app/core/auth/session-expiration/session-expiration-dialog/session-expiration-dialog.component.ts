@@ -1,8 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
-import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '@gsrs-core/auth';
 import { concatMap } from "rxjs"
 
@@ -10,9 +11,11 @@ import { concatMap } from "rxjs"
     selector: 'app-session-expiration-dialog',
     templateUrl: './session-expiration-dialog.component.html',
     styleUrls: ['./session-expiration-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionExpirationDialogComponent implements OnInit {
+export class SessionExpirationDialogComponent implements OnInit, OnDestroy {
   sessionExpirationWarning: SessionExpirationWarning = null;
   sessionExpiringAt: number;
   timeRemainingSeconds: number;
@@ -27,6 +30,7 @@ export class SessionExpirationDialogComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private authService: AuthService,
+    private cdr: ChangeDetectorRef,
     public configService: ConfigService
   ) {
     this.sessionExpirationWarning = data.sessionExpirationWarning;
@@ -36,7 +40,9 @@ export class SessionExpirationDialogComponent implements OnInit {
   ngOnInit() {
     // If SessionExpirationWarning is not found in configData, the intervals are never set
     // and this component is inert
-    this.updateDialogInterval = setInterval(() => { this.updateDialog(); });
+    this.updateDialogInterval = setInterval(() => {
+      this.updateDialog();
+    }, 1000);
   }
 
   ngOnDestroy() {
@@ -60,6 +66,7 @@ export class SessionExpirationDialogComponent implements OnInit {
       this.dialogTitle = "Session Ended"
       this.dialogMessage = "Your session has expired, please login again."
     }
+    this.cdr.markForCheck();
   }
 
   closeDialog() {
@@ -72,7 +79,9 @@ export class SessionExpirationDialogComponent implements OnInit {
       data => {
         this.dialogRef.close(true);
       },
-      err => { console.log("Error extending session: ", err) },
+      err => {
+ console.log("Error extending session: ", err) 
+},
       () => { }
     );
   }

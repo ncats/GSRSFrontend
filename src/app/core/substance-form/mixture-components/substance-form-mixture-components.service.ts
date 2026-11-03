@@ -4,7 +4,9 @@ import { SubstanceFormService } from '../substance-form.service';
 import { MixtureComponents } from '@gsrs-core/substance/substance.model';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormMixtureComponentsService extends SubstanceFormServiceBase<Array<MixtureComponents>> {
 
   constructor(

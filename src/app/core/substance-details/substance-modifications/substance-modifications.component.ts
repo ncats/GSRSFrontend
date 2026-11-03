@@ -9,12 +9,16 @@ import {
   SubstanceDetail
 } from '../../substance/substance.model';
 import {Subject} from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
     selector: 'app-substance-modifications',
     templateUrl: './substance-modifications.component.html',
     styleUrls: ['./substance-modifications.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatTableModule, RouterModule]
 })
 export class SubstanceModificationsComponent extends SubstanceCardBase implements OnInit {
   structural: Array<StructuralModification>;

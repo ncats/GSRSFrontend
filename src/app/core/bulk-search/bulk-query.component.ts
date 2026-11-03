@@ -1,12 +1,14 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
   OnDestroy,
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -17,17 +19,34 @@ import { AuthService } from '../../core/auth/auth.service';
 import { BulkSearchService } from './service/bulk-search.service';
 import { BulkQuery } from './bulk-query.model';
 import { BulkSearch } from './bulk-search.model';
-import * as lodash from 'lodash';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
   @Component({
     selector: 'app-bulk-query',
     templateUrl: './bulk-query.component.html',
     styleUrls: ['./bulk-query.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      ReactiveFormsModule,
+      MatCardModule,
+      MatRadioModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatButtonModule,
+      MatInputModule,
+      TextInputFormComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
-  _ = lodash;
   loadedComponents: LoadedComponents;
   isLoggedIn = false;
   showDeprecated = false;

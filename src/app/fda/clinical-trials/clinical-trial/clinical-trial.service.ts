@@ -9,7 +9,9 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { ClinicalTrialFacetParam } from '../misc/clinical-trial-facet-param.model';
 import {Facet, FacetQueryResponse, FacetHttpParams} from '@gsrs-core/facets-manager';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ClinicalTrialService extends BaseHttpService {
 
   totalRecords = 0;
@@ -60,7 +62,9 @@ export class ClinicalTrialService extends BaseHttpService {
     let url = this.apiBaseUrl;
     // search
     url += 'clinicaltrialsus/search';
-    if (!searchTerm) { searchTerm = ''; }
+    if (!searchTerm) {
+ searchTerm = ''; 
+}
     if (searchTerm !== null && searchTerm !== '') {
       if (type !== null && type !== '') {
         if (type === 'trialNumber' ) {

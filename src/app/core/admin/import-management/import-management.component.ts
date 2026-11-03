@@ -4,7 +4,18 @@ import {
   FormGroup,
   Validators,
   FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
 } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatIconModule } from "@angular/material/icon";
+import { MatOptionModule } from "@angular/material/core";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatSelectModule } from "@angular/material/select";
+import { MatButtonModule } from "@angular/material/button";
 import { AdminService } from "@gsrs-core/admin/admin.service";
 import { take } from "rxjs/operators";
 import { Router, ActivatedRoute, NavigationExtras } from "@angular/router";
@@ -23,12 +34,27 @@ import {
 import { ImportDialogComponent } from "@gsrs-core/admin/import-management/import-dialog/import-dialog.component";
 import { isString } from "util";
 import { ImportScrubberComponent } from "@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component";
+import { SubstanceImageDirective } from "@gsrs-core/substance/substance-image.directive";
 
 @Component({
   selector: "app-import-management",
   templateUrl: "./import-management.component.html",
   styleUrls: ["./import-management.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatOptionModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatButtonModule,
+    SubstanceImageDirective
+  ],
 })
 export class ImportManagementComponent implements OnInit {
   demo: any;

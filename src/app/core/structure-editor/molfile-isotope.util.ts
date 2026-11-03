@@ -13,11 +13,15 @@ export interface MolfileCounts {
 }
 
 export function getCounts(molfile: string): MolfileCounts | null {
-  if (!molfile) { return null; }
+  if (!molfile) {
+ return null; 
+}
 
   const lines     = molfile.split('\n');
   const lineIndex = lines.findIndex(l => l.includes('V2000'));
-  if (lineIndex === -1) { return null; }
+  if (lineIndex === -1) {
+ return null; 
+}
 
   const parts     = lines[lineIndex].trim().split(/\s+/);
   const atomCount = parseInt(parts[0], 10);
@@ -30,7 +34,9 @@ export function getCounts(molfile: string): MolfileCounts | null {
 
 export function getAtomElements(molfile: string): string[] {
   const counts = getCounts(molfile);
-  if (!counts) { return []; }
+  if (!counts) {
+ return []; 
+}
 
   return molfile.split('\n')
     .slice(counts.lineIndex + 1, counts.lineIndex + 1 + counts.atomCount)
@@ -40,7 +46,9 @@ export function getAtomElements(molfile: string): string[] {
 
 export function getBondLayout(molfile: string): string[] {
   const counts = getCounts(molfile);
-  if (!counts) { return []; }
+  if (!counts) {
+ return []; 
+}
 
   return molfile.split('\n')
     .slice(
@@ -60,8 +68,12 @@ export function getBondLayout(molfile: string): string[] {
 export function hasSameStructureLayout(trusted: string, incoming: string): boolean {
   const te = getAtomElements(trusted);
   const ie = getAtomElements(incoming);
-  if (te.length === 0 || te.length !== ie.length) { return false; }
-  if (!te.every((el, i) => el === ie[i])) { return false; }
+  if (te.length === 0 || te.length !== ie.length) {
+ return false; 
+}
+  if (!te.every((el, i) => el === ie[i])) {
+ return false; 
+}
 
   const tb = getBondLayout(trusted);
   const ib = getBondLayout(incoming);
@@ -70,17 +82,23 @@ export function hasSameStructureLayout(trusted: string, incoming: string): boole
 
 /** Reads isotope entries from all M  ISO lines. */
 export function getIsoEntries(molfile: string): MolfileIsoEntry[] {
-  if (!molfile) { return []; }
+  if (!molfile) {
+ return []; 
+}
 
   const atomElements = getAtomElements(molfile);
   const entries: MolfileIsoEntry[] = [];
 
   for (const line of molfile.split('\n')) {
-    if (!line.startsWith('M  ISO')) { continue; }
+    if (!line.startsWith('M  ISO')) {
+ continue; 
+}
 
     const parts = line.trim().split(/\s+/);
     const count = parseInt(parts[2], 10);
-    if (isNaN(count)) { continue; }
+    if (isNaN(count)) {
+ continue; 
+}
 
     for (let i = 0; i < count; i++) {
       const atomIndex = parseInt(parts[3 + i * 2], 10);
@@ -112,7 +130,9 @@ export function addIsoLines(
   linesWithoutIso: string[],
   entries: Array<{ atomIndex: number; isotope: number }>,
 ): string {
-  if (entries.length === 0) { return linesWithoutIso.join('\n'); }
+  if (entries.length === 0) {
+ return linesWithoutIso.join('\n'); 
+}
   const isoLines = formatIsoLines(entries);
   const endIdx   = linesWithoutIso.findIndex(l => l.startsWith('M  END'));
   const result   = [...linesWithoutIso];
@@ -122,7 +142,9 @@ export function addIsoLines(
 
 /** Combines M  ISO entries into blocks of up to eight atom/isotope pairs. */
 export function consolidateIsoLines(molfile: string): string {
-  if (!molfile || !molfile.includes('M  ISO')) { return molfile; }
+  if (!molfile || !molfile.includes('M  ISO')) {
+ return molfile; 
+}
 
   const entries: Array<{ atomIndex: number; isotope: number }> = [];
   const filteredLines: string[] = [];
@@ -131,7 +153,9 @@ export function consolidateIsoLines(molfile: string): string {
     if (line.startsWith('M  ISO')) {
       const parts = line.trim().split(/\s+/);
       const count = parseInt(parts[2], 10);
-      if (isNaN(count)) { continue; }
+      if (isNaN(count)) {
+ continue; 
+}
       for (let i = 0; i < count; i++) {
         const atomIndex = parseInt(parts[3 + i * 2], 10);
         const isotope   = parseInt(parts[4 + i * 2], 10);
@@ -144,7 +168,9 @@ export function consolidateIsoLines(molfile: string): string {
     }
   }
 
-  if (entries.length === 0) { return molfile; }
+  if (entries.length === 0) {
+ return molfile; 
+}
   // Keep output stable for comparisons and tests.
   entries.sort((a, b) => a.atomIndex - b.atomIndex);
   return addIsoLines(filteredLines, entries);
@@ -161,7 +187,9 @@ const LEGACY_ISOTOPE_MASS: Record<string, number> = { D: 2, T: 3 };
 // Normalize to H + M ISO so isotope data survives editor/server round-trips.
 export function convertLegacyIsotopeSymbols(molfile: string): string {
   const counts = getCounts(molfile);
-  if (!counts) { return molfile; }
+  if (!counts) {
+ return molfile; 
+}
 
   const lines = molfile.split('\n');
   const newEntries: Array<{ atomIndex: number; isotope: number }> = [];
@@ -169,18 +197,24 @@ export function convertLegacyIsotopeSymbols(molfile: string): string {
   for (let i = 0; i < counts.atomCount; i++) {
     const lineIdx = counts.lineIndex + 1 + i;
     const line = lines[lineIdx];
-    if (line == null || line.length < ATOM_SYMBOL_START + ATOM_SYMBOL_LEN) { continue; }
+    if (line == null || line.length < ATOM_SYMBOL_START + ATOM_SYMBOL_LEN) {
+ continue; 
+}
 
     const symbol = line.substring(ATOM_SYMBOL_START, ATOM_SYMBOL_START + ATOM_SYMBOL_LEN).trim();
     const isotope = LEGACY_ISOTOPE_MASS[symbol];
-    if (isotope == null) { continue; }
+    if (isotope == null) {
+ continue; 
+}
 
     lines[lineIdx] = line.substring(0, ATOM_SYMBOL_START) + 'H  '
       + line.substring(ATOM_SYMBOL_START + ATOM_SYMBOL_LEN);
     newEntries.push({ atomIndex: i + 1, isotope });
   }
 
-  if (newEntries.length === 0) { return molfile; }
+  if (newEntries.length === 0) {
+ return molfile; 
+}
 
   const existingEntries = getIsoEntries(molfile)
     .filter(e => !newEntries.some(n => n.atomIndex === e.atomIndex));
@@ -195,15 +229,21 @@ export function convertLegacyIsotopeSymbols(molfile: string): string {
  */
 export function restoreMissingIsoEntries(trustedMolfile: string, rawMolfile: string): string {
   const trustedEntries = getIsoEntries(trustedMolfile);
-  if (trustedEntries.length === 0) { return rawMolfile; }
+  if (trustedEntries.length === 0) {
+ return rawMolfile; 
+}
 
   const rawEntries     = getIsoEntries(rawMolfile);
   const missingEntries = trustedEntries.filter(
     t => !rawEntries.some(r => r.atomIndex === t.atomIndex),
   );
 
-  if (missingEntries.length === 0) { return rawMolfile; }
-  if (!hasSameStructureLayout(trustedMolfile, rawMolfile)) { return rawMolfile; }
+  if (missingEntries.length === 0) {
+ return rawMolfile; 
+}
+  if (!hasSameStructureLayout(trustedMolfile, rawMolfile)) {
+ return rawMolfile; 
+}
 
   // Add missing entries and normalize the ISO blocks.
   const withMissing = addIsoLines(
@@ -217,7 +257,9 @@ export function adjustFormulaForIsotopicHydrogen(
   molfile: string | null | undefined,
   formula: string | null | undefined,
 ): string | null | undefined {
-  if (!molfile || !formula) { return formula; }
+  if (!molfile || !formula) {
+ return formula; 
+}
 
   const isotopeCounts = getIsoEntries(molfile).reduce((counts, entry) => {
     if (entry.element === 'H' && (entry.isotope === 2 || entry.isotope === 3)) {
@@ -226,10 +268,14 @@ export function adjustFormulaForIsotopicHydrogen(
     return counts;
   }, { D: 0, T: 0 });
 
-  if (isotopeCounts.D === 0 && isotopeCounts.T === 0) { return formula; }
+  if (isotopeCounts.D === 0 && isotopeCounts.T === 0) {
+ return formula; 
+}
 
   const tokens = formula.match(/[A-Z][a-z]?\d*/g);
-  if (!tokens || tokens.join('') !== formula) { return formula; }
+  if (!tokens || tokens.join('') !== formula) {
+ return formula; 
+}
 
   const parsed = tokens.map(token => {
     const match = token.match(/^([A-Z][a-z]?)(\d*)$/);
@@ -240,7 +286,9 @@ export function adjustFormulaForIsotopicHydrogen(
   });
 
   const hydrogenIndex = parsed.findIndex(token => token.element === 'H');
-  if (hydrogenIndex === -1) { return formula; }
+  if (hydrogenIndex === -1) {
+ return formula; 
+}
 
   const hydrogen = parsed[hydrogenIndex];
   hydrogen.count = Math.max(0, hydrogen.count - isotopeCounts.D - isotopeCounts.T);

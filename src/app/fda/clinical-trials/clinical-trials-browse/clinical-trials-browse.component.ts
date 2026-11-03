@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial } from '../clinical-trial/clinical-trial.model';
 import { ConfigService } from '@gsrs-core/config';
-import * as _ from 'lodash';
+import lodashHas from 'lodash/has';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -27,16 +27,45 @@ import { Auth } from '@gsrs-core/auth/auth.model';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
 // import { environment } from '../../../../environments/environment';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
 
 @Component({
     selector: 'app-clinical-trials-browse',
     templateUrl: './clinical-trials-browse.component.html',
     styleUrls: ['./clinical-trials-browse.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatSidenavModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatButtonModule,
+      MatIconModule,
+      MatCardModule,
+      MatPaginatorModule,
+      MatTableModule,
+      FacetsManagerComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
-  public lodash = _;
   public privateSearchTerm = '';
   private privateSearchType = 'all';
   private privateSearchCutoff?: number;
@@ -51,7 +80,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   // view = 'cards';
-  displayedColumns: string[];
   public smiles: string;
   private argsHash?: number;
   public auth?: Auth;
@@ -62,8 +90,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   toggle: Array<boolean> = [];
   private subscriptions: Array<Subscription> = [];
   dataSource = new MatTableDataSource<ClinicalTrial>([]);
-  canDelete: boolean = false;
-  canEdit: boolean = false;
   showExactMatches = false;
   private isComponentInit = false;
 
@@ -91,10 +117,29 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private location: Location,
     private facetManagerService: FacetsManagerService,
     public gaService: GoogleAnalyticsService,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  async ngOnInit() {
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canDelete(): boolean {
+    return this.authService.hasPrivilege('Delete Lower Level Items');
+  }
+
+  // Derived purely from canDelete, no side effects, so a live getter is safe here too.
+  get displayedColumns(): string[] {
+    const columns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
+    if (this.canDelete) {
+      columns.push('delete');
+    }
+    return columns;
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -115,11 +160,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     }
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
-    this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
-    const columns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
-    if (this.canDelete) { columns.push('delete'); }
-    this.displayedColumns = columns;
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},
       {'title': 'Title', 'value': 'title'},
@@ -149,12 +189,13 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.facetManagerService.unregisterFacetSearchHandler();
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     // Debounce resize handler to avoid measuring during animation
     clearTimeout(this.resizeTimeout);
     this.resizeTimeout = setTimeout(() => {
       this.processResponsiveness();
+      this.cdr.markForCheck();
     }, 150);
   }
 
@@ -251,6 +292,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
           }
+          this.cdr.markForCheck();
 /*
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
@@ -311,7 +353,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   deleteClinicalTrial(index: number) {
-    if (typeof this.clinicalTrials[index] === 'undefined' || ! _.has(this.clinicalTrials[index], 'trialNumber')) {
+    if (typeof this.clinicalTrials[index] === 'undefined' || ! lodashHas(this.clinicalTrials[index], 'trialNumber')) {
         alert('A trial number is required.');
         return;
     }
@@ -324,6 +366,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
         this.isError = false;
         const deletedClinicalTrials = this.clinicalTrials.splice(index, 1);
         this.dataSource.data = this.clinicalTrials;
+        this.cdr.markForCheck();
         const notification: AppNotification = {
           message: 'You deleted the clinical trial record for:' + deletedClinicalTrials[0].trialNumber,
           type: NotificationType.success,

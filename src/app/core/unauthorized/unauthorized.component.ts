@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
     selector: 'app-unauthorized',
     templateUrl: './unauthorized.component.html',
     styleUrls: ['./unauthorized.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatCardModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UnauthorizedComponent implements OnInit {
   email?: string;

@@ -1,52 +1,70 @@
-<div *ngIf = "loading === false">
-
+@if (loading === false) {
+  <div>
     <div>
-        <mat-form-field>
-          <mat-label style="width: 100%;">Service</mat-label>
-          <mat-select [(ngModel)]="currentService" (selectionChange)="onServiceSelectionChange($event)">
-                <mat-option *ngFor="let option of services" [value]="option">
-                  {{option}}
-                </mat-option>
-              </mat-select>
-          </mat-form-field>
+      <mat-form-field>
+        <mat-label style="width: 100%;">Service</mat-label>
+        <mat-select [(ngModel)]="currentService" (selectionChange)="onServiceSelectionChange($event)">
+          @for (option of services; track option) {
+            <mat-option [value]="option">
+              {{option}}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </div>
     <div>
-        <mat-form-field style="width: 800px;">
-          <mat-label style="width: 100%;">API Endpoint</mat-label>
-            <mat-select [(ngModel)]="currentEndpoint" (selectionChange)="onEndpointSelectionChange($event)" style="width: 800px;">
-                <mat-option *ngFor="let option of endpoints" [value]="option.path" style="width: 800px;">
-                  {{option.path}}
-                </mat-option>
-              </mat-select>
-          </mat-form-field><span *ngIf="currentEndpointUrl">
-             <a class = 'ext-link endpoint-link' [attr.href]="currentEndpointUrl" target="_blank" title="Open endpoint as new raw browser tab"><mat-icon class="icon small-icon" svgIcon="open_in_new"></mat-icon></a>
-          </span>
-    </div>
-
-    <div class="scrollable-container" cdkScrollable>
-      <div *ngIf = "content">
-        <div *ngIf = "displayAsJson">
-          <div style="margin-bottom: 10px;">
-            <mat-checkbox (change)="onRawCheckboxChange($event)">Raw?</mat-checkbox>
+      <mat-form-field style="width: 800px;">
+        <mat-label style="width: 100%;">API Endpoint</mat-label>
+        <mat-select [(ngModel)]="currentEndpoint" (selectionChange)="onEndpointSelectionChange($event)" style="width: 800px;">
+          @for (option of endpoints; track option) {
+            <mat-option [value]="option.path" style="width: 800px;">
+              {{option.path}}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>@if (currentEndpointUrl) {
+      <span>
+        <a class = 'ext-link endpoint-link' [attr.href]="currentEndpointUrl" target="_blank" title="Open endpoint as new raw browser tab"><mat-icon class="icon small-icon" svgIcon="open_in_new"></mat-icon></a>
+      </span>
+    }
+  </div>
+  <div class="scrollable-container" cdkScrollable>
+    @if (content) {
+      <div>
+        @if (displayAsJson) {
+          <div>
+            <div style="margin-bottom: 10px;">
+              <mat-checkbox (change)="onRawCheckboxChange($event)">Raw?</mat-checkbox>
+            </div>
+            @if (!rawContent) {
+              <div>
+                <ngx-json-viewer [json]="content" [raw]="true"></ngx-json-viewer>
+              </div>
+            }
+            @if (rawContent) {
+              <div>
+                <pre style="white-space: pre-wrap;">{{ content | json }}</pre>
+              </div>
+            }
           </div>
-          <div *ngIf = "!rawContent">
-            <ngx-json-viewer [json]="content" [raw]="true"></ngx-json-viewer>
+        }
+        @if (!displayAsJson) {
+          <div>
+            <pre style="white-space: pre-wrap;">{{ content }}</pre>
           </div>
-          <div *ngIf = "rawContent">
-            <pre style="white-space: pre-wrap;">{{ content | json }}</pre>
-          </div>
-        </div>
-        <div *ngIf = "!displayAsJson">
-          <pre style="white-space: pre-wrap;">{{ content }}</pre>
-        </div>
-    </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+}
 
-    </div>
-
-    <div class = "loading-container" *ngIf = "loading === true">
+@if (loading === true) {
+  <div class = "loading-container">
     <mat-progress-spinner
       class="progress-spinner"
       [color]="primary"
       mode = "indeterminate">
     </mat-progress-spinner>
-</div>
+  </div>
+}

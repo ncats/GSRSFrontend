@@ -1,16 +1,24 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {MixtureComponents, SubstanceRelationship} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormMixtureComponentsService} from './substance-form-mixture-components.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import {CommonModule} from '@angular/common';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MixtureComponentFormComponent} from './mixture-component-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-mixture-components-card',
     templateUrl: './substance-form-mixture-components-card.component.html',
     styleUrls: ['./substance-form-mixture-components-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, MixtureComponentFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -19,9 +27,10 @@ export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBa
   constructor(
     private substanceFormMixtureComponentsService: SubstanceFormMixtureComponentsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
   }
 
   ngOnInit() {
@@ -33,6 +42,7 @@ export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBa
   ngAfterViewInit() {
     const relationshipsSubscription = this.substanceFormMixtureComponentsService.substanceMixtureComponents.subscribe(components => {
       this.relationships = components;
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(relationshipsSubscription);
   }

@@ -1,14 +1,25 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { SubstanceCode } from '@gsrs-core/substance';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { UtilsService } from '@gsrs-core/utils';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-simplified-code-form',
     templateUrl: './simplified-code-form.component.html',
     styleUrls: ['./simplified-code-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatTooltipModule, MatInputModule, AccessManagerComponent, CvInputComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SimplifiedCodeFormComponent implements OnInit {
   private privateCode: SubstanceCode;
@@ -21,7 +32,8 @@ export class SimplifiedCodeFormComponent implements OnInit {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -46,6 +58,7 @@ export class SimplifiedCodeFormComponent implements OnInit {
       this.codeSystemDictionary = response['CODE_SYSTEM'].dictionary;
       this.setCodeSystemType();
       this.codeTypeList = response['CODE_TYPE'].list;
+      this.cdr.markForCheck();
     });
   }
 

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Pipe({
     name: 'codeSystemDisplay',
-    standalone: false
+    standalone: true
 })
 export class CodeSystemDisplayPipe implements PipeTransform {
     constructor(public cvService: ControlledVocabularyService) {

@@ -1,15 +1,24 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {SubstanceName, SubstanceRelated, SubstanceService, SubstanceSummary} from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import {AuthService} from '@gsrs-core/auth';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-substance-hierarchy',
     templateUrl: './substance-hierarchy.component.html',
     styleUrls: ['./substance-hierarchy.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, RouterModule, MatTreeModule, MatIconModule, MatButtonModule, MatTooltipModule, MatProgressSpinnerModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceHierarchyComponent implements OnInit {
   @Input() uuid: string;
@@ -20,15 +29,15 @@ export class SubstanceHierarchyComponent implements OnInit {
   dataSource = new MatTreeNestedDataSource<any>();
   selfNode: HierarchyNode;
   activeNode: any;
-  canEdit: boolean;
   loading = true;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
   constructor(
     private substanceService: SubstanceService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.selfNode = {
       'id': 0,
       'type': 'ROOT',
@@ -47,8 +56,11 @@ export class SubstanceHierarchyComponent implements OnInit {
       }, error => {
        this.loadHierarchy([this.selfNode]);
       });
-      
-      this.canEdit = await this.authService.hasSpecificPrivilege("Edit");
+  }
+
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
   }
 
   loadHierarchy(orig: any): void {
@@ -69,6 +81,7 @@ export class SubstanceHierarchyComponent implements OnInit {
     const temp2 = this.list_to_tree(orig);
     this.dataSource.data = temp2;
     this.activeNode = this.dataSource.data[0];
+    this.cdr.markForCheck();
   }
 
     formatHierarchy(data: any): HierarchyNode {

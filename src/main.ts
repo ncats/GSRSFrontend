@@ -1,12 +1,12 @@
 import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app/core/app.module';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { environment } from './environments/environment';
-import 'hammerjs';
+import { AppComponent } from './app/core/app.component';
+import { appConfig } from './app/core/app.config';
 
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+bootstrapApplication(AppComponent, appConfig)
   .catch(err => console.log(err));

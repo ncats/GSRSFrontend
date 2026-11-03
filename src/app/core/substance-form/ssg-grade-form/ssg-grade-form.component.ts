@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Grade } from '@gsrs-core/substance';
 import { Subscription } from 'rxjs';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
@@ -6,12 +6,18 @@ import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
+import { CommonModule } from '@angular/common';
+import { AccessManagerComponent } from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { DomainReferencesComponent } from '@gsrs-core/substance-form/references/domain-references/domain-references.component';
 
 @Component({
     selector: 'app-ssg-grade-form',
     templateUrl: './ssg-grade-form.component.html',
     styleUrls: ['./ssg-grade-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, AccessManagerComponent, CvInputComponent, DomainReferencesComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class SsgGradeFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
@@ -21,7 +27,8 @@ export class SsgGradeFormComponent extends SubstanceFormBase implements OnInit, 
   constructor(
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
     this.analyticsEventCategory = 'substance form ssg 3 grade';
@@ -35,6 +42,7 @@ export class SsgGradeFormComponent extends SubstanceFormBase implements OnInit, 
       }
       this.substanceFormService.resetState();
       this.grade = substance.specifiedSubstanceG3.grade;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(substanceSubscription);
   }

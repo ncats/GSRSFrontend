@@ -2,14 +2,16 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, Title} from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { GoogleAnalyticsService } from './google-analytics/google-analytics.service';
-import {Router, NavigationStart} from '@angular/router';
+import {Router, NavigationStart, RouterOutlet} from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { MainNotificationComponent } from './main-notification/main-notification/main-notification.component';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterOutlet, MainNotificationComponent]
 })
 export class AppComponent implements OnDestroy {
   private destroy$ = new Subject<void>();

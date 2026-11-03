@@ -3,12 +3,19 @@ import { SubstanceCardBase } from '../substance-card-base';
 import {DisplayStructure, Polymer, PolymerClassification, SubstanceDetail} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-substance-polymer-structure',
     templateUrl: './substance-polymer-structure.component.html',
     styleUrls: ['./substance-polymer-structure.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatTooltipModule, MatButtonModule, RouterModule, SubstanceImageDirective]
 })
 export class SubstancePolymerStructureComponent extends SubstanceCardBase implements OnInit {
   structure: DisplayStructure;

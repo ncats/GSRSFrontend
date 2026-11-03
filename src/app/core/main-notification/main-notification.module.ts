@@ -1,17 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MainNotificationService } from './main-notification.service';
 import { MainNotificationComponent } from './main-notification/main-notification.component';
 
 @NgModule({
   imports: [
-    CommonModule
-  ],
-  declarations: [
+    CommonModule,
     MainNotificationComponent
-  ],
-  providers: [
-    MainNotificationService
   ],
   exports: [
     MainNotificationComponent

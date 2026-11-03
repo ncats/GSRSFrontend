@@ -1,18 +1,36 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute, Router, NavigationExtras, RouterModule } from '@angular/router';
+import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Location, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as _ from 'lodash';
-import * as moment from 'moment';
-import { Sort } from '@angular/material/sort';
+import lodashCloneDeep from 'lodash/cloneDeep';
+import moment from 'moment';
+import { Sort, MatSortModule } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CrossEntitySearchComponent } from '../../cross-entity-search/cross-entity-search.component';
+import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
+import { ProductTextSearchComponent } from '../product-text-search/product-text-search.component';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -42,7 +60,32 @@ import jp from 'jsonpath';
     selector: 'app-products-browse',
     templateUrl: './products-browse.component.html',
     styleUrls: ['./products-browse.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatButtonModule,
+      MatButtonToggleModule,
+      MatCardModule,
+      MatExpansionModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatInputModule,
+      MatMenuModule,
+      MatOptionModule,
+      MatPaginatorModule,
+      MatSelectModule,
+      MatSidenavModule,
+      MatSortModule,
+      MatTableModule,
+      MatTabsModule,
+      MatTooltipModule,
+      CrossEntitySearchComponent,
+      BulkSearchResultsSummaryComponent,
+      FacetsManagerComponent,
+      ProductTextSearchComponent
+    ]
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -73,9 +116,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   disableExport = false;
   private overlayContainer: HTMLElement;
   isLoggedIn = false;
-  canUpdate: boolean = false;
-  canExport: boolean = false;
-  canCreate: boolean = false;
   etag = '';
   environment: any;
   narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
@@ -171,7 +211,20 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     }, 50);
   }
 
-  async ngOnInit() {
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
 
     // Get Daily Med Url from Configuration
@@ -226,9 +279,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.isComponentInit = true;
     this.loadComponent();
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
   }
 
   ngAfterViewInit() {
@@ -917,7 +967,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     const date = new Date();
     let jsonFilename = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    const copyProd = _.cloneDeep(this.products[productIndex]);
+    const copyProd = lodashCloneDeep(this.products[productIndex]);
     let cleanProduct = this.scrub(copyProd);
 
     let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };
@@ -934,7 +984,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   saveJSON(productIndex: number): void {
-    const copyProd = _.cloneDeep(this.products[productIndex]);
+    const copyProd = lodashCloneDeep(this.products[productIndex]);
     let cleanProduct = this.scrub(copyProd);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanProduct)));

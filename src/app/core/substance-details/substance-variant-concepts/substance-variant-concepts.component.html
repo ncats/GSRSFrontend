@@ -1,10 +1,12 @@
 <div class = "flex-row wrap">
-  <div class="thumb-col" *ngFor = "let variant of variants">
-    <img class="image-thumb" appSubstanceImage [entityId]="variant.refuuid" size="400">
-    <div>
-      <a class="substance-name" [routerLink]="['/substances', variant.refuuid]" >
-        {{variant.refPname}}
-      </a>
+  @for (variant of variants; track variant) {
+    <div class="thumb-col">
+      <img class="image-thumb" appSubstanceImage [entityId]="variant.refuuid" size="400">
+      <div>
+        <a class="substance-name" [routerLink]="['/substances', variant.refuuid]" >
+          {{variant.refPname}}
+        </a>
+      </div>
     </div>
-  </div>
+  }
 </div>

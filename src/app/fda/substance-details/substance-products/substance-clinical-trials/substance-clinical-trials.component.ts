@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/clinical-trial.service';
@@ -15,15 +15,23 @@ import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { take } from 'rxjs/operators';
 import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-substance-clinical-trials',
     templateUrl: './substance-clinical-trials.component.html',
     styleUrls: ['./substance-clinical-trials.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 
-export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
   private privateFacetParams: FacetParam;
   clinicalTrialCount = 0;
@@ -52,8 +60,6 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     'outcomemeasures'
   ];
 
-  canExport: boolean = false;
-
   constructor(
     public gaService: GoogleAnalyticsService,
     private clinicalTrialService: ClinicalTrialService,
@@ -66,9 +72,13 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     super(gaService, clinicalTrialService);
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
     if (this.substanceUuid) {
      this.getSubstanceClinicalTrials(null, 'initial');
     }

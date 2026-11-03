@@ -7,10 +7,14 @@
     <textarea [formControl]="importTextControl" [ngClass]="{ 'has-message': message }"></textarea>
   </div>
 </div>
-<mat-progress-bar color="accent" mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
-<div [ngClass]="['message-container', messageClass]" *ngIf="message">
-  {{message}}
-</div>
+@if (isLoading) {
+  <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+}
+@if (message) {
+  <div [ngClass]="['message-container', messageClass]">
+    {{message}}
+  </div>
+}
 <div class="import-actions" mat-dialog-actions>
   <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)" (click)="fileBrowse()">Browse</button>
   <span class="middle-fill"></span>

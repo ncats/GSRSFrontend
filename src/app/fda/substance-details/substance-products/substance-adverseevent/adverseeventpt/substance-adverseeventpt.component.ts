@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
-import { TitleCasePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,12 +14,20 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { AuthService } from '@gsrs-core/auth';
 import { Subscription } from 'rxjs';
 import { adverseEventPtSearchSortValues } from '../../../../adverse-event/adverse-events-pt-browse/adverse-events-pt-search-sort-values';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-substance-adverseeventpt',
   templateUrl: './substance-adverseeventpt.component.html',
   styleUrls: ['./substance-adverseeventpt.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
@@ -62,7 +70,6 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     'prr'
   ];
 
-  canExport: boolean = false;
 
   constructor(
     private router: Router,
@@ -76,9 +83,12 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     super(gaService, adverseEventService);
   }
 
-  async ngOnInit() {
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
 
+  ngOnInit() {
     /* Commenting right now. Will remove later after everything works */
     /*
     if (this.bdnum) {

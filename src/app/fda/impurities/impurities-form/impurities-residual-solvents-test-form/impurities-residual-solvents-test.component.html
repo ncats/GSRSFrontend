@@ -14,7 +14,7 @@
       matTooltip="Delete Residual Solvents Test {{
         residualSolventsTestIndex + 1
       }}"
-    >
+      >
       <mat-icon>delete_forever</mat-icon>
     </button>
   </div>
@@ -23,111 +23,118 @@
 <mat-card class="borderblue">
   <mat-card-content>
     <div class="form-row">
-      <app-cv-input
-        class="col-2-1"
-        *ngIf="
-          configSettingsDisplay['sourceType'] ||
-          (configSettingsDisplay['sourceType'] === undefined && true)
-        "
-        domain="IMPURITIES_SOURCE_TYPE"
-        title="Source Type"
-        name="sourceType"
-        [model]="impuritiesResidualSolventsTest.sourceType"
-        (valueChange)="impuritiesResidualSolventsTest.sourceType = $event"
-      >
-      </app-cv-input>
+      @if (
+        configSettingsDisplay['sourceType'] ||
+        (configSettingsDisplay['sourceType'] === undefined && true)
+        ) {
+        <app-cv-input
+          class="col-2-1"
+          domain="IMPURITIES_SOURCE_TYPE"
+          title="Source Type"
+          name="sourceType"
+          [model]="impuritiesResidualSolventsTest.sourceType"
+          (valueChange)="impuritiesResidualSolventsTest.sourceType = $event"
+          >
+        </app-cv-input>
+      }
 
-      <app-cv-input
-        class="col-2-1"
-        *ngIf="
-          configSettingsDisplay['source'] ||
-          (configSettingsDisplay['source'] === undefined && true)
-        "
-        domain="IMPURITIES_SOURCE"
-        title="Source"
-        name="source"
-        [model]="impuritiesResidualSolventsTest.source"
-        (valueChange)="impuritiesResidualSolventsTest.source = $event"
-      >
-      </app-cv-input>
+      @if (
+        configSettingsDisplay['source'] ||
+        (configSettingsDisplay['source'] === undefined && true)
+        ) {
+        <app-cv-input
+          class="col-2-1"
+          domain="IMPURITIES_SOURCE"
+          title="Source"
+          name="source"
+          [model]="impuritiesResidualSolventsTest.source"
+          (valueChange)="impuritiesResidualSolventsTest.source = $event"
+          >
+        </app-cv-input>
+      }
 
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
-          configSettingsDisplay['sourceId'] ||
-          (configSettingsDisplay['sourceId'] === undefined && true)
-        "
-      >
-        <mat-label>Source ID</mat-label>
-        <input
-          matInput
-          [(ngModel)]="impuritiesResidualSolventsTest.sourceId"
-          name="sourceId"
-        />
-      </mat-form-field>
+      @if (
+        configSettingsDisplay['sourceId'] ||
+        (configSettingsDisplay['sourceId'] === undefined && true)
+        ) {
+        <mat-form-field
+          class="col-2-1"
+          >
+          <mat-label>Source ID</mat-label>
+          <input
+            matInput
+            [(ngModel)]="impuritiesResidualSolventsTest.sourceId"
+            name="sourceId"
+            />
+        </mat-form-field>
+      }
     </div>
 
     <div class="form-row">
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
-          configSettingsDisplay['test'] ||
-          (configSettingsDisplay['test'] === undefined && true)
-        "
-      >
-        <mat-label>Test</mat-label>
-        <input
-          matInput
-          [(ngModel)]="impuritiesResidualSolventsTest.test"
-          name="test"
-        />
-      </mat-form-field>
+      @if (
+        configSettingsDisplay['test'] ||
+        (configSettingsDisplay['test'] === undefined && true)
+        ) {
+        <mat-form-field
+          class="col-2-1"
+          >
+          <mat-label>Test</mat-label>
+          <input
+            matInput
+            [(ngModel)]="impuritiesResidualSolventsTest.test"
+            name="test"
+            />
+        </mat-form-field>
+      }
 
-      <app-cv-input
-        class="col-2-1"
-        *ngIf="
-          configSettingsDisplay['testType'] ||
-          (configSettingsDisplay['testType'] === undefined && true)
-        "
-        domain="IMPURITIES_TEST_TYPE"
-        title="Test Type"
-        name="testType"
-        [model]="impuritiesResidualSolventsTest.testType"
-        (valueChange)="impuritiesResidualSolventsTest.testType = $event"
-      >
-      </app-cv-input>
+      @if (
+        configSettingsDisplay['testType'] ||
+        (configSettingsDisplay['testType'] === undefined && true)
+        ) {
+        <app-cv-input
+          class="col-2-1"
+          domain="IMPURITIES_TEST_TYPE"
+          title="Test Type"
+          name="testType"
+          [model]="impuritiesResidualSolventsTest.testType"
+          (valueChange)="impuritiesResidualSolventsTest.testType = $event"
+          >
+        </app-cv-input>
+      }
     </div>
 
     <div class="form-row">
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
-          configSettingsDisplay['testDescription'] ||
-          (configSettingsDisplay['testDescription'] === undefined && true)
-        "
-      >
-        <mat-label>Test Description</mat-label>
-        <textarea
-          matInput
-          [(ngModel)]="impuritiesResidualSolventsTest.testDescription"
-          name="testDescription"
-        ></textarea>
-      </mat-form-field>
+      @if (
+        configSettingsDisplay['testDescription'] ||
+        (configSettingsDisplay['testDescription'] === undefined && true)
+        ) {
+        <mat-form-field
+          class="col-2-1"
+          >
+          <mat-label>Test Description</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="impuritiesResidualSolventsTest.testDescription"
+            name="testDescription"
+          ></textarea>
+        </mat-form-field>
+      }
 
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
-          configSettingsDisplay['comments'] ||
-          (configSettingsDisplay['comments'] === undefined && true)
-        "
-      >
-        <mat-label>Comments</mat-label>
-        <textarea
-          matInput
-          [(ngModel)]="impuritiesResidualSolventsTest.comments"
-          name="comments"
-        ></textarea>
-      </mat-form-field>
+      @if (
+        configSettingsDisplay['comments'] ||
+        (configSettingsDisplay['comments'] === undefined && true)
+        ) {
+        <mat-form-field
+          class="col-2-1"
+          >
+          <mat-label>Comments</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="impuritiesResidualSolventsTest.comments"
+            name="comments"
+          ></textarea>
+        </mat-form-field>
+      }
     </div>
 
     <!-- IMPURITIES RESIDUAL SOLVENTS LIST BEGIN -->
@@ -140,7 +147,7 @@
           matBadgeColor="accent"
           matBadgeSize="medium"
           matBadgeOverlap="false"
-        >
+          >
           <span class="titleblue"><b>Residual Solvents</b></span>
         </span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -149,29 +156,29 @@
           color="primary"
           (click)="addNewImpuritiesResidualSolvents($event)"
           matTooltip="Add New Residual Solvents"
-        >
+          >
           <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Residual
           Solvents
         </button>
       </div>
     </div>
 
-    <div
-      class="marginbottom10px"
-      *ngFor="
-        let impuritiesResidualSolvents of impuritiesResidualSolventsTest.impuritiesResidualSolventsList;
-        let impuritiesResidualIndex = index
-      "
-    >
-      <app-impurities-residual-solvents-form
-        [impuritiesResidualSolvents]="impuritiesResidualSolvents"
-        [impuritiesResidualIndex]="impuritiesResidualIndex"
-        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
-        [residualSolventsTestIndex]="residualSolventsTestIndex"
-        [showAdvancedSettings]="showAdvancedSettings"
-      >
-      </app-impurities-residual-solvents-form>
-    </div>
+    @for (
+      impuritiesResidualSolvents of impuritiesResidualSolventsTest.impuritiesResidualSolventsList; track
+      impuritiesResidualSolvents; let impuritiesResidualIndex = $index) {
+      <div
+        class="marginbottom10px"
+        >
+        <app-impurities-residual-solvents-form
+          [impuritiesResidualSolvents]="impuritiesResidualSolvents"
+          [impuritiesResidualIndex]="impuritiesResidualIndex"
+          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
+          [residualSolventsTestIndex]="residualSolventsTestIndex"
+          [showAdvancedSettings]="showAdvancedSettings"
+          >
+        </app-impurities-residual-solvents-form>
+      </div>
+    }
 
     <!--
     <div class="marginbottom10px"
@@ -198,15 +205,15 @@
     </button>
 
     <br>
-    <div class="marginbottom10px"
-      *ngFor="let impuritiesUnspecified of impuritiesTest.impuritiesUnspecifiedList; let impuritiesUnspecifiedIndex = index">
-      <app-impurities-unspecified-form [impuritiesUnspecified]="impuritiesUnspecified"
-        [impuritiesUnspecifiedIndex]="impuritiesUnspecifiedIndex" [impuritiesTestIndex]="impuritiesTestIndex"
-        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
-      </app-impurities-unspecified-form>
-    </div>
-    -->
-    <!-- IMPURITIES UNSPECIFIED LIST END -->
-  </mat-card-content>
-</mat-card>
-<br />
+      <div class="marginbottom10px"
+        *ngFor="let impuritiesUnspecified of impuritiesTest.impuritiesUnspecifiedList; let impuritiesUnspecifiedIndex = index">
+        <app-impurities-unspecified-form [impuritiesUnspecified]="impuritiesUnspecified"
+          [impuritiesUnspecifiedIndex]="impuritiesUnspecifiedIndex" [impuritiesTestIndex]="impuritiesTestIndex"
+          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+        </app-impurities-unspecified-form>
+      </div>
+      -->
+      <!-- IMPURITIES UNSPECIFIED LIST END -->
+    </mat-card-content>
+  </mat-card>
+  <br />

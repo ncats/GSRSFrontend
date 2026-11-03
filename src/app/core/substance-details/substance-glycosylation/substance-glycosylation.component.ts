@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import {SubstanceCardBase} from '../substance-card-base';
 import {Glycosylation, Site, SubstanceDetail} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
@@ -7,7 +8,8 @@ import {Subject} from 'rxjs';
     selector: 'app-substance-glycosylation',
     templateUrl: './substance-glycosylation.component.html',
     styleUrls: ['./substance-glycosylation.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatTableModule]
 })
 export class SubstanceGlycosylationComponent extends SubstanceCardBase implements OnInit {
   glycosylation: Glycosylation;
