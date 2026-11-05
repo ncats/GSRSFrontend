@@ -534,13 +534,24 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     // Set service assay
     this.invitroPharmacologyService.assay = this.assay;
 
-    this.invitroPharmacologyService.saveAssay().subscribe(response => {
+    this.invitroPharmacologyService.saveAssay().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
+      this.validationResult = false;
+
+      // precisionFDA only: nothing was written to the read-only GSRS database, the assay JSON
+      // was stored as a file in the user's pFDA My Home area instead.
+      const fileUrl = this.invitroPharmacologyService.getPfdaFileUrl(response);
+      if (fileUrl) {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = '';
+        this.invitroPharmacologyService.openPfdaSaveSuccessDialog(fileUrl, 'Assay');
+        return;
+      }
+
       this.submissionMessage = 'In Vitro Pharmacology Assay data was saved successfully!';
       this.showSubmissionMessages = true;
-      this.validationResult = false;
 
       setTimeout(() => {
         this.showSubmissionMessages = false;
@@ -553,8 +564,30 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
           this.router.navigate(['/invitro-pharm/assay', id, 'edit']);
         }
       }, 4000);
-    }
-    );
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      if (error && error.type === 'AUTH') {
+        this.validationMessages = [];
+        this.setValidationMessage(this.invitroPharmacologyService.getPfdaLoginRequiredMessage('an assay'));
+        this.showSubmissionMessages = true;
+      } else {
+        this.addServerError(error);
+      }
+    });
+  }
+
+  getSubmitButtonText(): string {
+    return this.invitroPharmacologyService.getSubmitButtonText(
+      !!(this.validationMessages && this.validationMessages.length > 0));
+  }
+
+  get isPfdaVersion(): boolean {
+    return this.invitroPharmacologyService.isPfdaVersion;
+  }
+
+  generateExternalAssayId(): void {
+    this.assay.externalAssayId = this.invitroPharmacologyService.generateExternalAssayId();
   }
 
   displayMessageAfterDeleteImpurities() {

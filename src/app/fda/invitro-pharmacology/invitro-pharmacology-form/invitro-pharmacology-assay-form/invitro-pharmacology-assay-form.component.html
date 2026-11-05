@@ -128,12 +128,7 @@
           (click)="submit()"
           [disabled]="isLoading || this.validationResult === false"
         >
-          {{
-            validationMessages && validationMessages.length > 0
-              ? "Dismiss All and "
-              : ""
-          }}
-          Submit
+          {{ getSubmitButtonText() }}
         </button>
       </div>
     </div>
@@ -305,6 +300,17 @@
                   name="externalAssayId"
                 />
               </mat-form-field>
+              <button
+                *ngIf="isPfdaVersion"
+                class="marginleft10px margintop10px"
+                mat-flat-button
+                color="primary"
+                type="button"
+                (click)="generateExternalAssayId()"
+                matTooltip="Generate a random External Assay ID"
+              >
+                Generate
+              </button>
             </div>
 
             <div class="form-row">

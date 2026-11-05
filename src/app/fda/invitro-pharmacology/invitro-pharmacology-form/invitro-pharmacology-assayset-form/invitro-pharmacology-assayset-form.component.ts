@@ -545,6 +545,13 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     // Scrub extra fields before saving
     this.scrubExtraFields();
 
+    // precisionFDA only: the whole Assay Set is sent in a single bulk request, which the pFDA platform
+    // stores as one file in the user's My Home area.
+    if (this.invitroPharmacologyService.isPfdaVersion) {
+      this.savePfdaFile();
+      return;
+    }
+
     // Get the index to delete the Assay Set in the Assay
     const indexAssaySetInDatabase = this.existingAssaySetDatabaseList.findIndex(
       (record) => record.assaySet === this.selectedAssaySet,
@@ -615,6 +622,58 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
       // If Assay Set is already in DB
       this.saveBulkAssays(false);
     }
+  }
+
+  // precisionFDA only: stores the selected assays as a single file on the pFDA platform.
+  private savePfdaFile(): void {
+    if (this.validationMessages && this.validationMessages.length > 0) {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      return;
+    }
+
+    this.invitroPharmacologyService
+      .saveBulkAssays(this.assaysToSave)
+      .pipe(take(1))
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          this.loadingService.setLoading(false);
+          this.validationMessages = null;
+          this.validationResult = false;
+          this.showSubmissionMessages = false;
+          this.submissionMessage = "";
+
+          const fileUrl =
+            this.invitroPharmacologyService.getPfdaFileUrl(response);
+          if (fileUrl) {
+            this.invitroPharmacologyService.openPfdaSaveSuccessDialog(
+              fileUrl,
+              "Assay Set",
+            );
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          this.loadingService.setLoading(false);
+          this.validationMessages = [];
+          this.setValidationMessage(
+            error && error.type === "AUTH"
+              ? this.invitroPharmacologyService.getPfdaLoginRequiredMessage(
+                  "an assay set",
+                )
+              : "There was a problem saving the Assay Set" +
+                  (error && error.status ? " (" + error.status + ")" : ""),
+          );
+          this.showSubmissionMessages = true;
+        },
+      );
+  }
+
+  getSubmitButtonText(): string {
+    return this.invitroPharmacologyService.getSubmitButtonText(
+      !!(this.validationMessages && this.validationMessages.length > 0),
+    );
   }
 
   saveBulkAssays(skipFirstRecord?: boolean) {

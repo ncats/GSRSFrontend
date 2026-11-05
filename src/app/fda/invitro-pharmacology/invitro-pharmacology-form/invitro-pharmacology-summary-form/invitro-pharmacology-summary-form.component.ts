@@ -429,6 +429,10 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
         if (!screening._selectedAssay) {
           this.setValidationMessage('Assay is required in row ' + (index + 1));
+        } else if (screening._selectedAssay._isPfdaInline) {
+          // precisionFDA only: validate the assay entered inline
+          this.invitroPharmacologyService.getPfdaInlineAssayValidationMessages(screening._selectedAssay, 'row ' + (index + 1), false)
+            .forEach(message => this.setValidationMessage(message));
         }
 
         if (screening.invitroSummary) {
@@ -587,6 +591,17 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       this.checkIfDataChanged();
     }
 
+    // precisionFDA only: all assays are sent in a single bulk request, which the pFDA platform stores
+    // as one file in the user's My Home area.
+    if (this.invitroPharmacologyService.isPfdaVersion) {
+      const assays = this.assayToSave
+        .filter((assay, indexAssay) => !(skipFirstRecord == true && indexAssay == 0))
+        .map(assay => this.cleanData(_.cloneDeep(assay)))
+        .concat(this.getPfdaInlineAssaysToSave());
+      this.savePfdaFile(assays);
+      return;
+    }
+
     const url = this.invitroPharmacologyService.apiBaseUrlWithInvitroPharmEntityUrl;
 
     // Clean/remove extra fields
@@ -653,6 +668,78 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       this.isLoading = false;
       this.loadingService.setLoading(false);
     }
+  }
+
+  // precisionFDA only: stores the assays as a single file on the pFDA platform.
+  private savePfdaFile(assays: Array<any>): void {
+    if (assays.length == 0) {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      this.validationMessages = null;
+      this.submissionMessage = 'No changes were made, there is nothing to save.';
+      this.showSubmissionMessages = true;
+      return;
+    }
+
+    this.invitroPharmacologyService.saveBulkAssays(assays).pipe(take(1)).subscribe(response => {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      this.validationMessages = null;
+      this.validationResult = false;
+      this.showSubmissionMessages = false;
+      this.submissionMessage = '';
+
+      const fileUrl = this.invitroPharmacologyService.getPfdaFileUrl(response);
+      if (fileUrl) {
+        this.invitroPharmacologyService.openPfdaSaveSuccessDialog(fileUrl, 'Summary');
+      }
+    }, error => {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      if (error && error.type === 'AUTH') {
+        this.validationMessages = [];
+        this.setValidationMessage(this.invitroPharmacologyService.getPfdaLoginRequiredMessage('a summary'));
+        this.showSubmissionMessages = true;
+      } else {
+        this.addServerError(error);
+      }
+    });
+  }
+
+  getSubmitButtonText(): string {
+    return this.invitroPharmacologyService.getSubmitButtonText(
+      !!(this.validationMessages && this.validationMessages.length > 0));
+  }
+
+  get isPfdaVersion(): boolean {
+    return this.invitroPharmacologyService.isPfdaVersion;
+  }
+
+  // precisionFDA only: uses an assay entered inline for this summary instead of an existing one
+  usePfdaInlineAssay(indexScreening: number): void {
+    const screening = this.screeningList[indexScreening];
+    this.assayToSave = this.assayToSave.filter(assay => !(assay.invitroAssayScreenings || []).includes(screening));
+    screening._selectedAssay = this.invitroPharmacologyService.createPfdaInlineAssay();
+    screening._assayResults = [];
+  }
+
+  generatePfdaInlineExternalAssayId(indexScreening: number): void {
+    this.screeningList[indexScreening]._selectedAssay.externalAssayId = this.invitroPharmacologyService.generateExternalAssayId();
+  }
+
+  // The inline assay targets the substance selected as the summary Target Name.
+  private getPfdaInlineAssaysToSave(): Array<InvitroAssayInformation> {
+    return this.screeningList
+      .filter(screening => screening && screening._selectedAssay && screening._selectedAssay._isPfdaInline)
+      .map(screening => {
+        const assay: InvitroAssayInformation = _.cloneDeep(screening._selectedAssay);
+        const savedScreening = _.cloneDeep(_.omit(screening, ['_selectedAssay', '_assayResults'])) as InvitroAssayScreening;
+        assay.targetName = screening.invitroSummary.targetName;
+        assay.targetNameSubstanceKey = screening.invitroSummary.targetNameSubstanceKey;
+        assay.targetNameSubstanceKeyType = 'UUID';
+        assay.invitroAssayScreenings = [savedScreening];
+        return this.invitroPharmacologyService.toPfdaInlineAssayForSaving(assay);
+      });
   }
 
   reloadPageAfterSave() {
@@ -765,7 +852,12 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     // Assign Test Agent
     newScreening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid = this.testAgentSubstanceUuid;
     newScreening.invitroAssayResultInformation.invitroTestAgent.testAgent = this.testAgent;
-  
+
+    // precisionFDA only: GSRS has no assays to search yet, so start with an inline assay
+    if (this.isPfdaVersion && !this.id) {
+      newScreening._selectedAssay = this.invitroPharmacologyService.createPfdaInlineAssay();
+    }
+
     this.screeningList.push(newScreening);
 
   }

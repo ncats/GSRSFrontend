@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { Observable, throwError } from 'rxjs';
+import { concatMap, map, switchMap, take, tap } from 'rxjs/operators';
 
 /* GSRS Core Imports */
 import { BaseHttpService } from '@gsrs-core/base';
@@ -10,6 +13,8 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { PagingResponse } from '@gsrs-core/utils';
 import { Facet, FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { SubmitSuccessDialogComponent } from '@gsrs-core/substance-form/submit-success-dialog/submit-success-dialog.component';
 
 /* GSRS Invitro Pharmacology Imports */
 import { InvitroAssayInformation, InvitroAssayAnalyte, InvitroAssayResult, InvitroAssayScreening, InvitroSummary, ValidationResults } from '../model/invitro-pharmacology.model';
@@ -34,11 +39,189 @@ export class InvitroPharmacologyService extends BaseHttpService {
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
-    public utilsService: UtilsService
+    public utilsService: UtilsService,
+    public authService: AuthService,
+    private dialog: MatDialog,
+    private router: Router,
+    private overlayContainerService: OverlayContainer
   ) {
     super(configService);
     // Initialize fields that depend on configService
     this.apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/' + this.invitroPharmEntityEndpoint + '/';
+  }
+
+  get isPfdaVersion(): boolean {
+    return !!(this.configService.configData && this.configService.configData.isPfdaVersion);
+  }
+
+  // Sends an In Vitro Pharmacology save request. 'endpoint' is relative to the entity url, e.g.
+  // '' (assay), 'screening', 'saveBulkAssays' or '<assayId>/screening'.
+  //
+  // precisionFDA only: the GSRS in-vitro pharmacology database is read-only. Every save is
+  // intercepted by the pFDA platform, which stores the submitted JSON as a file in the user's
+  // My Home area and returns a 'fileUrl' instead of the saved entity. Saving requires an
+  // authenticated pFDA user, so anonymous users are prompted to log in (popup) first.
+  sendSave<T>(method: 'PUT' | 'POST', endpoint: string, body: any): Observable<T> {
+    const options = {
+      body: body,
+      params: new HttpParams(),
+      headers: {
+        'Content-type': 'application/json'
+      }
+    };
+
+    if (!this.isPfdaVersion) {
+      return this.http.request<T>(method, this.apiBaseUrlWithInvitroPharmEntityUrl + endpoint, options);
+    }
+
+    // No trailing slash, the pFDA platform routes these exact paths to its own file-upload endpoint
+    const pfdaUrl = this.configService.configData.apiBaseUrl + 'api/v1/' + this.invitroPharmEntityEndpoint
+      + (endpoint ? '/' + endpoint : '');
+
+    return this.authService.getAuth().pipe(
+      // getAuth() is a BehaviorSubject that never completes. Taking a single value prevents the
+      // auth update emitted by a successful pfdaLogin() from queueing a second save request.
+      take(1),
+      concatMap(auth =>
+        auth
+          ? this.http.request<T>(method, pfdaUrl, options)
+          : this.authService.pfdaLogin().pipe(
+            concatMap(success =>
+              success
+                ? this.http.request<T>(method, pfdaUrl, options)
+                : throwError(() => ({
+                  type: 'AUTH',
+                  message: 'Authentication failed',
+                }))
+            )
+          )
+      )
+    );
+  }
+
+  // precisionFDA only: the 'fileUrl' returned when a save was stored as a pFDA file, otherwise null.
+  getPfdaFileUrl(response: any): string {
+    return (this.isPfdaVersion && response && response.fileUrl) ? response.fileUrl : null;
+  }
+
+  // precisionFDA only: text of the submit button, anonymous users are asked to log in on submit.
+  getSubmitButtonText(dismissAll: boolean): string {
+    const parts = [];
+    if (dismissAll) {
+      parts.push('Dismiss all');
+    }
+    if (this.isPfdaVersion && !this.authService.getUser()) {
+      parts.push('Login');
+    }
+    parts.push('Submit');
+    if (parts.length === 1) {
+      return parts[0];
+    }
+    return parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+  }
+
+  // precisionFDA only: message shown when an anonymous user cancels or fails the login popup.
+  getPfdaLoginRequiredMessage(recordLabel: string): string {
+    return 'You need to be logged in to precisionFDA to submit ' + recordLabel + '.';
+  }
+
+  // precisionFDA only: confirms the record was saved as a file on the pFDA platform and offers a
+  // link to that file.
+  openPfdaSaveSuccessDialog(fileUrl: string, recordLabel: string): void {
+    this.bypassUpdateCheck();
+    const overlayContainer = this.overlayContainerService.getContainerElement();
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
+      data: {
+        isCoreSubstance: 'true',
+        type: 'submit',
+        fileUrl: fileUrl,
+        dialogTitle: 'In Vitro Pharmacology ' + recordLabel + ' Saved',
+        dialogMessage: 'The in vitro pharmacology ' + recordLabel.toLowerCase()
+          + ' was saved successfully as a file in your pFDA My Home area.',
+        viewLabel: 'View ' + recordLabel + ' File'
+      },
+      disableClose: true
+    });
+    overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      overlayContainer.style.zIndex = null;
+      if (response === 'viewInPfda') {
+        // View the submitted file in the user's precisionFDA home
+        window.location.assign(fileUrl);
+      } else if (response === 'browse') {
+        this.router.navigate(['/browse-invitro-pharm']);
+      }
+    });
+  }
+
+  // precisionFDA only: generates a random External Assay ID, for users who have no real one.
+  generateExternalAssayId(): string {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.floor(Math.random() * 16);
+      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    });
+  }
+
+  // precisionFDA only: pFDA submissions are stored as files and never saved into GSRS, so there may be
+  // no existing assays to pick from. The Screening and Summary forms let users enter an assay inline.
+  createPfdaInlineAssay(): InvitroAssayInformation {
+    return {
+      _isPfdaInline: true,
+      _assaySet: '',
+      externalAssaySource: '',
+      externalAssayId: '',
+      assayTitle: '',
+      invitroAssayAnalytes: [],
+      invitroAssaySets: [],
+      invitroAssayScreenings: []
+    };
+  }
+
+  setPfdaInlineAssayTarget(assay: InvitroAssayInformation, substance: any, substanceKeyType: string): void {
+    if (!assay || !substance) {
+      return;
+    }
+    const useApprovalId = (substanceKeyType === 'APPROVAL_ID' || substanceKeyType === 'UNII') && substance.approvalID;
+    assay.targetName = substance._name;
+    assay.targetNameApprovalId = substance.approvalID;
+    assay.targetNameSubstanceKey = useApprovalId ? substance.approvalID : substance.uuid;
+    assay.targetNameSubstanceKeyType = useApprovalId ? substanceKeyType : 'UUID';
+  }
+
+  getPfdaInlineAssayValidationMessages(assay: InvitroAssayInformation, rowLabel: string, validateTarget = true): Array<string> {
+    const messages = [];
+    const isBlank = (value: string) => !value || value.trim().length === 0;
+    if (isBlank(assay._assaySet)) {
+      messages.push('Assay Set is required in ' + rowLabel);
+    }
+    if (isBlank(assay.externalAssaySource)) {
+      messages.push('External Assay Source is required in ' + rowLabel);
+    }
+    if (isBlank(assay.externalAssayId)) {
+      messages.push('External Assay ID is required in ' + rowLabel);
+    }
+    if (validateTarget && (isBlank(assay.targetName) || isBlank(assay.targetNameSubstanceKey))) {
+      messages.push('Target Name is required in ' + rowLabel);
+    }
+    return messages;
+  }
+
+  // Converts the inline assay into the JSON shape of a GSRS assay (without the UI-only fields).
+  toPfdaInlineAssayForSaving(assay: InvitroAssayInformation): InvitroAssayInformation {
+    const assaySet = (assay._assaySet || '').trim();
+    const saved: InvitroAssayInformation = { ...assay, invitroAssaySets: [{ assaySet: assaySet }] };
+    delete saved._isPfdaInline;
+    delete saved._assaySet;
+    (saved.invitroAssayScreenings || []).forEach(screening => {
+      if (screening) {
+        screening.assaySet = assaySet;
+      }
+    });
+    return saved;
   }
 
   getInvitroPharmacology(
@@ -364,110 +547,33 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   saveAssay(): Observable<InvitroAssayInformation> {
-    const url = this.apiBaseUrlWithInvitroPharmEntityUrl;
-    const params = new HttpParams();
-    const options = {
-      params: params,
-      type: 'JSON',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    };
-    // Update In Vitro Pharmacology ASSAY
-    if ((this.assay != null) && (this.assay.id)) {
-      return this.http.put<InvitroAssayInformation>(url, this.assay, options);
-    } else {
-      // Save New In Vitro Pharmacology ASSAY
-      return this.http.post<InvitroAssayInformation>(url, this.assay, options);
-    }
+    // Update existing In Vitro Pharmacology ASSAY (PUT) or save a new one (POST)
+    const method = ((this.assay != null) && (this.assay.id)) ? 'PUT' : 'POST';
+    return this.sendSave<InvitroAssayInformation>(method, '', this.assay);
   }
 
   saveAssayforScreening(): Observable<InvitroAssayInformation> {
-    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + "saveAssay";
-    const params = new HttpParams();
-    const options = {
-      params: params,
-      type: 'JSON',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    };
-    // Update In Vitro Pharmacology ASSAY
-    //if ((this.assay != null) && (this.assay.id)) {
-    return this.http.put<InvitroAssayInformation>(url, this.assay, options);
-    //  } else {
-    //    // Save New In Vitro Pharmacology ASSAY
-    //    return this.http.post<InvitroAssayInformation>(url, this.assay, options);
-    //  }
+    return this.sendSave<InvitroAssayInformation>('PUT', 'saveAssay', this.assay);
   }
 
   saveBulkAssays(bulkAssays: any): Observable<any> {
-    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + "saveBulkAssays";
-    const params = new HttpParams();
-    const options = {
-      params: params,
-      type: 'JSON',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    };
     // Add or Update In Vitro Pharmacology ASSAY in Bulk
-    return this.http.put<any>(url, bulkAssays, options);
+    return this.sendSave<any>('PUT', 'saveBulkAssays', bulkAssays);
   }
 
   saveScreeningOnly(screening: any): Observable<InvitroAssayScreening> {
-    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'screening';
-    const params = new HttpParams();
-    const options = {
-      params: params,
-      type: 'JSON',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    };
-    // Update In Vitro Pharmacology SCREENING
-    if ((screening != null) && (screening.id)) {
-      return this.http.put<InvitroAssayScreening>(url, screening, options);
-    } else {
-      // Save New In Vitro Pharmacology SCREENING
-      return this.http.post<InvitroAssayScreening>(url, screening, options);
-    }
+    // Update existing In Vitro Pharmacology SCREENING (PUT) or save a new one (POST)
+    const method = ((screening != null) && (screening.id)) ? 'PUT' : 'POST';
+    return this.sendSave<InvitroAssayScreening>(method, 'screening', screening);
   }
 
   saveScreening(screening: any, assayId: number): Observable<InvitroAssayScreening> {
-    //Remove last slash /
-    // let entityUrl = this.apiBaseUrlWithInvitroPharmEntityUrl.replace(/\/+$/, '');
-    // const url = entityUrl + '(' + assayId + ')/screening';
-    let url = this.apiBaseUrlWithInvitroPharmEntityUrl + assayId + '/screening';
-    let params = new HttpParams();
-    const options = {
-      params: params,
-      type: 'JSON',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    };
-    // Update In Vitro Pharmacology Screening
-    //    if ((this.assay != null) && (this.assay.id)) {
-    return this.http.post<InvitroAssayScreening>(url, screening, options);
-    //   } else {
-    // Save New In Vitro Pharmacology Screening
-    //     return this.http.post<InvitroAssayScreening>(url, this.assay, options);
-    //  }
+    return this.sendSave<InvitroAssayScreening>('POST', assayId + '/screening', screening);
   }
 
   saveBulkScreenings(bulkScreenings: any): Observable<InvitroAssayInformation> {
-    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + "saveBulkScreenings";
-    const params = new HttpParams();
-    const options = {
-      params: params,
-      type: 'JSON',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    };
     // Add or Update In Vitro Pharmacology ASSAY Screening in Bulk
-    return this.http.put<InvitroAssayInformation>(url, bulkScreenings, options);
+    return this.sendSave<InvitroAssayInformation>('PUT', 'saveBulkScreenings', bulkScreenings);
   }
 
   validateAssay(): Observable<ValidationResults> {

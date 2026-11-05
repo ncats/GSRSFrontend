@@ -73,9 +73,7 @@
       <div class="dismiss-container">
         <span class="middle-fill"></span>
         <button mat-flat-button color="primary" (click)="saveAssays()"
-          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
-          validationMessages.length > 0?'Dismiss All and ':''}}
-          Submit</button>
+          [disabled]="isLoading || (this.validationResult === false)">{{ getSubmitButtonText() }}</button>
       </div>
     </div>
     <!-- Validation Message and Submit Button -->
@@ -1047,6 +1045,14 @@
                       </div>
                     </div>
 
+                    <!-- precisionFDA only: enter an assay inline instead of selecting an existing one -->
+                    <div class="marginleft20px padtop5px" *ngIf="!id && isPfdaVersion">
+                      <button mat-flat-button color="primary" type="button" (click)="addPfdaInlineAssay()"
+                        matTooltip="Enter an Assay that is not in the database yet">
+                        <mat-icon>add_circle_outline</mat-icon>&nbsp;Add Assay
+                      </button>
+                    </div>
+
                     <!-- NEXT BUTTON -->
                     <div class="alignright">
                       <button mat-button matStepperPrevious>Back</button>
@@ -1102,6 +1108,7 @@
                             <b>{{(indexAssay+1)}}</b>
                           </div>
 
+                          <ng-container *ngIf="!assay._isPfdaInline">
                           <div class="marginright20px width190px">
                             <span class="font13px">Target Name:</span><br>
 
@@ -1127,6 +1134,37 @@
                             <span class="font13px">Assay Title:</span><br>
                             <span class="fontbold">{{assay.assayTitle}}&nbsp;</span>
                           </div>
+                          </ng-container>
+
+                          <!-- precisionFDA only: Assay entered inline -->
+                          <ng-container *ngIf="assay._isPfdaInline">
+                          <mat-form-field class="marginright20px width190px">
+                            <mat-label>* Assay Set</mat-label>
+                            <input matInput [(ngModel)]="assay._assaySet" name="pfdaInlineAssaySet{{indexAssay}}" />
+                          </mat-form-field>
+
+                          <mat-form-field class="marginright20px width190px">
+                            <mat-label>* External Assay Source</mat-label>
+                            <input matInput [(ngModel)]="assay.externalAssaySource"
+                              name="pfdaInlineExternalAssaySource{{indexAssay}}" />
+                          </mat-form-field>
+
+                          <mat-form-field class="width190px">
+                            <mat-label>* External Assay ID</mat-label>
+                            <input matInput [(ngModel)]="assay.externalAssayId"
+                              name="pfdaInlineExternalAssayId{{indexAssay}}" />
+                          </mat-form-field>
+                          <button mat-icon-button color="primary" type="button" class="marginright10px"
+                            (click)="generatePfdaInlineExternalAssayId(indexAssay)"
+                            matTooltip="Generate a random External Assay ID">
+                            <mat-icon>autorenew</mat-icon>
+                          </button>
+
+                          <mat-form-field class="marginright10px width230px">
+                            <mat-label>Assay Title</mat-label>
+                            <input matInput [(ngModel)]="assay.assayTitle" name="pfdaInlineAssayTitle{{indexAssay}}" />
+                          </mat-form-field>
+                          </ng-container>
 
 
                           <div class="divflex margintopneg5px width100px alignright">
@@ -1148,6 +1186,18 @@
                           </div> <!-- divflex -->
 
                         </div> <!-- First row class=divflex -->
+
+                        <!-- precisionFDA only: Target Name of the Assay entered inline -->
+                        <div class="form-row margintop10px related-substance" *ngIf="assay._isPfdaInline">
+                          <app-substance-selector
+                            (selectionUpdated)="pfdaInlineTargetUpdated($event, indexAssay)"
+                            eventCategory="substanceRelationshipRelatedSub"
+                            placeholder="* Target Name - Search by Name/CAS RN/UNII/BDNUM"
+                            header="Target Name"
+                            [subuuid]="assay.targetNameSubstanceKeyType === 'UUID' ? assay.targetNameSubstanceKey : null"
+                            [showMorelinks]="true">
+                          </app-substance-selector>
+                        </div>
 
 
                         <!-- Result - SECOND ROW  -->

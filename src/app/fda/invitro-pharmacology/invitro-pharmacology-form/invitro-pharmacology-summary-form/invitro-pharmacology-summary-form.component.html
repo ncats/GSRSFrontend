@@ -105,12 +105,7 @@
           (click)="submit()"
           [disabled]="isLoading || this.validationResult === false"
         >
-          {{
-            validationMessages && validationMessages.length > 0
-              ? "Dismiss All and "
-              : ""
-          }}
-          Submit
+          {{ getSubmitButtonText() }}
         </button>
       </div>
     </div>
@@ -256,7 +251,11 @@
                         <div class="form-row">
                           <div class="width300px margintop10px">
                             <app-invitro-pharmacology-text-search
-                              placeholder="* Assay - Type any text to Search Assay"
+                              [placeholder]="
+                                isPfdaVersion && !id
+                                  ? 'Optional - Search existing Assay'
+                                  : '* Assay - Type any text to Search Assay'
+                              "
                               styling="homePage"
                               [searchValue]="searchValue"
                               (searchPerformed)="
@@ -265,12 +264,99 @@
                               eventCategory="invitroPharmacologySearch"
                             >
                             </app-invitro-pharmacology-text-search>
+
+                            <!-- precisionFDA only: enter an assay inline instead of selecting an existing one -->
+                            <button
+                              *ngIf="
+                                isPfdaVersion &&
+                                !id &&
+                                !(
+                                  screening._selectedAssay &&
+                                  screening._selectedAssay._isPfdaInline
+                                )
+                              "
+                              class="margintop10px"
+                              mat-flat-button
+                              color="primary"
+                              type="button"
+                              (click)="usePfdaInlineAssay(indexScreening)"
+                              matTooltip="Enter an Assay that is not in the database yet"
+                            >
+                              Enter Assay
+                            </button>
+                          </div>
+
+                          <!-- precisionFDA only: Assay entered inline -->
+                          <div
+                            class="margintop10px marginleft20px"
+                            *ngIf="
+                              screening._selectedAssay &&
+                              screening._selectedAssay._isPfdaInline
+                            "
+                          >
+                            <div class="textalignleft">
+                              <b>&nbsp;Assay (targets the Target Name)</b>
+                            </div>
+                            <div class="divflex">
+                              <mat-form-field class="marginright10px" style="width: 160px">
+                                <mat-label>* Assay Set</mat-label>
+                                <input
+                                  matInput
+                                  [(ngModel)]="screening._selectedAssay._assaySet"
+                                  name="pfdaInlineAssaySet{{ indexScreening }}"
+                                />
+                              </mat-form-field>
+                              <mat-form-field class="marginright10px" style="width: 160px">
+                                <mat-label>* External Assay Source</mat-label>
+                                <input
+                                  matInput
+                                  [(ngModel)]="
+                                    screening._selectedAssay.externalAssaySource
+                                  "
+                                  name="pfdaInlineExternalAssaySource{{ indexScreening }}"
+                                />
+                              </mat-form-field>
+                            </div>
+                            <div class="divflex">
+                              <mat-form-field class="width300px">
+                                <mat-label>* External Assay ID</mat-label>
+                                <input
+                                  matInput
+                                  [(ngModel)]="
+                                    screening._selectedAssay.externalAssayId
+                                  "
+                                  name="pfdaInlineExternalAssayId{{ indexScreening }}"
+                                />
+                              </mat-form-field>
+                              <button
+                                mat-icon-button
+                                color="primary"
+                                type="button"
+                                (click)="
+                                  generatePfdaInlineExternalAssayId(indexScreening)
+                                "
+                                matTooltip="Generate a random External Assay ID"
+                              >
+                                <mat-icon>autorenew</mat-icon>
+                              </button>
+                            </div>
+                            <mat-form-field style="width: 330px">
+                              <mat-label>Assay Title</mat-label>
+                              <input
+                                matInput
+                                [(ngModel)]="screening._selectedAssay.assayTitle"
+                                name="pfdaInlineAssayTitle{{ indexScreening }}"
+                              />
+                            </mat-form-field>
                           </div>
 
                           <!-- Selected Assay -->
                           <div
                             class="margintop10px marginleft20px"
-                            *ngIf="screening._selectedAssay"
+                            *ngIf="
+                              screening._selectedAssay &&
+                              !screening._selectedAssay._isPfdaInline
+                            "
                           >
                             <div class="textalignleft">
                               <b>&nbsp;Selected Assay</b>
