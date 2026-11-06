@@ -1,43 +1,85 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { Subject } from 'rxjs';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { LoadingService } from '@gsrs-core/loading';
+import { DataManagementComponent } from './data-management.component';
+import { ChangeDetectorRef } from '@angular/core';
 import { vi } from 'vitest';
 
-import { DataManagementComponent } from './data-management.component';
-
-describe('DataManagementComponent', () => {
+describe('DataManagementComponent upload', () => {
   let component: DataManagementComponent;
-  let fixture: ComponentFixture<DataManagementComponent>;
+  let request: Subject<any>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      // template binds formControlName + ngModel on a real <mat-select>, so it needs a
-      // real ControlValueAccessor - NO_ERRORS_SCHEMA doesn't substitute for that.
-      imports: [ ReactiveFormsModule, FormsModule, MatSelectModule, NoopAnimationsModule, DataManagementComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: AdminService, useValue: {} },
-        { provide: Router, useValue: {} },
-        { provide: ActivatedRoute, useValue: { params: of({}) } },
-        { provide: LoadingService, useValue: { setLoading: vi.fn() } }
-      ]
-    })
-    .compileComponents();
-  });
+  let admin: any;
+  let router: any;
+  let loading: any;
+
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DataManagementComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+
+  request = new Subject();
+
+  admin = {
+    loadData: vi.fn().mockReturnValue(request)
+  };
+
+  router = {
+    navigate: vi.fn()
+  };
+
+  loading = {
+    setLoading: vi.fn()
+  };
+
+    
+ const cdr = {
+    markForCheck: vi.fn()
+  } as unknown as ChangeDetectorRef;
+
+  component = new DataManagementComponent(
+    new FormBuilder(),
+    admin,
+    router,
+    {} as ActivatedRoute,
+    loading,
+    cdr
+  );
+
+    component.ngOnInit();
+    component.uploadForm.get('file').setValue(new File(['data'], 'test.gsrs'));
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('blocks duplicate submissions and navigates after success', () => {
+    component.onSubmit();
+    component.onSubmit();
+    expect(admin.loadData).toHaveBeenCalledTimes(1);
+    expect(component.processing).toBe(true);
+    request.next({ id: 1 });
+    expect(router.navigate).toHaveBeenCalledWith(['/monitor/1']);
+    expect(component.processing).toBe(false);
+    expect(loading.setLoading).toHaveBeenCalledWith(false);
+  });
+
+  it('shows the backend reason and HTTP status instead of hiding them', () => {
+    component.onSubmit();
+    request.error(new HttpErrorResponse({ status: 413, error: { message: 'Database packet limit exceeded' } }));
+    expect(component.message).toContain('HTTP 413');
+    expect(component.message).toContain('Database packet limit exceeded');
+    expect(component.processing).toBe(false);
+  });
+
+  it('explains an expired session when no backend message is available', () => {
+    component.onSubmit();
+    request.error(new HttpErrorResponse({ status: 401 }));
+    expect(component.message).toContain('Sign in again');
+  });
+
+  it('does not submit without a file', () => {
+    component.uploadForm.get('file').setValue(null);
+    component.onSubmit();
+    expect(admin.loadData).not.toHaveBeenCalled();
+    expect(component.message).toContain('Select a file');
   });
 });

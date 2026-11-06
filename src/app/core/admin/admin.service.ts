@@ -136,8 +136,9 @@ export class AdminService extends BaseHttpService {
         }
 
         public queryLoad(id: string): Observable< UploadObject > {
-          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/jobs`;
-          return this.http.get< any >(`${url}/${id}/`);
+         // __aw__ test this 
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin`;
+          return this.http.get< UploadObject >(`${url}/${encodeURIComponent(id)}`);
         }
 
         public getFiles(): Observable < Array< DirectoryFile >> {
