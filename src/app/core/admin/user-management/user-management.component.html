@@ -109,6 +109,45 @@
           </a>
         </td>
       </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
+        <td mat-cell *matCellDef="let user, index as index" class="actions-column">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="userActionsMenu"
+            [attr.aria-label]="'Actions for ' + user.user.username"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #userActionsMenu="matMenu">
+            <button mat-menu-item
+              (click)="regenerateApiKeyConfirm(
+                user.user.username,
+                index, 
+                'For user [' + user.user.username + '], generate and persist a new API key, evict the old computed token and profile cache entries, then cache the newly derived computed token and profile.'
+              )"
+                >
+                Generate new API key
+            </button>
+            <button mat-menu-item (click)="expireUserSessionsConfirm(
+              user.user.username,
+              index,
+              {'revokeTokens': false},
+              'For user [' + user.user.username + '], expire the user\'s active sessions while leaving the API key, computed tokens, and token cache unchanged.'
+              )">
+              Expire user's "ix" sessions
+            </button>
+            <button mat-menu-item (click)="expireUserSessionsConfirm(
+              user.user.username,
+              index,
+              {'revokeTokens': true},
+              'For user [' + user.user.username + '], expire active sessions, generate and persist a new API key, evict the old computed token and profile cache entries, persist the updated user profile, and cache the newly derived computed token and profile.'
+              )">
+              Expire user's "ix" sessions and revoke tokens
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>

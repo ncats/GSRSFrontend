@@ -36,6 +36,21 @@
   height: 20px;
   line-height: 20px;
 }
+
+.actions-column {
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  padding: 0 4px;
+  text-align: center;
+}
+
+.actions-column button {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+}
+
 .dropdown-content {
   display: none;
   box-shadow: 0px 8px 16px 0px var(--box-shadow-color);
