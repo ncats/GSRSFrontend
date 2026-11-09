@@ -2,14 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, O
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
-
-import { ConfigService } from '@gsrs-core/config';
-import { AuthService } from '@gsrs-core/auth/auth.service';
-import { LoadingService } from '@gsrs-core/loading';
-import { GeneralService } from '../../../service/general.service';
-import { ImpuritiesService } from '../../service/impurities.service';
-import { ImpuritiesTesting, ImpuritiesDetails, ImpuritiesSolutionTable } from '../../model/impurities.model';
-import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,7 +12,20 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTableModule } from '@angular/material/table';
+import { TextFieldModule } from '@angular/cdk/text-field';
+
+/* GSRS Core */
+import { ConfigService } from '@gsrs-core/config';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { LoadingService } from '@gsrs-core/loading';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+
+/* GSRS Impurities */
+import { GeneralService } from '../../../service/general.service';
+import { ImpuritiesService } from '../../service/impurities.service';
+import { ImpuritiesTesting, ImpuritiesDetails, ImpuritiesSolutionTable } from '../../model/impurities.model';
+
 import { ImpuritiesDetailsFormComponent } from '../impurities-details-form/impurities-details-form.component';
 import { ImpuritiesUnspecifiedFormComponent } from '../impurities-unspecified-form/impurities-unspecified-form.component';
 
@@ -128,10 +133,6 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
         this.configSettingsDisplay[key] = true;
       }
     });
-  }
-
-  addNewElutionSolvent($event) {
-    this.impuritiesService.addNewImpuritiesElutionSolvent(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
   }
 
   addNewSolution() {
@@ -257,6 +258,26 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
       .impuritiesSolutionTableList);
   }
 
+  addNewImpuritiesAnalysis() {
+    this.impuritiesService.addNewImpuritiesAnalysis(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
+  }
+
+  confirmDeleteImpuritiesAnalysis(analysisIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Analysis row ' + (analysisIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteImpuritiesAnalysis(analysisIndex);
+      }
+    });
+  }
+
+  deleteImpuritiesAnalysis(analysisIndex: number) {
+    this.impuritiesService.deleteImpuritiesAnalysis(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, analysisIndex);
+  }
+
   addNewImpuritiesDetails() {
     this.createNewImpurities(null);
   }
@@ -287,23 +308,15 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.deleteImpuritiesTest(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
   }
 
-  confirmDeleteImpuritiesElutionSolvent(elutionIndex: number) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Elution Solvent ' + (elutionIndex + 1) + '?' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteImpuritiesElutionSolvent(elutionIndex);
-        this.cdr.markForCheck();
-      }
-    });
+  copyImpuritiesTest() {
+    this.impuritiesService.copyImpuritiesTest(this.impuritiesSubstanceIndex, this.impuritiesTest);
   }
 
-  deleteImpuritiesElutionSolvent(elutionIndex: number) {
-    this.impuritiesService.deleteImpuritiesElutionSolvent(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, elutionIndex);
+  getLetter(index: number): string {
+    return this.letters[index];
   }
 
+  /*
   nameSearch(event: any, impuritiesTestIndex: number, impuritiesElutionIndex: number): void {
     this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolvent = event;
 
@@ -324,12 +337,6 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(substanceSubscribe);
   }
+  */
 
-  copyImpuritiesTest() {
-    this.impuritiesService.copyImpuritiesTest(this.impuritiesSubstanceIndex, this.impuritiesTest);
-  }
-
-  getLetter(index: number): string {
-    return this.letters[index];
-  }
 }

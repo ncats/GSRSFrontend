@@ -1,13 +1,13 @@
 export interface Impurities {
   id?: number;
-  sourceType?: string;
   source?: string;
+  sourceType?: string;
   sourceId?: string;
   type?: string;
   specType?: string;
-  productSubstanceName?: string;
   submitterName?: string;
   productId?: string;
+  productSubstanceName?: string;
   dateType?: string;
   dateTypeDate?: string;
   createdBy?: string;
@@ -17,6 +17,7 @@ export interface Impurities {
   internalVersion?: number;
   impuritiesSubstanceList?: Array<ImpuritiesSubstance>;
   impuritiesTotal?: ImpuritiesTotal;
+  impuritiesAdditionalRequirements?: ImpuritiesAdditionalRequirements;
   _dateTypeDate?: Date;
 }
 
@@ -38,10 +39,9 @@ export interface ImpuritiesSubstance {
   _parentSubstanceName?: string;
   _parentSubstanceUuid?: string;
   impuritiesTestList?: Array<ImpuritiesTesting>;
-  impuritiesResidualSolventsTestList?: Array<ImpuritiesResidualSolventsTest>;  //new 3.1
- // impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>; //new 3.1, need to remove this for 3.1
-  impuritiesInorganicTestList?: Array<ImpuritiesInorganicTest>;  //new 3.1
- // impuritiesInorganicList?: Array<ImpuritiesInorganic>;  //new 3.1, need to remove this for 3.1
+  impuritiesResidualSolventsTestList?: Array<ImpuritiesResidualSolventsTest>;
+  impuritiesInorganicTestList?: Array<ImpuritiesInorganicTest>;
+  impuritiesSpecificTestList?: Array<ImpuritiesSpecificTest>;
 }
 
 export interface ImpuritiesTesting {
@@ -49,30 +49,44 @@ export interface ImpuritiesTesting {
   sourceType?: string;
   source?: string;
   sourceId?: string;
+  test?: string;
+  testType?: string;
+  buffer?: string;
+  elutionType?: string;
+  elutionSolvent?: string;
+  elutionSolventId?: string;
+  solutionADescription?: string;
+  solutionBDescription?: string;
+  diluent?: string;
   system?: string;
   mode?: string;
   detectionType?: string;
+  detectorWavelength?: string;
   detectionDetails?: string;
   columnPackingType?: string;
   columnPackingSize?: string;
   columnSize?: string;
   columnTemperature?: string;
+  autosamplerTemperature?: string;
   flowRate?: string;
   injectionVolumeAmount?: string;
-  diluent?: string;
-  standardSolution?: string;
-  sampleSolution?: string;
+  columnStationaryPhase?: string;
+  runTime?: string;
+  injection?: string;
   systemSuitabilitySolution?: string;
+  systemSuitabilityStockSolution?: string;
+  standardSolution?: string;
+  standardStockSolution?: string;
+  sampleSolution?: string;
+  sampleStockSolution?: string;
+  sensitivitySolution?: string;
   otherSolution?: string;
-  solutionADescription?: string;
-  solutionBDescription?: string;
-  suitabilityReqResolution?: string;
-  suitabilityReqRelStandardDeviation?: string;
-  elutionType?: string;
-  elutionSolvent?: string;
-  elutionSolventId?: string;
-  test?: string;
-  testType?: string;
+  systemSuitabilitySample?: string;
+  systemSuitabilityReqResolution?: string;
+  systemSuitabilityReqRelStandardDeviation?: string;
+  systemSuitabilityReqTailingFactor?: string;
+  systemSuitabilitySignalToNoiseRatio?: string;
+  systemSuitabilityReqPeakValleyRatio?: string;
   testDescription?: number;
   comments?: string;
   createdBy?: string;
@@ -82,20 +96,9 @@ export interface ImpuritiesTesting {
   internalVersion?: number;
   impuritiesSolutionList?: Array<ImpuritiesSolution>;
   impuritiesSolutionTableList?: Array<ImpuritiesSolutionTable>;
-  impuritiesElutionSolventList?: Array<ImpuritiesElutionSolvent>;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
-}
-
-export interface ImpuritiesElutionSolvent {
-  id?: number;
-  elutionSolvent?: string;
-  elutionSolventCode?: string;
-  createdBy?: string;
-  createDate?: number;
-  modifiedBy?: string;
-  modifyDate?: number;
-  internalVersion?: number;
+  impuritiesAnalysisList?: Array<ImpuritiesAnalysis>;
 }
 
 export interface ImpuritiesSolution {
@@ -112,9 +115,9 @@ export interface ImpuritiesSolution {
 
 export interface ImpuritiesSolutionTable {
   id?: number;
-  solutionTime?: number;
-  solutionAPercent?: number;
-  solutionBPercent?: number;
+  solutionTime?: string;
+  solutionAPercent?: string;
+  solutionBPercent?: string;
   solutionCPercent?: number;
   solutionDPercent?: number;
   solutionEPercent?: number;
@@ -123,6 +126,8 @@ export interface ImpuritiesSolutionTable {
   solutionHPercent?: number;
   solutionIPercent?: number;
   solutionJPercent?: number;
+  solutionAHeader?: string;
+  solutionBHeader?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -148,6 +153,11 @@ export interface ImpuritiesDetails {
   modifyDate?: number;
   internalVersion?: number;
   _ingredientName?: string;
+  _sourceImpurityStructureImage?: string;
+  chemicalStructure?: string | null;      // IUPAC name or SMILES
+  structureImage?: string | null;         // Base64 encoded image
+  molecularFormula?: string | null;       // e.g., C17H19N3O3S
+  impurityLetter?: string;                // e.g., A, B, C, D
   identityCriteriaList?: Array<IdentityCriteria>;
 }
 
@@ -179,7 +189,27 @@ export interface ImpuritiesUnspecified {
   identityCriteriaList?: Array<IdentityCriteria>;
 }
 
-export interface ImpuritiesResidualSolventsTest {    //new 3.1
+export interface ImpuritiesAnalysis {
+  id?: number;
+  samples?: string;
+  description?: string;
+  resultFormula?: string;
+  formulaRU?: string;
+  formulaRS?: string;
+  formulaCS?: string;
+  formulaCU?: string;
+  formulaP?: string;
+  formulaF?: string;
+  formulaMR1?: string;
+  formulaMR2?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesResidualSolventsTest {
   id?: number;
   sourceType?: string;
   source?: string;
@@ -200,6 +230,7 @@ export interface ImpuritiesResidualSolvents {
   id?: number;
   relatedSubstanceUuid?: string;
   pharmaceuticalLimit?: string;
+  analysis?: string;
   testType?: string;
   limitValue?: number;
   limitType?: string;
@@ -214,7 +245,7 @@ export interface ImpuritiesResidualSolvents {
   internalVersion?: number;
 }
 
-export interface ImpuritiesInorganicTest {    //new 3.1
+export interface ImpuritiesInorganicTest {
   id?: number;
   sourceType?: string;
   source?: string;
@@ -235,7 +266,7 @@ export interface ImpuritiesInorganic {
   id?: number;
   relatedSubstanceUuid?: string;
   testType?: string;
-  limitValue?: number;
+  limitValue?: string;
   limitType?: string;
   unit?: string;
   comments?: string;
@@ -248,13 +279,38 @@ export interface ImpuritiesInorganic {
   internalVersion?: number;
 }
 
+export interface ImpuritiesSpecificTest {
+  id?: number;
+  testType?: string;
+  sampleSolution?: string;
+  analysis?: string;
+  acceptanceCriteria?: string;
+  otherDescription?: string;
+  comments?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
 export interface ImpuritiesTotal {
   id?: number;
   testType?: string;
   limitValue?: string;
-  limitType?: number;
-  amountValue?: string;
+  limitType?: string;
+  unit?: string;
   comments?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesAdditionalRequirements {
+  id?: number;
+  referenceStandards?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -289,4 +345,22 @@ export interface ValidationMessage {
 export interface MessageLink {
   href: string;
   text: string;
+}
+
+export interface ImpurityStructure {
+  impurityCode: string;                    // A, B, C, etc.
+  chemicalName: string;                    // IUPAC name
+  alternateName?: string;                  // Common name
+  molecularFormula?: string | null;        // e.g., C17H19N3O3S
+  casNumber?: string | null;               // CAS Registry Number
+  structureRepresentation?: string;        // ASCII structure from PDF
+  
+  // Fields populated by REST API calls
+  smiles?: string | null;                  // Canonical SMILES
+  inchi?: string | null;                   // InChI
+  inchiKey?: string | null;                // InChIKey
+  molFile?: string | null;                 // MOL/SDF format
+  pubchemCid?: number | null;              // PubChem Compound ID
+  
+  searchable: boolean;                     // Whether enough data for search
 }

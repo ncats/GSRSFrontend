@@ -5,9 +5,29 @@ import { CanActivateRegisterImpuritiesFormComponent } from "./impurities-form/ca
 import { CanDeactivateImpuritiesFormComponent } from "./impurities-form/can-deactivate-impurities-form.component";
 import { CanActivateUpdateImpuritiesFormComponent } from "./impurities-form/can-activate-update-impurities-form.component";
 import { ImpuritiesDetailsComponent } from "./impurities-details/impurities-details.component";
+import { ImpuritiesBrowseComponent } from './impurities-browse/impurities-browse.component';
+import { ImpuritiesListsComponent } from './impurities-lists/impurities-lists.component';
+import { ImpuritiesImportComponent } from './impurities-import/impurities-import.component';
 
 export const IMPURITIES_ROUTES: Routes = [
-    {
+  {
+    path: 'browse-impurities',
+    component: ImpuritiesBrowseComponent
+  },
+  {
+    path: 'impurities/lists',
+    component: ImpuritiesListsComponent,
+  },
+  {
+    path: 'impurities/import',
+    component: ImpuritiesImportComponent
+  },
+  {
+    path: 'impurities/import/preview',
+    component: ImpuritiesDetailsComponent,
+    canActivate: [ActivateImpuritiesComponent]
+  },
+  {
     path: 'impurities/register',
     component: ImpuritiesFormComponent,
     canActivate: [ActivateImpuritiesComponent, CanActivateRegisterImpuritiesFormComponent],

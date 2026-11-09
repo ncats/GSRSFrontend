@@ -9,15 +9,15 @@ import { ConfigService } from '@gsrs-core/config';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { AuthService } from '@gsrs-core/auth';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { ImpuritiesService } from '../../../impurities/service/impurities.service';
-import { GeneralService } from '../../../service/general.service';
+import { ImpuritiesService } from '../../impurities/service/impurities.service';
+import { GeneralService } from '../../service/general.service';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
-import { SubstanceDetailsBaseTableDisplay } from '../substance-details-base-table-display';
-import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../../impurities/model/impurities.model';
+import { SubstanceDetailsBaseTableDisplay } from '../substance-products/substance-details-base-table-display';
+import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../impurities/model/impurities.model';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { impuritiesSearchSortValues } from '../../../impurities/impurities-search-sort-values';
+import { impuritiesSearchSortValues } from '../../impurities/impurities-search-sort-values';
 import { RouterLink } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,10 +28,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
-    selector: 'app-substance-impurities',
-    templateUrl: './substance-impurities.component.html',
-    styleUrls: ['./substance-impurities.component.scss'],
-    standalone: true,
+  selector: 'app-substance-impurities',
+  templateUrl: './substance-impurities.component.html',
+  styleUrls: ['./substance-impurities.component.scss'],
+  standalone: true,
     imports: [RouterLink, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
@@ -68,7 +68,6 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     'relatedSubstance'
   ];
 
-
   constructor(
     private router: Router,
     public gaService: GoogleAnalyticsService,
@@ -81,7 +80,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     super(gaService, impuritiesService);
   }
 
-  // Getters, not fields, so they always reflect the current privilege signal.
+    // Getters, not fields, so they always reflect the current privilege signal.
   get canUpdate(): boolean {
     return this.authService.hasPrivilege('Edit');
   }
@@ -91,7 +90,9 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
   }
 
   ngOnInit() {
-    if (this.substanceUuid) {
+ 
+    if (this.substance && this.substance.uuid) {
+      this.substanceUuid = this.substance.uuid;
       this.getImpuritiesBySubstanceUuid();
       this.impuritiesListExportUrl();
     }

@@ -6,12 +6,8 @@
     </div>
   </div>
   <div class="padleft105px margintopneg10px">
-    <button
-      mat-icon-button
-      color="primary"
-      (click)="confirmDeleteImpuritiesDetails()"
-      matTooltip="Delete Impurities {{ impuritiesDetailsIndex + 1 }}"
-      >
+    <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesDetails()"
+      matTooltip="Delete Impurities {{ impuritiesDetailsIndex + 1 }}">
       <mat-icon>delete_forever</mat-icon>
     </button>
   </div>
@@ -20,29 +16,17 @@
 <mat-card class="margintop20px bordergray">
   <mat-card-content>
     <div class="flex-container marginleftneg7px padbottom10px">
+
       <!-- Left Side -->
-      @if (
-        configSettingsDisplay['relatedSubstanceUnii'] ||
-        (configSettingsDisplay['relatedSubstanceUnii'] === undefined && true)
-        ) {
-        <div
-          class="width25percent textaligncenter"
-          >
-          <app-substance-selector
-            class="textaligncenter"
-            (selectionUpdated)="relatedSubstanceUpdated($event)"
-            eventCategory="substanceRelationshipRelatedSub"
-            placeholder="Substance Name"
-            [hideImage]="false"
-            header="Related Substance"
-            [subuuid]="impuritiesDetails.relatedSubstanceUuid"
-            [showMorelinks]="true"
-            >
+      @if (configSettingsDisplay['relatedSubstanceUnii'] ||
+           (configSettingsDisplay['relatedSubstanceUnii'] === undefined && true)) {
+        <div class="width25percent textaligncenter">
+          <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
+            eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
+            header="Related Substance" [subuuid]="impuritiesDetails.relatedSubstanceUuid" [showMorelinks]="true">
           </app-substance-selector>
           @if (impuritiesDetails.relatedSubstanceUnii) {
-            <div
-              class="textaligncenter font11px colororange"
-              >
+            <div class="textaligncenter font11px colororange">
               {{ impuritiesDetails.relatedSubstanceUnii }}
             </div>
           }
@@ -51,219 +35,123 @@
 
       <!-- Right Side -->
       <div class="flex-item width75percent padleft20px padright20px">
+
         <div class="form-row">
-          @if (
-            configSettingsDisplay['sourceImpurityName'] ||
-            (configSettingsDisplay['sourceImpurityName'] === undefined &&
-            true)
-            ) {
-            <mat-form-field
-              class="col-3-1"
-              >
+          @if (configSettingsDisplay['sourceImpurityName'] ||
+               (configSettingsDisplay['sourceImpurityName'] === undefined && true)) {
+            <mat-form-field class="col-2-1">
               <mat-label>Source Impurity Name</mat-label>
-              <input
-                matInput
-                [(ngModel)]="impuritiesDetails.sourceImpurityName"
-                name="sourceImpurityName"
-                />
+              <input matInput [(ngModel)]="impuritiesDetails.sourceImpurityName" name="sourceImpurityName" />
             </mat-form-field>
           }
 
-          @if (
-            configSettingsDisplay['impurityType'] ||
-            (configSettingsDisplay['impurityType'] === undefined && true)
-            ) {
-            <app-cv-input
-              class="col-3-1"
-              domain="IMPURITIES_IMPURITY_TYPE"
-              title="Impurity Type"
-              name="impurityType"
-              [model]="impuritiesDetails.impurityType"
-              (valueChange)="impuritiesDetails.impurityType = $event"
-              >
+          @if (configSettingsDisplay['impurityType'] ||
+               (configSettingsDisplay['impurityType'] === undefined && true)) {
+            <app-cv-input class="col-2-1" domain="IMPURITIES_IMPURITY_TYPE" title="Impurity Type" name="impurityType"
+              [model]="impuritiesDetails.impurityType" (valueChange)="impuritiesDetails.impurityType = $event">
             </app-cv-input>
-          }
-
-          @if (
-            configSettingsDisplay['comments'] ||
-            (configSettingsDisplay['comments'] === undefined && true)
-            ) {
-            <mat-form-field
-              class="col-3-1"
-              >
-              <mat-label>Comments</mat-label>
-              <textarea
-                matInput
-                [(ngModel)]="impuritiesDetails.comments"
-                name="comments"
-                rows="1"
-              ></textarea>
-            </mat-form-field>
           }
         </div>
 
         <div class="form-row">
-          @if (
-            configSettingsDisplay['limitType'] ||
-            (configSettingsDisplay['limitType'] === undefined && true)
-            ) {
-            <app-cv-input
-              class="col-3-1"
-              domain="IMPURITIES_LIMIT_TYPE"
-              title="Limit Type"
-              name="limitType"
-              [model]="impuritiesDetails.limitType"
-              (valueChange)="impuritiesDetails.limitType = $event"
-              >
+          @if (configSettingsDisplay['limitType'] ||
+               (configSettingsDisplay['limitType'] === undefined && true)) {
+            <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
+              [model]="impuritiesDetails.limitType" (valueChange)="impuritiesDetails.limitType = $event">
             </app-cv-input>
           }
 
-          @if (
-            configSettingsDisplay['limitValue'] ||
-            (configSettingsDisplay['limitValue'] === undefined && true)
-            ) {
-            <mat-form-field
-              class="col-3-1"
-              >
+          @if (configSettingsDisplay['limitValue'] ||
+               (configSettingsDisplay['limitValue'] === undefined && true)) {
+            <mat-form-field class="col-3-1">
               <mat-label>Limit Value</mat-label>
-              <input
-                matInput
-                [(ngModel)]="impuritiesDetails.limitValue"
-                name="limitValue"
-                />
+              <input matInput [(ngModel)]="impuritiesDetails.limitValue" name="limitValue" />
             </mat-form-field>
           }
 
-          @if (
-            configSettingsDisplay['unit'] ||
-            (configSettingsDisplay['unit'] === undefined && true)
-            ) {
-            <app-cv-input
-              class="col-3-1"
-              domain="PROD_UNIT"
-              title="Unit"
-              name="unit"
-              [model]="impuritiesDetails.unit"
-              (valueChange)="impuritiesDetails.unit = $event"
-              >
+          @if (configSettingsDisplay['unit'] ||
+               (configSettingsDisplay['unit'] === undefined && true)) {
+            <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit"
+              [model]="impuritiesDetails.unit" (valueChange)="impuritiesDetails.unit = $event">
             </app-cv-input>
+          }
+        </div>
+
+        <div class="form-row">
+          @if (configSettingsDisplay['comments'] ||
+               (configSettingsDisplay['comments'] === undefined && true)) {
+            <mat-form-field class="col-1">
+              <mat-label>Comments</mat-label>
+              <textarea matInput [(ngModel)]="impuritiesDetails.comments" name="comments" rows="1"></textarea>
+            </mat-form-field>
           }
         </div>
 
         <!-- Identity Criteria -->
         <div class="margintop10px marginleftneg7px">
-          @if (
-            configSettingsDisplay['identityCriteriaType'] ||
-            (configSettingsDisplay['identityCriteriaType'] === undefined &&
-            true) ||
-            configSettingsDisplay['amountValue'] ||
-            (configSettingsDisplay['amountValue'] === undefined && true)
-            ) {
-            <div
-              class="padbottom10px marginright10px"
-              >
-              <button
-                mat-raised-button
-                color="primary"
-                (click)="addNewIdentityCriteria()"
-                matTooltip="Add Identity Criteria"
-                >
+          @if (configSettingsDisplay['identityCriteriaType'] ||
+               (configSettingsDisplay['identityCriteriaType'] === undefined && true) ||
+               configSettingsDisplay['amountValue'] ||
+               (configSettingsDisplay['amountValue'] === undefined && true)) {
+            <div class="padbottom10px marginright10px">
+              <button mat-raised-button color="primary" (click)="addNewIdentityCriteria()"
+                matTooltip="Add Identity Criteria">
                 <mat-icon svgIcon="add_circle_outline"></mat-icon>
                 Add Identity Criteria
               </button>
             </div>
           }
 
-          <div class="">
-            @for (
-              identityCriteria of impuritiesDetails.identityCriteriaList; track
-              identityCriteria; let identityCriteriaIndex = $index) {
-              <div
-                class="marginbottom10px"
-                >
+          <div>
+            @for (identityCriteria of impuritiesDetails.identityCriteriaList; track identityCriteria; let identityCriteriaIndex = $index) {
+              <div class="marginbottom10px">
                 <div class="form-row padleft7px">
-                  @if (
-                    configSettingsDisplay['identityCriteriaType'] ||
-                    (configSettingsDisplay['identityCriteriaType'] ===
-                    undefined &&
-                    true)
-                    ) {
-                    <app-cv-input
-                      class="col-3-1"
-                      domain="IMPURITIES_IDENTITY_CRITERIA_TYPE"
-                      title="Identity Criteria Type"
-                      name="identityCriteriaType"
+                  @if (configSettingsDisplay['identityCriteriaType'] ||
+                       (configSettingsDisplay['identityCriteriaType'] === undefined && true)) {
+                    <app-cv-input class="col-3-2" domain="IMPURITIES_IDENTITY_CRITERIA_TYPE"
+                      title="Identity Criteria Type" name="identityCriteriaType"
                       [model]="identityCriteria.identityCriteriaType"
-                      (valueChange)="identityCriteria.identityCriteriaType = $event"
-                      >
+                      (valueChange)="identityCriteria.identityCriteriaType = $event">
                     </app-cv-input>
                   }
-                  @if (
-                    configSettingsDisplay['amountValue'] ||
-                    (configSettingsDisplay['amountValue'] === undefined && true)
-                    ) {
-                    <mat-form-field
-                      class="col-3-1"
-                      >
+
+                  @if (configSettingsDisplay['amountValue'] ||
+                       (configSettingsDisplay['amountValue'] === undefined && true)) {
+                    <mat-form-field class="col-3-1">
                       <mat-label>Amount Value</mat-label>
-                      <input
-                        matInput
-                        [(ngModel)]="identityCriteria.amountValue"
-                        name="amountValue"
-                        />
+                      <input matInput [(ngModel)]="identityCriteria.amountValue" name="amountValue" />
                     </mat-form-field>
                   }
-                  @if (
-                    configSettingsDisplay['criteriaUnit'] ||
-                    (configSettingsDisplay['criteriaUnit'] === undefined &&
-                    true)
-                    ) {
-                    <app-cv-input
-                      class="col-3-1"
-                      domain="PROD_UNIT"
-                      title="Unit"
-                      name="unit"
-                      [model]="identityCriteria.unit"
-                      (valueChange)="identityCriteria.unit = $event"
-                      >
+
+                  @if (configSettingsDisplay['criteriaUnit'] ||
+                       (configSettingsDisplay['criteriaUnit'] === undefined && true)) {
+                    <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit"
+                      [model]="identityCriteria.unit" (valueChange)="identityCriteria.unit = $event">
                     </app-cv-input>
                   }
-                  @if (
-                    configSettingsDisplay['identityCriteriaType'] ||
-                    (configSettingsDisplay['identityCriteriaType'] ===
-                    undefined &&
-                    true) ||
-                    configSettingsDisplay['amountValue'] ||
-                    (configSettingsDisplay['amountValue'] === undefined && true)
-                    ) {
-                    <div
-                      class="col-3-1 marginleftneg20px"
-                      >
-                      <button
-                        mat-icon-button
-                        color="primary"
-                    (click)="
-                      confirmDeleteIdentityCriteria(
-                        impuritiesDetailsIndex,
-                        identityCriteriaIndex
-                      )
-                    "
-                    matTooltip="Delete Identity Criteria {{
-                      identityCriteriaIndex + 1
-                    }}"
-                        >
+
+                  @if (configSettingsDisplay['identityCriteriaType'] ||
+                       (configSettingsDisplay['identityCriteriaType'] === undefined && true) ||
+                       configSettingsDisplay['amountValue'] ||
+                       (configSettingsDisplay['amountValue'] === undefined && true)) {
+                    <div>
+                      <button mat-icon-button color="primary"
+                        (click)="confirmDeleteIdentityCriteria(impuritiesDetailsIndex, identityCriteriaIndex)"
+                        matTooltip="Delete Identity Criteria {{ identityCriteriaIndex + 1 }}">
                         <mat-icon>delete_forever</mat-icon>
                       </button>
                     </div>
                   }
-                </div>
+
+                </div> <!-- form-row -->
               </div>
-            }
-            <!-- Loop -->
+            } <!-- @for -->
           </div>
         </div>
+
       </div>
       <!-- Right Side -->
+
     </div>
   </mat-card-content>
 </mat-card>

@@ -1,0 +1,66 @@
+<div class="margintop90px divcenter">
+
+  <div class="font20px"><b>All Impurities Lists ({{totalImpurities}})</b></div>
+
+  <mat-card class="margintop20px bordergray">
+    <mat-card-title>
+
+    </mat-card-title>
+
+    <mat-card-content>
+      <b>View by Substance Name ({{totalSubstanceRecords}})</b><br><br>
+
+      <!-- Display Buttons -->
+      <div class="alphabet-container">
+        <button *ngFor="let letter of alphabet" class="letter-btn" [disabled]="!hasDataForLetter(letter)"
+          [class.disabled-btn]="!hasDataForLetter(letter)" (click)="scrollToSection(letter)">
+          {{ letter }}
+        </button>
+      </div>
+
+
+      <!-- Display Substance Name Lists -->
+      <div class="sections-container">
+
+        <!-- Outer Loop: Goes through the groups (A, B, C...) that actually have data -->
+        <div *ngFor="let group of groupedData" [id]="'section-' + group.letter" class="letter-section">
+
+          <!-- Display the Alphabet Letter Header (e.g., "A") -->
+          <h2 class="section-header">{{ group.letter }}</h2>
+
+          <!-- Inner Loop: Goes through the items for that specific letter -->
+          <ul class="item-list">
+            <li *ngFor="let item of group.items">
+
+              <div class="divflex">
+
+                <div class="width300px">
+                  <!-- item[0] is the Substance Name -->
+                  <a [routerLink]="['/substances', item[1]]" target="_blank" title="Go to Substance Details page">
+                    <span class="colororange font16px fontbold"> {{ item[0] }}</span>
+                  </a>
+                </div>
+
+                <div class="badge-container">
+                  <!-- Loop through the sources (starting from index 2) -->
+                  <span *ngFor="let data of item | slice:2" class="source-badge">
+                    <a [routerLink]="['/impurities', data.id]" target="_blank" title="Go to Impurities Details page">
+                      {{ data.source }}
+                    </a>
+                  </span>
+                </div>
+
+              </div> <!-- divflex -->
+
+            </li>
+          </ul>
+
+        </div> <!-- for loop -->
+      </div> <!-- sections-container -->
+
+    </mat-card-content>
+
+  </mat-card>
+  <br><br><br>
+
+</div>

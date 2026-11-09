@@ -543,7 +543,9 @@ export class ProductService extends BaseHttpService {
   }
 
   saveProduct(): Observable<Product> {
-    const url = this.apiBaseUrlWithProductEntityUrl;
+    // Remove the last slash from the url
+    const url = this.apiBaseUrlWithProductEntityUrl.replace(/\/$/, '');
+  
     const params = new HttpParams();
     const options = {
       params: params,

@@ -18,7 +18,10 @@
   "showCrossEntitySearchDropdown": true,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "disableJSDraw": false,
-  "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
+  "registerApplicationCenterNotAllowed": [
+    "CDER",
+    "CBER"
+  ],
   "apiBaseUrl": "http://localhost:8081/ginas/app/",
   "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
   "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
@@ -37,7 +40,10 @@
     "configurations": {
       "emailForm": {
         "active": false,
-        "userAdminRecipientEmails": ["email1@domain.com", "email1@domain.com"],
+        "userAdminRecipientEmails": [
+          "email1@domain.com",
+          "email1@domain.com"
+        ],
         "instanceApplicationName": "GSRS",
         "instanceApplicationSubjectTag": "GSRS",
         "registrationAccessEmailSubjectTemplate": "[%s] User registration/access issue",
@@ -92,7 +98,10 @@
       }
     ]
   },
-  "filteredDuplicationCodes": ["BDNUM", "FDA UNII"],
+  "filteredDuplicationCodes": [
+    "BDNUM",
+    "FDA UNII"
+  ],
   "typeaheadFields": [
     "Standardized_Name",
     "Display_Name",
@@ -112,17 +121,61 @@
     "userRegistration": false
   },
   "services": [
-    { "name": "adverse-events", "active": true, "hasEntities": true },
-    { "name": "applications", "active": true, "hasEntities": true },
-    { "name": "clinical-trials", "active": true, "hasEntities": true },
-    { "name": "discovery", "active": false, "hasEntities": false },
-    { "name": "frontend", "active": true, "hasEntities": false },
-    { "name": "gateway", "active": true, "hasEntities": false },
-    { "name": "impurities", "active": true, "hasEntities": true },
-    { "name": "invitro-pharmacology", "active": true, "hasEntities": true },
-    { "name": "products", "active": true, "hasEntities": true },
-    { "name": "ssg4m", "active": true, "hasEntities": true },
-    { "name": "substances", "active": true, "hasEntities": true }
+    {
+      "name": "adverse-events",
+      "active": true,
+      "hasEntities": true
+    },
+    {
+      "name": "applications",
+      "active": true,
+      "hasEntities": true
+    },
+    {
+      "name": "clinical-trials",
+      "active": true,
+      "hasEntities": true
+    },
+    {
+      "name": "discovery",
+      "active": false,
+      "hasEntities": false
+    },
+    {
+      "name": "frontend",
+      "active": true,
+      "hasEntities": false
+    },
+    {
+      "name": "gateway",
+      "active": true,
+      "hasEntities": false
+    },
+    {
+      "name": "impurities",
+      "active": true,
+      "hasEntities": true
+    },
+    {
+      "name": "invitro-pharmacology",
+      "active": true,
+      "hasEntities": true
+    },
+    {
+      "name": "products",
+      "active": true,
+      "hasEntities": true
+    },
+    {
+      "name": "ssg4m",
+      "active": true,
+      "hasEntities": true
+    },
+    {
+      "name": "substances",
+      "active": true,
+      "hasEntities": true
+    }
   ],
   "usefulLinks": [
     {
@@ -170,8 +223,10 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In Vitro Pharmacology",
-      "filters": [{}]
+      "title": "Products, Applications, Clinical Trials, Adverse Events, SSG4 Manufacturing, In Vitro Pharmacology",
+      "filters": [
+        {}
+      ]
     },
     {
       "card": "substance-primary-definition",
@@ -672,6 +727,10 @@
           "propertyToCheck": "Restore Previous Versions"
         }
       ]
+    },
+    {
+      "card": "substance-impurities",
+      "title": "Impurities Specifications"
     }
   ],
   "facets": {
@@ -808,7 +867,11 @@
         },
         {
           "category": "User Data",
-          "facets": ["Record Created By", "Approved By", "root_lastEditedBy"]
+          "facets": [
+            "Record Created By",
+            "Approved By",
+            "root_lastEditedBy"
+          ]
         },
         {
           "category": "CMC Data",
@@ -1195,9 +1258,39 @@
         "root_modifiedDate",
         "Record Last Edited By"
       ]
+    },
+    "impurities": {
+      "default": [
+        "Source",
+        "Source Type",
+        "Source ID",
+        "Spec Type",
+        "Product Substance ID",
+        "Ingredient Approval ID",
+        "Substance (Preferred)",
+        "Substance Name",
+        "Impurities",
+        "Test",
+        "Test Type",
+        "System",
+        "Elution Type",
+        "Type"
+      ],
+      "admin": [
+        "root_creationDate",
+        "Record Created By",
+        "root_lastModifiedDate",
+        "Record Last Edited By"
+      ]
     }
   },
-  "codeSystemOrder": ["BDNUM", "CAS", "WHO-ATC", "EVMPD", "NCI"],
+  "codeSystemOrder": [
+    "BDNUM",
+    "CAS",
+    "WHO-ATC",
+    "EVMPD",
+    "NCI"
+  ],
   "homeHeader": "Global Substance Registration System - GSRS",
   "homeContents": "<p>The primary goal of the Global Substance Registration System (GSRS) program is the production of software to assist agencies in registering and documenting information about substances found in medicines and other regulated products. GSRS provides common identifiers including FDA UNIIs for all substances used in regulated products. It utilizes definitions of substances  globally-consistent with ISO 11238 and DTS 19844 including active substances under clinical investigation.\n\n</p><p>\n\n<img src='assets/icons/home/fda.logo.h77px.png' alt='' title='Food and Drug Administration' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n\n<img src='assets/icons/home/ncats.logo.h77px.png' alt='' title='National Center for Advancing Translational Science' />\n\n</p><p>Many organizations contribute to the GSRS project including the Food and Drug Administration (FDA) and the National Center for Advancing Translational Science (NCATS). For more information about GSRS, code and public data, please consult <a href='https://gsrs.ncats.nih.gov/'>https://gsrs.ncats.nih.gov/</a>.</p>\n\n<p>",
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
@@ -1238,6 +1331,12 @@
       "order": 15
     },
     {
+      "component": "impurities",
+      "display": "Browse Impurities",
+      "path": "browse-impurities",
+      "order": 16
+    },
+    {
       "display": "Register",
       "children": [
         {
@@ -1269,6 +1368,12 @@
           "display": "Impurities",
           "path": "impurities/register",
           "order": 220
+        },
+        {
+          "component": "impurities",
+          "display": "Impurities PDF Extractor",
+          "path": "impurities/import",
+          "order": 221
         },
         {
           "component": "invitropharmacology",
@@ -1356,7 +1461,9 @@
           "kind": "contact-us",
           "display": "Email GSRS Support",
           "mailToPath": "mailto:%s",
-          "queryParams": { "subject": "Support request" },
+          "queryParams": {
+            "subject": "Support request"
+          },
           "order": 30
         }
       ]
@@ -1366,7 +1473,9 @@
       "kind": "contact-us",
       "display": "Contact Us",
       "mailToPath": "mailto:%s",
-      "queryParams": { "subject": "Support request" },
+      "queryParams": {
+        "subject": "Support request"
+      },
       "order": 2000
     }
   ],
@@ -1691,14 +1800,14 @@
   "impuritiesForm": {
     "settingsDisplay": {
       "overview": {
-        "sourceType": "simple",
         "source": "simple",
+        "sourceType": "simple",
         "sourceId": "simple",
         "type": "simple",
-        "productId": "simple",
         "specType": "simple",
+        "productSubstanceName": "simple",
+        "productId": "simple",
         "submitterName": "advanced",
-        "productSubstanceName": "advanced",
         "dateType": "advanced",
         "dateTypeDate": "advanced"
       },
@@ -1715,28 +1824,49 @@
         "sourceId": "simple",
         "test": "simple",
         "testType": "simple",
+        "buffer": "simple",
+        "mobilePhase": "simple",
         "flowRate": "simple",
-        "columnPackingType": "advanced",
-        "columnPackingSize": "advanced",
-        "columnSize": "advanced",
-        "columnTemperature": "advanced",
-        "injectionVolumeAmount": "advanced",
         "diluent": "advanced",
         "system": "advanced",
         "mode": "advanced",
         "detectionType": "advanced",
+        "detectorWavelength": "advanced",
         "detectionDetails": "advanced",
-        "suitabilityReqResolution": "advanced",
-        "suitabilityReqRelStandardDeviation": "advanced",
+        "columnPackingType": "advanced",
+        "columnPackingSize": "advanced",
+        "columnSize": "advanced",
+        "columnTemperature": "advanced",
+        "autosamplerTemperature": "simple",
+        "injectionVolumeAmount": "advanced",
+        "elutionType": "simple",
         "testDescription": "advanced",
         "comments": "advanced",
-        "sampleSolution": "advanced",
+        "systemSuitabilityStockSolution": "simple",
         "systemSuitabilitySolution": "advanced",
+        "standardStockSolution": "advanced",
         "standardSolution": "advanced",
+        "sampleStockSolution": "advanced",
+        "sampleSolution": "advanced",
+        "sensitivitySolution": "advanced",
         "otherSolution": "advanced",
-        "elutionType": "simple",
         "solutionDescription": "simple",
-        "mobilePhase": "simple"
+        "systemSuitabilitySample": "simple",
+        "suitabilityReqRelStandardDeviation": "simple",
+        "suitabilityReqResolution": "simple",
+        "systemSuitabilityReqTailingFactor": "simple",
+        "systemSuitabilitySignalToNoiseRatio": "sample",
+        "analysisSample": "simple",
+        "analysisDescription": "simple",
+        "analysisResultFormula": "simple",
+        "analysisFormulaRU": "simple",
+        "analysisFormulaRS": "simple",
+        "analysisFormulaCS": "simple",
+        "analysisFormulaCU": "simple",
+        "analysisFormulaP": "simple",
+        "analysisFormulaF": "simple",
+        "analysisFormulaMR1": "simple",
+        "analysisFormulaMR2": "simple"
       },
       "impurities": {
         "relatedSubstanceUnii": "simple",
@@ -1762,21 +1892,22 @@
         "criteriaUnit": "advanced"
       },
       "residualSolventsTest": {
-        "sourceType": "simple",
         "source": "simple",
+        "sourceType": "simple",
         "sourceId": "simple",
-        "test": "advanced",
+        "test": "simple",
         "testType": "advanced",
         "testDescription": "advanced",
         "comments": "advanced"
       },
       "residualSolvents": {
         "relatedSubstanceUuid": "simple",
-        "pharmaceuticalLimit": "advanced",
-        "testType": "advanced",
-        "limitType": "advanced",
-        "limitValue": "advanced",
-        "unit": "advanced",
+        "pharmaceuticalLimit": "simple",
+        "analysis": "simple",
+        "testType": "simple",
+        "limitType": "simple",
+        "limitValue": "simple",
+        "unit": "simple",
         "comments": "advanced"
       },
       "inorganicImpuritiesTest": {
@@ -1796,11 +1927,20 @@
         "unit": "advanced",
         "comments": "advanced"
       },
+      "specificTest": {
+        "testType": "advanced",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "sampleSolution": "simple",
+        "analysis": "advanced",
+        "comments": "advanced"
+      },
       "impuritiesTotal": {
         "testType": "simple",
         "limitType": "simple",
         "limitValue": "simple",
-        "amountValue": "simple",
+        "unit": "simple",
         "comments": "simple"
       }
     }
