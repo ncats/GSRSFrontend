@@ -14,12 +14,28 @@ import { SpecifiedSubstanceG4mProcess } from '@gsrs-core/substance/substance.mod
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
 import { Ssg4mStepViewDialogComponent } from '../ssg4m-step-view-dialog/ssg4m-step-view-dialog.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { Ssg4mProcessFormComponent } from './ssg4m-process-form.component';
+import { Ssg4mSchemeViewComponent } from '../ssg4m-scheme-view/ssg4m-scheme-view.component';
 
 @Component({
     selector: 'app-substance-form-ssg4m-process-card',
     templateUrl: './substance-form-ssg4m-process-card.component.html',
     styleUrls: ['./substance-form-ssg4m-process-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      MatTabsModule,
+      MatCheckboxModule,
+      MatPaginatorModule,
+      MatButtonModule,
+      MatIconModule,
+      Ssg4mProcessFormComponent,
+      Ssg4mSchemeViewComponent
+    ]
 })
 
 export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFilteredList<SpecifiedSubstanceG4mProcess>

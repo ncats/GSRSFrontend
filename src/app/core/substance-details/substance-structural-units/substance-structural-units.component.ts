@@ -5,12 +5,20 @@ import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
 import {StructuralUnit} from '@gsrs-core/substance';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-substance-structural-units',
     templateUrl: './substance-structural-units.component.html',
     styleUrls: ['./substance-structural-units.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatTableModule, MatPaginatorModule, SubstanceImageDirective]
 })
 export class SubstanceStructuralUnitsComponent extends SubstanceCardBaseFilteredList<StructuralUnit> implements OnInit {
   structuralUnits: Array<StructuralUnit>;

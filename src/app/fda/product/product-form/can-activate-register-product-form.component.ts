@@ -5,7 +5,9 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { Observable } from 'rxjs';
 import { subscribeOn } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CanActivateRegisterProductFormComponent implements CanActivate {
 
   constructor(

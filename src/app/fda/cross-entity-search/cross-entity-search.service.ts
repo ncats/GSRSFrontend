@@ -110,7 +110,9 @@ export class CrossEntitySearchService extends BaseHttpService {
       // call entity/bulkSearch
       params = params.append('bulkQID', bulkQID.toString());
       let v = "false";
-      if (searchOnIdentifiers === true) { v = "true"; }
+      if (searchOnIdentifiers === true) {
+ v = "true"; 
+}
       params = params.append('searchOnIdentifiers', v);
       params = params.append('searchEntity', searchEntity);
 

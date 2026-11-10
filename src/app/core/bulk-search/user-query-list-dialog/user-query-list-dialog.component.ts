@@ -1,4 +1,18 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, DestroyRef, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -14,7 +28,22 @@ import { ConfigService } from '@gsrs-core/config';
     selector: 'app-user-query-list-dialog',
     templateUrl: './user-query-list-dialog.component.html',
     styleUrls: ['./user-query-list-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatDialogModule,
+      MatButtonModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatOptionModule,
+      MatPaginatorModule,
+      MatProgressSpinnerModule,
+      MatSelectModule,
+      MatSortModule,
+      MatTableModule,
+      MatTooltipModule
+    ]
 })
 export class UserQueryListDialogComponent implements OnInit {
   lists: Array<any> = [];
@@ -40,7 +69,6 @@ export class UserQueryListDialogComponent implements OnInit {
   users = [];
   setUser: string;
   identifier: string;
-  canManageListsForOthers = false;
   etagIDs = [];
   uniqueRecords = [];
   disabled = false;
@@ -51,6 +79,7 @@ export class UserQueryListDialogComponent implements OnInit {
   viewCreated = false;
   downloadJsonHref: SafeUrl;
   refreshing = false;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private bulkSearchService: BulkSearchService,
@@ -71,8 +100,13 @@ export class UserQueryListDialogComponent implements OnInit {
 
   }
 
-  async ngOnInit() {
-    this.substanceService.getAllByEtag(this.etag).subscribe(result => {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canManageListsForOthers(): boolean {
+    return this.authService.hasPrivilege('Manage Others Lists');
+  }
+
+  ngOnInit() {
+    this.substanceService.getAllByEtag(this.etag).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if(result.content) {
         result.content.forEach(record => {
           this.etagIDs.push(record.uuid);
@@ -80,16 +114,15 @@ export class UserQueryListDialogComponent implements OnInit {
       }
 
     });
-    this.authService.checkAuth().subscribe(response => {
+    this.authService.checkAuth().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.setUser = response.identifier;
       this.identifier = response.identifier;
     });
     this.getUserLists();
     if (this.view === 'single') {
       this.useDraft(this.activeName);
-      
+
     }
-    this.canManageListsForOthers = await this.authService.hasSpecificPrivilege('Manage Others Lists');
   }
 
   
@@ -111,7 +144,7 @@ export class UserQueryListDialogComponent implements OnInit {
     });
     if (!found) {
       this.loading = true;
-      this.bulkSearchService.saveBulkSearchEtag(null, this.listName, this.etag).subscribe( response => {
+      this.bulkSearchService.saveBulkSearchEtag(null, this.listName, this.etag).pipe(takeUntilDestroyed(this.destroyRef)).subscribe( response => {
         this.loadID = response.id;
         setTimeout(() => {
           
@@ -132,7 +165,7 @@ export class UserQueryListDialogComponent implements OnInit {
 
   checkList(): void {
     this.message ="";
-    this.bulkSearchService.getSingleBulkSearchList(this.listName2).subscribe(result => {
+    this.bulkSearchService.getSingleBulkSearchList(this.listName2).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       let tosend = [];
       result.lists.forEach(list => {
         tosend.push(list.key);
@@ -146,7 +179,9 @@ export class UserQueryListDialogComponent implements OnInit {
 
   compareLists(list: any) {
     this.message ="";
-    this.uniqueRecords = this.etagIDs.filter(obj => { return list.indexOf(obj) == -1; });
+    this.uniqueRecords = this.etagIDs.filter(obj => {
+ return list.indexOf(obj) == -1; 
+});
     if (this.uniqueRecords.length == 0) {
       this.message = "NOTICE: All records already exist in selected list";
       this.disabled = true;
@@ -171,7 +206,7 @@ export class UserQueryListDialogComponent implements OnInit {
     if (!found) {
       this.loading = true;
       
-      this.bulkSearchService.editEtagBulkSearchLists(this.listName2, this.etag, 'add').subscribe( response => {
+      this.bulkSearchService.editEtagBulkSearchLists(this.listName2, this.etag, 'add').pipe(takeUntilDestroyed(this.destroyRef)).subscribe( response => {
         this.loadID = response.id;
         setTimeout(() => {
           this.refresh('append');
@@ -193,7 +228,7 @@ export class UserQueryListDialogComponent implements OnInit {
     this.viewCreated = false;
     this.setUser = null;
     this.loaded = false;
-    this.bulkSearchService.getUserBulkSearchLists(name).subscribe(response => {
+    this.bulkSearchService.getUserBulkSearchLists(name).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.view = "all";
       this.lists = response.lists;
       this.setUser = name;
@@ -247,7 +282,7 @@ export class UserQueryListDialogComponent implements OnInit {
 
   refresh(type: string) {
     this.message ="";
-    this.bulkSearchService.getSaveBulkListStatus(this.loadID).pipe(take(1)).subscribe(response => {
+    this.bulkSearchService.getSaveBulkListStatus(this.loadID).pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
 
     this.status = response.status;
     this.refreshing = true;
@@ -272,7 +307,7 @@ export class UserQueryListDialogComponent implements OnInit {
   getUserLists(): void {
     this.message ="";
     this.refreshing = false;
-    this.bulkSearchService.getBulkSearchLists().subscribe(result => {
+    this.bulkSearchService.getBulkSearchLists().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       this.bulkSearchService.listEmitter.next(result.lists);
       this.lists = result.lists;
      // this.setUser = null;
@@ -287,8 +322,8 @@ export class UserQueryListDialogComponent implements OnInit {
     this.message = '';
     if (confirm("Are you sure you want to delete this list?")){
       if(this.setUser != this.identifier){
-        this.bulkSearchService.deleteUserBulkSearchList(list, this.setUser).subscribe(result => {
-          this.bulkSearchService.getUserBulkSearchLists(this.setUser).subscribe(response => {
+        this.bulkSearchService.deleteUserBulkSearchList(list, this.setUser).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
+          this.bulkSearchService.getUserBulkSearchLists(this.setUser).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
             this.view = "all";
             this.lists = response.lists;
           });
@@ -298,7 +333,7 @@ export class UserQueryListDialogComponent implements OnInit {
           
         });
       } else {
-      this.bulkSearchService.deleteBulkSearchList(list).subscribe(result => {
+      this.bulkSearchService.deleteBulkSearchList(list).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
         this.getUserLists();
       }, error => {
         console.log(error);
@@ -328,7 +363,7 @@ export class UserQueryListDialogComponent implements OnInit {
       user = this.setUser;
     }
 
-    this.bulkSearchService.editKeysBulkSearchLists(this.activeName, entry.key, 'remove', user).subscribe(response => {
+    this.bulkSearchService.editKeysBulkSearchLists(this.activeName, entry.key, 'remove', user).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.active = copy;
       this.filtered = JSON.parse(JSON.stringify(copy.lists)).slice(0, 10);
       this.pagesize = 10;
@@ -340,7 +375,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   demo() {
-    this.bulkSearchService.saveBulkSearchEtag('90e9191d-1a81-4a53-b7ee-560bf9e68109', 'testList', 'f6fe09ff7ae9fab1').subscribe(response => {
+    this.bulkSearchService.saveBulkSearchEtag('90e9191d-1a81-4a53-b7ee-560bf9e68109', 'testList', 'f6fe09ff7ae9fab1').pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
     });
   }
 
@@ -350,7 +385,7 @@ export class UserQueryListDialogComponent implements OnInit {
     this.viewCreated = false;
     this.loaded = false;
     this.view = 'users';
-    this.adminService.getAllUsers().subscribe(response => {
+    this.adminService.getAllUsers().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
       this.users = response;
     })
   }
@@ -360,7 +395,7 @@ export class UserQueryListDialogComponent implements OnInit {
     this.viewCreated = false;
     this.message = '';
     this.activeName = draft;
-    this.bulkSearchService.getSingleBulkSearchList(draft, this.setUser).subscribe(result => {
+    this.bulkSearchService.getSingleBulkSearchList(draft, this.setUser).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       this.active = result;
       this.filtered = JSON.parse(JSON.stringify(result.lists)).slice(0, 10);
       this.pagesize = 10;
@@ -426,7 +461,7 @@ export class UserQueryListDialogComponent implements OnInit {
           this.loaded = true;
           this.importedList = read;
           const mapped = read.map(x=> x.key).join(',');
-          this.bulkSearchService.saveBulkSearch( mapped, this.listName, 'add').subscribe(response => {
+          this.bulkSearchService.saveBulkSearch( mapped, this.listName, 'add').pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
             this.getUserLists();
             this.loading = false;
             this.message = "List Successfully Created";

@@ -4,7 +4,9 @@ import { SubstanceFormService } from '../substance-form.service';
 import { Observable } from 'rxjs';
 import { Link } from '@gsrs-core/substance/substance.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormOtherLinksService extends SubstanceFormServiceBase<Array<Link>> {
 
   constructor(

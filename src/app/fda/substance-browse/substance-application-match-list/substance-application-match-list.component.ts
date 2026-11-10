@@ -1,18 +1,34 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit } from '@angular/core';
 import { GeneralService } from '../../service/general.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationService } from '../../application/service/application.service';
 import { Subscription } from 'rxjs';
 import { Application, SubstanceApplicationMatch } from '../../application/model/application.model';
+import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-substance-application-match-list',
     templateUrl: './substance-application-match-list.component.html',
     styleUrls: ['./substance-application-match-list.component.scss'],
-    standalone: false
+    imports: [
+    CommonModule,
+    RouterModule,
+    MatTableModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+  ],
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class SubstanceApplicationMatchListComponent implements OnInit, AfterViewInit {
@@ -39,7 +55,8 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
     private router: Router,
     public loadingService: LoadingService,
     private utilsService: UtilsService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
@@ -147,6 +164,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
                                     }
                                   }
                                 }
+                                this.cdr.markForCheck();
                               });
                             }
                           }
@@ -188,6 +206,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
 
           this.dataSource = this.substanceApplicationMatchList;
         }
+        this.cdr.markForCheck();
       });
   }
 

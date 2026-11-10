@@ -2,7 +2,7 @@ import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
     selector: '[appBrowseHeaderDynamicSection]',
-    standalone: false
+    standalone: true
 })
 export class BrowseHeaderDynamicSectionDirective {
 

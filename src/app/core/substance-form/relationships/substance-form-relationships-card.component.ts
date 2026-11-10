@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceRelationship } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
@@ -6,12 +6,24 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import { Subscription } from 'rxjs';
 import { SubstanceFormRelationshipsService } from './substance-form-relationships.service';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { RelationshipFormComponent } from './relationship-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-relationships-card',
     templateUrl: './substance-form-relationships-card.component.html',
     styleUrls: ['./substance-form-relationships-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatInputModule, RelationshipFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -27,9 +39,10 @@ export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFi
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private configService: ConfigService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
   }
 
   ngOnInit() {
@@ -59,6 +72,7 @@ export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFi
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(relationshipsSubscription);
   }

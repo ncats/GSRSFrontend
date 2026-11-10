@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -6,12 +6,19 @@ import {MatTreeFlattener} from '@angular/material/tree';
 import {MatTreeFlatDataSource} from '@angular/material/tree';
 import { DirectoryFile } from '@gsrs-core/admin/admin-objects.model';
 import { LoadingService } from '@gsrs-core/loading';
+import { CommonModule } from '@angular/common';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-all-files',
     templateUrl: './all-files.component.html',
     styleUrls: ['./all-files.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatTreeModule, MatIconModule, MatButtonModule, MatTooltipModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllFilesComponent implements OnInit {
 
@@ -27,9 +34,11 @@ export class AllFilesComponent implements OnInit {
           const temp = this.listToTree(result);
          this.dataSource.data = temp;
          this.loadingService.setLoading(false);
+         this.cdr.markForCheck();
 
     }, () => {
       this.loadingService.setLoading(false);
+      this.cdr.markForCheck();
     });
 
   }
@@ -84,7 +93,8 @@ export class AllFilesComponent implements OnInit {
     logFiles: Array< DirectoryFile >;
   constructor(
     private adminService: AdminService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private cdr: ChangeDetectorRef
   ) {
   }
   hasChild = (_: number, node: FileTreeNode) => node.expandable;

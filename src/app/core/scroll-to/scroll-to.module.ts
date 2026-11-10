@@ -5,9 +5,7 @@ import { ScrollToTargetDirective } from './scroll-to-target.directive';
 
 @NgModule({
   imports: [
-    CommonModule
-  ],
-  declarations: [
+    CommonModule,
     ScrollToTriggerDirective,
     ScrollToTargetDirective
   ],

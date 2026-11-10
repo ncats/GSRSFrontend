@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
@@ -7,12 +7,26 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import { Subscription } from 'rxjs';
 import { SubstanceFormNamesService } from './substance-form-names.service';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NameFormComponent } from './name-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-names-card',
     templateUrl: './substance-form-names-card.component.html',
     styleUrls: ['./substance-form-names-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatCheckboxModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatInputModule, MatTooltipModule, NameFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormNamesCardComponent
   extends SubstanceCardBaseFilteredList<SubstanceName>
@@ -33,9 +47,10 @@ export class SubstanceFormNamesCardComponent
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
     private configService: ConfigService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form names';
   }
 
@@ -84,6 +99,7 @@ export class SubstanceFormNamesCardComponent
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(namesSubscription);
   }

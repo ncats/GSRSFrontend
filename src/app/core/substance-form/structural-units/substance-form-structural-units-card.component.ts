@@ -1,16 +1,22 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {StructuralUnit} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormStructuralUnitsService } from './substance-form-structural-units.service';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { StructuralUnitFormComponent } from './structural-unit-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-structural-units-card',
     templateUrl: './substance-form-structural-units-card.component.html',
     styleUrls: ['./substance-form-structural-units-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, StructuralUnitFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBaseFilteredList<StructuralUnit>
   implements OnInit, AfterViewInit, OnDestroy {
@@ -20,9 +26,10 @@ export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBase
   constructor(
     private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form structural units';
   }
 
@@ -33,6 +40,7 @@ export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBase
   ngAfterViewInit() {
     const structuralSubscription = this.substanceFormStructuralUnitsService.substanceSRUs.subscribe(structuralUnits => {
       this.structuralUnits = structuralUnits;
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(structuralSubscription);
   }

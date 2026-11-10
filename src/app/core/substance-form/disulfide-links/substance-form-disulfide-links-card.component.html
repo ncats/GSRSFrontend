@@ -2,35 +2,43 @@
   <div class = "flex-row form-row2">
     <div class = "add-buttons">
       <!-- <button mat-button (click)="addLink()">
-        Add Disulfide Link <mat-icon svgIcon="add_circle_outline"></mat-icon>
-      </button> -->
-      <button mat-button (click)="openDialog()">
-        Add Multiple Links <mat-icon svgIcon="add_circle_outline"></mat-icon>
-      </button>
-    </div>
-
-    <div class = "cysteine">
-      Number of unspecified Cysteine residues: {{cysteineBonds}}
-    </div>
+      Add Disulfide Link <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    </button> -->
+    <button mat-button (click)="openDialog()">
+      Add Multiple Links <mat-icon svgIcon="add_circle_outline"></mat-icon>
+    </button>
   </div>
 
-  <div *ngFor = "let disulfideLink of disulfideLinks; last as isLast; index as index"  appScrollToTarget [id]="'substance-disulfide-links-' + index"
-       class = "site-set alternate-backgrounds2" [ngClass] = "index % 2 === 0? 'side-border':''">
-    <mat-divider *ngIf = "index % 2 === 0" [vertical]="true" style = "" [inset] = "true"></mat-divider>
+  <div class = "cysteine">
+    Number of unspecified Cysteine residues: {{cysteineBonds}}
+  </div>
+</div>
+
+@for (disulfideLink of disulfideLinks; track disulfideLink; let isLast = $last; let index = $index) {
+  <div  appScrollToTarget [id]="'substance-disulfide-links-' + index"
+    class = "site-set alternate-backgrounds2" [ngClass] = "index % 2 === 0? 'side-border':''">
+    @if (index % 2 === 0) {
+      <mat-divider [vertical]="true" style = "" [inset] = "true"></mat-divider>
+    }
     <app-disulfide-links-form [link]="disulfideLink" (linkDeleted)="deleteDisulfideLink($event)"></app-disulfide-links-form>
-    <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast && (index !== disulfideLinks.length - 2)"></mat-divider>
+    @if (!isLast && (index !== disulfideLinks.length - 2)) {
+      <mat-divider class="form-divider" [inset]="true"></mat-divider>
+    }
   </div>
+}
 
 </div>
 
-<div class = "flex-row" *ngIf = "disulfideLinks && disulfideLinks.length > 0"><button mat-raised-button mat-primary (click) ="deleteAllDisulfideLinks()">
-  Delete All Links
-</button></div>
+@if (disulfideLinks && disulfideLinks.length > 0) {
+  <div class = "flex-row"><button mat-raised-button mat-primary (click) ="deleteAllDisulfideLinks()">
+    Delete All Links
+  </button></div>
+}
 <app-audit-info [source] = "disulfideLinks"></app-audit-info>
 
 <div class = "flex-row">
-    <span class = "middle-fill"></span>
-      <button mat-button (click)="addLink()">
+  <span class = "middle-fill"></span>
+  <button mat-button (click)="addLink()">
     Add Disulfide Link <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
 </div>

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import {AgentModification, StructuralModification, SubstanceAmount, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
@@ -7,12 +7,25 @@ import {MatDialog} from '@angular/material/dialog';
 import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {SubstanceSelectorComponent} from '@gsrs-core/substance-selector/substance-selector.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import {AccessManagerComponent} from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
 
 @Component({
     selector: 'app-agent-modification-form',
     templateUrl: './agent-modification-form.component.html',
     styleUrls: ['./agent-modification-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatInputModule, SubstanceSelectorComponent, CvInputComponent, AccessManagerComponent, AuditInfoComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgentModificationFormComponent implements OnInit {
   private privateMod: AgentModification;
@@ -31,7 +44,8 @@ export class AgentModificationFormComponent implements OnInit {
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
   ngOnInit() {
     this.getVocabularies();
@@ -60,6 +74,7 @@ export class AgentModificationFormComponent implements OnInit {
       this.modTypeList = response['AGENT_MODIFICATION_TYPE'].list;
       this.modProcessList = response['AGENT_MODIFICATION_PROCESS'].list;
       this.modRoleList = response['ROLE'].list;
+      this.cdr.markForCheck();
     });
   }
 
@@ -91,6 +106,7 @@ export class AgentModificationFormComponent implements OnInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
       this.overlayContainer.style.zIndex = null;
       this.mod.amount = newAmount;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }

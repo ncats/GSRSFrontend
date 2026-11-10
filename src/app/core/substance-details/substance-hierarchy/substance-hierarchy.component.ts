@@ -5,12 +5,19 @@ import { AuthService } from '@gsrs-core/auth';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { HierarchyNode } from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-substance-hierarchy',
     templateUrl: './substance-hierarchy.component.html',
     styleUrls: ['./substance-hierarchy.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatTreeModule, MatIconModule, MatTooltipModule, MatButtonModule, RouterModule]
 })
 export class SubstanceHierarchyComponent extends SubstanceCardBase implements OnInit {
 
@@ -29,10 +36,9 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
   dataSource = new MatTreeNestedDataSource<any>();
   selfNode!: HierarchyNode;
   activeNode!: any;
-  canEdit: boolean = false;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
 
-  async ngOnInit() {
+  ngOnInit() {
     this.uuid = this.substance.uuid!;
     this.name = this.substance._nameHTML!
     this.selfNode = {
@@ -52,7 +58,11 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
         next: resp => this.loadHierarchy(resp),
         error: () => this.loadHierarchy([this.selfNode])
       });
-      this.canEdit = await this.authService.hasSpecificPrivilege('Edit')
+  }
+
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
   }
 
   loadHierarchy(orig: any): void {

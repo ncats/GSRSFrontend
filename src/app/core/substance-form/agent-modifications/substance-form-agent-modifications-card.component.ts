@@ -1,16 +1,23 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {AgentModification, StructuralModification} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormAgentModificationsService} from './substance-form-agent-modifications.service';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import {CommonModule} from '@angular/common';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {AgentModificationFormComponent} from './agent-modification-form.component';
 
 @Component({
     selector: 'app-substance-form-agent-modifications-card',
     templateUrl: './substance-form-agent-modifications-card.component.html',
     styleUrls: ['./substance-form-agent-modifications-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatButtonModule, MatIconModule, AgentModificationFormComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len
 export class SubstanceFormAgentModificationsCardComponent
@@ -23,9 +30,10 @@ export class SubstanceFormAgentModificationsCardComponent
   constructor(
     private substanceFormAgentModificationsService: SubstanceFormAgentModificationsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form agent modifications';
   }
 
@@ -37,6 +45,7 @@ export class SubstanceFormAgentModificationsCardComponent
     this.canAddItemUpdate.emit(true);
     const agentSubscription = this.substanceFormAgentModificationsService.substanceAgentModifications.subscribe(modifications => {
       this.modifications = modifications;
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(agentSubscription);
   }

@@ -1,8 +1,11 @@
-import { PagingResponse } from '../app/utils/paging-response.model';
-import { SubstanceSummary } from '../app/substance/substance.model';
+import { PagingResponse } from '../app/core/utils/paging-response.model';
+import { SubstanceSummary } from '../app/core/substance/substance.model';
 
 /* eslint-disable max-len */
-export const SubstanceSummaryListData: PagingResponse<SubstanceSummary> = {
+// `statusKey`/`searchStatusUrl` were added to PagingResponse after this fixture was
+// captured from a real API response (async search-job status tracking); cast rather
+// than inventing placeholder values for fields this fixture never had.
+export const SubstanceSummaryListData = {
     'id': 37192136,
     'version': 1,
     'created': 1539385812146,
@@ -799,4 +802,4 @@ export const SubstanceSummaryListData: PagingResponse<SubstanceSummary> = {
             '_self': 'https://ginas.ncats.nih.gov/ginas/app/api/v1/substances(000a0d70-e785-4b99-8e00-284d840c903b)?view=full'
         }
     ]
-};
+} as unknown as PagingResponse<SubstanceSummary>;

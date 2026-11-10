@@ -1,16 +1,24 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {Link} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormOtherLinksService } from './substance-form-other-links.service';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { OtherLinksFormComponent } from './other-links-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-other-links-card',
     templateUrl: './substance-form-other-links-card.component.html',
     styleUrls: ['./substance-form-other-links-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, OtherLinksFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilteredList<Link>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -20,9 +28,10 @@ export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilte
     private substanceFormOtherLinksService: SubstanceFormOtherLinksService,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
+    cdr: ChangeDetectorRef,
 
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form otherLinks';
   }
 
@@ -34,6 +43,7 @@ export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilte
   ngAfterViewInit() {
     const otherLinksSubscription = this.substanceFormOtherLinksService.substanceOtherLinks.subscribe(otherLinks => {
       this.otherLinks = otherLinks;
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(otherLinksSubscription);
   }

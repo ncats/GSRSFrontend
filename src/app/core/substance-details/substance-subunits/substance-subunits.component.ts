@@ -5,12 +5,19 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-substance-subunits',
     templateUrl: './substance-subunits.component.html',
     styleUrls: ['./substance-subunits.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatButtonToggleModule, MatIconModule, MatTooltipModule, MatButtonModule, RouterModule]
 })
 export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnInit, AfterViewInit {
   subunits: Array<Subunit> = [];

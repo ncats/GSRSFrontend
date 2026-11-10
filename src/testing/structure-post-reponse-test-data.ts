@@ -1,6 +1,6 @@
-import { StructurePostResponse } from '../app/utils/structure-post-response.model';
+import { InterpretStructureResponse } from '../app/core/structure/structure-post-response.model';
 
-export const StructurePostResponseData: StructurePostResponse = {
+export const StructurePostResponseData: InterpretStructureResponse = {
     'structure': {
       'id': '67c1e575-3729-4c0d-a197-865c06e461e5',
       'deprecated': false,

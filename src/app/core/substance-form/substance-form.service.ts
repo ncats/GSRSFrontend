@@ -24,13 +24,16 @@ import {Observable, Subject, ReplaySubject, Subscription} from 'rxjs';
 import {SubstanceService} from '../substance/substance.service';
 import {UtilsService} from '../utils/utils.service';
 import {StructureService} from '@gsrs-core/structure';
-import * as _ from 'lodash';
+import { chain as lodashChain } from 'lodash';
+import lodashMap from 'lodash/map';
 import jp from 'jsonpath';
 
 import {take} from 'rxjs/operators';
 import {AdminService} from '@gsrs-core/admin/admin.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormService implements OnDestroy {
    privateSubstance: SubstanceDetail;
    originalSubstanceSnapshot: SubstanceDetail | null = null;
@@ -2011,8 +2014,8 @@ export class SubstanceFormService implements OnDestroy {
       'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
       const tup = s.split('\t');
 
-      const list = _.chain(tup[1].split(',')).map(function (t) {
-        return _.map(t.split('-'), function (temp) {
+      const list = lodashChain(tup[1].split(',')).map(function (t) {
+        return lodashMap(t.split('-'), function (temp) {
           return +temp - 0;
         });
       }).value();
@@ -2037,11 +2040,11 @@ export class SubstanceFormService implements OnDestroy {
     const realList = [];
     const cst = [];
 
-    let cs = _.chain(prot.subunits).map(function (s) {
+    let cs = lodashChain(prot.subunits).map(function (s) {
       const sid = s.subunitIndex;
       let i1 = 1;
 
-      const v = _.chain(s.sequence).map(function (r) {
+      const v = lodashChain(s.sequence).map(function (r) {
         return {
           'i': i1++,
           'r': r
@@ -2072,7 +2075,7 @@ export class SubstanceFormService implements OnDestroy {
       real.value = real.display;
       realList.push(real);
     }
-    const newDS = _.chain(pattern).map(function (sl) {
+    const newDS = lodashChain(pattern).map(function (sl) {
       return [realList[sl[0]], realList[sl[1]]];
     }).map(function (s) {
       return {
@@ -2084,21 +2087,21 @@ export class SubstanceFormService implements OnDestroy {
     if (prot.glycosylation) {
       if (prot.glycosylation.NGlycosylationSites) {
         const s = prot.glycosylation.NGlycosylationSites;
-        ng = _.chain(s).map(function (s1) {
+        ng = lodashChain(s).map(function (s1) {
           return s1.subunitIndex + '_' + s1.residueIndex;
         }).value().join(';');
       }
 
       if (prot.glycosylation.CGlycosylationSites) {
         const s = prot.glycosylation.CGlycosylationSites;
-        cg = _.chain(s).map(function (s1) {
+        cg = lodashChain(s).map(function (s1) {
           return s1.subunitIndex + '_' + s1.residueIndex;
         }).value().join(';');
       }
 
       if (prot.glycosylation.OGlycosylationSites) {
         const s = prot.glycosylation.OGlycosylationSites;
-        og = _.chain(s).map(function (s1) {
+        og = lodashChain(s).map(function (s1) {
           return s1.subunitIndex + '_' + s1.residueIndex;
         }).value().join(';');
       }
@@ -2132,7 +2135,7 @@ export class SubstanceFormService implements OnDestroy {
     }
 
     function proteinGlycFinder(proteinSubstance) {
-      return _.chain(proteinSubstance.protein.subunits).flatMap(function (su) {
+      return lodashChain(proteinSubstance.protein.subunits).flatMap(function (su) {
         return gfinder(su.subunitIndex, su.sequence);
       }).value();
     }
@@ -2177,7 +2180,9 @@ export class SubstanceFormService implements OnDestroy {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
-        if (typeof or === 'object') { continue; }
+        if (typeof or === 'object') {
+ continue; 
+}
         refs[j] = _map[or];
       }
     }
@@ -2191,12 +2196,14 @@ export class SubstanceFormService implements OnDestroy {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
           const or = refs[j];
-          if (typeof or === 'object') { continue; }
+          if (typeof or === 'object') {
+ continue; 
+}
           refSet[or] = true;
         }
       }
 
-      const nrefs = _.chain(old.references)
+      const nrefs = lodashChain(old.references)
         .filter(function (ref) {
           if (refSet[ref.uuid]) {
             return true;

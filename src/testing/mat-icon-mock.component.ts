@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
     template: '',
     // eslint-disable-next-line
     selector: 'md-icon, mat-icon',
+    standalone: false,
 })
 // eslint-disable-next-line
 export class MatIconMock {

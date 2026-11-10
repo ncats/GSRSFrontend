@@ -1,14 +1,16 @@
 <div class="subunit-container">
-  <div *ngIf="subunit.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-  </div>
+  @if (subunit.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+    </div>
+  }
   <div class="form-row">
     <div class="delete-container">
       <button
         mat-icon-button
         matTooltip="Delete link"
         (click)="deleteSubunit()"
-      >
+        >
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
@@ -19,7 +21,7 @@
         class="action-button"
         color="primary"
         (click)="editSubunit(subunit, editSequence)"
-      >
+        >
         {{ toggle[subunit.subunitIndex] ? "save" : "edit" }}
       </button>
       <button
@@ -27,20 +29,21 @@
         class="action-button"
         color="primary"
         (click)="cleanSequence()"
-      >
+        >
         clean
       </button>
       <span class="spacer"> </span>
-      <button
-        mat-button
-        class="action-button convert"
-        color="primary"
-        matTooltip="convert 3 letter sequence to 1 letter"
-        *ngIf="substanceType !== 'nucleicAcid'"
-        (click)="convertSequence()"
-      >
-        convert
-      </button>
+      @if (substanceType !== 'nucleicAcid') {
+        <button
+          mat-button
+          class="action-button convert"
+          color="primary"
+          matTooltip="convert 3 letter sequence to 1 letter"
+          (click)="convertSequence()"
+          >
+          convert
+        </button>
+      }
 
       <a
         mat-button
@@ -49,77 +52,80 @@
         matTooltip="search for sequence in a new tab"
         (click)="search()"
         >sequence search</a
-      >
-      <button
-        mat-button
-        class="action-button"
-        color="primary"
-        matTooltip="copy disulfides from another subunit"
-        (click)="copyDisulfides()"
-        *ngIf="substanceType === 'protein'"
-      >
-        copy disulfide links
-      </button>
-      <span class="middle-fill"></span>
-      <button
-        mat-button
-        class="action-button"
-        color="primary"
-        (click)="copySequence()"
-      >
-        Copy to Clipboard
-        <mat-icon
-          svgIcon="outline-file_copy"
-          matTooltip="Copy Sequence to clipboard"
-        ></mat-icon>
-      </button>
-    </div>
-  </div>
-
-  <div
-    class="subunit-edit"
-    [ngClass]="toggle[subunit.subunitIndex] ? 'show' : 'hide'"
-  >
-    <textarea
-      #sequence
-      rows="3"
-      placeholder="Enter sequence here"
-      [(ngModel)]="editSequence"
-      (change)="editSubunit(subunit, editSequence)"
-      (input)="autoResize($event)"
-      class="sequence-textarea"
-      name="edit"
-    ></textarea>
-  </div>
-  <div [ngClass]="toggle[subunit.subunitIndex] ? 'hide' : 'show'">
-    <div class="nest">
-      <div class="subunit">
-        <div class="raw-sequence">{{ subunit.sequence }}</div>
+        >
+        @if (substanceType === 'protein') {
+          <button
+            mat-button
+            class="action-button"
+            color="primary"
+            matTooltip="copy disulfides from another subunit"
+            (click)="copyDisulfides()"
+            >
+            copy disulfide links
+          </button>
+        }
+        <span class="middle-fill"></span>
+        <button
+          mat-button
+          class="action-button"
+          color="primary"
+          (click)="copySequence()"
+          >
+          Copy to Clipboard
+          <mat-icon
+            svgIcon="outline-file_copy"
+            matTooltip="Copy Sequence to clipboard"
+          ></mat-icon>
+        </button>
       </div>
     </div>
 
-    <div class="subunit-sequence" *ngIf="subunitSequence">
-      <div class="responsive">
-        <div
-          *ngFor="let set of subunitSequence.subsections; last as last1"
-          class="sequence-section-group"
-        >
-          <div
-            *ngFor="let num of set; last as last2"
-            class="sequence-section"
-            [ngClass]="last1 && last2 ? 'last-section' : ''"
-          >
-            <div class="section-number">{{ num[1] }}</div>
-            <div class="section-units-container">
-              <span
-                *ngFor="
-                  let subunit of subunitSequence.subunits.slice(num[0], num[1])
-                "
-                class="section-unit"
-              >
-                <span
-                  class="selectedSite siteref"
-                  matTooltipClass="unit-tooltip"
+    <div
+      class="subunit-edit"
+      [ngClass]="toggle[subunit.subunitIndex] ? 'show' : 'hide'"
+      >
+      <textarea
+        #sequence
+        rows="3"
+        placeholder="Enter sequence here"
+        [(ngModel)]="editSequence"
+        (change)="editSubunit(subunit, editSequence)"
+        (input)="autoResize($event)"
+        class="sequence-textarea"
+        name="edit"
+      ></textarea>
+    </div>
+    <div [ngClass]="toggle[subunit.subunitIndex] ? 'hide' : 'show'">
+      <div class="nest">
+        <div class="subunit">
+          <div class="raw-sequence">{{ subunit.sequence }}</div>
+        </div>
+      </div>
+
+      @if (subunitSequence) {
+        <div class="subunit-sequence">
+          <div class="responsive">
+            @for (set of subunitSequence.subsections; track set; let last1 = $last) {
+              <div
+                class="sequence-section-group"
+                >
+                @for (num of set; track num; let last2 = $last) {
+                  <div
+                    class="sequence-section"
+                    [ngClass]="last1 && last2 ? 'last-section' : ''"
+                    >
+                    <div class="section-number">{{ num[1] }}</div>
+                    <div class="section-units-container">
+                      @for (
+                        subunit of subunitSequence.subunits.slice(num[0], num[1])
+                        ; track
+                        subunit) {
+                        <span
+                          class="section-unit"
+                          >
+                          <span
+                            class="selectedSite siteref"
+                            matTooltipClass="unit-tooltip"
                   matTooltip="{{
                     getTooltipMessage(
                       subunitSequence.subunitIndex,
@@ -128,36 +134,42 @@
                       subunit.class || ''
                     ).join('\n')
                   }}"
-                  [ngClass]="subunit.class"
-                  >{{ subunit.unitValue }}</span
-                >
-              </span>
+                            [ngClass]="subunit.class"
+                            >{{ subunit.unitValue }}</span
+                            >
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
-        </div>
+        }
       </div>
+      <div class="form-row">
+        @if (substanceType === 'nucleicAcid') {
+          <div>
+            Generate{{ sequenceType ? "d" : "" }} links and sugars for this subunit as
+            a
+            <button
+              mat-button
+              (click)="generateSites('DNA')"
+              [ngClass]="sequenceType === 'DNA' ? 'generated' : ''"
+              >
+              DNA
+            </button>
+            <button
+              mat-button
+              (click)="generateSites('RNA')"
+              [ngClass]="sequenceType === 'RNA' ? 'generated' : ''"
+              >
+              RNA
+            </button>
+            sequence
+          </div>
+        }
+      </div>
+      <app-audit-info [source]="subunit"></app-audit-info>
     </div>
-  </div>
-  <div class="form-row">
-    <div *ngIf="substanceType === 'nucleicAcid'">
-      Generate{{ sequenceType ? "d" : "" }} links and sugars for this subunit as
-      a
-      <button
-        mat-button
-        (click)="generateSites('DNA')"
-        [ngClass]="sequenceType === 'DNA' ? 'generated' : ''"
-      >
-        DNA
-      </button>
-      <button
-        mat-button
-        (click)="generateSites('RNA')"
-        [ngClass]="sequenceType === 'RNA' ? 'generated' : ''"
-      >
-        RNA
-      </button>
-      sequence
-    </div>
-  </div>
-  <app-audit-info [source]="subunit"></app-audit-info>
-</div>

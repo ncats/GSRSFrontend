@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Router} from '@angular/router';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial, OutcomeResultNote } from '../clinical-trial/clinical-trial.model';
 import { ClinicalTrialUSDrug } from '../clinical-trial/clinical-trial.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
-import * as _ from 'lodash';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -16,6 +16,19 @@ import { switchMap, map, concat, concatMap, delay, mergeMap } from 'rxjs/operato
 import { forkJoin } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MiniSearchComponent } from '../mini-search/mini-search.component';
+import { ClinicalTrialEditSubstanceRolesComponent } from './substance-roles/clinical-trial-edit-substance-roles.component';
+import { ClinicalTrialEditOutcomeResultNoteComponent } from './outcome-result-notes/clinical-trial-edit-outcome-result-note.component';
 
 
 /**
@@ -26,7 +39,23 @@ import { Observable } from 'rxjs';
     selector: 'app-clinical-trial-edit',
     templateUrl: './clinical-trial-edit.component.html',
     styleUrls: ['./clinical-trial-edit.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatCheckboxModule,
+      MatButtonModule,
+      MatExpansionModule,
+      MatIconModule,
+      MatTableModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MiniSearchComponent,
+      ClinicalTrialEditSubstanceRolesComponent,
+      ClinicalTrialEditOutcomeResultNoteComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDestroy {
   clinicalTrial: ClinicalTrial;
@@ -35,9 +64,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   defaultSubstanceKeyType = 'UUID';
   agencySubstanceKeyType = 'UUID';
 
-  canUpdate: boolean = false;
   isTesting  = false;
-  displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
   public  _trialNumber: string;
   bulkInputValue = '';
@@ -61,17 +88,24 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
-  async ngOnInit() {
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    if (this.canUpdate) {
-      this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete'];
-    } else {
-      this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
-    }
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  // Derived purely from canUpdate, no side effects, so a live getter is safe here too rather than a one-time cached array.
+  get displayedColumns(): string[] {
+    return this.canUpdate
+      ? ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete']
+      : ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
+  }
+
+  ngOnInit() {
     this.pageSize = 10;
     this.pageIndex = 0;
     this.activatedRoute.paramMap.subscribe(params => {
@@ -98,8 +132,10 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
           this.dataSource.data[data.myIndex].orgSubstanceKey = this.getOrgSubstanceKeyFromSubstance(substance);
         }
         }
+        this.cdr.markForCheck();
     }, () => {
       this.dataSource.data[data.myIndex].substanceKey = null;
+      this.cdr.markForCheck();
     });
     this.dataSource.data = this.dataSource.data;
   }
@@ -172,7 +208,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
             }
           });
           // don't know why but deep clone makes the myInitialSearch value work as expected perhaps by rerendering table.
-          const data = _.cloneDeep(this.dataSource.data);
+          const data = lodashCloneDeep(this.dataSource.data);
           // but this doesn't work.
           // const data = [...this.dataSource.data];
           this.dataSource.data = data;
@@ -191,9 +227,11 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
+        this.cdr.markForCheck();
       }, () => {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
+        this.cdr.markForCheck();
     });
     this.subscriptions.push(subscription);
   }
@@ -216,7 +254,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   updateClinicalTrial() {
     // var that = this;
     this.loadingService.setLoading(true);
-    const newClinicalTrial = _.cloneDeep(this.clinicalTrial);
+    const newClinicalTrial = lodashCloneDeep(this.clinicalTrial);
     const newClinicalTrialUSDrugs: Array<ClinicalTrialUSDrug> = [];
     this.dataSource.data.forEach((element)  => {
       const ctd = {} as ClinicalTrialUSDrug;

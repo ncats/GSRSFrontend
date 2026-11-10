@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import {SubstanceCardBase} from '../substance-card-base';
 import {DisulfideLink, Site, SubstanceDetail} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
@@ -7,7 +8,8 @@ import {Subject} from 'rxjs';
     selector: 'app-substance-disulfide-links',
     templateUrl: './substance-disulfide-links.component.html',
     styleUrls: ['./substance-disulfide-links.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatTableModule]
 })
 export class SubstanceDisulfideLinksComponent extends SubstanceCardBase implements OnInit {
   disulfideLinks: Array<DisulfideLink>;

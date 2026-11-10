@@ -1,14 +1,36 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import * as moment from 'moment';
-import * as _ from 'lodash';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatInputModule } from '@angular/material/input';
+import { SchemaFormModule } from 'ngx-schema-form';
+import moment from 'moment';
+import lodashIsEqual from 'lodash/isEqual';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 
 @Component({
     selector: 'app-export-dialog',
     templateUrl: './export-dialog.component.html',
     styleUrls: ['./export-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatDialogModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTabsModule,
+      MatInputModule,
+      SchemaFormModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExportDialogComponent implements OnInit {
   name: string;
@@ -38,7 +60,8 @@ export class ExportDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ExportDialogComponent>,
     public substanceService: SubstanceService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private cdr: ChangeDetectorRef
   ) {
     if(data.entity) {
       this.entity = data.entity;
@@ -63,7 +86,7 @@ export class ExportDialogComponent implements OnInit {
         }
         })
         this.scrubberSchema = response;
-        
+        this.cdr.markForCheck();
     });
     this.substanceService.getSchema('expander', this.entity).subscribe(response => {
       Object.keys(response.properties).forEach(val => {
@@ -78,7 +101,7 @@ export class ExportDialogComponent implements OnInit {
         }
       });
       this.expanderSchema = response;
-
+      this.cdr.markForCheck();
   });
   this.substanceService.getExportOptions(this.data.extension, this.entity).subscribe(response => {
     Object.keys(response.properties).forEach(val => {
@@ -93,7 +116,7 @@ export class ExportDialogComponent implements OnInit {
       }
     });
     this.exporterSchema = response;
-
+    this.cdr.markForCheck();
 });
     const date = new Date();
     if (this.data.type && this.data.type !== null && this.data.type !== '') {
@@ -167,8 +190,7 @@ export class ExportDialogComponent implements OnInit {
         if (a.exporterKey === 'PUBLIC_DATA_ONLY') {
           test = -1;
           
-        }
-          else if (b.exporterKey === 'PUBLIC_DATA_ONLY') {
+        } else if (b.exporterKey === 'PUBLIC_DATA_ONLY') {
             test = 1;
         }else {
           test = 1;
@@ -192,6 +214,7 @@ export class ExportDialogComponent implements OnInit {
           }
         })
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -219,6 +242,7 @@ export class ExportDialogComponent implements OnInit {
         this.loadedConfig.configurationId = response['Newly created configuration'];
         this.unsaved = false;
       }
+      this.cdr.markForCheck();
     });
   } else {
     alert('Cannot Save: config name "' + this.configName + "' already exists");
@@ -236,6 +260,7 @@ export class ExportDialogComponent implements OnInit {
         this.message = response.Result;
         this.unsaved = false;
       }
+      this.cdr.markForCheck();
     })
   }
 
@@ -250,11 +275,13 @@ export class ExportDialogComponent implements OnInit {
     this.substanceService.deleteConfig(id, this.entity).subscribe(response => {
       this.substanceService.getConfigs(this.entity).subscribe(response2 => {
         this.options = response2;
+        this.cdr.markForCheck();
       });
       this.loadedConfig = null;
       if (response.Result) {
         this.message = response.Result;
       }
+      this.cdr.markForCheck();
     });
   }
   }
@@ -264,7 +291,7 @@ export class ExportDialogComponent implements OnInit {
     // we need to treat properties that are undefined, null, false, or empty arrays as the same value for the sake of detecting differences
 
     let result = false;
-    if (!_.isEqual(config, model)) {
+    if (!lodashIsEqual(config, model)) {
       if ((!config || Object.keys(config).length === 0) && 
       (!model || Object.keys(model).length === 0)) {
       } else {
@@ -281,7 +308,7 @@ export class ExportDialogComponent implements OnInit {
             delete check2[key];
           }
         });
-        if (!_.isEqual(check1, check2)) {
+        if (!lodashIsEqual(check1, check2)) {
           result = true;
         }
       }
@@ -334,6 +361,7 @@ export class ExportDialogComponent implements OnInit {
     this.configName = event.exporterKey;
     setTimeout(()=> {
       this.scrubberModel = testing;
+      this.cdr.markForCheck();
     }, 100);
     if (!preload) {
       this.message = "Export Configuration " + this.configName + " Loaded";

@@ -42,41 +42,17 @@ import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/ph
 import {PhysicalParameterFormComponent} from '@gsrs-core/substance-form/physical-parameter-form/physical-parameter-form.component';
 import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import {SugarFormComponent} from '@gsrs-core/substance-form/sugar-form/sugar-form.component';
-import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
 import { RouterModule } from '@angular/router';
+import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 import {MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {DefinitionSwitchDialogComponent} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
-import { SubstanceFormComponent } from './substance-form.component';
-import { CanActivateSubstanceForm } from './can-activate-substance-form';
-import { CanRegisterSubstanceForm } from './can-register-substance-form';
-import { SubstanceFormService } from './substance-form.service';
-import { SubstanceFormStructureService } from './structure/substance-form-structure.service';
-import { SubstanceFormDisulfideLinksService } from './disulfide-links/substance-form-disulfide-links.service';
-import { SubstanceFormGlycosylationService } from './glycosylation/substance-form-glycosylation.service';
-import { SubstanceFormPropertiesService } from './properties/substance-form-properties.service';
-import { SubstanceFormReferencesService } from './references/substance-form-references.service';
-import { SubstanceFormStructuralUnitsService } from './structural-units/substance-form-structural-units.service';
-import { SubstanceFormStructurallyDiverseService } from './structurally-diverse/substance-form-structurally-diverse.service';
-import { SubstanceFormNamesService } from './names/substance-form-names.service';
-import { SubstanceFormLinksService } from './links/substance-form-links.service';
-import { SubstanceFormCodesService } from './codes/substance-form-codes.service';
-import { SubstanceFormAgentModificationsService } from './agent-modifications/substance-form-agent-modifications.service';
-import { SubstanceFormConstituentsService } from './constituents/substance-form-constituents.service';
-import { SubstanceFormMixtureComponentsService } from './mixture-components/substance-form-mixture-components.service';
-import { SubstanceFormMonomersService } from './monomers/substance-form-monomers.service';
-import { SubstanceFormNotesService } from './notes/substance-form-notes.service';
-import { SubstanceFormOtherLinksService } from './other-links/substance-form-other-links.service';
-import { SubstanceFormPhysicalModificationsService } from './physical-modifications/substance-form-physical-modifications.service';
-import { SubstanceFormPolymerClassificationService } from './polymer-classification/substance-form-polymer-classification.service';
-import { SubstanceFormRelationshipsService } from './relationships/substance-form-relationships.service';
-import { SubstanceFormStructuralModificationsService } from './structural-modifications/substance-form-structural-modifications.service';
 import { PreviousReferencesComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references.component';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -93,6 +69,7 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    FragmentWizardComponent,
     MatFormFieldModule,
     MatMenuModule,
     MatCheckboxModule,
@@ -124,41 +101,36 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     MatProgressSpinnerModule,
     MatSortModule,
     ElementLabelDisplayModule,
-    MatPaginatorModule
-  ],
-  declarations: [
-    SubstanceFormComponent,
+    MatPaginatorModule,
     AccessManagerComponent,
-    TagSelectorComponent,
-    DomainReferencesComponent,
-    PreviousReferencesComponent,
-    ReuseReferencesDialogComponent,
-    StructureFormComponent,
     AmountFormComponent,
-    ApplyReferenceComponent,
-    PropertyParameterFormComponent,
-    PropertyParameterDialogComponent,
-    SubunitFormComponent,
-    SubunitDisplayPipe,
-    SugarFormComponent,
-    SubunitSelectorComponent,
-    SubunitSelectorDialogComponent,
     AmountFormDialogComponent,
-    PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
-    CvInputComponent,
-    CvDialogComponent,
+    PhysicalParameterFormDialogComponent,
     JsonDialogComponent,
-    AuditInfoComponent,
     SubmitSuccessDialogComponent,
     MergeConceptDialogComponent,
-    DefinitionSwitchDialogComponent,
+    PropertyParameterFormComponent,
+    PropertyParameterDialogComponent,
+    SubunitSelectorComponent,
+    SubunitSelectorDialogComponent,
+    PreviousReferencesComponent,
     PreviousReferencesDialogComponent,
     CopyDisulfideDialogComponent,
-    SubstanceDraftsComponent
+    TagSelectorComponent,
+    ApplyReferenceComponent,
+    DomainReferencesComponent,
+    StructureFormComponent,
+    AuditInfoComponent,
+    ReuseReferencesDialogComponent,
+    SubunitFormComponent,
+    SugarFormComponent,
+    CvInputComponent,
+    DefinitionSwitchDialogComponent,
+    SubstanceDraftsComponent,
+    SubunitDisplayPipe
   ],
   exports: [
-    SubstanceFormComponent,
     AccessManagerComponent,
     TagSelectorComponent,
     DomainReferencesComponent,
@@ -178,7 +150,6 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
     CvInputComponent,
-    CvDialogComponent,
     JsonDialogComponent,
     AuditInfoComponent,
     SubmitSuccessDialogComponent,
@@ -193,31 +164,7 @@ export class SubstanceFormModule {
     static forRoot(): ModuleWithProviders<any> {
       return {
         ngModule: SubstanceFormModule,
-        providers: [
-          SubstanceFormService,
-          CanActivateSubstanceForm,
-          CanRegisterSubstanceForm,
-          SubstanceFormStructureService,
-          SubstanceFormDisulfideLinksService,
-          SubstanceFormGlycosylationService,
-          SubstanceFormPropertiesService,
-          SubstanceFormReferencesService,
-          SubstanceFormStructuralUnitsService,
-          SubstanceFormStructurallyDiverseService,
-          SubstanceFormNamesService,
-          SubstanceFormLinksService,
-          SubstanceFormCodesService,
-          SubstanceFormAgentModificationsService,
-          SubstanceFormConstituentsService,
-          SubstanceFormMixtureComponentsService,
-          SubstanceFormMonomersService,
-          SubstanceFormNotesService,
-          SubstanceFormOtherLinksService,
-          SubstanceFormPhysicalModificationsService,
-          SubstanceFormPolymerClassificationService,
-          SubstanceFormRelationshipsService,
-          SubstanceFormStructuralModificationsService
-        ]
+        providers: []
       };
     }
 }

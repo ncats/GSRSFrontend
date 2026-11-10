@@ -1,11 +1,15 @@
 <div class = "responsive">
-  <div class="thumb-col" *ngIf="parent">
-    <div *ngIf = "parent.approvalID" class = "code">{{parent.approvalID}}</div>
-    <img class="image-thumb" appSubstanceImage [entityId]="parent.refuuid">
-    <div>
-      <a class="substance-name" [routerLink]="['/substances', parent.refuuid]" [innerHTML]="parent.refPname" >
-      </a>
+  @if (parent) {
+    <div class="thumb-col">
+      @if (parent.approvalID) {
+        <div class = "code">{{parent.approvalID}}</div>
+      }
+      <img class="image-thumb" appSubstanceImage [entityId]="parent.refuuid">
+      <div>
+        <a class="substance-name" [routerLink]="['/substances', parent.refuuid]" [innerHTML]="parent.refPname" >
+        </a>
+      </div>
     </div>
-  </div>
+  }
 </div>
 

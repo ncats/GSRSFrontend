@@ -1,16 +1,31 @@
-import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { InterpretStructureResponse } from '../../structure/structure-post-response.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
 
 @Component({
     selector: 'app-structure-form',
     templateUrl: './structure-form.component.html',
     styleUrls: ['./structure-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatSelectModule,
+      MatOptionModule,
+      AuditInfoComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureFormComponent implements OnInit, OnDestroy {
   private privateStructure: SubstanceStructure | SubstanceMoiety = {};
@@ -27,7 +42,8 @@ export class StructureFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -65,6 +81,7 @@ export class StructureFormComponent implements OnInit, OnDestroy {
       this.stereoChemistryTypeList = response['STEREOCHEMISTRY_TYPE'].list;
       this.opticalActivityList = response['OPTICAL_ACTIVITY'].list;
       this.atropisomerismList = response['ATROPISOMERISM'].list;
+      this.cdr.markForCheck();
     });
   }
 

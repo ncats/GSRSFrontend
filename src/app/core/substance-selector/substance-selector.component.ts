@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceSummary, SubstanceDetail } from '../substance/substance.model';
 import { ConfigService } from '@gsrs-core/config';
@@ -10,12 +10,20 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { Router } from '@angular/router';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
+import { CommonModule } from '@angular/common';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
   selector: "app-substance-selector",
   templateUrl: "./substance-selector.component.html",
   styleUrls: ["./substance-selector.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, SubstanceTextSearchComponent, SubstanceImageDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
@@ -56,7 +64,8 @@ export class SubstanceSelectorComponent implements OnInit {
     public scrollToService: ScrollToService,
     private dialog: MatDialog,
     private router: Router,
-    private structureService: StructureService
+    private structureService: StructureService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   StoreSelection() {
@@ -92,6 +101,7 @@ export class SubstanceSelectorComponent implements OnInit {
         (response) => {
           this.selectedSubstance = response;
           this.errorMessage = "";
+          this.cdr.markForCheck();
         },
         (error) => {
           if (this.name && this.name !== "") {
@@ -100,6 +110,7 @@ export class SubstanceSelectorComponent implements OnInit {
             this.selectedSubstance = { _name: "" };
           }
           this.errorMessage = "Not in database";
+          this.cdr.markForCheck();
         },
       );
     }
@@ -120,10 +131,12 @@ export class SubstanceSelectorComponent implements OnInit {
             console.log("no match for UUID");
             this.errorMessage = "No substances found";
           }
+          this.cdr.markForCheck();
         },
         error: (err) => {
           console.log("error retrieving UUID");
           this.errorMessage = "No substances found";
+          this.cdr.markForCheck();
         },
       });
       return;
@@ -141,6 +154,7 @@ export class SubstanceSelectorComponent implements OnInit {
         } else {
           this.errorMessage = "No substances found";
         }
+        this.cdr.markForCheck();
       });
   }
 
@@ -183,6 +197,7 @@ export class SubstanceSelectorComponent implements OnInit {
       }
 
       this.overlayContainer.style.zIndex = null;
+      this.cdr.markForCheck();
     });
   }
 
@@ -418,6 +433,7 @@ export class SubstanceSelectorComponent implements OnInit {
       primaryName: primaryName,
       tmpStructureId: tmpStructureId
     });
+    this.cdr.markForCheck();
   }
 
 

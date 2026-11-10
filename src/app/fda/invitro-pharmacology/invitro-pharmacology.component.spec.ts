@@ -8,7 +8,7 @@ describe('InvitroPharmaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InvitroPharmacologyComponent ]
+      imports: [ InvitroPharmacologyComponent ]
     })
     .compileComponents();
   });

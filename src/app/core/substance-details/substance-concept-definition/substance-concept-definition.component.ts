@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
 import {SubstanceCardBase} from '../substance-card-base';
 import {SubstanceDetail, SubstanceRelated, SubstanceRelationship} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
@@ -7,7 +9,8 @@ import {Subject} from 'rxjs';
     selector: 'app-substance-concept-definition',
     templateUrl: './substance-concept-definition.component.html',
     styleUrls: ['./substance-concept-definition.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterModule, SubstanceImageDirective]
 })
 export class SubstanceConceptDefinitionComponent extends SubstanceCardBase implements OnInit {
   relationships: Array<SubstanceRelationship> = [];

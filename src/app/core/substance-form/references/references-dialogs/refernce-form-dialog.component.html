@@ -3,29 +3,32 @@
   mat-dialog-content
   name="reference-dialog-container"
   id="reference-dialog-container"
->
-  <app-previous-references
-    (selectedReference)="fillReference($event)"
-    *ngIf="showPrev"
-  ></app-previous-references>
-  <div *ngIf="reference">
-    <app-reference-form
-      [reference]="reference"
-      #referenceForm
-      hideDelete="true"
-      id="reference-dialog-form"
-      name="reference-dialog-form"
-    ></app-reference-form>
-    <div class="actions">
-      <span class="middle-fill"></span>
-      <button matButton (click)="cancel()">Cancel</button>
-      <button
-        matButton
-        [disabled]="!referenceForm || !referenceForm.isValid"
-        (click)="save()"
-      >
-        Save
-      </button>
+  >
+  @if (showPrev) {
+    <app-previous-references
+      (selectedReference)="fillReference($event)"
+    ></app-previous-references>
+  }
+  @if (reference) {
+    <div>
+      <app-reference-form
+        [reference]="reference"
+        #referenceForm
+        hideDelete="true"
+        id="reference-dialog-form"
+        name="reference-dialog-form"
+      ></app-reference-form>
+      <div class="actions">
+        <span class="middle-fill"></span>
+        <button matButton (click)="cancel()">Cancel</button>
+        <button
+          matButton
+          [disabled]="!referenceForm || !referenceForm.isValid"
+          (click)="save()"
+          >
+          Save
+        </button>
+      </div>
     </div>
-  </div>
+  }
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
@@ -10,12 +10,41 @@ import { GeneralService } from '../../../service/general.service';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { ImpuritiesTesting, ImpuritiesDetails, ImpuritiesSolutionTable } from '../../model/impurities.model';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTableModule } from '@angular/material/table';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ImpuritiesDetailsFormComponent } from '../impurities-details-form/impurities-details-form.component';
+import { ImpuritiesUnspecifiedFormComponent } from '../impurities-unspecified-form/impurities-unspecified-form.component';
 
 @Component({
   selector: 'app-impurities-test-form',
   templateUrl: './impurities-test-form.component.html',
   styleUrls: ['./impurities-test-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatCardModule,
+    MatBadgeModule,
+    MatTableModule,
+    CvInputComponent,
+    ImpuritiesDetailsFormComponent,
+    ImpuritiesUnspecifiedFormComponent
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
 
@@ -47,7 +76,8 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     private generalService: GeneralService,
     private loadingService: LoadingService,
     private authService: AuthService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     // Load item in displayColumns based on Solution Letter
@@ -154,6 +184,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteImpuritiesSolution(solutionIndex);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -212,6 +243,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteImpuritiesSolutionTable(solutionTableIndex);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -263,6 +295,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteImpuritiesElutionSolvent(elutionIndex);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -287,6 +320,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
           }
         }
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(substanceSubscribe);
   }

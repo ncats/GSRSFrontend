@@ -1,247 +1,265 @@
 <!-- [ngClass]="{'bordergreen': showAdvancedSettings === true}"> -->
 <div class="form-container">
-  <div class="divflexright" *ngIf="showAdvancedSettings">
-    <button
-      mat-stroked-button
-      color="primary"
-      class="button-delete"
-      matTooltip="Delete Site {{ siteIndex + 1 }}"
-      (click)="confirmDeleteSite()"
-    >
-      <mat-icon svgIcon="delete_forever"></mat-icon>Delete Site
-      {{ siteIndex + 1 }}
-    </button>
-  </div>
+  @if (showAdvancedSettings) {
+    <div class="divflexright">
+      <button
+        mat-stroked-button
+        color="primary"
+        class="button-delete"
+        matTooltip="Delete Site {{ siteIndex + 1 }}"
+        (click)="confirmDeleteSite()"
+        >
+        <mat-icon svgIcon="delete_forever"></mat-icon>Delete Site
+        {{ siteIndex + 1 }}
+      </button>
+    </div>
+  }
 
   <div class="form-row">
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteName'] ||
-        (configSettingsDisplay['siteName'] === undefined &&
-          showAdvancedSettings)
-      "
-    >
-      <mat-label>Site Name</mat-label>
-      <input matInput [(ngModel)]="site.siteName" name="site.siteName" />
-    </mat-form-field>
+    @if (
+      configSettingsDisplay['siteName'] ||
+      (configSettingsDisplay['siteName'] === undefined &&
+      showAdvancedSettings)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Site Name</mat-label>
+        <input matInput [(ngModel)]="site.siteName" name="site.siteName" />
+      </mat-form-field>
+    }
 
-    <app-cv-input
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteIdType'] ||
-        (configSettingsDisplay['siteIdType'] === undefined &&
-          showAdvancedSettings)
-      "
-      domain="SSG_SITE_ID_TYPE"
-      title="Site ID Type"
-      name="siteIdType"
-      [model]="site.siteIdType"
-      (valueChange)="site.siteIdType = $event"
-    >
-    </app-cv-input>
+    @if (
+      configSettingsDisplay['siteIdType'] ||
+      (configSettingsDisplay['siteIdType'] === undefined &&
+      showAdvancedSettings)
+      ) {
+      <app-cv-input
+        class="col-4-1"
+        domain="SSG_SITE_ID_TYPE"
+        title="Site ID Type"
+        name="siteIdType"
+        [model]="site.siteIdType"
+        (valueChange)="site.siteIdType = $event"
+        >
+      </app-cv-input>
+    }
 
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteId'] ||
-        (configSettingsDisplay['siteId'] === undefined && showAdvancedSettings)
-      "
-    >
-      <mat-label>Site ID</mat-label>
-      <input matInput [(ngModel)]="site.siteId" name="site.siteId" />
-    </mat-form-field>
+    @if (
+      configSettingsDisplay['siteId'] ||
+      (configSettingsDisplay['siteId'] === undefined && showAdvancedSettings)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Site ID</mat-label>
+        <input matInput [(ngModel)]="site.siteId" name="site.siteId" />
+      </mat-form-field>
+    }
 
-    <app-cv-input
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteClearance'] ||
-        (configSettingsDisplay['siteClearance'] === undefined &&
-          showAdvancedSettings)
-      "
-      domain="SSG_SITE_CLEARANCE"
-      title="Site Clearance"
-      name="siteClearance"
-      [model]="site.siteClearance"
-      (valueChange)="site.siteClearance = $event"
-    >
-    </app-cv-input>
-  </div>
-  <!-- form row -->
-
-  <div class="form-row">
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteAddress'] ||
-        (configSettingsDisplay['siteAddress'] === undefined &&
-          showAdvancedSettings)
-      "
-    >
-      <mat-label>Site Address</mat-label>
-      <input matInput [(ngModel)]="site.siteAddress" name="site.siteAddress" />
-    </mat-form-field>
-
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteGPSLatitude'] ||
-        (configSettingsDisplay['siteGPSLatitude'] === undefined &&
-          showAdvancedSettings)
-      "
-    >
-      <mat-label>Site GPS Latitude</mat-label>
-      <input
-        matInput
-        [(ngModel)]="site.siteGPSLatitude"
-        name="site.siteGPSLatitude"
-      />
-    </mat-form-field>
-
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteGPSLongitude'] ||
-        (configSettingsDisplay['siteGPSLongitude'] === undefined &&
-          showAdvancedSettings)
-      "
-    >
-      <mat-label>Site GPS Longitude</mat-label>
-      <input
-        matInput
-        [(ngModel)]="site.siteGPSLongitude"
-        name="site.siteGPSLongitude"
-      />
-    </mat-form-field>
-
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteGPSElevation'] ||
-        (configSettingsDisplay['siteGPSElevation'] === undefined &&
-          showAdvancedSettings)
-      "
-    >
-      <mat-label>Site GPS Elevation</mat-label>
-      <input
-        matInput
-        [(ngModel)]="site.siteGPSElevation"
-        name="site.siteGPSElevation"
-      />
-    </mat-form-field>
+    @if (
+      configSettingsDisplay['siteClearance'] ||
+      (configSettingsDisplay['siteClearance'] === undefined &&
+      showAdvancedSettings)
+      ) {
+      <app-cv-input
+        class="col-4-1"
+        domain="SSG_SITE_CLEARANCE"
+        title="Site Clearance"
+        name="siteClearance"
+        [model]="site.siteClearance"
+        (valueChange)="site.siteClearance = $event"
+        >
+      </app-cv-input>
+    }
   </div>
   <!-- form row -->
 
   <div class="form-row">
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['companyName'] ||
-        (configSettingsDisplay['companyName'] === undefined && true)
-      "
-    >
-      <mat-label>Company Name</mat-label>
-      <input matInput [(ngModel)]="site.companyName" name="site.companyName" />
-    </mat-form-field>
+    @if (
+      configSettingsDisplay['siteAddress'] ||
+      (configSettingsDisplay['siteAddress'] === undefined &&
+      showAdvancedSettings)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Site Address</mat-label>
+        <input matInput [(ngModel)]="site.siteAddress" name="site.siteAddress" />
+      </mat-form-field>
+    }
 
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['companyId'] ||
-        (configSettingsDisplay['companyId'] === undefined && true)
-      "
-    >
-      <mat-label>Company ID</mat-label>
-      <input matInput [(ngModel)]="site.companyId" name="site.companyId" />
-    </mat-form-field>
+    @if (
+      configSettingsDisplay['siteGPSLatitude'] ||
+      (configSettingsDisplay['siteGPSLatitude'] === undefined &&
+      showAdvancedSettings)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Site GPS Latitude</mat-label>
+        <input
+          matInput
+          [(ngModel)]="site.siteGPSLatitude"
+          name="site.siteGPSLatitude"
+          />
+      </mat-form-field>
+    }
 
-    <app-cv-input
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['companyIdType'] ||
-        (configSettingsDisplay['companyIdType'] === undefined && true)
-      "
-      domain="SSG_COMPANY_ID_TYPE"
-      title="Company ID Type"
-      [model]="site.companyIdType"
-      (valueChange)="updateCompanyIdType($event)"
-    >
-    </app-cv-input>
+    @if (
+      configSettingsDisplay['siteGPSLongitude'] ||
+      (configSettingsDisplay['siteGPSLongitude'] === undefined &&
+      showAdvancedSettings)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Site GPS Longitude</mat-label>
+        <input
+          matInput
+          [(ngModel)]="site.siteGPSLongitude"
+          name="site.siteGPSLongitude"
+          />
+      </mat-form-field>
+    }
 
-    <mat-form-field
-      class="col-4-1"
-      *ngIf="
-        configSettingsDisplay['siteComments'] ||
-        (configSettingsDisplay['siteComments'] === undefined &&
-          showAdvancedSettings)
-      "
-    >
-      <mat-label>Comments</mat-label>
-      <textarea
-        matInput
-        [(ngModel)]="site.siteComments"
-        name="site.siteComments"
-        rows="1"
-      ></textarea>
-    </mat-form-field>
+    @if (
+      configSettingsDisplay['siteGPSElevation'] ||
+      (configSettingsDisplay['siteGPSElevation'] === undefined &&
+      showAdvancedSettings)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Site GPS Elevation</mat-label>
+        <input
+          matInput
+          [(ngModel)]="site.siteGPSElevation"
+          name="site.siteGPSElevation"
+          />
+      </mat-form-field>
+    }
+  </div>
+  <!-- form row -->
+
+  <div class="form-row">
+    @if (
+      configSettingsDisplay['companyName'] ||
+      (configSettingsDisplay['companyName'] === undefined && true)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Company Name</mat-label>
+        <input matInput [(ngModel)]="site.companyName" name="site.companyName" />
+      </mat-form-field>
+    }
+
+    @if (
+      configSettingsDisplay['companyId'] ||
+      (configSettingsDisplay['companyId'] === undefined && true)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Company ID</mat-label>
+        <input matInput [(ngModel)]="site.companyId" name="site.companyId" />
+      </mat-form-field>
+    }
+
+    @if (
+      configSettingsDisplay['companyIdType'] ||
+      (configSettingsDisplay['companyIdType'] === undefined && true)
+      ) {
+      <app-cv-input
+        class="col-4-1"
+        domain="SSG_COMPANY_ID_TYPE"
+        title="Company ID Type"
+        [model]="site.companyIdType"
+        (valueChange)="updateCompanyIdType($event)"
+        >
+      </app-cv-input>
+    }
+
+    @if (
+      configSettingsDisplay['siteComments'] ||
+      (configSettingsDisplay['siteComments'] === undefined &&
+      showAdvancedSettings)
+      ) {
+      <mat-form-field
+        class="col-4-1"
+        >
+        <mat-label>Comments</mat-label>
+        <textarea
+          matInput
+          [(ngModel)]="site.siteComments"
+          name="site.siteComments"
+          rows="1"
+        ></textarea>
+      </mat-form-field>
+    }
   </div>
 
   <!-- STAGES LIST BEGIN -->
   <div>
-    <div
-      class="marginbottom30px margintop15px"
-      *ngFor="let stage of site.stages; let stageIndex = index"
-    >
-      <fieldset class="border">
-        <legend class="border">
-          {{ configTitleStage }}&nbsp;
-          <span *ngIf="site.stages.length > 0">
-            <b>{{ stageIndex + 1 }} of {{ site.stages.length }}</b>
-            &nbsp;&nbsp;
-          </span>
-          <button class="buttonstyle" mat-button (click)="showSchemePreview()">
-            Step View
-          </button>
-        </legend>
-        <app-ssg4m-stages-form
-          [stage]="stage"
-          [processIndex]="processIndex"
-          [siteIndex]="siteIndex"
-          [stageIndex]="stageIndex"
-          [showAdvancedSettings]="showAdvancedSettings"
-          [tabSelectedView]="tabSelectedView"
+    @for (stage of site.stages; track stage; let stageIndex = $index) {
+      <div
+        class="marginbottom30px margintop15px"
         >
-        </app-ssg4m-stages-form>
-
-        <!-- Another Add Button-->
-        <div class="divflex">
-          <span class="middle-fill"></span>
-          <button
-            mat-stroked-button
-            color="primary"
-            class="button-add"
-            (click)="addStage(processIndex, siteIndex)"
-          >
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add
-            {{ configTitleStage }}
-          </button>
-        </div>
-      </fieldset>
-    </div>
+        <fieldset class="border">
+          <legend class="border">
+            {{ configTitleStage }}&nbsp;
+            @if (site.stages.length > 0) {
+              <span>
+                <b>{{ stageIndex + 1 }} of {{ site.stages.length }}</b>
+                &nbsp;&nbsp;
+              </span>
+            }
+            <button class="buttonstyle" mat-button (click)="showSchemePreview()">
+              Step View
+            </button>
+          </legend>
+          <app-ssg4m-stages-form
+            [stage]="stage"
+            [processIndex]="processIndex"
+            [siteIndex]="siteIndex"
+            [stageIndex]="stageIndex"
+            [showAdvancedSettings]="showAdvancedSettings"
+            [tabSelectedView]="tabSelectedView"
+            >
+          </app-ssg4m-stages-form>
+          <!-- Another Add Button-->
+          <div class="divflex">
+            <span class="middle-fill"></span>
+            <button
+              mat-stroked-button
+              color="primary"
+              class="button-add"
+              (click)="addStage(processIndex, siteIndex)"
+              >
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>Add
+              {{ configTitleStage }}
+            </button>
+          </div>
+        </fieldset>
+      </div>
+    }
     <!-- for Loop -->
     <!-- STAGES LIST END -->
 
-    <div class="divflexright" *ngIf="site.stages && site.stages.length === 0">
-      <span class="middle-fill"></span>
-      <button
-        mat-stroked-button
-        color="primary"
-        class=""
-        (click)="addStage(processIndex, siteIndex)"
-      >
-        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add
-        {{ configTitleStage }}
-      </button>
-    </div>
+    @if (site.stages && site.stages.length === 0) {
+      <div class="divflexright">
+        <span class="middle-fill"></span>
+        <button
+          mat-stroked-button
+          color="primary"
+          class=""
+          (click)="addStage(processIndex, siteIndex)"
+          >
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add
+          {{ configTitleStage }}
+        </button>
+      </div>
+    }
   </div>
 </div>

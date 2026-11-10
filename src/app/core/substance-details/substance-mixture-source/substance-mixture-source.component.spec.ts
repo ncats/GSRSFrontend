@@ -1,27 +1,26 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubstanceMixtureSourceComponent } from './substance-mixture-source.component';
-import { RouterLinkDirectiveMock } from '../../../testing/router-link-mock.directive';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../config/config.service';
 import { UtilsService } from '../../utils/utils.service';
-import { UtilsServiceStub } from '../../../testing/utils-service-stub';
+import { UtilsServiceStub } from '../../../../testing/utils-service-stub';
+import { vi } from 'vitest';
 
 describe('SubstanceMixtureSourceComponent', () => {
   let component: SubstanceMixtureSourceComponent;
   let fixture: ComponentFixture<SubstanceMixtureSourceComponent>;
   let utilsServiceStub: UtilsServiceStub;
 
-  beforeEach(async(() => {
-    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['configData']);
+  beforeEach(async () => {
+    const configServiceSpy = { configData: vi.fn() };
     utilsServiceStub = new UtilsServiceStub();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
-      ],
-      declarations: [
-        SubstanceMixtureSourceComponent,
-        RouterLinkDirectiveMock
+        HttpClientTestingModule,
+        RouterTestingModule,
+        SubstanceMixtureSourceComponent
       ],
       providers: [
         { provide: ConfigService, useValue: configServiceSpy },
@@ -29,7 +28,7 @@ describe('SubstanceMixtureSourceComponent', () => {
       ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceMixtureSourceComponent);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ClinicalTrialService } from '../../clinical-trial/clinical-trial.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
@@ -9,17 +9,30 @@ import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config';
 import { take } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-clinical-trial-details',
     templateUrl: './clinical-trial-details.component.html',
     styleUrls: ['./clinical-trial-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatIconModule,
+      MatTabsModule,
+      MatCardModule,
+      SubstanceImageDirective
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseComponent implements OnInit {
-
-  canEdit:boolean = false;
 
   constructor(
     clinicalTrialService: ClinicalTrialService,
@@ -30,14 +43,15 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
     public configService: ConfigService,
-    authService: AuthService
-  ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
-    router, gaService, utilsService, authService);
+    authService: AuthService,
+    cdr: ChangeDetectorRef
+  ) {
+ super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
+    router, gaService, utilsService, authService, cdr);
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     super.ngOnInit();
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
   }
 
 }

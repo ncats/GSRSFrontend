@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,7 +7,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as _ from 'lodash';
 import { Sort } from '@angular/material/sort';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
@@ -27,17 +26,57 @@ import { AdverseEventService } from '../service/adverseevent.service';
 import { GeneralService } from '../../service/general.service';
 import { AdverseEventDme } from '../model/adverse-event.model';
 import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sort-values';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { AdverseEventTextSearchComponent } from '../adverse-event-text-search/adverse-event-text-search.component';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
 
 @Component({
     selector: 'app-adverse-events-dme-browse',
     templateUrl: './adverse-events-dme-browse.component.html',
     styleUrls: ['./adverse-events-dme-browse.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatSidenavModule,
+      MatIconModule,
+      MatMenuModule,
+      MatButtonModule,
+      MatButtonToggleModule,
+      MatTooltipModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatPaginatorModule,
+      MatTableModule,
+      MatSortModule,
+      MatCardModule,
+      MatSelectModule,
+      MatOptionModule,
+      AdverseEventTextSearchComponent,
+      FacetsManagerComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() countAdverseEventDmeOut: EventEmitter<number> = new EventEmitter<number>();
-  canExport: boolean;
   isLoggedIn = false;
   isLoading = true;
   isError = false;
@@ -99,7 +138,8 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     private facetManagerService: FacetsManagerService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -112,7 +152,12 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     }, 50);
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
     //  this.gaService.sendPageView('Browse Adverse Event Dme');
 
@@ -141,8 +186,6 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
         this.isLoggedIn = true;
       }
     });
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-
     this.subscriptions.push(authSubscription);
 
     this.isComponentInit = true;
@@ -221,6 +264,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
 
         //  this.getSubstanceBySubstanceKey();
         // this.applicationService.getClinicalTrialApplication(this.applications);
+        this.cdr.markForCheck();
       }, error => {
         console.log('error');
         const notification: AppNotification = {

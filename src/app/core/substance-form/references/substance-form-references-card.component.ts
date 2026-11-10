@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
@@ -10,12 +10,24 @@ import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormReferencesService } from './substance-form-references.service';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { ReferenceFormComponent } from './reference-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-references-card',
     templateUrl: './substance-form-references-card.component.html',
     styleUrls: ['./substance-form-references-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatPaginatorModule, MatInputModule, ReferenceFormComponent, ScrollToTargetDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilteredList<SubstanceReference>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
@@ -33,8 +45,9 @@ export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilte
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private configService: ConfigService,
+    cdr: ChangeDetectorRef,
   ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form references';
   }
 
@@ -65,6 +78,7 @@ export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilte
       this.subscriptions.push(searchSubscription);
       this.page = 0;
       this.pageChange();
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(referencesSubscription);
   }

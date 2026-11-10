@@ -7,7 +7,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as _ from 'lodash';
 import { Sort } from '@angular/material/sort';
 
 // GSRS Imports
@@ -31,12 +30,59 @@ import { StructureImageModalComponent, StructureService } from '@gsrs-core/struc
 import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
 
 import { Application } from '../model/application.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CrossEntitySearchComponent } from '../../cross-entity-search/cross-entity-search.component';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
+import { ApplicationTextSearchComponent } from '../application-text-search/application-text-search.component';
 
 @Component({
     selector: 'app-applications-browse',
     templateUrl: './applications-browse.component.html',
     styleUrls: ['./applications-browse.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      MatSidenavModule,
+      MatIconModule,
+      MatExpansionModule,
+      MatMenuModule,
+      MatButtonModule,
+      MatButtonToggleModule,
+      MatTooltipModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatOptionModule,
+      MatPaginatorModule,
+      MatInputModule,
+      MatTableModule,
+      MatSortModule,
+      MatCardModule,
+      MatBadgeModule,
+      CrossEntitySearchComponent,
+      FacetsManagerComponent,
+      BulkSearchResultsSummaryComponent,
+      ApplicationTextSearchComponent
+    ]
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
@@ -52,8 +98,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   totalApplications: number;
   isLoading = true;
   isError = false;
-  canUpdate: boolean = false;
-  canExport: boolean = false;
   isLoggedIn = false;
   dataSource = [];
   hasBackdrop = false;
@@ -146,7 +190,16 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     }, 50);
   }
 
-  async ngOnInit() {
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
 
@@ -202,8 +255,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     this.isComponentInit = true;
     this.loadComponent();
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
   }
 
   ngAfterViewInit() {
@@ -614,7 +665,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
             };
             const params = { 'total': this.totalApplications };
             this.router.navigate(['/user-downloads/', response.id]);
-          }, error => { this.loadingService.setLoading(false); });
+          }, error => {
+ this.loadingService.setLoading(false); 
+});
         }
       });
       //  }

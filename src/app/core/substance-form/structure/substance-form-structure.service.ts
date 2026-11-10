@@ -6,7 +6,9 @@ import { SubstanceStructure, SubstanceMoiety, PolymerClassification } from '@gsr
 import { StructureService } from '@gsrs-core/structure';
 import { take } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormStructureService extends SubstanceFormServiceBase<SubstanceStructure> {
   private substanceIdealizedStructureEmitter = new ReplaySubject<SubstanceStructure>();
   private substanceMoietiesEmitter = new ReplaySubject<Array<SubstanceMoiety>>();

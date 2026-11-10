@@ -1,22 +1,38 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { AuthService } from '@gsrs-core/auth';
 import { CvDialogComponent } from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-tag-selector',
     templateUrl: './tag-selector.component.html',
     styleUrls: ['./tag-selector.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      MatAutocompleteModule,
+      MatChipsModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatOptionModule,
+      MatInputModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagSelectorComponent implements OnInit, AfterViewInit {
   @Input() cvDomain: string;
@@ -33,20 +49,24 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   @ViewChild('tagsAuto', {static: true}) matAutocomplete: MatAutocomplete;
   optionsDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
   private overlayContainer: HTMLElement;
-  canUpdateCV: boolean = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
 
   ) {
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.canUpdateCV = await this.authService.hasSpecificPrivilege('Manage CVs');
+  }
+
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdateCV(): boolean {
+    return this.authService.hasPrivilege('Manage CVs');
   }
 
   ngAfterViewInit() {
@@ -75,6 +95,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
           startWith(<string>null),
           map((tag: string | null) => tag ? this._filter(tag)
             : this.allOptions.filter(option => this.privateTags.indexOf(option.value) === -1)));
+        this.cdr.markForCheck();
       });
     });
   }

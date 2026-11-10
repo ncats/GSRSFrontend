@@ -13,7 +13,9 @@ import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/face
 import { Product } from '../product/model/product.model';
 import { Application } from '../application/model/application.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GeneralService extends BaseHttpService {
 
   private NO_CONFIG_FOUND_DEFAULT_SUBSTANCE_KEY = "UUID";

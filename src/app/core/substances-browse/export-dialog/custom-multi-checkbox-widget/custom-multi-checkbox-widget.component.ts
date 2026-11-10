@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { CheckboxWidget } from 'ngx-schema-form';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { CheckboxWidget, SchemaFormModule } from 'ngx-schema-form';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -7,7 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
     selector: 'app-custom-multi-checkbox-widget',
     templateUrl: './custom-multi-checkbox-widget.component.html',
     styleUrls: ['./custom-multi-checkbox-widget.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatIconModule, SchemaFormModule]
 })
 export class CustomMultiCheckboxWidgetComponent  extends CheckboxWidget implements OnInit {
   options = [];

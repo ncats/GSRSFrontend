@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { SubstanceCardBase } from '../substance-card-base';
 
 @Component({
     selector: 'app-substance-audit-info',
     templateUrl: './substance-audit-info.component.html',
     styleUrls: ['./substance-audit-info.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule]
 })
 export class SubstanceAuditInfoComponent extends SubstanceCardBase implements OnInit {
 

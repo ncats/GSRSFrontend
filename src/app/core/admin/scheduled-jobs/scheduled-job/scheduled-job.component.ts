@@ -1,16 +1,23 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import moment from 'moment';
 import cronstrue from 'cronstrue';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MomentModule } from 'ngx-moment';
 
 @Component({
     selector: 'app-scheduled-job',
     templateUrl: './scheduled-job.component.html',
     styleUrls: ['./scheduled-job.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule, MomentModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduledJobComponent implements OnInit, OnDestroy {
 
@@ -21,23 +28,30 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     monitor: boolean;
     quickLoad = false;
     mess: any;
+    private refreshTimeout?: ReturnType<typeof setTimeout>;
+    private executeRetryTimeout?: ReturnType<typeof setTimeout>;
+    private destroyed = false;
 
     occasionalApiBasePath = '';
 
   constructor(
     private adminService: AdminService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
+    this.destroyed = false;
     this.monitor = this.pollIn;
      this.refresh(true);
      this.occasionalApiBasePath = (this.configService.configData && this.configService.configData.occasionalApiBasePath) || '';
   }
 
   ngOnDestroy() {
+    this.destroyed = true;
     this.monitor = false;
-    this.refresh(false);
+    clearTimeout(this.refreshTimeout);
+    clearTimeout(this.executeRetryTimeout);
     this.stopMonitor();
   }
 
@@ -81,26 +95,31 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
         this.quickLoad = false;
         if (this.monitor && spawn) {
           this.mess = 'Polling ... ' + response.status;
+          clearTimeout(this.refreshTimeout);
           if (this.job.running) {
-            setTimeout(() => {
+            this.refreshTimeout = setTimeout(() => {
               this.refresh(true);
             }, Math.min(this.untilNextRun(), 200));
           } else {
-            setTimeout(() => {
+            this.refreshTimeout = setTimeout(() => {
               this.refresh(true);
             }, Math.min(this.untilNextRun(), 10000));
           }
         }
+        this.cdr.markForCheck();
       },
       error: error => {
         this.monitor = false;
         console.log(error);
+        this.cdr.markForCheck();
       }
     });
   }
 
   untilNextRun() {
-    if (!this.job.nextRun) { return Number.MAX_SAFE_INTEGER; }
+    if (!this.job.nextRun) {
+ return Number.MAX_SAFE_INTEGER; 
+}
     return this.job.nextRun - new Date().getTime();
   }
 
@@ -129,18 +148,32 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     const url = job['@execute'];
     const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
     this.adminService.runJob(url2).pipe(take(1)).subscribe({
-      next: () => this.refresh(true),
-      error: () => setTimeout(() => this.refresh())
+      next: () => {
+        if (!this.destroyed) {
+          this.refresh(true);
+        }
+      },
+      error: () => {
+        if (this.destroyed) {
+          return;
+        }
+        clearTimeout(this.executeRetryTimeout);
+        this.executeRetryTimeout = setTimeout(() => this.refresh());
+      }
     });
   }
 
   cancel(serviceContext: string, job: any) {
     const url = job['@cancel'];
-    if (!url) { return; }
+    if (!url) {
+ return; 
+}
     const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
     this.adminService.runJob(url2).pipe(take(1)).subscribe({
       next: () => this.refresh(),
-      error: err => { console.error('Cancel failed', err); this.refresh(); }
+      error: err => {
+ console.error('Cancel failed', err); this.refresh(); 
+}
     });
   }
 

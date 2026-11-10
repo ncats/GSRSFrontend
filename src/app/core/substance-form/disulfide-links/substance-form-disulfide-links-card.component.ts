@@ -8,12 +8,20 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
 import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import { SubstanceFormService } from '../substance-form.service';
+import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { DisulfideLinksFormComponent } from './disulfide-links-form.component';
+import { ScrollToTargetDirective } from '@gsrs-core/scroll-to/scroll-to-target.directive';
 
 @Component({
     selector: 'app-substance-form-disulfide-links-card',
     templateUrl: './substance-form-disulfide-links-card.component.html',
     styleUrls: ['./substance-form-disulfide-links-card.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDividerModule, MatIconModule, MatButtonModule, AuditInfoComponent, DisulfideLinksFormComponent, ScrollToTargetDirective]
 })
 export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseFilteredList<DisulfideLink>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

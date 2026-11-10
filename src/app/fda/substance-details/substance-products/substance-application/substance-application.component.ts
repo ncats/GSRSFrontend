@@ -15,12 +15,22 @@ import { Application } from '../../../application/model/application.model';
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { applicationSearchSortValues } from '../../../application/applications-browse/application-search-sort-values';
+import { RouterLink } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-substance-application',
   templateUrl: './substance-application.component.html',
   styleUrls: ['./substance-application.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [RouterLink, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule, MatTabsModule]
 })
 
 export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
@@ -55,8 +65,6 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     'appStatus',
     'applicationSubType'
   ];
-  canExport: boolean = false;
-  canUpdate: boolean = false;
 
   constructor(
     private router: Router,
@@ -70,10 +78,16 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     super(gaService, applicationService);
   }
 
-  async ngOnInit() {
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit')
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
 
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     /* Commenting right now. Will remove later after everything works */
     /*
     if (this.bdnum) {

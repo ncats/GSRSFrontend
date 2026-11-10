@@ -1,18 +1,20 @@
 <h1 mat-dialog-title>{{ isNew ? "Add" : "Edit" }} Parameter</h1>
 <div mat-dialog-content>
-  <div *ngIf="subsParameter">
-    <app-physical-parameter-form [parameter]="subsParameter" #parameterForm>
-    </app-physical-parameter-form>
-    <div class="actions">
-      <span class="middle-fill"></span>
-      <button matButton (click)="cancel()">Cancel</button>
-      <button
-        matButton
-        [disabled]="!parameterForm || !parameterForm.isValid"
-        (click)="save()"
-      >
-        Save
-      </button>
+  @if (subsParameter) {
+    <div>
+      <app-physical-parameter-form [parameter]="subsParameter" #parameterForm>
+      </app-physical-parameter-form>
+      <div class="actions">
+        <span class="middle-fill"></span>
+        <button matButton (click)="cancel()">Cancel</button>
+        <button
+          matButton
+          [disabled]="!parameterForm || !parameterForm.isValid"
+          (click)="save()"
+          >
+          Save
+        </button>
+      </div>
     </div>
-  </div>
+  }
 </div>

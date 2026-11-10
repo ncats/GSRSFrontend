@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { KetcherWrapperComponent } from './ketcher-wrapper.component';
 
 @NgModule({
-  imports: [
-  ],
-  declarations: [KetcherWrapperComponent],
+  imports: [KetcherWrapperComponent],
   exports: [KetcherWrapperComponent]
 })
 export class KetcherWrapperModule { }

@@ -1,7 +1,16 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { QueryableSubstanceDictionary, CommandInput, Command } from '@gsrs-core/guided-search/queryable-substance-dictionary.model';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Subscription } from 'rxjs';
 import { typeCommandOptions, inputTypes } from '@gsrs-core/guided-search/query-statement/type-command-options.constant';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -25,7 +34,20 @@ import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material
     selector: 'app-advanced-query-statement',
     templateUrl: './advanced-query-statement.component.html',
     styleUrls: ['./advanced-query-statement.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatAutocompleteModule,
+        MatDatepickerModule,
+        MatIconModule,
+        MatTooltipModule
+    ]
 })
 
 export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {

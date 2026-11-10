@@ -10,8 +10,8 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import jp from 'jsonpath';
 import { take, map } from 'rxjs/operators';
-import * as moment from 'moment';
-import * as _ from 'lodash';
+import moment from 'moment';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import { DatePipe, formatDate } from '@angular/common';
 
 /* GSRS Imports */
@@ -29,12 +29,46 @@ import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.co
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
 import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ImpuritiesSubstanceFormComponent } from './impurities-substance-form/impurities-substance-form.component';
+import { ImpuritiesTotalFormComponent } from './impurities-total-form/impurities-total-form.component';
 
 @Component({
   selector: 'app-impurities-form',
   templateUrl: './impurities-form.component.html',
   styleUrls: ['./impurities-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatCheckboxModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatExpansionModule,
+    MatBadgeModule,
+    CvInputComponent,
+    ImpuritiesSubstanceFormComponent,
+    ImpuritiesTotalFormComponent
+  ]
 })
 export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
@@ -61,7 +95,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   title = null;
   submitDateMessage = '';
   statusDateMessage = '';
-  canEdit: boolean = false;
   subRelationship: Array<SubRelationship> = [];
   substanceName: string;
   substanceNameHintMessage = '';
@@ -92,14 +125,17 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private sanitizer: DomSanitizer) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     // Get form field configuration to show on either simple or advanced form
     this.getConfigSettings();
 
     // Show Impurities Total Section only if at least one field is either simple or advanced
     this.showHideTotalImpuritiesSection();
-
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
 
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -400,8 +436,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
               if (solTable.solutionFPercent) {
                 if (this.isNumber(solTable.solutionFPercent) === false) {
                   this.setValidationMessage('Solution F (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
-                }
-                else {
+                } else {
                   totalCount100percent = totalCount100percent + Number(solTable.solutionFPercent);
                 }
               }
@@ -721,7 +756,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   cleanImpurities(): any {
-    const copiedImpurities = _.cloneDeep(this.impurities);
+    const copiedImpurities = lodashCloneDeep(this.impurities);
 
     delete copiedImpurities._dateTypeDate;
 

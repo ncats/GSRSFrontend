@@ -1,21 +1,25 @@
 <div class="reference-form-container">
-  <div *ngIf="reference.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
-
-  <div class="form-row">
-    <div class="delete-container" *ngIf="reference.uuid">
-      <button
-        mat-icon-button
-        matTooltip="Delete reference"
-        (click)="deleteReference()"
-      >
-        <mat-icon svgIcon="delete_forever"></mat-icon>
+  @if (reference.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
       </button>
     </div>
+  }
+
+  <div class="form-row">
+    @if (reference.uuid) {
+      <div class="delete-container">
+        <button
+          mat-icon-button
+          matTooltip="Delete reference"
+          (click)="deleteReference()"
+          >
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
+    }
 
     <app-cv-input
       required="true"
@@ -24,7 +28,7 @@
       title="Source Type"
       [model]="reference.docType"
       (valueChange)="setSourceType($event)"
-    >
+      >
     </app-cv-input>
 
     <mat-form-field class="citation">
@@ -34,14 +38,14 @@
         [(ngModel)]="reference.citation"
         required
         name="citation"
-      />
+        />
     </mat-form-field>
 
     <div>
       <app-access-manager
         (accessOut)="updateAccess($event)"
         [access]="reference.access"
-      >
+        >
       </app-access-manager>
     </div>
   </div>

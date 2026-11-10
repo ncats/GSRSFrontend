@@ -7,6 +7,7 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NavigationExtras,ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
@@ -21,7 +22,8 @@ import { BulkSearch } from './bulk-search.model';
     selector: 'app-bulk-search',
     templateUrl: './bulk-search.component.html',
     styleUrls: ['./bulk-search.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule]
 })
   export class BulkSearchComponent implements OnInit, OnDestroy {
     loadedComponents: LoadedComponents;

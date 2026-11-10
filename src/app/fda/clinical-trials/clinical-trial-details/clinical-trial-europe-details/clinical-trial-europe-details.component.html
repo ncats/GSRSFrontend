@@ -1,39 +1,38 @@
-<div class="details-container margintop90px" *ngIf="clinicalTrial">
-
-  <div class="details-box">
-    <div class="font20px box">
-      <img [src]="flagIconSrcPath" width="25px" height="30px">
-      &nbsp;<b>Clinical Trial Europe Details</b>
-    </div>
-    <div class="row">
-      <div class="row-property-key-2">
-        Eudract Number:
+@if (clinicalTrial) {
+  <div class="details-container margintop90px">
+    <div class="details-box">
+      <div class="font20px box">
+        <img [src]="flagIconSrcPath" width="25px" height="30px">
+        &nbsp;<b>Clinical Trial Europe Details</b>
       </div>
-      <div class="row-property-value-2">
-        <a href="{{clinicalTrial.url}}" target="_blank"><span
-            class="font14px fontbold colororange">{{clinicalTrial.eudractNumber}}</span></a>
+      <div class="row">
+        <div class="row-property-key-2">
+          Eudract Number:
+        </div>
+        <div class="row-property-value-2">
+          <a href="{{clinicalTrial.url}}" target="_blank"><span
+          class="font14px fontbold colororange">{{clinicalTrial.eudractNumber}}</span></a>
+        </div>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="row-property-key-2">
-        Title:
+      <div class="row">
+        <div class="row-property-key-2">
+          Title:
+        </div>
+        <div class="row-property-value-2">
+          {{clinicalTrial.title}}
+        </div>
       </div>
-      <div class="row-property-value-2">
-        {{clinicalTrial.title}}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="row-property-key-2">
-        Sponsor Name:
-      </div>
-      <div class="row-property-value-2">
-        {{clinicalTrial.sponsorName}}
+      <div class="row">
+        <div class="row-property-key-2">
+          Sponsor Name:
+        </div>
+        <div class="row-property-value-2">
+          {{clinicalTrial.sponsorName}}
+        </div>
       </div>
     </div>
   </div>
-</div>
+}
 
 <div class="details-container">
   <!-- Tabs-->
@@ -52,7 +51,7 @@
                   </div>
                   <div class="row-property-value">
                     <a href="{{clinicalTrial.url}}" target="_blank"><span
-                        class="font14px fontbold colororange">{{clinicalTrial.eudractNumber}}</span></a>
+                    class="font14px fontbold colororange">{{clinicalTrial.eudractNumber}}</span></a>
                   </div>
                 </div>
                 <div class="row-property">
@@ -189,41 +188,44 @@
           <mat-card>
             <div class="title">Products in Clinical Trial</div>
             <mat-card-content>
-              <div *ngIf="clinicalTrial.clinicalTrialEuropeProductList.length > 0; else noRecordProd">
-                <table width="98%" class="bordergray blueTable padleft20px">
-                  <thead>
-                    <tr valign="top">
-                      <th width="60px">#</th>
-                      <th width="200px">Product Name</th>
-                      <th width="200px">Trade Name</th>
-                      <th width="200px">Substances</th>
-                      <th width="200px">IMP Route of Administration</th>
-                      <th width="200px">Pharmaceutical Form</th>
-                      <th width="200px">IMP Sections</th>
-                      <th width="200px">IMP Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeProductList; let i = index">
-                      <td>{{i+1}}</td>
-                      <td>{{x.productName}}</td>
-                      <td>{{x.tradeName}}</td>
-                      <td>
-                        <div [innerHTML]="x.prodIngredName"></div>
-                      </td>
-                      <td>{{x.impRoutesAdmin}}</td>
-                      <td>{{x.pharmaceuticalForm}}</td>
-                      <td>{{x.impSection}}</td>
-                      <td>{{x.impRole}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <ng-template #noRecordProd>
+              @if (clinicalTrial.clinicalTrialEuropeProductList.length > 0) {
+                <div>
+                  <table width="98%" class="bordergray blueTable padleft20px">
+                    <thead>
+                      <tr valign="top">
+                        <th width="60px">#</th>
+                        <th width="200px">Product Name</th>
+                        <th width="200px">Trade Name</th>
+                        <th width="200px">Substances</th>
+                        <th width="200px">IMP Route of Administration</th>
+                        <th width="200px">Pharmaceutical Form</th>
+                        <th width="200px">IMP Sections</th>
+                        <th width="200px">IMP Role</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (x of clinicalTrial.clinicalTrialEuropeProductList; track x; let i = $index) {
+                        <tr>
+                          <td>{{i+1}}</td>
+                          <td>{{x.productName}}</td>
+                          <td>{{x.tradeName}}</td>
+                          <td>
+                            <div [innerHTML]="x.prodIngredName"></div>
+                          </td>
+                          <td>{{x.impRoutesAdmin}}</td>
+                          <td>{{x.pharmaceuticalForm}}</td>
+                          <td>{{x.impSection}}</td>
+                          <td>{{x.impRole}}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
                 <p><br>
                   There is no Product and Substance Data for this Clinical Trial
                 </p>
-              </ng-template>
+              }
             </mat-card-content>
           </mat-card>
         </div>
@@ -235,31 +237,34 @@
           <mat-card>
             <div class="title">Medical Conditions in Clinical Trial</div>
             <mat-card-content>
-              <div *ngIf="clinicalTrial.clinicalTrialEuropeMedicalList.length > 0; else noRecordMed">
-                <table width="98%" class="bordergray blueTable padleft20px">
-                  <thead>
-                    <tr valign="top">
-                      <th width="60px">#</th>
-                      <th width="200px">Medical Condition Investigated</th>
-                      <th width="200px">Medical Condition Investigated EZ</th>
-                      <th width="200px">Medical Condition Therapy Area</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMedicalList; let i = index">
-                      <td>{{i+1}}</td>
-                      <td>{{x.medicalCondInvesigated}}</td>
-                      <td>{{x.medicalCondInvesigatedEz}}</td>
-                      <td>{{x.medicalCondTherapyArea}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <ng-template #noRecordMed>
+              @if (clinicalTrial.clinicalTrialEuropeMedicalList.length > 0) {
+                <div>
+                  <table width="98%" class="bordergray blueTable padleft20px">
+                    <thead>
+                      <tr valign="top">
+                        <th width="60px">#</th>
+                        <th width="200px">Medical Condition Investigated</th>
+                        <th width="200px">Medical Condition Investigated EZ</th>
+                        <th width="200px">Medical Condition Therapy Area</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (x of clinicalTrial.clinicalTrialEuropeMedicalList; track x; let i = $index) {
+                        <tr>
+                          <td>{{i+1}}</td>
+                          <td>{{x.medicalCondInvesigated}}</td>
+                          <td>{{x.medicalCondInvesigatedEz}}</td>
+                          <td>{{x.medicalCondTherapyArea}}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
                 <p><br>
                   There is no Medical Data for this Clinical Trial
                 </p>
-              </ng-template>
+              }
             </mat-card-content>
           </mat-card>
         </div>
@@ -270,33 +275,36 @@
           <mat-card>
             <div class="title">Meddra in Clinical Trial</div>
             <mat-card-content>
-              <div *ngIf="clinicalTrial.clinicalTrialEuropeMeddraList.length > 0; else noRecordMeddra">
-                <table width="98%" class="bordergray blueTable">
-                  <thead>
-                    <tr valign="top">
-                      <th width="60px">#</th>
-                      <th width="200px">Meddra Version</th>
-                      <th width="200px">Meddra Class Code</th>
-                      <th width="200px">Meddra Term</th>
-                      <th width="200px">Meddra System Organ Class</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let x of clinicalTrial.clinicalTrialEuropeMeddraList; let i = index">
-                      <td>{{i+1}}</td>
-                      <td>{{x.meddraVersion}}</td>
-                      <td>{{x.meddraClassCode}}</td>
-                      <td>{{x.meddraTerm}}</td>
-                      <td>{{x.meddraSystemOrganClass}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <ng-template #noRecordMeddra>
+              @if (clinicalTrial.clinicalTrialEuropeMeddraList.length > 0) {
+                <div>
+                  <table width="98%" class="bordergray blueTable">
+                    <thead>
+                      <tr valign="top">
+                        <th width="60px">#</th>
+                        <th width="200px">Meddra Version</th>
+                        <th width="200px">Meddra Class Code</th>
+                        <th width="200px">Meddra Term</th>
+                        <th width="200px">Meddra System Organ Class</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (x of clinicalTrial.clinicalTrialEuropeMeddraList; track x; let i = $index) {
+                        <tr>
+                          <td>{{i+1}}</td>
+                          <td>{{x.meddraVersion}}</td>
+                          <td>{{x.meddraClassCode}}</td>
+                          <td>{{x.meddraTerm}}</td>
+                          <td>{{x.meddraSystemOrganClass}}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
                 <p><br>
                   There is no Meddra Data for this Clinical Trial
                 </p>
-              </ng-template>
+              }
             </mat-card-content>
           </mat-card>
         </div>
