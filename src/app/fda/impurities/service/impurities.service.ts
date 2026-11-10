@@ -254,6 +254,9 @@ export class ImpuritiesService extends BaseHttpService {
     // if Update/Exist Impurity
     if (impurities != null) {
       this.impurities = impurities;
+      if (!this.impurities.impuritiesAdditionalRequirements) {
+         this.impurities.impuritiesAdditionalRequirements = {};
+      }
     } else {
       this.impurities = {
         impuritiesSubstanceList: [],
@@ -264,7 +267,15 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   getImpuritiesDetails(id: string): Observable<any> {
-    const url = this.apiBaseUrlWithEntityContext + `${id}`;
+    // COMMENTING THIS OUT. THIS IS NOT WOKRING  /api/vi/impurities/{id}
+    //const url = this.apiBaseUrlWithEntityContext + `${id}`;
+
+     // Remove the last slash from the url
+    let urlWithoutLastSlash = this.apiBaseUrlWithEntityContext.replace(/\/$/, '');
+
+    // This is working.  /api/v1/impurities/(id)
+    const url = urlWithoutLastSlash + '(' + `${id}` + ')';
+
     return this.http.get<Impurities>(url)
       .pipe(
         map(result => {
