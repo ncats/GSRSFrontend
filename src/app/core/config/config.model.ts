@@ -132,6 +132,9 @@ export interface LoadedComponents {
     impurities?: boolean;
     ssg4m?: boolean;
     invitropharmacology?: boolean;
+    // Set to false when there is no In Vitro Pharmacology data or backend yet: hides the data views (browse,
+    // substance details tabs) and the registration forms skip backend lookups and server-side validation.
+    invitropharmacologydata?: boolean;
     userRegistration?: boolean;
 }
 

@@ -251,6 +251,7 @@
                         <div class="form-row">
                           <div class="width300px margintop10px">
                             <app-invitro-pharmacology-text-search
+                              *ngIf="isDataEnabled"
                               [placeholder]="
                                 isPfdaVersion && !id
                                   ? 'Optional - Search existing Assay'

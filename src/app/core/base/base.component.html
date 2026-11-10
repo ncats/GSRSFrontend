@@ -190,7 +190,7 @@
       <a
         mat-menu-item
         routerLink="/browse-invitro-pharm"
-        *ngIf="loadedComponents.invitropharmacology"
+        *ngIf="loadedComponents.invitropharmacology && loadedComponents.invitropharmacologydata !== false"
       >
         Browse In Vitro Pharmacology
       </a>

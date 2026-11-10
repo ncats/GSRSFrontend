@@ -437,6 +437,21 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     this.validationMessages = [];
     this.validationResult = true;
 
+    // Required fields (marked with * in the form). Checked here so the form still validates
+    // when there is no in-vitro pharmacology backend to run @validate.
+    if (!this.assay.invitroAssaySets || !this.assay.invitroAssaySets.some(set => set && this.hasText(set.assaySet))) {
+      this.setValidationMessage('Assay Set is required');
+    }
+    if (!this.hasText(this.assay.externalAssaySource)) {
+      this.setValidationMessage('External Assay Source is required');
+    }
+    if (!this.hasText(this.assay.externalAssayId)) {
+      this.setValidationMessage('External Assay ID is required');
+    }
+    if (!this.hasText(this.assay.targetName)) {
+      this.setValidationMessage('Target Name is required');
+    }
+
     if (this.assay.standardLigandSubstrateConcentration) {
       if (this.isNumber(this.assay.standardLigandSubstrateConcentration) === false) {
         this.setValidationMessage('Standard Ligand/Substrate Concentration must be a number');
@@ -777,6 +792,10 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       return !nan;
     }
     return false;
+  }
+
+  hasText(value: any): boolean {
+    return value != null && String(value).trim().length > 0;
   }
 
   scrub(oldraw: any): any {

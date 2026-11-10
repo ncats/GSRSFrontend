@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { concatMap, map, switchMap, take, tap } from 'rxjs/operators';
 
 /* GSRS Core Imports */
@@ -52,6 +52,13 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   get isPfdaVersion(): boolean {
     return !!(this.configService.configData && this.configService.configData.isPfdaVersion);
+  }
+
+  // False when loadedComponents.invitropharmacologydata is false: no in-vitro data and no backend is deployed, so the
+  // data views are hidden and the forms work without backend calls (empty lookups, client-side validation).
+  get isDataEnabled(): boolean {
+    const loadedComponents = this.configService.configData && this.configService.configData.loadedComponents;
+    return !loadedComponents || loadedComponents.invitropharmacologydata !== false;
   }
 
   // Sends an In Vitro Pharmacology save request. 'endpoint' is relative to the entity url, e.g.
@@ -138,7 +145,8 @@ export class InvitroPharmacologyService extends BaseHttpService {
         dialogTitle: 'In Vitro Pharmacology ' + recordLabel + ' Saved',
         dialogMessage: 'The in vitro pharmacology ' + recordLabel.toLowerCase()
           + ' was saved successfully as a file in your pFDA My Home area.',
-        viewLabel: 'View ' + recordLabel + ' File'
+        viewLabel: 'View ' + recordLabel + ' File',
+        hideBrowse: !this.isDataEnabled
       },
       disableClose: true
     });
@@ -421,6 +429,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAllAssays(): Observable<any> {
+    if (!this.isDataEnabled) {
+      return of([]);
+    }
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allAssays';
     return this.http.get<any>(url)
       .pipe(
@@ -431,6 +442,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAllAssysByAssaySet(assaySet: string): Observable<any> {
+    if (!this.isDataEnabled) {
+      return of([]);
+    }
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'assaysByAssaySets/' + assaySet;
     return this.http.get<any>(url)
       .pipe(
@@ -441,6 +455,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAllAssaySets(): Observable<any> {
+    if (!this.isDataEnabled) {
+      return of([]);
+    }
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allAssaySets';
     return this.http.get<any>(url)
       .pipe(
@@ -451,6 +468,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAllReferences(): Observable<any> {
+    if (!this.isDataEnabled) {
+      return of([]);
+    }
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allReferences';
     return this.http.get<any>(url)
       .pipe(
@@ -461,6 +481,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAllSponsors(): Observable<any> {
+    if (!this.isDataEnabled) {
+      return of([]);
+    }
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allSponsors';
     return this.http.get<any>(url)
       .pipe(
@@ -471,6 +494,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAllSponsorSubmitters(): Observable<any> {
+    if (!this.isDataEnabled) {
+      return of([]);
+    }
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allSponsorSubmitters';
     return this.http.get<any>(url)
       .pipe(
@@ -481,6 +507,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAllLaboratories(): Observable<any> {
+    if (!this.isDataEnabled) {
+      return of([]);
+    }
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allLaboratories';
     return this.http.get<any>(url)
       .pipe(
@@ -491,6 +520,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAllTestAgents(): Observable<any> {
+    if (!this.isDataEnabled) {
+      return of([]);
+    }
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allTestAgents';
     return this.http.get<any>(url)
       .pipe(
@@ -577,6 +609,10 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   validateAssay(): Observable<ValidationResults> {
+    // Without in-vitro data the backend is not deployed, so the form validates client-side only (like impurities)
+    if (!this.isDataEnabled) {
+      return of({ valid: true, validationMessages: [] });
+    }
     return new Observable(observer => {
       this.validateAssayServer().subscribe(results => {
         observer.next(results);

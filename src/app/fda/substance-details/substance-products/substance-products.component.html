@@ -250,7 +250,7 @@
     </mat-tab>
 
     <mat-tab label="In Vitro Pharmacology Summary ({{invitroPharmSummaryCount}})"
-      *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+      *ngIf="loadedComponents && loadedComponents.invitropharmacology && loadedComponents.invitropharmacologydata !== false">
       <app-substance-invitro-pharmacology-summary [substance]="substance" [substanceUuid]="substance.uuid"
         [substanceUnii]="substance.approvalID" (countInvitroPharmSummaryOut)="getInvitroPharmSummaryCount($event)"
         [substanceName]="substanceName">
@@ -258,7 +258,7 @@
     </mat-tab>
 
     <mat-tab label="In Vitro Pharmacology Screening ({{invitroPharmScreeningCount}})"
-      *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+      *ngIf="loadedComponents && loadedComponents.invitropharmacology && loadedComponents.invitropharmacologydata !== false">
       <app-substance-invitro-pharmacology [substance]="substance" [substanceUuid]="substance.uuid"
         [substanceUnii]="substance.approvalID" (countInvitroPharmScreeningOut)="getInvitroPharmScreeningCount($event)"
         [substanceName]="substanceName">

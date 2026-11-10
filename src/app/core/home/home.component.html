@@ -98,7 +98,7 @@
                               </div>
                               -->
                     </span>
-                    <span *ngIf="loadedComponents.invitropharmacology">
+                    <span *ngIf="loadedComponents.invitropharmacology && loadedComponents.invitropharmacologydata !== false">
                       <mat-divider></mat-divider>
                       <a mat-list-item routerLink="/browse-invitro-pharm">
                         <mat-icon matListIcon svgIcon="glasses"></mat-icon>
@@ -269,6 +269,19 @@
                             svgIcon="outline-description"
                           ></mat-icon>
                           In Vitro Pharmacology Screening
+                        </a>
+                      </span>
+                      <span *ngIf="loadedComponents.invitropharmacology">
+                        <mat-divider></mat-divider>
+                        <a
+                          mat-list-item
+                          routerLink="/invitro-pharm/summary/register"
+                        >
+                          <mat-icon
+                            matListIcon
+                            svgIcon="outline-description"
+                          ></mat-icon>
+                          In Vitro Pharmacology Summary
                         </a>
                       </span>
                     </span>

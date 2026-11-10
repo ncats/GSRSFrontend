@@ -13,6 +13,7 @@ export class SubmitSuccessDialogComponent implements OnInit {
   fileUrl: string = null;
   browseLabel: string = "Go to Browse";
   viewLabel: string = "View Substance";
+  hideBrowse = false;
 
   public isCoreSubstance = 'true';
   public staging = false;
@@ -52,6 +53,9 @@ export class SubmitSuccessDialogComponent implements OnInit {
     }
     if (data.viewLabel) {
       this.viewLabel = data.viewLabel;
+    }
+    if (data.hideBrowse) {
+      this.hideBrowse = true;
     }
    }
 

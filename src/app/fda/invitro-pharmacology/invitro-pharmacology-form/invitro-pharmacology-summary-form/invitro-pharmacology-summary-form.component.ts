@@ -715,6 +715,10 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     return this.invitroPharmacologyService.isPfdaVersion;
   }
 
+  get isDataEnabled(): boolean {
+    return this.invitroPharmacologyService.isDataEnabled;
+  }
+
   // precisionFDA only: uses an assay entered inline for this summary instead of an existing one
   usePfdaInlineAssay(indexScreening: number): void {
     const screening = this.screeningList[indexScreening];
