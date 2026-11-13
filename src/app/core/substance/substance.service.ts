@@ -942,6 +942,21 @@ export class SubstanceService extends BaseHttpService {
     return this.http.post(url, substance);
   }
 
+  
+  resetSubstanceIds(substance: SubstanceDetail): Observable<object> {
+    let url = `${this.configService.configData.apiBaseUrl}api/v1/substances/resetUuids`;
+    return this.http.post(url, substance);
+  }
+
+
+  checkSubstanceForDuplicateIds(substance: SubstanceDetail, stagingID?: string): Observable<object> {
+    let url = `${this.configService.configData.apiBaseUrl}api/v1/substances/hasDuplicateUuid`;
+    if (stagingID) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/stagingArea(${stagingID})/hasDuplicateUuid`;
+    }
+    return this.http.post(url, substance);
+  }
+
   getHierarchy(id: string): Observable<Array<HierarchyNode>> {
     const url = `${this.apiBaseUrl}substances(${id})/@hierarchy`;
     return this.http.get<any>(url);

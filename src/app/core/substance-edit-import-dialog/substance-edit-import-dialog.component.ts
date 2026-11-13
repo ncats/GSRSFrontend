@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ConfigService } from '@gsrs-core/config';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
 
 @Component({
     selector: 'app-substance-edit-import-dialog',
@@ -28,7 +29,8 @@ export class SubstanceEditImportDialogComponent implements OnInit {
     private router: Router,
     private configService: ConfigService,
     public dialogRef: MatDialogRef<SubstanceEditImportDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private substanceService: SubstanceService,
   ) {
     this.urlImportEnabled = this.configService.configData.isPfdaVersion;
   }
@@ -61,6 +63,7 @@ export class SubstanceEditImportDialogComponent implements OnInit {
             this.loaded = true;
             this.record = response;
             this.message = '';
+            this.checkIds(read);
           }
         } else {
           this.message = 'Error: Invalid file format';
@@ -72,8 +75,21 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   }
 
   importSubstance() {
+    let checkbox = document.getElementById("replaceIdsCheckbox");
+    console.log(`checkbox: ${checkbox}`);
     if (this.currentTab === 0) {
-      // Nothing
+      if( checkbox != null  && (checkbox as HTMLInputElement ).checked ){
+        console.log(`checkbox checked`);
+        let cleaned = this.resetIds(JSON.parse(this.record));
+        this.record = cleaned;
+        this.message = 'success';
+      } else {
+        console.log(`checkbox not found or unchecked`);
+        this.record = this.pastedJSON;
+        this.message = '';
+        this.dialogRef.close(this.record);
+      }
+
       this.dialogRef.close(this.record);
     } else if (this.currentTab === 1) {
       const read = JSON.parse(this.pastedJSON);
@@ -82,9 +98,17 @@ export class SubstanceEditImportDialogComponent implements OnInit {
         this.loaded = false;
       } else {
         this.loaded = true;
-        this.record = this.pastedJSON;
-        this.message = '';
-        this.dialogRef.close(this.record);
+        if( checkbox != null  && (checkbox as HTMLInputElement ).checked ){
+          console.log(`checkbox checked`);
+          let cleaned = this.resetIds(this.pastedJSON);
+          this.record = this.pastedJSON;
+          this.message = 'success';
+        } else {
+          console.log(`checkbox not found or unchecked`);
+          this.record = this.pastedJSON;
+          this.message = '';
+          this.dialogRef.close(this.record);
+        }
       }
     } else if (this.currentTab === 2) {
       fetch(`/reverse-proxy?url=${this.pastedUrl}`).then(r => {
@@ -98,8 +122,16 @@ export class SubstanceEditImportDialogComponent implements OnInit {
           const json = r.text().then(data => {
             try {
               JSON.parse(data);
-              this.record = data;
-              this.dialogRef.close(this.record);
+              let checkbox = document.getElementById("replaceIdsCheckbox");
+              console.log(`checkbox: ${checkbox}`);
+              if( checkbox != null  && (checkbox as HTMLInputElement ).checked ){
+                console.log(`checkbox checked`);
+                this.resetIds(data);
+              } else {
+                console.log(`checkbox not found`);
+                this.record = data;
+                this.dialogRef.close(this.record);
+              }
             } catch (_e) {
               this.message = 'Error: The URL does not point to a valid JSON file'
             }
@@ -181,5 +213,33 @@ export class SubstanceEditImportDialogComponent implements OnInit {
       this.pastedUrl = '';
       this.filename = '';
     }
+  }
+
+  checkIds(subst: any) {
+    this.substanceService.checkSubstanceForDuplicateIds(subst).subscribe(results => {
+      
+      console.log(`result of checkSubstanceForDuplicateIds: ${results}`);
+
+      let resultsAsString = results.toString();
+      if(results && results !== null && resultsAsString == 'true') {
+        let div = document.getElementById('replaceIdsDiv');
+        if( div !== null) {
+          div.style.visibility= 'visible';
+        }
+      }
+    }, error => {
+      console.log(`error checking UUIDs: ${error}`);
+    });
+  }
+
+  resetIds(subst: any) {
+    this.substanceService.resetSubstanceIds(subst).subscribe(results => {
+      
+      console.log(`result of reset: ${results}`);
+      this.record= results;
+      this.dialogRef.close(this.record);
+    }, error => {
+      console.log(`error reseting UUIDs: ${error}`);
+    });
   }
 }
