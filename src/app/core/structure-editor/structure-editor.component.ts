@@ -92,8 +92,11 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ];
   private ketcherUrls = [
-    `${environment.baseHref || ''}assets/ketcher/static/js/main.963f80c2.js`,
-    `${environment.baseHref || ''}assets/ketcher/static/js/583.7fb8b79c.chunk.js`,
+    `${environment.baseHref || ''}assets/ketcher/static/js/main.e47c48ad.js`,
+    // Ketcher's lazy chunks resolve page-relative, so preload them all from the assets path
+    `${environment.baseHref || ''}assets/ketcher/static/js/127.aa15387f.chunk.js`,
+    `${environment.baseHref || ''}assets/ketcher/static/js/609.d5254829.chunk.js`,
+    `${environment.baseHref || ''}assets/ketcher/static/js/114.cd66d630.chunk.js`,
   ];
 
   constructor(
@@ -308,7 +311,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       }
 
       const node2 = document.createElement('link');
-      node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.3fc9c0f8.css`;
+      node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.96b87be0.css`;
       node2.rel = "stylesheet";
       document.getElementsByTagName('head')[0].appendChild(node2);
     }
@@ -392,7 +395,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       }
 
       const node2 = document.createElement('link');
-      node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.3fc9c0f8.css`;
+      node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.96b87be0.css`;
       node2.rel = "stylesheet";
       document.getElementsByTagName('head')[0].appendChild(node2);
 
