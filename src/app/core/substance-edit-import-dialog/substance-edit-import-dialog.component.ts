@@ -75,22 +75,15 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   }
 
   importSubstance() {
-    let checkbox = document.getElementById("replaceIdsCheckbox");
-    console.log(`checkbox: ${checkbox}`);
+    const checkbox = document.getElementById('replaceIdsCheckbox') as HTMLInputElement;
+    const replaceIds = checkbox != null && checkbox.checked;
     if (this.currentTab === 0) {
-      if( checkbox != null  && (checkbox as HTMLInputElement ).checked ){
-        console.log(`checkbox checked`);
-        let cleaned = this.resetIds(JSON.parse(this.record));
-        this.record = cleaned;
-        this.message = 'success';
+      if (replaceIds) {
+        this.resetIds(JSON.parse(this.record));
       } else {
-        console.log(`checkbox not found or unchecked`);
-        this.record = this.pastedJSON;
         this.message = '';
         this.dialogRef.close(this.record);
       }
-
-      this.dialogRef.close(this.record);
     } else if (this.currentTab === 1) {
       const read = JSON.parse(this.pastedJSON);
       if (!read['substanceClass']) {
@@ -98,13 +91,9 @@ export class SubstanceEditImportDialogComponent implements OnInit {
         this.loaded = false;
       } else {
         this.loaded = true;
-        if( checkbox != null  && (checkbox as HTMLInputElement ).checked ){
-          console.log(`checkbox checked`);
-          let cleaned = this.resetIds(this.pastedJSON);
-          this.record = this.pastedJSON;
-          this.message = 'success';
+        if (replaceIds) {
+          this.resetIds(read);
         } else {
-          console.log(`checkbox not found or unchecked`);
           this.record = this.pastedJSON;
           this.message = '';
           this.dialogRef.close(this.record);
@@ -121,14 +110,10 @@ export class SubstanceEditImportDialogComponent implements OnInit {
         } else {
           const json = r.text().then(data => {
             try {
-              JSON.parse(data);
-              let checkbox = document.getElementById("replaceIdsCheckbox");
-              console.log(`checkbox: ${checkbox}`);
-              if( checkbox != null  && (checkbox as HTMLInputElement ).checked ){
-                console.log(`checkbox checked`);
-                this.resetIds(data);
+              const read = JSON.parse(data);
+              if (replaceIds) {
+                this.resetIds(read);
               } else {
-                console.log(`checkbox not found`);
                 this.record = data;
                 this.dialogRef.close(this.record);
               }
@@ -220,11 +205,13 @@ export class SubstanceEditImportDialogComponent implements OnInit {
       
       console.log(`result of checkSubstanceForDuplicateIds: ${results}`);
 
-      let resultsAsString = results.toString();
-      if(results && results !== null && resultsAsString == 'true') {
-        let div = document.getElementById('replaceIdsDiv');
-        if( div !== null) {
-          div.style.visibility= 'visible';
+      const div = document.getElementById('replaceIdsDiv');
+      if (div !== null) {
+        const hasDuplicates = results != null && results.toString() === 'true';
+        div.style.visibility = hasDuplicates ? 'visible' : 'hidden';
+        const checkbox = document.getElementById('replaceIdsCheckbox') as HTMLInputElement;
+        if (checkbox !== null) {
+          checkbox.checked = false;
         }
       }
     }, error => {
@@ -233,12 +220,15 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   }
 
   resetIds(subst: any) {
+    this.loaded = false;
+    this.message = '';
     this.substanceService.resetSubstanceIds(subst).subscribe(results => {
-      
-      console.log(`result of reset: ${results}`);
-      this.record= results;
+      // The form consuming the dialog result expects serialized JSON.
+      this.record = typeof results === 'string' ? results : JSON.stringify(results);
       this.dialogRef.close(this.record);
     }, error => {
+      this.loaded = true;
+      this.message = 'Error resetting UUIDs. Please try again.';
       console.log(`error reseting UUIDs: ${error}`);
     });
   }
