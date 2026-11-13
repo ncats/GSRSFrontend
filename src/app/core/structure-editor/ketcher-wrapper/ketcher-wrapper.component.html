@@ -9,6 +9,10 @@
     .LeftToolbar-module_group__0s41t.LeftToolbar-module_groupItem__OqQu0:has(button[data-testid='shape-ellipse']) {
         display: none;
     }
+    /* Macromolecules mode breaks getMolfile/getSmiles, keep users in Molecules mode */
+    [data-testid='polymer-toggler'] {
+        display: none !important;
+    }
     div#root{
        border: 0.001em solid white;
     }
