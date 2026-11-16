@@ -9,41 +9,55 @@
   <button mat-menu-item (click)="applyToAllWithoutRef()">
     <span>All without references</span>
   </button>
-  <div *ngIf="domainsWithReferences">
-    <div *ngIf="domainsWithReferences.definition" mat-menu-item (click)="$event.stopPropagation()">
-      <mat-checkbox (change)="updateAppliedOtion($event, domainsWithReferences.definition.domain)"
-        [checked]="domainsWithReferences.definition.domain.checked">
-        {{domainsWithReferences.definition.subClass}}
-      </mat-checkbox>
-    </div>
-    <ng-container *ngFor="let domainKey of domainKeys">
-      <div *ngIf="domainsWithReferences[domainKey] && domainsWithReferences[domainKey].domains && domainsWithReferences[domainKey].domains.length">
-        <button mat-menu-item [matMenuTriggerFor]="optionsMenu">
-          {{domainKey}}
-        </button>
-        <mat-menu #optionsMenu="matMenu">
-          <button mat-menu-item (click)="applyToAllDomain(domainKey)">
-            <span>All {{domainKey}}</span>
-          </button>
-          <button mat-menu-item (click)="applyToAllDomainWithoutRef(domainKey)">
-            <span>All {{domainKey}} without references</span>
-          </button>
-          <div *ngFor="let domain of domainsWithReferences[domainKey].domains" mat-menu-item (click)="$event.stopPropagation()">
-            <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey !== "relationships" && domainKey !== "constituents" && domain[domainsWithReferences[domainKey].displayKey]'
-            [checked]="domain.checked">
-            {{(domain[domainsWithReferences[domainKey].displayKey].length>50)? (domain[domainsWithReferences[domainKey].displayKey] | slice:0:50)+'...':(domain[domainsWithReferences[domainKey].displayKey])}}
-            </mat-checkbox>
-            <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey === "relationships"'
-            [checked]="domain.checked">
-            {{(domain.relatedSubstance.name.length>40)? (domain.relatedSubstance.name | slice:0:40)+'...':(domain.relatedSubstance.name)}}
-            </mat-checkbox>
-            <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey === "constituents"'
-            [checked]="domain.checked">
-            {{(domain.substance.name.length > 40)? (domain.substance.name | slice:0:40)+'...':(domain.substance.name)}}
-            </mat-checkbox>
+  @if (domainsWithReferences) {
+    <div>
+      @if (domainsWithReferences.definition) {
+        <div mat-menu-item (click)="$event.stopPropagation()">
+          <mat-checkbox (change)="updateAppliedOtion($event, domainsWithReferences.definition.domain)"
+            [checked]="domainsWithReferences.definition.domain.checked">
+            {{domainsWithReferences.definition.subClass}}
+          </mat-checkbox>
+        </div>
+      }
+      @for (domainKey of domainKeys; track domainKey) {
+        @if (domainsWithReferences[domainKey] && domainsWithReferences[domainKey].domains && domainsWithReferences[domainKey].domains.length) {
+          <div>
+            <button mat-menu-item [matMenuTriggerFor]="optionsMenu">
+              {{domainKey}}
+            </button>
+            <mat-menu #optionsMenu="matMenu">
+              <button mat-menu-item (click)="applyToAllDomain(domainKey)">
+                <span>All {{domainKey}}</span>
+              </button>
+              <button mat-menu-item (click)="applyToAllDomainWithoutRef(domainKey)">
+                <span>All {{domainKey}} without references</span>
+              </button>
+              @for (domain of domainsWithReferences[domainKey].domains; track domain) {
+                <div mat-menu-item (click)="$event.stopPropagation()">
+                  @if (domainKey !== "relationships" && domainKey !== "constituents" && domain[domainsWithReferences[domainKey].displayKey]) {
+                    <mat-checkbox (change)="updateAppliedOtion($event, domain)"
+                      [checked]="domain.checked">
+                      {{(domain[domainsWithReferences[domainKey].displayKey].length>50)? (domain[domainsWithReferences[domainKey].displayKey] | slice:0:50)+'...':(domain[domainsWithReferences[domainKey].displayKey])}}
+                    </mat-checkbox>
+                  }
+                  @if (domainKey === "relationships") {
+                    <mat-checkbox (change)="updateAppliedOtion($event, domain)"
+                      [checked]="domain.checked">
+                      {{(domain.relatedSubstance.name.length>40)? (domain.relatedSubstance.name | slice:0:40)+'...':(domain.relatedSubstance.name)}}
+                    </mat-checkbox>
+                  }
+                  @if (domainKey === "constituents") {
+                    <mat-checkbox (change)="updateAppliedOtion($event, domain)"
+                      [checked]="domain.checked">
+                      {{(domain.substance.name.length > 40)? (domain.substance.name | slice:0:40)+'...':(domain.substance.name)}}
+                    </mat-checkbox>
+                  }
+                </div>
+              }
+            </mat-menu>
           </div>
-        </mat-menu>
-      </div>
-    </ng-container>
-  </div>
+        }
+      }
+    </div>
+  }
 </mat-menu>

@@ -1,15 +1,33 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { Location, LocationStrategy } from '@angular/common';
-import { Title, DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router, NavigationExtras, RouterModule } from '@angular/router';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
+import { Title, DomSanitizer } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
-import * as _ from 'lodash';
-import * as moment from 'moment';
+import lodashCloneDeep from 'lodash/cloneDeep';
+import moment from 'moment';
+import { FormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
+import { InvitroPharmacologyTextSearchComponent } from '../invitro-pharmacology-text-search/invitro-pharmacology-text-search.component';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -17,7 +35,7 @@ import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+import { FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { FacetParam } from '@gsrs-core/facets-manager';
@@ -37,9 +55,32 @@ import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-sear
   selector: 'app-invitro-pharmacology-browse',
   templateUrl: './invitro-pharmacology-browse.component.html',
   styleUrls: ['./invitro-pharmacology-browse.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatOptionModule,
+    MatPaginatorModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatTableModule,
+    MatSortModule,
+    MatDialogModule,
+    FacetsManagerComponent,
+    InvitroPharmacologyTextSearchComponent
+  ]
 })
-export class InvitroPharmacologyBrowseComponent implements OnInit {
+export class InvitroPharmacologyBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public sortValues = invitroPharmacologySearchSortValues;
   public assays: Array<InvitroAssayInformation>;
@@ -80,9 +121,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   skip: number;
   isLoading = true;
   isError = false;
-  canExport: boolean = false;
-  canUpdate: boolean = false;
-  canSaveJson: boolean = false;
   isLoggedIn = false;
   dataSource = [];
   appType: string;
@@ -199,7 +237,20 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     private dialog: MatDialog
   ) { }
 
-  async ngOnInit() {
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canSaveJson(): boolean {
+    return this.authService.hasPrivilege('Save Record JSON');
+  }
+
+  ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.invitroPharmacologyService.getInvitroPharmacologyFacets);
 
     this.titleService.setTitle(`In Vitro Pharmacology Browser`);
@@ -235,9 +286,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.searchValue = params.get('search');
     });
     this.subscriptions.push(paramsSubscription);
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.canSaveJson = await this.authService.hasSpecificPrivilege('Save Record JSON');
   }
 
   ngAfterViewInit() {
@@ -1169,7 +1217,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     const date = new Date();
     let jsonFilename = 'Invitro_Pharmacology_Assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    const copyAssay = _.cloneDeep(this.assays[index]);
+    const copyAssay = lodashCloneDeep(this.assays[index]);
     //let cleanProduct = this.scrub(copyProd);
 
     let data = { jsonData: copyAssay, jsonFilename: jsonFilename };

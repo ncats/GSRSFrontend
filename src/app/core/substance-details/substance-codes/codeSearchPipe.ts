@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'forwardSlash',
-    standalone: false
+    standalone: true
 })
 export class forwardSlash implements PipeTransform {
 

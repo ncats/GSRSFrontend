@@ -3,7 +3,7 @@ import { ConfigService } from '../config/config.service';
 
 @Pipe({
     name: 'facetDisplay',
-    standalone: false
+    standalone: true
 })
 export class FacetDisplayPipe implements PipeTransform {
   constructor(

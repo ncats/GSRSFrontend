@@ -1,4 +1,9 @@
-import { Component, OnInit, OnDestroy, HostListener, Inject, DOCUMENT } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, HostListener, Inject, DOCUMENT } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -11,14 +16,15 @@ import { Subscription } from 'rxjs';
 import { RegisterComponent } from '../../register/register.component';
 
 import { LoadedComponents } from '@gsrs-core/config'
-import * as _ from 'lodash';
 import {sprintf} from "sprintf-js";
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit, OnDestroy {
   isLoaded = false;
@@ -41,7 +47,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private mainNotificationService: MainNotificationService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
-    @Inject(DOCUMENT) private document: Document 
+    @Inject(DOCUMENT) private document: Document,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @HostListener('keyup', ['$event'])
@@ -72,10 +79,12 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.isLoaded = true;
         this.isLoading = false;
       }
+      this.cdr.markForCheck();
     }, error => {
       this.loadingService.setLoading(false);
       this.isLoaded = true;
       this.isLoading = false;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(subscription);
   }
@@ -101,6 +110,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         } else {
           this.isLoading = false;
         }
+        this.cdr.markForCheck();
       }, error => {
         subscription.unsubscribe();
         const notification: AppNotification = {
@@ -111,6 +121,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loadingService.setLoading(false);
         this.isLoaded = true;
         this.isLoading = false;
+        this.cdr.markForCheck();
       });
     }
   }

@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   Input,
@@ -28,7 +30,7 @@ import { AuthService } from "@gsrs-core/auth";
 import { SubstanceService } from "@gsrs-core/substance/substance.service";
 import { StructureService } from "@gsrs-core/structure";
 import { SubstanceSummaryDynamicContent } from "./substance-summary-dynamic-content.component";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { Alignment } from "@gsrs-core/utils";
 import { take } from "rxjs/operators";
 import { OverlayContainer } from "@angular/cdk/overlay";
@@ -36,22 +38,69 @@ import { MatDialog } from "@angular/material/dialog";
 import { ShowMolfileDialogComponent } from "@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component";
 import { ConfigService } from "@gsrs-core/config";
 import { Vocabulary } from "@gsrs-core/controlled-vocabulary";
-import * as lodash from "lodash";
+import join from 'lodash/join';
 import { BulkSearchService } from "@gsrs-core/bulk-search/service/bulk-search.service";
 import { ListCreateDialogComponent } from "@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatCardModule } from "@angular/material/card";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatOptionModule } from "@angular/material/core";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSelectModule } from "@angular/material/select";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { SequenceAlignmentComponent } from "../sequence-alignment/sequence-alignment.component";
+import { SubstanceHierarchyComponent } from "../substance-hierarchy/substance-hierarchy.component";
+import { FacetDisplayPipe } from "@gsrs-core/facets-manager/facet-display.pipe";
+import { ElementLabelDisplayModule } from "@gsrs-core/utils/element-label-display.module";
+import { SubstanceImageDirective } from "@gsrs-core/substance/substance-image.directive";
+import { TrackLinkEventDirective } from "@gsrs-core/google-analytics/track-link-event/track-link-event.directive";
+import { TakePipe } from "@gsrs-core/utils/take.pipe";
+import { NamesDisplayPipe } from "@gsrs-core/utils/names-display-order.pipe";
+import { SubstanceStatusPipe } from "@gsrs-core/utils/substance-status.pipe";
+import { CodeSystemDisplayPipe } from "@gsrs-core/utils/code-system-display.pipe";
 
 @Component({
   selector: "app-substance-summary-card",
   templateUrl: "./substance-summary-card.component.html",
   styleUrls: ["./substance-summary-card.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    MatCardModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatOptionModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatTooltipModule,
+    CardDynamicSectionDirective,
+    SequenceAlignmentComponent,
+    SubstanceHierarchyComponent,
+    FacetDisplayPipe,
+    ElementLabelDisplayModule,
+    SubstanceImageDirective,
+    TrackLinkEventDirective,
+    TakePipe,
+    NamesDisplayPipe,
+    SubstanceStatusPipe,
+    CodeSystemDisplayPipe
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
-  canCreate = false; //meant to allow creating new records
-  canUpdate = false;
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, { static: true })
   dynamicContentContainer: CardDynamicSectionDirective;
@@ -75,7 +124,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   privateNames?: Array<SubstanceName>;
   nameLoading = true;
   selectedList: string;
-  _ = lodash;
+  join = join;
 
   constructor(
     public utilsService: UtilsService,
@@ -91,12 +140,19 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private bulkSearchService: BulkSearchService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS)
     private dynamicContentItems: DynamicComponentManifest<any>[],
+    private cdr: ChangeDetectorRef,
   ) {}
 
-  async ngOnInit() {
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canCreate(): boolean { //meant to allow creating new records
+    return this.authService.hasPrivilege('Create');
+  }
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.canCreate = await this.authService.hasSpecificPrivilege("Create");
-    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
       this.getAlignments();
@@ -119,6 +175,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
             this.inxightUrl =
               "https://drugs.ncats.io/drug/" + this.substance.approvalID;
           }
+          this.cdr.markForCheck();
         },
         (error) => {},
       );

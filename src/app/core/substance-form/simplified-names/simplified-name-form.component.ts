@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {SubstanceName, SubstanceNameOrg} from '../../substance/substance.model';
 import {ControlledVocabularyService} from '../../controlled-vocabulary/controlled-vocabulary.service';
 import {FormControl} from '@angular/forms';
@@ -10,12 +10,23 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {SubstanceFormNamesService} from '@gsrs-core/substance-form/names/substance-form-names.service';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatInputModule} from '@angular/material/input';
+import {AccessManagerComponent} from '@gsrs-core/substance-form/access-manager/access-manager.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-simplified-name-form',
     templateUrl: './simplified-name-form.component.html',
     styleUrls: ['./simplified-name-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatTooltipModule, MatInputModule, AccessManagerComponent, CvInputComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SimplifiedNameFormComponent implements OnInit, OnDestroy {
   private privateName: SubstanceName;

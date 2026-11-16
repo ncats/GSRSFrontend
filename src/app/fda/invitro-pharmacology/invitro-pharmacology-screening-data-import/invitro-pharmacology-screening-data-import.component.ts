@@ -1,18 +1,21 @@
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ViewChild, TemplateRef, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormBuilder } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import { take, map, finalize } from 'rxjs/operators';
-import { forkJoin, from, tap, of, toArray, concatMap, catchError, throwError } from 'rxjs';
-import * as moment from 'moment';
-import * as _ from 'lodash';
+import { map } from 'rxjs/operators';
+import { forkJoin, from, tap, of, toArray, concatMap, catchError } from 'rxjs';
+import moment from 'moment';
+import lodashClone from 'lodash/clone';
+import lodashCloneDeep from 'lodash/cloneDeep';
 import * as XLSX from 'xlsx';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 /* GSRS Core Imports */
@@ -20,30 +23,25 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
-import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
 import {
   InvitroAssayInformation, InvitroReference, InvitroLaboratory, InvitroSponsor, InvitroSponsorReport,
-  InvitroTestAgent, InvitroSponsorSubmitter, InvitroControl, InvitroAssayResult, InvitroAssayScreening, ValidationMessage, InvitroAssayResultInformation
+  InvitroTestAgent, InvitroSponsorSubmitter, InvitroControl, InvitroAssayResult, InvitroAssayScreening, InvitroAssayResultInformation
 } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-screening-data-import',
   templateUrl: './invitro-pharmacology-screening-data-import.component.html',
   styleUrls: ['./invitro-pharmacology-screening-data-import.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatTooltipModule]
 })
 
-export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
+export class InvitroPharmacologyScreeningDataImportComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('progressDialogTemplate') progressDialogTemplateRef: TemplateRef<any>;
 
   private TEST_AGENT = "Test Agent";
@@ -87,7 +85,6 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   disableImportButton = "true";
 
   isExcelDataLoaded = false;
-  canUpdate: boolean = false;
 
   /* Save Progress Bar variables */
   progressMessage: string = 'Initializing...';
@@ -113,13 +110,15 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.initializeRequiredFieldArray();
 
     this.titleService.setTitle("IVP Import Screening Data");
-
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-
   }
 
   ngAfterViewInit() {
@@ -136,8 +135,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     if (target.files.length > 1) {
       alert('Multiple files are not allowed');
       return;
-    }
-    else {
+    } else {
       // Empty the list
       this.importDataList.length = 0;
       //requiredFieldMissingArray = [{}];
@@ -212,8 +210,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheetRefLab[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -229,19 +226,16 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
               if (!this.invitroReference.sourceType) {
                 this.requiredFieldMissingArray[0].sourceType = true;
               }
-            }
-            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source/Citation *') {
+            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source/Citation *') {
               this.invitroReference.sourceCitation = this.getValue(worksheetRefLab[cellKeyValue]);
 
               // ** Validate Required field
               if (!this.invitroReference.sourceCitation) {
                 this.requiredFieldMissingArray[0].sourceCitation = true;
               }
-            }
-            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Id') {
+            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Id') {
               this.invitroReference.sourceId = this.getValue(worksheetRefLab[cellKeyValue]);
-            }
-            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Digital Object Identifier') {
+            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Digital Object Identifier') {
               this.invitroReference.digitalObjectIdentifier = this.getValue(worksheetRefLab[cellKeyValue]);
             }
 
@@ -280,8 +274,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheetRefLab[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -338,8 +331,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheetRefLab[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -395,8 +387,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheet[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           this.invitroSponsorSubmitter = this.invitroSponsorReport.invitroSponsorSubmitters[0];
           // Read the key value in the next column
@@ -453,8 +444,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheet[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -505,8 +495,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheet[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -562,8 +551,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         // No data found in the cell object
         if (!worksheet[cellKey]) {
           // do something here
-        }
-        else { // Key found in the cell
+        } else { // Key found in the cell
 
           // Read the key value in the next column
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
@@ -744,7 +732,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   }
 
   createInvitroReference(object: any): any {
-    let tempObject = _.cloneDeep(object);
+    let tempObject = lodashCloneDeep(object);
 
     // Delete the keys that not needed
     delete tempObject.externalAssaySource;
@@ -762,7 +750,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   createNewInvitroControl(resultObject: any): any {
     let invitroControls: Array<InvitroControl> = [];
 
-    let tempResultObject = _.cloneDeep(resultObject);
+    let tempResultObject = lodashCloneDeep(resultObject);
 
     // CONTROL ASSAY CHECK, check if Result Assays match control Assays
     this.invitroControlsTemp.forEach(ctrl => {
@@ -771,7 +759,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           // if Result and Control Assays match 
           if ((ctrl.externalAssaySource === tempResultObject.externalAssaySource)
             && (ctrl.externalAssayId === tempResultObject.externalAssayId)) {
-            let tempObject = _.cloneDeep(ctrl);
+            let tempObject = lodashCloneDeep(ctrl);
 
             // Delete the keys that not needed
             delete tempObject.externalAssaySource;
@@ -793,7 +781,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   }
 
   createInvitroResult(object: any): any {
-    let tempObject = _.cloneDeep(object);
+    let tempObject = lodashCloneDeep(object);
 
     // Delete the keys that not needed
     delete tempObject.externalAssaySource;
@@ -1028,7 +1016,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
                 // Assay found: update the result and cache it.
                 result.assayFoundInDb = 'true';
                 // cached Assay will also have new Screening data
-                initialState.cachedAssay = _.cloneDeep(dbAssay); // Cache the new assay
+                initialState.cachedAssay = lodashCloneDeep(dbAssay); // Cache the new assay
 
                 this.createNewScreeningData(dbAssay, result);
               } else {
@@ -1096,7 +1084,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     if (this.assayToSaveList && this.assayToSaveList.length > 0) {
 
       // Get First Record from the Array
-      let firstAssay = _.cloneDeep(this.assayToSaveList[0]);
+      let firstAssay = lodashCloneDeep(this.assayToSaveList[0]);
 
       // Find the index of the first screening to keep.
       if (firstAssay.invitroAssayScreenings && firstAssay.invitroAssayScreenings.length > 0) {
@@ -1151,7 +1139,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
                       if (result.invitroAssayScreenings[result.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id) {
                         this.savedResultInfo = result.invitroAssayScreenings[result.invitroAssayScreenings.length - 1].invitroAssayResultInformation;
 
-                        let newAssay = _.clone(result);
+                        let newAssay = lodashClone(result);
 
                         if (this.firstAssayRemainingScreening != null && this.firstAssayRemainingScreening.length > 0) {
                           this.firstAssayRemainingScreening.forEach(screening => {
@@ -1223,7 +1211,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       // 'concatMap' ensures each assay is processed one by one, waiting for the previous save to complete.
       concatMap((assayToSave, index) => {
 
-        assayReadyToSave = _.cloneDeep(assayToSave);
+        assayReadyToSave = lodashCloneDeep(assayToSave);
 
         assayReadyToSave.invitroAssayScreenings.forEach((screening, indexScreening) => {
           if (screening) {
@@ -1246,7 +1234,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
             // Update the state for the next iteration with the current source and ID.
             initialState.lastCheckedSource = savedAssay.externalAssaySource;
             initialState.lastCheckedAssayId = savedAssay.externalAssayId; // ADDED: Update the ID in our state
-            initialState.cachedAssay = _.cloneDeep(savedAssay); // Cache the new assay
+            initialState.cachedAssay = lodashCloneDeep(savedAssay); // Cache the new assay
 
             let savedAssayCount = index + 1;
             if (this.firstAssayRemainingScreening && this.firstAssayRemainingScreening.length > 0) {

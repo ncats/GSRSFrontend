@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -15,16 +15,34 @@ import { ProductDetailsBaseComponent } from '../product-details-base.component';
 import { GeneralService } from '../../../service/general.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ProductService } from '../../service/product.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-product-details',
     templateUrl: './product-details.component.html',
     styleUrls: ['./product-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatExpansionModule,
+      MatIconModule,
+      MatTabsModule,
+      MatTooltipModule,
+      MatButtonModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit {
 
-  canUpdate: boolean = false;
 
   constructor(
     public productService: ProductService,
@@ -41,15 +59,20 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
     titleService: Title,
     overlayContainerService: OverlayContainer,
     dialog: MatDialog,
-    public sanitizer: DomSanitizer 
+    public sanitizer: DomSanitizer,
+    cdr: ChangeDetectorRef
   ) {
     super(productService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
+      router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer, cdr);
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     super.ngOnInit();
-    this.canUpdate = await this.authService.canEditData();
   }
 
   ngAfterViewInit() {

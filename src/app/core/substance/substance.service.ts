@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { BehaviorSubject, concatMap, filter, interval, Observable, Observer, Subject, throwError } from 'rxjs';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpParameterCodec } from '@angular/common/http';
+import { BehaviorSubject, concatMap, Observable, Observer, Subject, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -11,7 +11,6 @@ import {
   SubstanceCode,
   SubstanceRelationship,
   SubstanceRelated,
-  SubstanceReference,
   SubstanceDiff
 } from './substance.model';
 import { PagingResponse, ShortResult } from '../utils/paging-response.model';
@@ -61,7 +60,7 @@ export class SubstanceService extends BaseHttpService {
     private authService: AuthService,
     public configService: ConfigService,
     private sanitizer: DomSanitizer,
-    private utilsService: UtilsService,
+    private utilsService: UtilsService
   ) {
     super(configService);
   }
@@ -304,7 +303,7 @@ export class SubstanceService extends BaseHttpService {
       if (!sync && this.searchKeys[structureFacetsKey]) {
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
-        if(querySearchTerm.length > 0) {
+        if (querySearchTerm && querySearchTerm.length > 0) {
           params = params.appendDictionary({
             top: pageSize.toString(),
             skip: skip.toString(),
@@ -538,7 +537,9 @@ export class SubstanceService extends BaseHttpService {
       } else {
         params = params.append('bulkQID', bulkQID.toString());
         let v  = "false";
-        if(searchOnIdentifiers===true) { v= "true"; }
+        if(searchOnIdentifiers===true) {
+ v= "true"; 
+}
         params = params.append('searchOnIdentifiers', v);
         params = params.append('searchEntity', searchEntity);
         url += `substances/bulkSearch`;
@@ -808,6 +809,7 @@ export class SubstanceService extends BaseHttpService {
 
   getSubstanceDetails(id: string, version?: string | number): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances(${id})`;
+    const restApiPrefix = this.configService.configData.restApiPrefix || '';
     let params = new HttpParams();
     params = params.append('view', 'internal');
     const options = {
@@ -826,7 +828,8 @@ export class SubstanceService extends BaseHttpService {
               `No @edits entry found for version=${v} on substance(${id}).`
             ));
           }
-          return this.http.get<SubstanceDetail>(match.oldValue, options);
+          const _matchOldValue = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, match.oldValue);
+          return this.http.get<SubstanceDetail>(_matchOldValue, options);
         }));
 
     } else {
@@ -902,7 +905,7 @@ export class SubstanceService extends BaseHttpService {
 
     const url = `${this.apiBaseUrl}substances?view=internal`;
     if (!this.configService.configData.isPfdaVersion) {
-    return this.http.request(method, url, options);
+      return this.http.request(method, url, options);
     } else {
       return this.authService.getAuth().pipe(
         concatMap(auth =>

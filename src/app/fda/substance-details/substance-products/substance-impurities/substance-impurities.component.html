@@ -3,20 +3,24 @@
   &nbsp;&nbsp;&nbsp;
 
   <!-- Export Button -->
-  <span class="export" *ngIf="canExport && totalRecords > 0">
-    <button matTooltip="Export Search Results" mat-button mat-raised-button (click)="export()"
-      class="export-button">
-      <mat-icon svgIcon="get_app"></mat-icon> Export
-    </button>
-  </span>
+  @if (canExport && totalRecords > 0) {
+    <span class="export">
+      <button matTooltip="Export Search Results" mat-button mat-raised-button (click)="export()"
+        class="export-button">
+        <mat-icon svgIcon="get_app"></mat-icon> Export
+      </button>
+    </span>
+  }
 </div>
 
 <div class="responsive mat-table-style">
   <!-- Spinner -->
-  <div *ngIf="showSpinner" class="spinnerstyle">
-    <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
-    </mat-progress-spinner>
-  </div>
+  @if (showSpinner) {
+    <div class="spinnerstyle">
+      <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
+  }
 
   <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)" matSortActive="id"
     matSortDirection="desc" matSortDisableClear>
@@ -24,19 +28,24 @@
     <ng-container matColumnDef="productSubstanceName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="width100px">Product/Substance Name</th>
       <td mat-cell *matCellDef="let impurities">
-        <div *ngIf="impurities.id">
-          <a [routerLink]="['/impurities', impurities.id]" target="_blank">
-            <div *ngIf="impurities.productSubstanceName; else noProdName">{{impurities.productSubstanceName}}</div>
-            <ng-template #noProdName>
-              View
-            </ng-template>
-          </a>
-          &nbsp;&nbsp;
-          <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="canUpdate"
-            matTooltip='Edit Impurities Record'>
-            <mat-icon svgIcon="edit"></mat-icon>
-          </a>
-        </div>
+        @if (impurities.id) {
+          <div>
+            <a [routerLink]="['/impurities', impurities.id]" target="_blank">
+              @if (impurities.productSubstanceName) {
+                <div>{{impurities.productSubstanceName}}</div>
+              } @else {
+                View
+              }
+            </a>
+            &nbsp;&nbsp;
+            @if (canUpdate) {
+              <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank"
+                matTooltip='Edit Impurities Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+            }
+          </div>
+        }
       </td>
     </ng-container>
 
@@ -68,41 +77,55 @@
     <ng-container matColumnDef="parentSubstance">
       <th mat-header-cell *matHeaderCellDef class="width100px"> Parent Substance </th>
       <td mat-cell *matCellDef="let impurities">
-        <div *ngFor="let impSub of impurities.impuritiesSubstanceList; let subIndex = index">
-          <a [routerLink]="['/substances', impSub._parentSubstanceUuid]" target="_blank">
-            <span class="colorblue">{{impSub._parentSubstanceName}}</span>
-          </a>
-        </div>
+        @for (impSub of impurities.impuritiesSubstanceList; track impSub; let subIndex = $index) {
+          <div>
+            <a [routerLink]="['/substances', impSub._parentSubstanceUuid]" target="_blank">
+              <span class="colorblue">{{impSub._parentSubstanceName}}</span>
+            </a>
+          </div>
+        }
       </td>
     </ng-container>
 
     <ng-container matColumnDef="relatedSubstance">
       <th mat-header-cell *matHeaderCellDef class="width100px"> Impurities Related Substance</th>
       <td mat-cell *matCellDef="let impurities">
-        <div *ngFor="let impSub of impurities.impuritiesSubstanceList; let subIndex = index">
-          <!-- Impurities Substance Name is same as current display Substance Name -->
-          <div *ngFor="let impTest of impSub.impuritiesTestList; let testIndex = index">
-            <div *ngFor="let impDetail of impTest.impuritiesDetailsList; let detIndex = index" class="font12px">
-              <div *ngIf="impDetail.relatedSubstanceUuid === substanceUuid">
-                <span class="colorgreen">
-                  <span *ngIf="impDetail.limitType">&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.limitType}}&nbsp;</span>
-                  {{impDetail.limitValue}}&nbsp;{{impDetail.unit}}
-                </span>
-                <span *ngIf="impDetail.impurityType"
-                  class="colorpurple"><br>&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.impurityType}}
-                </span>
+        @for (impSub of impurities.impuritiesSubstanceList; track impSub; let subIndex = $index) {
+          <div>
+            <!-- Impurities Substance Name is same as current display Substance Name -->
+            @for (impTest of impSub.impuritiesTestList; track impTest; let testIndex = $index) {
+              <div>
+                @for (impDetail of impTest.impuritiesDetailsList; track impDetail; let detIndex = $index) {
+                  <div class="font12px">
+                    @if (impDetail.relatedSubstanceUuid === substanceUuid) {
+                      <div>
+                        <span class="colorgreen">
+                          @if (impDetail.limitType) {
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.limitType}}&nbsp;</span>
+                          }
+                          {{impDetail.limitValue}}&nbsp;{{impDetail.unit}}
+                        </span>
+                        @if (impDetail.impurityType) {
+                          <span
+                            class="colorpurple"><br>&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.impurityType}}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                  } <!-- ngFor impDetail -->
+                </div>
+                } <!-- ngFor impTest -->
               </div>
-            </div> <!-- ngFor impDetail -->
-          </div> <!-- ngFor impTest -->
-        </div>
-      </td>
-    </ng-container>
+            }
+          </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
 
-<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
-  (page)="getImpuritiesBySubstanceUuid($event)" [pageSizeOptions]="[5, 10, 25, 100]">
-</mat-paginator>
+    <mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
+      (page)="getImpuritiesBySubstanceUuid($event)" [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>

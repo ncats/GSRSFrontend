@@ -1,85 +1,102 @@
-<div *ngIf="required && required.length > 0" class = "type-row">
-  <h3>All of the following components
-    <i>must</i> be present:</h3>
-  <div class="flex-row wrap">
-    <div *ngFor="let component of required" class="thumb-col">
-      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
-      <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
-      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid"></a>
-
-      <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" [innerHTML]="component.substance.name">
-        </a>
+@if (required && required.length > 0) {
+  <div class = "type-row">
+    <h3>All of the following components
+      <i>must</i> be present:</h3>
+      <div class="flex-row wrap">
+        @for (component of required; track component) {
+          <div class="thumb-col">
+            @if (component.substance.linkingID) {
+              <div class="code">{{component.substance.linkingID}}</div>
+            }
+            <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
+              <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid"></a>
+              <div>
+                <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" [innerHTML]="component.substance.name">
+                </a>
+              </div>
+            </div>
+          }
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-<div *ngIf="requiredMinor && requiredMinor.length > 0" class = "type-row">
-  <h3>All of the following Minor components
-    <i>must</i> be present:</h3>
-  <div class="flex-row wrap">
-    <div *ngFor="let component of requiredMinor" class="thumb-col">
-      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
-      <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
-      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid"></a>
+    }
+    @if (requiredMinor && requiredMinor.length > 0) {
+      <div class = "type-row">
+        <h3>All of the following Minor components
+          <i>must</i> be present:</h3>
+          <div class="flex-row wrap">
+            @for (component of requiredMinor; track component) {
+              <div class="thumb-col">
+                @if (component.substance.linkingID) {
+                  <div class="code">{{component.substance.linkingID}}</div>
+                }
+                <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
+                  <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid"></a>
+                  <div>
+                    <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]"  [innerHTML]="component.substance.name">
+                    </a>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+        @if (presentInAny && presentInAny.length > 0) {
+          <div class = "type-row">
+            <h3>Any of these components may be present:</h3>
+            <div class="flex-row wrap">
+              @for (component of presentInAny; track component) {
+                <div class="thumb-col">
+                  @if (component.substance.linkingID) {
+                    <div class="code">{{component.substance.linkingID}}</div>
+                  }
+                  <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
+                    <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
+                  </a>
+                  <div>
+                    <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]"  [innerHTML]="component.substance.name">
+                    </a>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+        @if (presentInOne && presentInOne.length > 0) {
+          <div class="flex-row wrap">
+            <h3>One of these components may be present:</h3>
+            <div class="flex-row">
+              @for (component of presentInOne; track component) {
+                <div class="thumb-col">
+                  @if (component.substance.linkingID) {
+                    <div class="code">{{component.substance.linkingID}}</div>
+                  }
+                  <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
+                    <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
+                  </a>
+                  <div>
+                    <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
+                      {{component.substance.name}}
+                    </a>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
 
-      <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]"  [innerHTML]="component.substance.name">
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-<div *ngIf="presentInAny && presentInAny.length > 0" class = "type-row">
-  <h3>Any of these components may be present:</h3>
-  <div class="flex-row wrap">
-    <div *ngFor="let component of presentInAny" class="thumb-col">
-
-      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
-      <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
-
-      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
-      </a>
-      <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]"  [innerHTML]="component.substance.name">
-        </a>
-      </div>
-    </div>
-  </div>
-
-</div>
-<div *ngIf="presentInOne && presentInOne.length > 0" class="flex-row wrap">
-  <h3>One of these components may be present:</h3>
-  <div class="flex-row">
-    <div *ngFor="let component of presentInOne" class="thumb-col">
-
-      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
-      <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
-
-      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
-      </a>
-      <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
-          {{component.substance.name}}
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
 
 
+        <ng-template #structureTemplate>
+          <div class = "close-container" mat-dialog-header>
+            <button mat-mini-fab class = "mat-mini-fab" (click) = "close()">
+              <mat-icon  class = "icon" svgIcon="close"></mat-icon>
+            </button>
+          </div>
 
-<ng-template #structureTemplate>
-  <div class = "close-container" mat-dialog-header>
-      <button mat-mini-fab class = "mat-mini-fab" (click) = "close()">
-          <mat-icon  class = "icon" svgIcon="close"></mat-icon>
-        </button>
-  </div>
-    
-  <div >
-    
-      <div style="height:620px;min-height:621px;width:620px;min-width:601px;margin:auto">
-    <img class="structure-img-big" appSubstanceImage  size = "600" [entityId]="active" >
-    </div>
-  </div>
-</ng-template>
+          <div >
+
+            <div style="height:620px;min-height:621px;width:620px;min-width:601px;margin:auto">
+              <img class="structure-img-big" appSubstanceImage  size = "600" [entityId]="active" >
+            </div>
+          </div>
+        </ng-template>

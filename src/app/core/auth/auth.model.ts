@@ -52,6 +52,6 @@ export interface Privilege {
     privilege: string;
 }
 
-export type Role ={
+export interface Role {
     role: string;
 }

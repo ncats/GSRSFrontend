@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Pipe({
     name: 'relationshipDisplay',
-    standalone: false
+    standalone: true
 })
 export class RelationshipDisplayPipe implements PipeTransform {
     constructor(public cvService: ControlledVocabularyService) {

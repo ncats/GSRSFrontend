@@ -23,7 +23,7 @@ describe('UtilsService', () => {
     httpTestingController = TestBed.inject(HttpTestingController);
     domSanitizer = TestBed.inject(DomSanitizer);
     configService = new ConfigService(httpClient);
-    configService.configData = { apiBaseUrl: '' };
+    configService.configData = { apiBaseUrl: '', services: [], privacyStatement: '' };
     utilsService = new UtilsService(httpClient, configService, domSanitizer);
   });
 

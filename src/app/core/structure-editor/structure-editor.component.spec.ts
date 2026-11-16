@@ -1,4 +1,5 @@
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 import { EditorImplementation } from './structure-editor-implementation.model';
 import {
   resolveStructureEditorPreference,
@@ -31,7 +32,7 @@ describe('StructureEditorComponent', () => {
     const component = Object.create(StructureEditorComponent.prototype) as StructureEditorComponent;
     const currentMolfile = 'blank JSDraw molfile';
     const destinationEditor = {
-      setMolecule: jasmine.createSpy('setMolecule'),
+      setMolecule: vi.fn(),
     };
     const sourceEditor = {
       getMolfile: () => of(currentMolfile),
@@ -42,24 +43,25 @@ describe('StructureEditorComponent', () => {
     component.ketcherLoaded = true;
     (component as any).ketcher = {};
     (component as any).jsdraw = { activated: true };
-    component.editorOnLoad = { emit: jasmine.createSpy('editorOnLoad') } as any;
-    component.editorSwitched = { emit: jasmine.createSpy('editorSwitched') } as any;
-    spyOn(component, 'getSketcher').and.returnValue((component as any).jsdraw);
-    spyOn(EditorImplementation.prototype, 'setMolecule').and.callFake(
+    component.editorOnLoad = { emit: vi.fn() } as any;
+    component.editorSwitched = { emit: vi.fn() } as any;
+    vi.spyOn(component, 'getSketcher').mockReturnValue((component as any).jsdraw);
+    vi.spyOn(EditorImplementation.prototype, 'setMolecule').mockImplementation(
       destinationEditor.setMolecule,
     );
-    spyOn(document, 'getElementById').and.returnValue({ style: {} } as HTMLElement);
-    const animationFrame = spyOn(window, 'requestAnimationFrame').and.callFake(() => 1);
+    vi.spyOn(document, 'getElementById').mockReturnValue({ style: {} } as HTMLElement);
+    const animationFrame = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1 as any);
 
     component.toggleEditor();
 
     expect(component.structureEditor).toBe('ketcher');
-    expect(destinationEditor.setMolecule).not.toHaveBeenCalled();
+    expect(destinationEditor.setMolecule.mock.calls.length).toBe(0);
 
-    animationFrame.calls.mostRecent().args[0](0);
+    animationFrame.mock.calls[animationFrame.mock.calls.length - 1][0](0);
 
-    expect(destinationEditor.setMolecule).toHaveBeenCalledWith(currentMolfile);
-    expect(component.editorOnLoad.emit).toHaveBeenCalled();
+    expect(destinationEditor.setMolecule.mock.calls.length).toBeGreaterThan(0);
+    expect(destinationEditor.setMolecule.mock.calls[destinationEditor.setMolecule.mock.calls.length - 1][0]).toBe(currentMolfile);
+    expect((component.editorOnLoad.emit as ReturnType<typeof vi.fn>).mock.calls.length).toBeGreaterThan(0);
   });
 
   it('loads and activates JSDraw after it is visible', () => {
@@ -67,37 +69,38 @@ describe('StructureEditorComponent', () => {
     const currentMolfile = 'Ketcher molfile';
     const normalizedMolfile = 'normalized JSDraw molfile';
     const destinationEditor = {
-      setMolecule: jasmine.createSpy('setMolecule'),
+      setMolecule: vi.fn(),
     };
 
     component.structureEditor = 'ketcher';
     component.editor = { getMolfile: () => of(currentMolfile) } as any;
     (component as any).jsdraw = { activated: false };
     (component as any).structureService = {
-      interpretStructure: jasmine.createSpy('interpretStructure').and.returnValue(of({
+      interpretStructure: vi.fn().mockReturnValue(of({
         structure: { molfile: normalizedMolfile },
       })),
     };
-    component.editorOnLoad = { emit: jasmine.createSpy('editorOnLoad') } as any;
-    component.editorSwitched = { emit: jasmine.createSpy('editorSwitched') } as any;
-    spyOn(component, 'getSketcher').and.returnValue((component as any).jsdraw);
-    spyOn(EditorImplementation.prototype, 'setMolecule').and.callFake(
+    component.editorOnLoad = { emit: vi.fn() } as any;
+    component.editorSwitched = { emit: vi.fn() } as any;
+    vi.spyOn(component, 'getSketcher').mockReturnValue((component as any).jsdraw);
+    vi.spyOn(EditorImplementation.prototype, 'setMolecule').mockImplementation(
       destinationEditor.setMolecule,
     );
-    spyOn(document, 'getElementById').and.returnValue({ style: {} } as HTMLElement);
-    const animationFrame = spyOn(window, 'requestAnimationFrame').and.callFake(() => 1);
+    vi.spyOn(document, 'getElementById').mockReturnValue({ style: {} } as HTMLElement);
+    const animationFrame = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1 as any);
 
     component.toggleEditor();
 
     expect(component.structureEditor).toBe('jsdraw');
     expect((component as any).jsdraw.activated).toBe(false);
-    expect(destinationEditor.setMolecule).not.toHaveBeenCalled();
+    expect(destinationEditor.setMolecule.mock.calls.length).toBe(0);
 
-    animationFrame.calls.mostRecent().args[0](0);
+    animationFrame.mock.calls[animationFrame.mock.calls.length - 1][0](0);
 
-    expect(destinationEditor.setMolecule).toHaveBeenCalledWith(normalizedMolfile);
+    expect(destinationEditor.setMolecule.mock.calls.length).toBeGreaterThan(0);
+    expect(destinationEditor.setMolecule.mock.calls[destinationEditor.setMolecule.mock.calls.length - 1][0]).toBe(normalizedMolfile);
     expect((component as any).jsdraw.activated).toBe(true);
-    expect(component.editorOnLoad.emit).toHaveBeenCalled();
+    expect((component.editorOnLoad.emit as ReturnType<typeof vi.fn>).mock.calls.length).toBeGreaterThan(0);
   });
 
 /*  let component: StructureEditorComponent;

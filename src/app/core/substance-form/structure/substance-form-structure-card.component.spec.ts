@@ -1,18 +1,75 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { Component, EventEmitter, Input, Output, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { of, NEVER } from 'rxjs';
+import { vi } from 'vitest';
+import { MatDialog } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SubstanceFormService } from '../substance-form.service';
+import { StructureService } from '../../structure/structure.service';
+import { LoadingService } from '../../loading/loading.service';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
+import { SubstanceFormStructureService } from './substance-form-structure.service';
+import { ConfigService } from '@gsrs-core/config';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+import { StructureFormComponent } from './structure-form.component';
 
 import { SubstanceFormStructureCardComponent } from './substance-form-structure-card.component';
+
+// app-structure-editor is the heavy Ketcher/JSDraw wrapper - doesn't survive Karma/jsdom
+// (see structure-search.component.spec.ts). Stub it, matching only the bindings this
+// component's template actually uses.
+@Component({ selector: 'app-structure-editor', template: '', standalone: true })
+class StructureEditorStubComponent {
+  @Input() calledFrom: any;
+  @Input() disclaimer: any;
+  @Output() loadedMolfile = new EventEmitter<any>();
+  @Output() editorOnLoad = new EventEmitter<any>();
+  @Output() editorSwitched = new EventEmitter<any>();
+}
 
 describe('SubstanceFormStructureComponent', () => {
   let component: SubstanceFormStructureCardComponent;
   let fixture: ComponentFixture<SubstanceFormStructureCardComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SubstanceFormStructureCardComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ SubstanceFormStructureCardComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: SubstanceFormService, useValue: { definition: NEVER, resolvedMol: NEVER } },
+        { provide: SubstanceFormStructureService, useValue: {} },
+        { provide: StructureService, useValue: {} },
+        { provide: LoadingService, useValue: { setLoading: () => null } },
+        { provide: MatDialog, useValue: { open: () => ({ afterClosed: () => NEVER }) } },
+        { provide: OverlayContainer, useValue: { getContainerElement: () => document.createElement('div') } },
+        { provide: GoogleAnalyticsService, useValue: { sendEvent: () => null } },
+        { provide: SubstanceService, useValue: {} },
+        { provide: SubstanceFormStructuralUnitsService, useValue: {} },
+        { provide: ActivatedRoute, useValue: { snapshot: { routeConfig: { path: '' }, queryParams: {} } } },
+        { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
+        { provide: ConfigService, useValue: { configData: {} } },
+        // also injected by the real, standalone app-structure-form child this
+        // component's template renders for real (app-structure-editor is stubbed below).
+        { provide: ControlledVocabularyService, useValue: { getDomainVocabulary: () => of(new Proxy({}, { get: () => ({ list: [], dictionary: {} }) })) } },
+      ]
+    })
+    .overrideComponent(SubstanceFormStructureCardComponent, {
+      set: {
+        imports: [CommonModule, MatExpansionModule, MatIconModule, MatMenuModule, MatButtonModule, MatTableModule, MatTooltipModule, StructureFormComponent, StructureEditorStubComponent]
+      }
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubstanceFormStructureCardComponent);
@@ -41,19 +98,19 @@ describe('SubstanceFormStructureCardComponent structure updates', () => {
 
   function createComponentForUpdate(): {
     component: SubstanceFormStructureCardComponent;
-    interpretStructure: jasmine.Spy;
+    interpretStructure: ReturnType<typeof vi.fn>;
   } {
     const component = Object.create(
       SubstanceFormStructureCardComponent.prototype,
     ) as SubstanceFormStructureCardComponent;
-    const interpretStructure = jasmine.createSpy('interpretStructure').and.returnValue(of({
+    const interpretStructure = vi.fn().mockReturnValue(of({
       structure: { smiles: '[204Pb][N+]' },
     }));
 
     component.isInitializing = false;
     component.structure = { molfile: 'original molfile' } as any;
     (component as any).structureService = { interpretStructure };
-    spyOn(component, 'processStructurePostResponse');
+    vi.spyOn(component, 'processStructurePostResponse');
 
     return { component, interpretStructure };
   }
@@ -63,7 +120,8 @@ describe('SubstanceFormStructureCardComponent structure updates', () => {
 
     component.updateStructureForm(molfileWithoutRemovedIsotope);
 
-    expect(interpretStructure).toHaveBeenCalledWith(molfileWithoutRemovedIsotope);
+    expect(interpretStructure.mock.calls.length).toBe(1);
+    expect(interpretStructure.mock.calls[0][0]).toBe(molfileWithoutRemovedIsotope);
     expect(component.structure.molfile).toBe(molfileWithoutRemovedIsotope);
     expect(component.structure.molfile).not.toContain('  2  15');
   });
@@ -74,7 +132,7 @@ describe('SubstanceFormStructureCardComponent structure updates', () => {
 
     component.updateStructureForm(molfileWithoutRemovedIsotope);
 
-    expect(interpretStructure).not.toHaveBeenCalled();
+    expect(interpretStructure.mock.calls.length).toBe(0);
     expect(component.structure.molfile).toBe('original molfile');
   });
 });

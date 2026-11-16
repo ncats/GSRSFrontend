@@ -1,11 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
-import * as _ from 'lodash';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import lodashCloneDeep from 'lodash/cloneDeep';
+import { RouterModule } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FacetsManagerComponent } from '@gsrs-core/facets-manager/facets-manager.component';
 
 /* GSRS Import */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -28,9 +36,21 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
     selector: 'app-cross-entity-search',
     templateUrl: './cross-entity-search.component.html',
     styleUrls: ['./cross-entity-search.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      RouterModule,
+      ReactiveFormsModule,
+      MatDialogModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatOptionModule,
+      MatSelectModule,
+      MatButtonModule,
+      MatTooltipModule,
+      FacetsManagerComponent
+    ]
 })
-export class CrossEntitySearchComponent implements OnInit {
+export class CrossEntitySearchComponent implements OnInit, OnDestroy {
 
   @Output() crossEntityFacetsSelected = new EventEmitter<DisplayFacet[]>();
   @Output() getSearchIdsOnly = new EventEmitter<boolean>();
@@ -205,7 +225,7 @@ export class CrossEntitySearchComponent implements OnInit {
     this.idListForSearch = list || [];
 
     // copy the lists in the temporary array to use later for comparison
-    this.idListForSearchOld = _.cloneDeep(this.idListForSearch);
+    this.idListForSearchOld = lodashCloneDeep(this.idListForSearch);
 
     // Only run if search is not canceled
     if (this.cancelSearch == false) {
@@ -366,7 +386,7 @@ export class CrossEntitySearchComponent implements OnInit {
     // Some how the facets selected in entity has been passed to sub-entity. Need to strip this off.
     if (this.facetsParamsUpdateCount == 1) {
       if (Object.keys(this.privateFacetParams).length > 0) {
-        this.removePrivateFacetParams = _.cloneDeep(this.privateFacetParams);
+        this.removePrivateFacetParams = lodashCloneDeep(this.privateFacetParams);
       }
     }
 

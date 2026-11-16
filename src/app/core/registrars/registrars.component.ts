@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
@@ -10,13 +16,14 @@ import { take } from 'rxjs/operators';
     selector: 'app-registrars',
     templateUrl: './registrars.component.html',
     styleUrls: ['./registrars.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, RouterModule, MatCardModule, MatListModule, MatIconModule, MatDividerModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistrarsComponent implements OnInit {
 
   environment: Environment;
   baseDomain: string;
-  isAuthenticated = false;
   contactEmail: string;
   isClosedWelcomeMessage = true;
   imageLoc: any;
@@ -39,13 +46,19 @@ export class RegistrarsComponent implements OnInit {
     private configService: ConfigService,
     private authService: AuthService,
     private substanceService: SubstanceService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so template reads always reflect the current privilege signal.
+  get isAuthenticated(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.environment = this.configService.environment;
     this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
     this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
@@ -53,7 +66,6 @@ export class RegistrarsComponent implements OnInit {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
     this.appId = this.configService.environment.appId;
 
-    this.isAuthenticated = await this.authService.hasSpecificPrivilege('Edit');
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.customLinks1 = this.configService.configData.registrarDynamicLinks;
@@ -71,6 +83,7 @@ export class RegistrarsComponent implements OnInit {
       }
       this.substanceService.searchFromString(str).pipe(take(1)).subscribe( response => {
         link.total = response.total;
+        this.cdr.markForCheck();
       });
     });
     this.customLinks2.forEach (link => {
@@ -85,6 +98,7 @@ export class RegistrarsComponent implements OnInit {
       }
       this.substanceService.searchFromString(str).pipe(take(1)).subscribe( response => {
         link.total =  Number(response.total);
+        this.cdr.markForCheck();
       });
     });
     this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';

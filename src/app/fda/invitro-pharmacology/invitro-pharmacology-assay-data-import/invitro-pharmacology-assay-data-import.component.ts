@@ -1,31 +1,26 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormBuilder } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { forkJoin, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import * as moment from 'moment';
+import moment from 'moment';
 import * as XLSX from 'xlsx';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
-import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
@@ -35,9 +30,10 @@ import { InvitroAssayInformation, InvitroAssaySet, InvitroAssayAnalyte, Validati
   selector: 'app-invitro-pharmacology-assay-data-import',
   templateUrl: './invitro-pharmacology-assay-data-import.component.html',
   styleUrls: ['./invitro-pharmacology-assay-data-import.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatTooltipModule]
 })
-export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
+export class InvitroPharmacologyAssayDataImportComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('saveTemplate') saveTemplate: TemplateRef<any>;
 
@@ -65,7 +61,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   isAllRecordValidated = false;
   isAllRecordSaved = false;
   isLoading = false;
-  canCreate: boolean = false;
 
   targetNameCheckCompleted = false;
   humanHomologCheckCompleted = false;
@@ -100,8 +95,12 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-  async ngOnInit() {
-    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canCreate(): boolean {
+    return this.authService.hasPrivilege('Create');
+  }
+
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.titleService.setTitle("IVP Import Assay Data");
@@ -126,8 +125,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     if (target.files.length > 1) {
       alert('Multiple files are not allowed');
       return;
-    }
-    else {
+    } else {
       this.importSaveMessageArray = [];
       this.importValidateMessageArray = [];
       this.disableImportButton = 'true';
@@ -753,24 +751,21 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.TARGET_NAME + ' Approval ID "' + element["targetNameApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
-                      }
-                      else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
+                      } else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
                         element["humanHomologTargetSubstanceKey"] = substanceKey;
                         element["humanHomologTargetSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
                         if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.HUMAN_HOMOLOG_TARGET + ' Approval ID "' + element["humanHomologTargetApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
-                      }
-                      else if (fieldName == this.LIGAND_SUBSTRATE) {
+                      } else if (fieldName == this.LIGAND_SUBSTRATE) {
                         element["ligandSubstrateSubstanceKey"] = substanceKey;
                         element["ligandSubstrateSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
                         if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.LIGAND_SUBSTRATE + ' Approval ID "' + element["ligandSubstrateApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
-                      }
-                      else if (fieldName == this.ANALYTE) {
+                      } else if (fieldName == this.ANALYTE) {
                         element["analyteSubstanceKey"] = substanceKey;
                         element["analyteSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
                       }

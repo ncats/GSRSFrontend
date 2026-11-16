@@ -9,58 +9,63 @@
         matInput
         [formControl]="resolverControl"
         (keydown)="resolveNameKey($event)"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="resolveName(resolverControl.value)"
-        aria-label="Resolve Name Search Button"
-      >
-        <mat-icon class="resolver-search-icon" svgIcon="search"></mat-icon>
-      </button>
-    </mat-form-field>
-  </div>
-
-  <div class="result-container">
-    {{ errorMessage }}
-    <div class="name-result" *ngFor="let name of resolvedNames">
-      <img appSubstanceImage [entityId]="name.value.id" /><br />
-      {{ name.source }}<br /><br />
-      <button
-        mat-raised-button
-        color="primary"
-        class="name-result-button"
-        (click)="applyStructure(name.value.molfile)"
-      >
-        Apply Structure
-      </button>
-      {{ errorMessage }}
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="resolveName(resolverControl.value)"
+          aria-label="Resolve Name Search Button"
+          >
+          <mat-icon class="resolver-search-icon" svgIcon="search"></mat-icon>
+        </button>
+      </mat-form-field>
     </div>
 
-    <ng-container *ngIf="matchedNames">
-      <div class="name-result" *ngFor="let name of matchedNames.content">
-        <img appSubstanceImage [entityId]="name.uuid" /><br />
-        GSRS Record<br />
-        {{ name._name }}
-        <br />
-        <button
-          *ngIf="name.structure"
-          mat-raised-button
-          color="primary"
-          class="name-result-button"
-          (click)="applyStructure(name.structure.molfile)"
-        >
-          Apply Structure</button
-        ><br />
-        <button
-          mat-raised-button
-          color="primary"
-          class="name-result-button"
-          [routerLink]="['/substances', name.uuid]"
-        >
-          view
-        </button>
+    <div class="result-container">
+      {{ errorMessage }}
+      @for (name of resolvedNames; track name) {
+        <div class="name-result">
+          <img appSubstanceImage [entityId]="name.value.id" /><br />
+          {{ name.source }}<br /><br />
+          <button
+            mat-raised-button
+            color="primary"
+            class="name-result-button"
+            (click)="applyStructure(name.value.molfile)"
+            >
+            Apply Structure
+          </button>
+          {{ errorMessage }}
+        </div>
+      }
+
+      @if (matchedNames) {
+        @for (name of matchedNames.content; track name) {
+          <div class="name-result">
+            <img appSubstanceImage [entityId]="name.uuid" /><br />
+            GSRS Record<br />
+            {{ name._name }}
+            <br />
+            @if (name.structure) {
+              <button
+                mat-raised-button
+                color="primary"
+                class="name-result-button"
+                (click)="applyStructure(name.structure.molfile)"
+                >
+                Apply Structure</button
+                >
+              }<br />
+              <button
+                mat-raised-button
+                color="primary"
+                class="name-result-button"
+                [routerLink]="['/substances', name.uuid]"
+                >
+                view
+              </button>
+            </div>
+          }
+        }
       </div>
-    </ng-container>
-  </div>
-</div>
+    </div>

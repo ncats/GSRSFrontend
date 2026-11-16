@@ -1,19 +1,23 @@
 <div class="sugar-form-container">
-  <div *ngIf="sugar.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
+  @if (sugar.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+  }
   <div class="form-row">
     <div class="delete-container">
       <button mat-icon-button matTooltip="Delete link" (click)="deleteLink()">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <div *ngIf = "structure">
+    @if (structure) {
+      <div>
         <img class = "structure-image" [src] = "structure"/>
-    </div>
+      </div>
+    }
     <div class = "type">
       <app-cv-input domain = "NUCLEIC_ACID_SUGAR" title = "Sugar" (valueChange) = "updateSugar($event)" [model] = "sugar.sugar"></app-cv-input>
     </div>

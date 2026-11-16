@@ -3,10 +3,7 @@ import { NgModule } from '@angular/core';
 
 @NgModule({
     imports: [
-      // dep modules
-    ],
-    declarations: [
-        ElementLabelDisplayPipe
+      ElementLabelDisplayPipe
     ],
     exports: [
         ElementLabelDisplayPipe

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
@@ -15,9 +15,11 @@ import { GeneralService } from '../../service/general.service';
     selector: 'app-application-details-base',
     templateUrl: './application-details-base.component.html',
     styleUrls: ['./application-details-base.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ApplicationDetailsBaseComponent implements OnInit {
+export class ApplicationDetailsBaseComponent implements OnInit, OnDestroy {
 
   id: number;
   src: string;
@@ -38,8 +40,9 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
-    public titleService: Title
+    public titleService: Title,
     // private authService: AuthService,
+    protected cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -76,6 +79,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
         const appHistSubscription = this.applicationService.getApplicationHistory(this.id).subscribe(response => {
           this.application.applicationHistoryList = [];
           this.application.applicationHistoryList = response;
+          this.cdr.markForCheck();
         });
         this.subscriptions.push(appHistSubscription);
 
@@ -83,6 +87,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
         const prodTechEffectSubscription = this.applicationService.getProductTechnicalEffect(this.id).subscribe(response => {
           this.application.productTechEffectList = [];
           this.application.productTechEffectList = response;
+          this.cdr.markForCheck();
         });
         this.subscriptions.push(prodTechEffectSubscription);
 
@@ -90,6 +95,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
         const prodEffectedSubscription = this.applicationService.getProductEffected(this.id).subscribe(response => {
           this.application.productEffectedList = [];
           this.application.productEffectedList = response;
+          this.cdr.markForCheck();
         });
         this.subscriptions.push(prodEffectedSubscription);
 
@@ -97,9 +103,11 @@ export class ApplicationDetailsBaseComponent implements OnInit {
         const clinicalSubscription = this.applicationService.getClinicalTrialApplication(this.id).subscribe(response => {
           this.application.clinicalTrialList = [];
           this.application.clinicalTrialList = response;
+          this.cdr.markForCheck();
         });
         this.subscriptions.push(clinicalSubscription);
       }
+      this.cdr.markForCheck();
     }, error => {
       //  this.message = 'No Application record found';
       // this.handleSubstanceRetrivalError();
@@ -120,6 +128,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
                     elementIngred._substanceUuid = response.uuid;
                     elementIngred._ingredientName = response._name;
                   }
+                  this.cdr.markForCheck();
                 });
                 this.subscriptions.push(ingSubscription);
               }
@@ -131,6 +140,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
                     elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
                     elementIngred._basisOfStrengthIngredientName = response._name;
                   }
+                  this.cdr.markForCheck();
                 });
                 this.subscriptions.push(basisSubscription);
               }

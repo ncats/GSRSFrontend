@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+// not sure about isPairedLinkageType
 import {isPairedLinkageType, Link, SubstanceReference} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
@@ -8,12 +9,20 @@ import {Subscription} from 'rxjs';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
+import {CommonModule} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-other-links-form',
     templateUrl: './other-links-form.component.html',
     styleUrls: ['./other-links-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule, AuditInfoComponent, CvInputComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OtherLinksFormComponent implements OnInit, OnDestroy {
 
@@ -30,7 +39,8 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   private dialog: MatDialog,
   private utilsService: UtilsService,
   private overlayContainerService: OverlayContainer,
-  private substanceFormService: SubstanceFormService
+  private substanceFormService: SubstanceFormService,
+  private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -53,6 +63,14 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   get link(): Link {
     return this.privateLink;
   }
+
+// __aw__sb41ang21 ang21 not sure
+//  updateDisplay(): void {
+//    this.siteDisplay = this.substanceFormService.siteString(this.privateLink.sites);
+//  }
+
+
+// __aw__sb41ang21 springBoot41 not sure
   updateDisplay(): void {
     // Paired-linkage types (e.g. Cys-linker-Cys) use pairedSiteString(), which keeps site pairing instead of sorting/range-compressing like siteString().
     if (isPairedLinkageType(this.privateLink.linkageType)) {
@@ -62,6 +80,9 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
     }
   }
 
+
+
+// __aw__sb41ang21 springBoot41 not sure
   onLinkageTypeChange(value: string): void {
     this.privateLink.linkageType = value;
     // Re-render siteDisplay since the paired-vs-flat format depends on the type.
@@ -84,6 +105,7 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   getVocabularies(): void {
     const subscription = this.cvService.getDomainVocabulary('OTHER_LINKAGE_TYPE').subscribe(response => {
       this.linkageTypes = response['OTHER_LINKAGE_TYPE'].list;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(subscription);
   }
@@ -91,8 +113,13 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
   openDialog(): void {
 
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
+// __aw__sb41ang21 ang21 not sure
+//      data: {'card': 'other', 'link': this.privateLink.sites},
+
+// __aw__sb41ang21 springBoot41 not sure
       // preserveSiteOrder stops the selector from re-sorting sites after each click, which would lose pairing before the dialog closes.
       data: {'card': 'other', 'link': this.privateLink.sites, 'preserveSiteOrder': isPairedLinkageType(this.privateLink.linkageType)},
+
       width: '1040px',
       panelClass: 'subunit-dialog'
     });
@@ -105,6 +132,7 @@ export class OtherLinksFormComponent implements OnInit, OnDestroy {
         this.substanceFormService.emitOtherLinkUpdate();
       }
       this.updateDisplay();
+      this.cdr.markForCheck();
     });
     const dialogSubscription2 = dialogRef.backdropClick().subscribe(sub => {     }
     );

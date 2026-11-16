@@ -9,73 +9,78 @@
             <input
               matInput
               formControlName="cutoff"
-            />
-            <mat-error
-              *ngIf="
+              />
+              @if (
                 sequenceSearchForm.controls.cutoff.hasError('min') ||
                 sequenceSearchForm.controls.cutoff.hasError('max')
-              "
-            >
-              Only values between 0 and 1 are allowed
-            </mat-error>
-            <mat-error
-              *ngIf="sequenceSearchForm.controls.cutoff.hasError('required')"
-            >
-              This is required
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Cutoff Type</mat-label>
-            <mat-select formControlName="type">
-              <mat-option value="SUB"> Contains Alignment Match </mat-option>
-              <mat-option value="GLOBAL"> Global Alignment Match </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Sequence Type</mat-label>
-            <mat-select
-              formControlName="sequenceType"
-            >
-              <mat-option value="protein"> Protein </mat-option>
-              <mat-option value="nucleicAcid"> Nucleic Acid </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="sequence-body">
-          <textarea formControlName="sequence"></textarea>
-        </div>
-        <div class="actions">
-          <button
-            class="padding-right"
-            mat-raised-button
-            color="primary"
-            (click)="search()"
-            [disabled]="sequenceSearchForm.invalid"
-          >
-            Search
-          </button>
-          <button
-            *ngIf="sequenceSearchForm.value.sequence"
-            mat-button
-            (click)="sequenceSearchForm.controls.sequence.setValue('')"
-          >
-            Clear
-          </button>
+                ) {
+                <mat-error
+                  >
+                  Only values between 0 and 1 are allowed
+                </mat-error>
+              }
+              @if (sequenceSearchForm.controls.cutoff.hasError('required')) {
+                <mat-error
+                  >
+                  This is required
+                </mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Cutoff Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option value="SUB"> Contains Alignment Match </mat-option>
+                <mat-option value="GLOBAL"> Global Alignment Match </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Sequence Type</mat-label>
+              <mat-select
+                formControlName="sequenceType"
+                >
+                <mat-option value="protein"> Protein </mat-option>
+                <mat-option value="nucleicAcid"> Nucleic Acid </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="sequence-body">
+            <textarea formControlName="sequence"></textarea>
+          </div>
+          <div class="actions">
+            <button
+              class="padding-right"
+              mat-raised-button
+              color="primary"
+              (click)="search()"
+              [disabled]="sequenceSearchForm.invalid"
+              >
+              Search
+            </button>
+            @if (sequenceSearchForm.value.sequence) {
+              <button
+                mat-button
+                (click)="sequenceSearchForm.controls.sequence.setValue('')"
+                >
+                Clear
+              </button>
+            }
 
-          <div class="align-right">
-            <a
-              class="blue-font"
+            <div class="align-right">
+              <a
+                class="blue-font"
               (click)="
                 cleanSequence(sequenceSearchForm.controls.sequenceType.value)
               "
-              ><mat-icon svgIcon="spellcheck"></mat-icon> clean sequence</a
-            >
-          </div>
-        </div>
-      </form>
-      <div class="error-message" *ngIf="errorMessage && errorMessage !== ''">
-        {{ errorMessage }}
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
+                ><mat-icon svgIcon="spellcheck"></mat-icon> clean sequence</a
+                >
+              </div>
+            </div>
+          </form>
+          @if (errorMessage && errorMessage !== '') {
+            <div class="error-message">
+              {{ errorMessage }}
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>

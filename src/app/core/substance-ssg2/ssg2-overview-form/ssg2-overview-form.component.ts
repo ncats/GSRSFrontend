@@ -6,12 +6,17 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { SubstanceFormBase } from '../../substance-form/base-classes/substance-form-base';
 import { SubstanceDetail, SpecifiedSubstanceG2 } from '@gsrs-core/substance/substance.model';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-ssg2-overview-form',
     templateUrl: './ssg2-overview-form.component.html',
     styleUrls: ['./ssg2-overview-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [FormsModule, MatFormFieldModule, MatInputModule, CvInputComponent]
 })
 export class Ssg2OverviewFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
 
