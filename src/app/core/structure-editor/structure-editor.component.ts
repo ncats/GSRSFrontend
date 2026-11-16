@@ -440,7 +440,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private afterEditorIsVisible(callback: () => void): void {
-    window.requestAnimationFrame(callback);
+    // Two frames so Ketcher 3.x measures its un-hidden canvas before loading, otherwise the structure lands top-left
+    window.requestAnimationFrame(() => window.requestAnimationFrame(callback));
   }
 
   toggleEditor() {
