@@ -26,6 +26,7 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
 import { PageEvent } from '@angular/material/paginator';
+import { A } from '@angular/cdk/keycodes';
 @Component({
     selector: 'app-import-summary',
     templateUrl: './import-summary.component.html',
@@ -81,7 +82,7 @@ export class ImportSummaryComponent implements OnInit {
   performedAction: string;
   @ViewChild('infoDialog', { static: true }) infoDialog: TemplateRef<any>;
   dialogRef: MatDialogRef<any>;
-
+  
 
   constructor(
     public utilsService: UtilsService,
@@ -308,6 +309,7 @@ export class ImportSummaryComponent implements OnInit {
     this.displayAction = action;
     this.loadingService.setLoading(true);
     this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {
+      console.log(`doAction result.jobStatus: ${result.jobStatus}; result: ${JSON.stringify(result)}`);
       if (result.jobStatus === 'completed') {
         this.loadingService.setLoading(false);
         this.doneAction.emit(this.privateSubstance.uuid);
@@ -324,18 +326,18 @@ export class ImportSummaryComponent implements OnInit {
          const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
           this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
          });
-
-      } else {
+        } else {
         setTimeout(() => {
           this.processingstatus(result.id, action, result);
         }, 200);
       }
      
     }, error => {
-      this.message = "Error: failed to " + action + " record";
+      console.log("failure detected in doAction");
+      this.message = "Error: failed to " + this.displayAction + " record";
       this.loadingService.setLoading(false);
       this.dialogRef =  this.dialog.open(this.infoDialog,
-        {data: {'message': 'Error: failed to', 'action': action},
+        {data: {'message': 'Error: failed to', 'action': this.displayAction},
       width: '600px'});
        const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
 
@@ -352,6 +354,9 @@ export class ImportSummaryComponent implements OnInit {
               if (result) {
         this.disabled = true;
         this.performedAction = action;
+      } else if(response.jobStatus && response.jobStatus === 'failed' ) {
+        this.loadingService.setLoading((false));
+        this.message = this.displayAction + " failed. Ask the admin to check logs";
       }
 
       this.deleted = false;
@@ -367,7 +372,15 @@ export class ImportSummaryComponent implements OnInit {
         }, 200);
       }
      
+    }, error => {
+      this.message = "Error: failed to " + this.displayAction + " record";
+      this.loadingService.setLoading(false);
+      this.dialogRef =  this.dialog.open(this.infoDialog,
+        {data: {'message': 'Error: failed to', 'action': this.displayAction},
+      width: '600px'});
+       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
 
+       });
     });
   }
 

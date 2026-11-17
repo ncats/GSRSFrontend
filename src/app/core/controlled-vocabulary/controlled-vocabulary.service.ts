@@ -112,10 +112,8 @@ export class ControlledVocabularyService extends BaseHttpService {
   }
   getStructureUrl(structure: string) {
     if(structure && structure !== null) {
-      structure = structure.replace(/[;]/g, '%3B')
-      .replace(/[#]/g, '%23')
-      .replace(/[+]/g, '%2B')
-      .replace(/[|]/g, '%7C');
+      //we used to make specific character substitutions. When the backend went to
+      structure = encodeURIComponent(structure);
       const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
       return url;
     } else {
@@ -126,7 +124,9 @@ export class ControlledVocabularyService extends BaseHttpService {
   }
 
   getStructureUrlFragment(structure: string) {
-    structure = structure.replace(/%/g, "%25").replace(/#/g, "%23").replace(/[;]/g, "%3B").replace(/[+]/g, "%2B");
+    //we used to make specific character substitutions. When the backend went to
+    // Spring Boot 4.1
+    structure= encodeURIComponent(structure);
     const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
     return url;
   }
