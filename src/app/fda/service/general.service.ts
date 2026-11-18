@@ -460,7 +460,8 @@ export class GeneralService extends BaseHttpService {
     if (this.configService.configData && this.configService.configData.dailyMedUrl) {
       return this.configService.configData.dailyMedUrl;
     }
-    return null;
+    // Without a configured base url the links would render as relative "null<code>" urls
+    return 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
   }
 
   getSubstanceKeyType(entity?: string): any {
