@@ -111,14 +111,9 @@ mat-select-panel {
   margin-top: 20px !important;
 }
 
-.form-content-container {
-  overflow: hidden;
-  padding-top: 121px;
-}
-
+.form-content-container,
 .small-form-content-container {
   overflow: hidden;
-  padding-top: 90px;
 }
 
 .actions-container {
@@ -292,4 +287,77 @@ mat-select-panel {
 
 ::ng-deep .mat-mdc-form-field-infix {
   padding-top: 24px !important;
+}
+
+// --- Section side navigation (mirrors substance-details sidenav) ---
+
+// Global _mat-side-nav.scss pins the container at top: 64px; push it below this page's fixed toolbar instead.
+.form-sidenav-container.below-toolbar {
+  top: 121px;
+}
+
+// Simplified toolbar: 30px buttons + 20px padding.
+.form-sidenav-container.below-small-toolbar {
+  top: 114px;
+
+  .expand-sidenav {
+    top: 124px;
+  }
+}
+
+// Global _mat-side-nav.scss reserves 315px for a sidenav on wide screens; undo it when there is no nav.
+.form-sidenav-container.no-section-nav mat-sidenav-content {
+  margin-left: 0 !important;
+}
+
+// Global position (top: 80px) would sit on top of the fixed toolbar.
+.expand-sidenav {
+  top: 131px;
+}
+
+.white-background {
+  background-color: var(--regular-white-color);
+}
+
+mat-sidenav.substance-sidenav.mat-drawer {
+  width: 315px !important;
+  min-width: 315px !important;
+  max-width: 315px !important;
+  flex: 0 0 315px !important;
+  box-sizing: border-box;
+}
+
+.substance-nav-list.mat-mdc-list-base {
+  display: flex !important;
+  flex-direction: column;
+}
+
+:host ::ng-deep .substance-nav-list
+  .mat-mdc-list-item
+  .mdc-list-item__primary-text {
+  color: #000;
+}
+
+.list-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+}
+
+.capitalized {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  min-width: 0;
+}
+
+::ng-deep .nav-chevron {
+  margin-right: 0 !important;
+  svg {
+    height: 24px;
+    width: 24px;
+  }
 }
