@@ -33,6 +33,7 @@ import { ApplyReferenceComponent } from './references/apply-reference/apply-refe
 import { PropertyParameterFormComponent } from './property-parameter-form/property-parameter-form.component';
 import { PropertyParameterDialogComponent } from './property-parameter-dialog/property-parameter-dialog.component';
 import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { SubunitFormComponent } from './subunit-form/subunit-form.component';
 import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
@@ -115,6 +116,7 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     ExpandDetailsModule,
     SubstanceSelectorModule,
     MatListModule,
+    MatSidenavModule,
     FileSelectModule,
     MatButtonToggleModule,
     NgxJsonViewerModule,

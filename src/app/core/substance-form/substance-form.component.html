@@ -255,6 +255,50 @@
   </div>
 </div>
 
+<mat-sidenav-container
+  class="form-sidenav-container"
+  [ngClass]="{
+    'below-toolbar': !simplifiedForm && !featuresOnly,
+    'below-small-toolbar': simplifiedForm,
+    'no-section-nav': !showSectionNav
+  }"
+  [hasBackdrop]="hasBackdrop"
+>
+  <mat-sidenav
+    *ngIf="showSectionNav"
+    [disableClose]="false"
+    mode="side"
+    [(opened)]="sideNavOpened"
+    class="white-background substance-sidenav"
+  >
+    <mat-nav-list class="substance-nav-list">
+      <a
+        mat-list-item
+        tabindex="0"
+        role="link"
+        *ngFor="let section of navSections; trackBy: trackBySection"
+        appScrollToTrigger
+        [scrollToElementId]="section.dynamicComponentName"
+        (click)="handleSidenavClick(section)"
+        vAlign="start"
+      >
+        <div class="list-content">
+          <span class="capitalized">{{ section.menuLabel }}</span>
+          <span class="middle-fill"></span>
+          <mat-icon class="nav-chevron" svgIcon="chevron_right"></mat-icon>
+        </div>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <button
+      *ngIf="showSectionNav"
+      aria-label="Open Side Navigation"
+      class="expand-sidenav mat-elevation-z4"
+      (click)="sideNavOpened = true"
+    >
+      <mat-icon svgIcon="chevron_right"></mat-icon>
+    </button>
 <div
   [ngClass]="
     !simplifiedForm ? 'form-content-container' : 'small-form-content-container'
@@ -276,6 +320,7 @@
             trackBy: trackBySection
           "
           [id]="section.dynamicComponentName"
+          appScrollToTarget
           [ngClass]="{ hidden: section.isHidden }"
         >
           <mat-expansion-panel-header>
@@ -302,6 +347,8 @@
     </div>
   </div>
 </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
 <!-- Template for substance validation messages -->
 <ng-template #substanceSubmissionMessages>

@@ -52,6 +52,8 @@ import {MatButtonToggleChange} from "@angular/material/button-toggle";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
 import { Location } from '@angular/common';
 import jp from 'jsonpath';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
     selector: 'app-substance-form',
@@ -130,6 +132,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   useApprovalAPI = false;
   featuresOnly = false;
   userCanChangeDefinitionVisibility = false;
+  sideNavOpened = true;
+  hasBackdrop = false;
+  private isNarrowScreen = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -146,7 +151,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     private authService: AuthService,
     private titleService: Title,
     private utilsService: UtilsService,
-    private location: Location
+    private location: Location,
+    private breakpointObserver: BreakpointObserver
   ) {
     this.substanceService.showImagePopup.subscribe(data => {
       this.hidePopup = data;
@@ -154,6 +160,32 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     this.substanceService.imagePopupUnit.subscribe(data => {
       this.unit = data;
     })
+  }
+
+  get showSectionNav(): boolean {
+    return !this.featuresOnly;
+  }
+
+  // Sections without a label yet (still loading) or hidden by their component are left out of the nav.
+  get navSections(): Array<SubstanceFormSection> {
+    return this.formSections.filter(section => !section.isHidden && section.menuLabel);
+  }
+
+  // appScrollToTrigger does the initial scroll; a collapsed panel needs a second scroll once it has grown.
+  handleSidenavClick(section: SubstanceFormSection): void {
+    const panel = section.matExpansionPanel;
+    if (panel && !panel.expanded) {
+      panel.afterExpand.pipe(take(1)).subscribe(() => {
+        const element = document.getElementById(section.dynamicComponentName);
+        if (element) {
+          element.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+      });
+      panel.open();
+    }
+    if (this.isNarrowScreen) {
+      this.sideNavOpened = false;
+    }
   }
 
   // Angular 19 FIX: trackBy function for *ngFor stability
@@ -307,6 +339,16 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
       this.featuresOnly = true;
     }
+    // Same 1100px breakpoint as substance-details: sidenav docked on desktop, overlay on narrow screens.
+    const breakpointSubscription = this.breakpointObserver
+      .observe(['(max-width: 1099px)'])
+      .pipe(distinctUntilChanged((prev, curr) => prev.matches === curr.matches))
+      .subscribe(result => {
+        this.isNarrowScreen = result.matches;
+        this.sideNavOpened = !result.matches;
+        this.hasBackdrop = result.matches;
+      });
+    this.subscriptions.push(breakpointSubscription);
     this.loadingService.setLoading(true);
     if (this.configService.configData && this.configService.configData.approvalType) {
       this.approvalType = this.configService.configData.approvalType;
