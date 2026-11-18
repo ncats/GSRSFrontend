@@ -5,7 +5,7 @@ import { ConfigService } from '../../config/config.service';
 
 @Directive({
     selector: '[appTrackLinkEvent]',
-    standalone: false
+    standalone: true
 })
 export class TrackLinkEventDirective {
   @Input() evCategory = 'Undefined';

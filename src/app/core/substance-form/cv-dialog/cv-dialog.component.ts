@@ -1,14 +1,23 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {SubstanceAmount} from '@gsrs-core/substance';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ControlledVocabularyService, Vocabulary, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 import {UtilsService} from '@gsrs-core/utils';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {FragmentWizardComponent} from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 
 @Component({
     selector: 'app-cv-dialog',
     templateUrl: './cv-dialog.component.html',
     styleUrls: ['./cv-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, FragmentWizardComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvDialogComponent implements OnInit {
   isNew: boolean;
@@ -21,6 +30,7 @@ export class CvDialogComponent implements OnInit {
     public cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
     public dialogRef: MatDialogRef<CvDialogComponent>,
+    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.vocabulary = data.vocabulary;
@@ -50,7 +60,10 @@ export class CvDialogComponent implements OnInit {
           this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
             if (response.terms && response.terms.length === this.vocabulary.terms.length) {
               this.message = 'Term ' + this.term.value + ' Added to ' + this.vocabulary.domain + '';
-              setTimeout(() => {this.dialogRef.close(this.term); }, 3000);
+              this.cdr.markForCheck();
+              setTimeout(() => {
+this.dialogRef.close(this.term);
+}, 3000);
             }
           }, error => {
             console.log(error);
@@ -58,13 +71,12 @@ export class CvDialogComponent implements OnInit {
             let str = 'Server Error';
           if (error.error && error.error.message) {
             str += ' - ' + error.error.message;
-    
-          }
-         else if(error.message) {
+
+          } else if(error.message) {
             str += ' - ' + error.message;
           }
           this.message = str;
-    
+          this.cdr.markForCheck();
           });
 
         } else {
@@ -74,6 +86,7 @@ export class CvDialogComponent implements OnInit {
             });
           }
           this.vocabulary.terms.pop();
+          this.cdr.markForCheck();
         }
       },error => {
         console.log(error);
@@ -82,12 +95,11 @@ export class CvDialogComponent implements OnInit {
       if (error.error && error.error.message) {
         str += ' - ' + error.error.message;
 
-      }
-     else if(error.message) {
+      } else if(error.message) {
         str += ' - ' + error.message;
       }
       this.message = str;
-
+      this.cdr.markForCheck();
       });
       
     } else {
@@ -95,6 +107,7 @@ export class CvDialogComponent implements OnInit {
       this.message = 'Term already exists';
       setTimeout(() => {
         this.message = '';
+        this.cdr.markForCheck();
       }, 3000);
     }
   }

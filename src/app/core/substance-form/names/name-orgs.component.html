@@ -7,9 +7,11 @@
             Naming Organizations
             <span [matBadge]="nameOrgs.length || 0" matBadgeOverlap="false" [hidden]="isExpanded"></span>
           </h4>
-          <button mat-icon-button (click)="addNewNameOrg($event)" matTooltip="Add name org" *ngIf="isExpanded">
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>
-          </button>
+          @if (isExpanded) {
+            <button mat-icon-button (click)="addNewNameOrg($event)" matTooltip="Add name org">
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>
+            </button>
+          }
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div>
@@ -29,9 +31,11 @@
               <mat-form-field class="name-org">
                 <mat-select (selectionChange)="updateNameOrg($event, nameOrg)" [value]="nameOrg.nameOrg"
                   [placeholder]="nameOrg.nameOrg ? '' : 'Naming Organization *'">
-                  <mat-option *ngFor="let nameOrgOption of nameOrgOptions" [value]="nameOrgOption.value">
-                    {{nameOrgOption.display}}
-                  </mat-option>
+                  @for (nameOrgOption of nameOrgOptions; track nameOrgOption) {
+                    <mat-option [value]="nameOrgOption.value">
+                      {{nameOrgOption.display}}
+                    </mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </td>

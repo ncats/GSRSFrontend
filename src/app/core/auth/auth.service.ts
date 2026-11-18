@@ -1,6 +1,7 @@
-import { Injectable, PLATFORM_ID, Inject } from "@angular/core";
+import { Injectable, PLATFORM_ID, Inject, signal, computed } from "@angular/core";
 import { ConfigService } from "../config/config.service";
 import { Auth, Privilege, Role, UserGroup } from "./auth.model";
+
 import {
   interval,
   from,
@@ -27,54 +28,83 @@ import {
   UserDownload,
   AllUserDownloads,
 } from "@gsrs-core/auth/user-downloads/download.model";
+import { UtilsService } from "@gsrs-core/utils/utils.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  private _auth: Auth;
+  private _auth: Auth | null;
   private _authUpdate = new BehaviorSubject<Auth | null>(null);
   private isLoading: boolean;
   private _privileges: Array<Privilege> = [];
+
+  // Signal mirrors for OnPush consumers; writable state stays private.
+  private readonly _authState = signal<Auth | null>(null);
+  private readonly _privilegesSignal = signal<Array<Privilege>>([]);
+  private readonly _authLoading = signal<boolean>(true);
+  readonly authState = this._authState.asReadonly();
+  readonly privileges = this._privilegesSignal.asReadonly();
+  readonly authLoading = this._authLoading.asReadonly();
+  readonly canEdit = computed(() => this.hasPrivilege("Edit"));
 
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: any,
+    private utilsService: UtilsService
   ) {
     this.isLoading = true;
+    this._authLoading.set(true);
     configService.afterLoad().then((cs) => {
       this.fetchAuth()
         .pipe(
           take(1),
           switchMap((auth) => {
             if (auth && auth.computedToken != null) {
-              this._auth = auth;
-              this._authUpdate.next(this._auth);
+              this.setAuthState(auth);
               // Fetch privileges AFTER successful auth
               return this.fetchPrivs();
             } else {
-              this._auth = null;
-              this._authUpdate.next(null);
+              this.setAuthState(null);
               return of([]);
             }
           }),
         )
         .subscribe({
           next: (privs) => {
-            this._privileges = privs;
+            this.setPrivileges(privs);
             this.isLoading = false;
+            this._authLoading.set(false);
           },
           error: (err) => {
             console.error("Error:", err);
-            this._authUpdate.next(null);
+            this.setAuthState(null);
             this.isLoading = false;
+            this._authLoading.set(false);
           },
         });
     });
   }
 
-  get auth(): Auth {
+  private setAuthState(auth: Auth | null): void {
+    this._auth = auth;
+    this._authUpdate.next(this._auth);
+    this._authState.set(auth);
+    // Avoid carrying privileges across auth transitions.
+    this.setPrivileges([]);
+  }
+
+  private setPrivileges(privileges: Privilege[]): void {
+    this._privileges = privileges;
+    this._privilegesSignal.set(privileges);
+  }
+
+  hasPrivilege(name: string): boolean {
+    return this.privileges().some((p) => p.privilege === name);
+  }
+
+  get auth(): Auth | null {
     return this._auth;
   }
 
@@ -110,11 +140,10 @@ export class AuthService {
     return obs.pipe(
       switchMap((auth) => {
         if (auth && auth.computedToken) {
-          this._auth = auth;
           if (isPlatformBrowser(this.platformId)) {
             sessionStorage.setItem("authToken", auth.computedToken);
           }
-          this._authUpdate.next(this._auth);
+          this.setAuthState(auth);
           // Fetch privileges after successful login
           return this.fetchPrivs().pipe(
             map(() => this._auth),
@@ -124,8 +153,7 @@ export class AuthService {
             }),
           );
         } else {
-          this._auth = null;
-          this._authUpdate.next(null);
+          this.setAuthState(null);
           return of(null);
         }
       }),
@@ -166,18 +194,30 @@ export class AuthService {
     // Trigger a fetch if not loading and no auth yet
     if (this._auth == null && !this.isLoading) {
       this.isLoading = true;
+      this._authLoading.set(true);
       this.fetchAuth()
-        .pipe(take(1))
+        .pipe(
+          take(1),
+          switchMap((auth) => {
+            if (auth?.computedToken) {
+              this.setAuthState(auth);
+              // Fetch privileges after a freshly-discovered auth, same as the constructor/login paths.
+              return this.fetchPrivs().pipe(catchError(() => of([])));
+            } else {
+              this.setAuthState(null);
+              return of([]);
+            }
+          }),
+        )
         .subscribe({
-          next: (auth) => {
-            this._auth = auth?.computedToken ? auth : null;
-            this._authUpdate.next(this._auth);
+          next: () => {
             this.isLoading = false;
+            this._authLoading.set(false);
           },
           error: () => {
-            this._auth = null;
-            this._authUpdate.next(null);
+            this.setAuthState(null);
             this.isLoading = false;
+            this._authLoading.set(false);
           },
         });
     }
@@ -191,7 +231,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this._privileges = [];
+    this.setPrivileges([]);
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem("authToken");
       const cookies = document.cookie.split(";");
@@ -211,13 +251,11 @@ export class AuthService {
 
     this.http.request(method, url).subscribe(
       () => {
-        this._auth = null;
-        this._authUpdate.next(null);
+        this.setAuthState(null);
         this.deleteCookie("sessionExpiredAt");
       },
       (error) => {
-        this._auth = null;
-        this._authUpdate.next(null);
+        this.setAuthState(null);
         this.deleteCookie("sessionExpiredAt");
       },
     );
@@ -321,10 +359,11 @@ export class AuthService {
   private async ensurePrivilegesLoaded(): Promise<void> {
     if (!this._privileges || this._privileges.length === 0) {
       try {
-        this._privileges = await firstValueFrom(this.fetchPrivs());
+        // fetchPrivs() already calls setPrivileges() internally on success.
+        await firstValueFrom(this.fetchPrivs());
       } catch (e) {
         // Not authenticated or fetch failed - use empty privileges
-        this._privileges = [];
+        this.setPrivileges([]);
       }
     }
   }
@@ -380,7 +419,9 @@ export class AuthService {
 
   getUpdateStatus(id: string): Observable<UserDownload> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || "/"}api/v1/`;
-    return this.http.get<any>(`${url}profile/downloads/${id}`);
+    const restApiPrefix = this.configService.configData.restApiPrefix || '';
+    const adjustedUrl  = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, url);
+    return this.http.get<any>(`${adjustedUrl}profile/downloads/${id}`);
   }
 
   changeDownload(url: string): Observable<UserDownload> {
@@ -393,7 +434,9 @@ export class AuthService {
 
   getAllDownloads(): Observable<AllUserDownloads> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || "/"}api/v1/`;
-    return this.http.get<any>(`${url}profile/downloads`);
+    const restApiPrefix = this.configService.configData.restApiPrefix || '';
+    const adjustedUrl  = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, url);
+    return this.http.get<any>(`${adjustedUrl}profile/downloads`);
   }
 
   private fetchAuth(): Observable<Auth> {
@@ -434,7 +477,7 @@ export class AuthService {
         const privs: Privilege[] = response.privileges.map((p) => ({
           privilege: p,
         }));
-        this._privileges = privs;
+        this.setPrivileges(privs);
         return privs;
       }),
       catchError((err) => {

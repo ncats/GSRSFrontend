@@ -4,7 +4,9 @@ import { SubstanceFormService } from '../substance-form.service';
 import { Observable } from 'rxjs';
 import { PolymerClassification } from '@gsrs-core/substance/substance.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubstanceFormPolymerClassificationService extends SubstanceFormServiceBase<PolymerClassification> {
 
   constructor(

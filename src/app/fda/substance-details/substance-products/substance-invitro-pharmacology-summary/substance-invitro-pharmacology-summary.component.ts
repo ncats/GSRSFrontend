@@ -21,12 +21,21 @@ import { InvitroPharmacologyService } from '../../../invitro-pharmacology/servic
 import { invitroPharmacologySearchSortValues } from '../../../invitro-pharmacology/invitro-pharmacology-browse/invitro-pharmacology-search-sort-values';
 import { GeneralService } from '../../../service/general.service';
 import { InvitroAssayInformation, InvitroAssayScreening } from '../../../invitro-pharmacology/model/invitro-pharmacology.model';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-substance-invitro-pharmacology-summary',
     templateUrl: './substance-invitro-pharmacology-summary.component.html',
     styleUrls: ['./substance-invitro-pharmacology-summary.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, RouterLink, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatPaginatorModule]
 })
 export class SubstanceInvitroPharmacologySummaryComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
@@ -73,8 +82,6 @@ export class SubstanceInvitroPharmacologySummaryComponent extends SubstanceDetai
     'isFromResult'
   ];
 
-  canExport: boolean = false;
-  canUpdate: boolean = false;
 
   constructor(
     private router: Router,
@@ -88,10 +95,16 @@ export class SubstanceInvitroPharmacologySummaryComponent extends SubstanceDetai
     super(gaService, invitroPharmService);
   }
 
-  async ngOnInit() {
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
 
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     if (this.substanceUuid) {
       this.privateSearch = this.privateSearchBase + '\"' + this.substanceUuid + '\"';
       this.getInvitroPharmacology();

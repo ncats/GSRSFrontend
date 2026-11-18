@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, Inject } from '@angular/core';
-import { Editor } from '@gsrs-core/structure-editor';
-import * as _ from 'lodash';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, Inject } from '@angular/core';
+import type { Editor } from '@gsrs-core/structure-editor';
+import { chain as lodashChain } from 'lodash';
 import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
 import { EventEmitter } from '@angular/core';
@@ -8,13 +8,21 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { take } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { StructureEditorModule } from '@gsrs-core/structure-editor/structure-editor.module';
 
 
 @Component({
     selector: 'app-fragment-wizard',
     templateUrl: './fragment-wizard.component.html',
     styleUrls: ['./fragment-wizard.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, StructureEditorModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FragmentWizardComponent implements OnInit {
   @Output() termUpdated = new EventEmitter();
@@ -42,6 +50,7 @@ private overlayContainer: HTMLElement;
     private structureService: StructureService,
     public dialogRef: MatDialogRef<FragmentWizardComponent>,
     private overlayContainerService: OverlayContainer,
+    private cdr: ChangeDetectorRef,
 
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -86,20 +95,22 @@ private overlayContainer: HTMLElement;
           this.CVService.addVocabTerm( this.vocabulary).subscribe (response => {
             if (response.terms && response.terms.length === this.vocabulary.terms.length) {
               this.message = 'Term ' + this.privateTerm.value + ' Added to ' + this.vocabulary.domain + '';
-              setTimeout(() => {this.dialogRef.close(this.privateTerm); }, 3000);
+              this.cdr.markForCheck();
+              setTimeout(() => {
+this.dialogRef.close(this.privateTerm);
+}, 3000);
             }
           }, error => {
             this.vocabulary.terms.pop();
             let str = 'Server Error';
           if (error.error && error.error.message) {
             str += ' - ' + error.error.message;
-    
-          }
-         else if(error.message) {
+
+          } else if(error.message) {
             str += ' - ' + error.message;
           }
           this.message = str;
-    
+          this.cdr.markForCheck();
           });
 
         } else {
@@ -109,6 +120,7 @@ private overlayContainer: HTMLElement;
             });
           }
           this.vocabulary.terms.pop();
+          this.cdr.markForCheck();
         }
       },error => {
         console.log(error);
@@ -117,18 +129,18 @@ private overlayContainer: HTMLElement;
       if (error.error && error.error.message) {
         str += ' - ' + error.error.message;
 
-      }
-     else if(error.message) {
+      } else if(error.message) {
         str += ' - ' + error.message;
       }
       this.message = str;
-
+      this.cdr.markForCheck();
       });
       
     } else {
       this.message = 'Term already exists';
       setTimeout(() => {
         this.message = '';
+        this.cdr.markForCheck();
       }, 1000);
     }
   }
@@ -317,7 +329,7 @@ private overlayContainer: HTMLElement;
     } else {
       selected = this.vocabulary;
     }
-    var rgs = _.chain(selected.terms).map(function (t) {
+    var rgs = lodashChain(selected.terms).map(function (t) {
       return t.fragmentStructure;
     }).filter(function (t) {
       return typeof t !== 'undefined';
@@ -368,6 +380,7 @@ private overlayContainer: HTMLElement;
       let temp = {'value':form, 'url':this.CVService.getStructureUrl(form)};
       this.forms.push(temp);
     });
+    this.cdr.markForCheck();
 
     });
   });
@@ -380,14 +393,15 @@ private overlayContainer: HTMLElement;
         if(!this.vocabulary) {
           this.CVService.getFragmentCV().subscribe(data => {
             this.dat = {};
-      
+
            this.domains = data.content;
-      
+           this.cdr.markForCheck();
+
            if (this.vocab) {
             this.fragmentType(this.vocab);
            }
-      
-          
+
+
           });
         } else {
           if (this.vocab) {
@@ -396,8 +410,10 @@ private overlayContainer: HTMLElement;
         }
       } else {
         this.message = "No Structure Detected in editor";
+        this.cdr.markForCheck();
         setTimeout(() => {
           this.message = null;
+          this.cdr.markForCheck();
         }, 4000);
       }
       });

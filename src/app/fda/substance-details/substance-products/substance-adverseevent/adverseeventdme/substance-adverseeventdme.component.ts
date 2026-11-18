@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
@@ -13,15 +13,24 @@ import { AuthService } from '@gsrs-core/auth';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { Subscription } from 'rxjs';
 import { adverseEventDmeSearchSortValues } from '../../../../adverse-event/adverse-events-dme-browse/adverse-events-dme-search-sort-values';
+import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-substance-adverseeventdme',
   templateUrl: './substance-adverseeventdme.component.html',
   styleUrls: ['./substance-adverseeventdme.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 
-export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
   @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -38,7 +47,6 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   loadingStatus = '';
   public sortValues = adverseEventDmeSearchSortValues;
   private subscriptions: Array<Subscription> = [];
-  canExport: boolean = false;
 
   displayedColumns: string[] = [
     'dmeReactions', 'ptTermMeddra', 'caseCount', 'dmeCount', 'dmeCountPercent', 'weightedAvgPrr'
@@ -55,9 +63,12 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
     super(gaService, adverseEventService);
   }
 
-  async ngOnInit() {
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
 
+  ngOnInit() {
     /* Commenting right now. Will remove later after everything works */
     /*
     if (this.bdnum) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ConfigService } from '@gsrs-core/config';
@@ -7,12 +7,23 @@ import { LoadingService } from '@gsrs-core/loading';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { Impurities, ValidationMessage, ImpuritiesTotal } from '../../model/impurities.model';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-impurities-total-form',
     templateUrl: './impurities-total-form.component.html',
     styleUrls: ['./impurities-total-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      CvInputComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpuritiesTotalFormComponent implements OnInit {
 

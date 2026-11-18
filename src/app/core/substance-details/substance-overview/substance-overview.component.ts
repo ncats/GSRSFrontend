@@ -1,5 +1,18 @@
 
 import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
@@ -18,13 +31,28 @@ import { LoadingService } from '@gsrs-core/loading';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
-import { take } from 'lodash';
 
 @Component({
     selector: 'app-substance-overview',
     templateUrl: './substance-overview.component.html',
     styleUrls: ['./substance-overview.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      ReactiveFormsModule,
+      MatChipsModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatMenuModule,
+      MatOptionModule,
+      MatSelectModule,
+      MatButtonModule,
+      MatTooltipModule,
+      ReferencesManagerModule,
+      SubstanceImageDirective,
+      SubstanceClassPipe
+    ]
 })
 export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit, AfterViewInit, OnDestroy {
   references: string[] = [];
@@ -33,12 +61,9 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   downloadJsonEuSmsFhirHref: any;
   defIcon = 'drop_down';
   latestVersion: number;
-  canEdit: boolean;
   defAccess: Array<string>;
   versionControl = new FormControl('', Validators.required);
   versions: string[] = [];
-  isEditable = false;
-  canRestoreVersions = false;
 
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
@@ -51,7 +76,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   showlinks = false;
-  @Output("downloadPDF") downloadPDF: EventEmitter<any> = new EventEmitter();
+  @Output() downloadPDF: EventEmitter<any> = new EventEmitter();
   enablePDFDownloadOption = false;
   pdfDownloadBtnName = "Download PDF";
   downloadList: DownloadList;
@@ -74,21 +99,29 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  async ngOnInit() {
-    // Synchronously seed versionControl with the current substance version BEFORE any
-    // async awaits below. Without this, canRestoreVersions can flip to true while
-    // versionControl still holds '' (its FormControl default), making the View button
-    // flash visible until the checkVersion() HTTP response arrives.
+  // Getters, not fields, so template reads always reflect the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  get canRestoreVersions(): boolean {
+    return this.authService.hasPrivilege('Restore Previous Versions');
+  }
+
+  // Derived purely from canEdit + already-loaded substance data, no side effects, so a live getter is safe here too.
+  get isEditable(): boolean {
+    return this.canEdit
+      && this.substance.substanceClass != null
+      && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
+  }
+
+  ngOnInit() {
+    // Seed versionControl synchronously here, before getVersion()'s async response, or the View button flashes visible until checkVersion() returns.
     if (this.substance?.version) {
       this.versionControl.setValue(this.substance.version.toString());
     }
     this.getSubtypeRefs(this.substance);
 
-    this.canEdit=await this.authService.canEditData();
-    this.canRestoreVersions = await this.authService.hasSpecificPrivilege("Restore Previous Versions");
-    this.isEditable =this.canEdit
-        && this.substance.substanceClass != null
-        && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;
@@ -141,38 +174,64 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
 
 getDownloadButtonName(type: string): string {    
-    if (type === undefined || type.trim() === "") { return ""; }
+    if (type === undefined || type.trim() === "") {
+ return ""; 
+}
     const _default: string = type;
     const root = this.downloadList;
-    if (root === undefined ) { return _default }
-    if (!root.downloads ) { return _default; }
+    if (root === undefined ) {
+ return _default 
+}
+    if (!root.downloads ) {
+ return _default; 
+}
     const d = root.downloads[type];
-    if (d && d.buttonName) { return d.buttonName; }
+    if (d && d.buttonName) {
+ return d.buttonName; 
+}
     return _default;   
 }
 
 getDownloadTitle(type: string): string {    
-    if (type === undefined || type.trim() === "") { return ""; }
+    if (type === undefined || type.trim() === "") {
+ return ""; 
+}
     const _default: string = type;
     const root = this.downloadList;
-    if (root === undefined ) { return _default }
-    if (!root.downloads ) { return _default; }
+    if (root === undefined ) {
+ return _default 
+}
+    if (!root.downloads ) {
+ return _default; 
+}
     const d = root.downloads[type];
-    if (d && d.title) { return d.title; }
+    if (d && d.title) {
+ return d.title; 
+}
     return _default;   
 }
 
 
 
   allowDownload(type: string): boolean {
-    if (type === undefined || type.trim() === "") { return false; }
+    if (type === undefined || type.trim() === "") {
+ return false; 
+}
     const root = this.downloadList;
-    if (root === undefined ) { return false; }
-    if (root.disableAll === true) { return false; }
-    if (!root.downloads ) { return false; }
+    if (root === undefined ) {
+ return false; 
+}
+    if (root.disableAll === true) {
+ return false; 
+}
+    if (!root.downloads ) {
+ return false; 
+}
     const d = root.downloads[type];
     // console.log("download object for type: " + type + " is: " + JSON.stringify(d));
-    if (d && d.enabled === true) { return true; }
+    if (d && d.enabled === true) {
+ return true; 
+}
     return false;   
   }
 

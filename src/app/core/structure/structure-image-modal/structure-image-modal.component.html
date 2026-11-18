@@ -3,79 +3,104 @@
     <button mat-mini-fab (click)="dismissDialog()">
       <mat-icon svgIcon="close"></mat-icon>
     </button>
-    <div class="approval" *ngIf="approvalID">
-      <div *ngIf="uuid !== null; else noUuid">
-        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
-          <span class="viewrecord">{{approvalID}}</span>
-        </a>&nbsp;
-        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" target="_blank">
-          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="View Substance Details (opens in a new window)">
-          </mat-icon>
-        </a>
+    @if (approvalID) {
+      <div class="approval">
+        @if (uuid !== null) {
+          <div>
+            <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
+              <span class="viewrecord">{{approvalID}}</span>
+            </a>&nbsp;
+            <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" target="_blank">
+              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="View Substance Details (opens in a new window)">
+              </mat-icon>
+            </a>
+          </div>
+        } @else {
+          {{approvalID}}
+        }
       </div>
-      <ng-template #noUuid>
-        {{approvalID}}
-      </ng-template>
-    </div>
+    }
     <div style="height:500px;min-height:501px;width:500px;min-width:501px;margin:auto">
-      <img *ngIf="structure" appSubstanceImage [entityId]="structure" size="500" stereo="true">
+      @if (structure) {
+        <img appSubstanceImage [entityId]="structure" size="500" stereo="true">
+      }
     </div>
-    <div class="displayname" *ngIf="displayName">
-      <div *ngIf="uuid !== null; else noDisplayUuid">
-        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
-          <span class="viewrecord">{{displayName}}</span>
-        </a>&nbsp;
-        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
-          <span class="viewrecord">(view record)</span>
-        </a>&nbsp;
-        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" target="_blank">
-          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="View Substance Details (opens in a new window)">
-          </mat-icon>
-        </a>
+    @if (displayName) {
+      <div class="displayname">
+        @if (uuid !== null) {
+          <div>
+            <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
+              <span class="viewrecord">{{displayName}}</span>
+            </a>&nbsp;
+            <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
+              <span class="viewrecord">(view record)</span>
+            </a>&nbsp;
+            <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" target="_blank">
+              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="View Substance Details (opens in a new window)">
+              </mat-icon>
+            </a>
+          </div>
+        } @else {
+          {{displayName}}
+        }
       </div>
-      <ng-template #noDisplayUuid>
-        {{displayName}}
-      </ng-template>
+    }
+    @if (smiles || (names && names.length > 0) || inchi || inchiKey) {
+      <mat-tab-group>
+        @if (names && names.length > 0) {
+          <mat-tab label="Systematic Names">
+            <ul>
+              @for (name of names; track name) {
+                <li>
+                  {{name}}
+                </li>
+              }
+            </ul>
+          </mat-tab>
+        }
+        @if (smiles) {
+          <mat-tab label="SMILES">
+            <textarea cdkTextareaAutosize id="smiles" readonly style="height:65px;">{{smiles}}</textarea>
+          </mat-tab>
+        }
+        @if (inchi || inchiKey) {
+          <mat-tab>
+            <ng-template mat-tab-label>
+              @if (inchi || inchiKey) {
+                <label  [matTooltip]= "inchiNote ? 'This molecule requires more than one Inchi': null">Inchi @if (inchiNote) {
+                  <sup>?</sup>
+                }</label>
+              }
+            </ng-template>
+            <textarea cdkTextareaAutosize id="inchi" readonly style="height:65px;">{{inchi}}</textarea>
+            <textarea cdkTextareaAutosize id="inchiKey" readonly style="height:65px;">{{inchiKey}}</textarea>
+          </mat-tab>
+        }
+      </mat-tab-group>
+    }
+  </div>
+  @if (showSelector) {
+    <div class = "button-row">
+      <button mat-flat-button color="primary" class = "modal-button"  (click) = "setMolfile()">Search Structure</button>
+      <button mat-flat-button color="primary" class = "modal-button"  (click) = "selectSubstance()">Select Substance</button>
+      <span style = "margin:8px;"></span>
+      <a mat-button color="primary"  class = "modal-button" target = "_blank" (click) = "gotoDetails()">Details <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+      <a mat-button color="primary" class = "modal-button"  (click) = "gotoEdit()">Edit <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+      <span class = "middle-fill"></span>
+      <button  class = "modal-button"  mat-flat-button color="primary" (click)="dialogRef.close()">Close</button>
     </div>
-    <mat-tab-group *ngIf="smiles || (names && names.length > 0) || inchi || inchiKey">
-      <mat-tab label="Systematic Names" *ngIf="names && names.length > 0">
-        <ul>
-          <li *ngFor="let name of names">
-            {{name}}
-          </li>
-        </ul>
-      </mat-tab>
-      <mat-tab label="SMILES" *ngIf="smiles">
-        <textarea cdkTextareaAutosize id="smiles" readonly style="height:65px;">{{smiles}}</textarea>
-      </mat-tab>
-        <mat-tab *ngIf="inchi || inchiKey">
-        <ng-template mat-tab-label>
-          <label  *ngIf="inchi || inchiKey" [matTooltip]= "inchiNote ? 'This molecule requires more than one Inchi': null">Inchi <sup *ngIf = "inchiNote">?</sup></label>
-        </ng-template>
-        <textarea cdkTextareaAutosize id="inchi" readonly style="height:65px;">{{inchi}}</textarea>
-        <textarea cdkTextareaAutosize id="inchiKey" readonly style="height:65px;">{{inchiKey}}</textarea>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-  <div *ngIf = "showSelector" class = "button-row">
-    <button mat-flat-button color="primary" class = "modal-button"  (click) = "setMolfile()">Search Structure</button>
-    <button mat-flat-button color="primary" class = "modal-button"  (click) = "selectSubstance()">Select Substance</button>
-    <span style = "margin:8px;"></span>
-    <a mat-button color="primary"  class = "modal-button" target = "_blank" (click) = "gotoDetails()">Details <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
-    <a mat-button color="primary" class = "modal-button"  (click) = "gotoEdit()">Edit <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
-    <span class = "middle-fill"></span>
-    <button  class = "modal-button"  mat-flat-button color="primary" (click)="dialogRef.close()">Close</button>
+  }
 
-  </div>
-
-  <div *ngIf = "showSubstanceSelector && !isDraft" class = "button-row">
+  @if (showSubstanceSelector && !isDraft) {
+    <div class = "button-row">
       <a mat-button color="primary"  class = "modal-button" target = "_blank" (click) = "gotoDetails()">Substance Details <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
       <a mat-button color="primary" class = "modal-button"  (click) = "gotoEdit()">Substance Edit <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
       <span class = "middle-fill"></span>
       <a  class = "modal-button" mat-button color="primary" (click)="dialogRef.close()">Close</a>
     </div>
+  }
 </div>
 <!-- <div mat-dialog-actions class='flex-row'>
-  <span class="middle-fill"></span>
-  <button class="modal-space-saver" mat-button (click)="dismissDialog()">Close</button>
+<span class="middle-fill"></span>
+<button class="modal-space-saver" mat-button (click)="dismissDialog()">Close</button>
 </div> -->

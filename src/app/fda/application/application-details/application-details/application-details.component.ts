@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -10,17 +10,28 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationDetailsBaseComponent } from '../application-details-base.component';
 import { ApplicationService } from '../../service/application.service';
 import { GeneralService } from '../../../service/general.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-application-details',
     templateUrl: './application-details.component.html',
     styleUrls: ['./application-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatIconModule,
+      MatTooltipModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent implements OnInit {
-
-  canEdit: boolean = false;
 
   constructor(
     applicationService: ApplicationService,
@@ -32,13 +43,18 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
     public authService: AuthService,
-    titleService: Title
+    titleService: Title,
+    cdr: ChangeDetectorRef
   ) {
-    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService);
+    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService, cdr);
   }
 
-  async ngOnInit() {
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.id = this.activatedRoute.snapshot.params['id'];
     this.appType = this.activatedRoute.snapshot.params['appType'];
     this.appNumber = this.activatedRoute.snapshot.params['appNumber'];

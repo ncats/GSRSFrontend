@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   ViewChild,
@@ -6,6 +8,16 @@ import {
   HostListener,
   OnDestroy,
 } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatCardModule } from "@angular/material/card";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatListModule } from "@angular/material/list";
+import { MatIconModule } from "@angular/material/icon";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialogModule } from "@angular/material/dialog";
 import { GoogleAnalyticsService } from "../google-analytics/google-analytics.service";
 import { ConfigService, LoadedComponents } from "@gsrs-core/config";
 import { Environment } from "src/environments/environment.model";
@@ -18,12 +30,27 @@ import { MatSidenav } from "@angular/material/sidenav";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { UtilsService } from "@gsrs-core/utils";
 import { UsefulLink } from "../config/config.model";
+import { SubstanceTextSearchComponent } from "../substance-text-search/substance-text-search.component";
 
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatSidenavModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatListModule,
+    MatIconModule,
+    MatDividerModule,
+    MatButtonModule,
+    MatDialogModule,
+    SubstanceTextSearchComponent,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   environment: Environment;
@@ -58,7 +85,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // Config for Adverse Event on Shiny Server
   adverseEventShinyHomepageDisplay = false;
   adverseEventShinyHomepageURL: string;
-  canRegister: boolean = false;
 
   constructor(
     private gaService: GoogleAnalyticsService,
@@ -69,12 +95,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
     public utilsService: UtilsService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canRegister(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.environment = this.configService.environment;
     this.application = `${this.configService.environment.baseHref || ""}assets/icons/home/icon_application.png`;
     this.browseAll = `${this.configService.environment.baseHref || ""}assets/icons/home/icon_browseall.png`;
@@ -124,18 +156,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
             link.total = 0;
           }
+          this.cdr.markForCheck();
         });
     });
     this.substanceService.getRecordCount().subscribe((response) => {
       this.total = parseInt(response);
+      this.cdr.markForCheck();
     });
     // this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'false';
     this.isClosedWelcomeMessage = false;
 
     this.getAdverseEventShinyConfig();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-
-    this.canRegister = await this.authService.canEditData();
   }
 
   ngAfterViewInit() {
@@ -152,12 +184,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     clearTimeout(this.resizeTimeout);
   }
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener("window:resize")
   onResize() {
     // Debounce resize handler to avoid measuring during animation
     clearTimeout(this.resizeTimeout);
     this.resizeTimeout = setTimeout(() => {
       this.processResponsiveness();
+      this.cdr.markForCheck();
     }, 150);
   }
 

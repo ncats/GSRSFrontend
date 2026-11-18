@@ -3,7 +3,7 @@ import { ExpandableDetailsDirective } from './expandable-details.directive';
 
 @Directive({
     selector: '[appExpandDetails]',
-    standalone: false
+    standalone: true
 })
 export class ExpandDetailsDirective implements AfterViewInit, OnDestroy {
   private focused = 0;

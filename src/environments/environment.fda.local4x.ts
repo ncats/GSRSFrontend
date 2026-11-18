@@ -1,0 +1,15 @@
+import { baseEnvironment } from 'src/environments';
+
+export const environment = baseEnvironment;
+environment.appId = 'fda';
+environment.clasicBaseHref = '/ginas/app/';
+environment.baseHref = '/ginas/app/ui/';
+environment.baseHref = '';
+
+environment.appId = 'fda';
+environment.isAnalyticsPrivate = true;
+environment.structureEditor = 'jsdraw';
+
+export { FDA_ROUTES as EXTRA_ROUTES } from '../app/fda/fda.routes';
+
+export { FDA_ENVIRONMENT_PROVIDERS as ENVIRONMENT_PROVIDERS } from '../app/fda/fda.providers';

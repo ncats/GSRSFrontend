@@ -1,17 +1,23 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SubstanceService } from '../substance/substance.service';
 import { ReferencesManagerComponent } from './references-manager.component';
 
 describe('ReferencesManagerComponent', () => {
   let component: ReferencesManagerComponent;
   let fixture: ComponentFixture<ReferencesManagerComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ReferencesManagerComponent ]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule, ReferencesManagerComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: SubstanceService, useValue: {} },
+      ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ReferencesManagerComponent);

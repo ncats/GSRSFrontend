@@ -101,7 +101,9 @@ export class EditorImplementation implements Editor {
                  .filter(l => l.indexOf('M  SMT') >= 0)
                  .map(l => l.substring(0, 10))
                  .forEach(l => {
-                     if (tset[l]) { dupCount++; }
+                     if (tset[l]) {
+ dupCount++; 
+}
                      tset[l] = 1;
                  });
             if (dupCount > 0) {
@@ -202,7 +204,9 @@ export class EditorImplementation implements Editor {
                             const idx = handlers.findIndex(
                                 h => h.handler === handler || h.f === handler,
                             );
-                            if (idx !== -1) { handlers.splice(idx, 1); }
+                            if (idx !== -1) {
+ handlers.splice(idx, 1); 
+}
                         }
                     } catch (_) { /* best-effort cleanup */ }
 
@@ -220,10 +224,14 @@ export class EditorImplementation implements Editor {
     // Unsupported CTfile records fall back to consolidated V2000.
     private toV3000DisplayMolfile(molfile: string): string | null {
         const isoEntries = getIsoEntries(molfile);
-        if (isoEntries.length === 0) { return null; }
+        if (isoEntries.length === 0) {
+ return null; 
+}
 
         const counts = getCounts(molfile);
-        if (!counts) { return null; }
+        if (!counts) {
+ return null; 
+}
 
         // Other M records may contain features this conversion does not support.
         const lines = molfile.split('\n');
@@ -250,7 +258,9 @@ export class EditorImplementation implements Editor {
 
         // JSDraw may omit one of the three standard header lines.
         const header = lines.slice(0, counts.lineIndex);
-        while (header.length < 3) { header.push(''); }
+        while (header.length < 3) {
+ header.push(''); 
+}
 
         const isoByAtom    = new Map(isoEntries.map(e => [e.atomIndex, e.isotope]));
         const chargeByAtom = this.getChargeByAtomIndex(molfile);
@@ -261,8 +271,12 @@ export class EditorImplementation implements Editor {
             const props: string[] = [];
             const iso    = isoByAtom.get(atomIdx);
             const charge = chargeByAtom.get(atomIdx);
-            if (iso    != null) { props.push(`MASS=${iso}`); }
-            if (charge != null) { props.push(`CHG=${charge}`); }
+            if (iso    != null) {
+ props.push(`MASS=${iso}`); 
+}
+            if (charge != null) {
+ props.push(`CHG=${charge}`); 
+}
             return `M  V30 ${atomIdx} ${p[3]} ${p[0]} ${p[1]} ${p[2]} 0`
                 + (props.length ? ' ' + props.join(' ') : '');
         });
@@ -292,12 +306,18 @@ export class EditorImplementation implements Editor {
 
     private getChargeByAtomIndex(molfile: string): Map<number, number> {
         const result = new Map<number, number>();
-        if (!molfile) { return result; }
+        if (!molfile) {
+ return result; 
+}
         for (const line of molfile.split('\n')) {
-            if (!line.startsWith('M  CHG')) { continue; }
+            if (!line.startsWith('M  CHG')) {
+ continue; 
+}
             const parts = line.trim().split(/\s+/);
             const count = parseInt(parts[2], 10);
-            if (isNaN(count)) { continue; }
+            if (isNaN(count)) {
+ continue; 
+}
             for (let i = 0; i < count; i++) {
                 const atomIndex = parseInt(parts[3 + i * 2], 10);
                 const charge    = parseInt(parts[4 + i * 2], 10);
@@ -310,7 +330,9 @@ export class EditorImplementation implements Editor {
     }
 
     getMCharge(): string | null {
-        if (this.jsdraw == null) { return null; }
+        if (this.jsdraw == null) {
+ return null; 
+}
 
         const xml    = this.jsdraw.getXml();
         let   aai    = 1;
@@ -333,7 +355,9 @@ export class EditorImplementation implements Editor {
             })
             .filter(a => a.c !== 0);
 
-        if (charges.length === 0) { return null; }
+        if (charges.length === 0) {
+ return null; 
+}
 
         const chunkLines: string[] = [];
         for (let i = 0; i < charges.length; i += 8) {

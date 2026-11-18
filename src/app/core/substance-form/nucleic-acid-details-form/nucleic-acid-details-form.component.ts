@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import {NucleicAcid, Protein} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
@@ -6,12 +6,18 @@ import {ControlledVocabularyService, VocabularyTerm} from '@gsrs-core/controlled
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import {CommonModule} from '@angular/common';
+import {AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import {TagSelectorComponent} from '@gsrs-core/substance-form/tag-selector/tag-selector.component';
 
 @Component({
     selector: 'app-nucleic-acid-details-form',
     templateUrl: './nucleic-acid-details-form.component.html',
     styleUrls: ['./nucleic-acid-details-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, AuditInfoComponent, CvInputComponent, TagSelectorComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 // eslint-disable-next-line max-len
 export class NucleicAcidDetailsFormComponent extends SubstanceCardBaseFilteredList<NucleicAcid> implements OnInit, AfterViewInit, OnDestroy {
@@ -22,9 +28,10 @@ private subscriptions: Array<Subscription> = [];
   constructor(
     private substanceFormService: SubstanceFormService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    cdr: ChangeDetectorRef
 ) {
-    super(gaService);
+    super(gaService, cdr);
     this.analyticsEventCategory = 'substance form Nucleic Acid Details';
   }
 
@@ -32,6 +39,7 @@ private subscriptions: Array<Subscription> = [];
     this.menuLabelUpdate.emit('Nucleic Acid Classification');
     const nucleicAcidSubscription = this.substanceFormService.substanceNucleicAcid.subscribe(nucleicAcid => {
       this.nucleicAcid = nucleicAcid;
+      this.cdr?.markForCheck();
     });
     this.subscriptions.push(nucleicAcidSubscription);
     this.dropdownSettings = { singleSelection: false, idField: 'value', textField: 'display', selectAllText: 'Select All',

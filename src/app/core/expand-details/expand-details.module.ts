@@ -5,9 +5,7 @@ import { ExpandableDetailsDirective } from './expandable-details.directive';
 
 @NgModule({
   imports: [
-    CommonModule
-  ],
-  declarations: [
+    CommonModule,
     ExpandDetailsDirective,
     ExpandableDetailsDirective
   ],

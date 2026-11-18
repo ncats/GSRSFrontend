@@ -4,13 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as moment from 'moment';
+import moment from 'moment';
 
 /* GSRS Core Imports */
 import { ConfigService } from '@gsrs-core/config';
@@ -28,13 +28,41 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 import { ApplicationService } from '../service/application.service';
 import { GeneralService } from '../../service/general.service';
 import { Application, ValidationMessage } from '../model/application.model';
-import { forEach } from 'lodash';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { ApplicationProductFormComponent } from './application-product-form/application-product-form.component';
 
 @Component({
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
   styleUrls: ['./application-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatOptionModule,
+    CvInputComponent,
+    ApplicationProductFormComponent
+  ]
 })
 
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -56,7 +84,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   submitDateMessage = '';
   statusDateMessage = '';
   appForm: FormGroup;
-  canDelete: boolean = false;
   regAppCenterNotAllowedConfig: Array<string>;
 
   constructor(
@@ -73,10 +100,13 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     private generalService: GeneralService,
     private dialog: MatDialog) { }
 
-  async ngOnInit() {
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canDelete(): boolean {
+    return this.authService.hasPrivilege('Delete Lower Level Items');
+  }
+
+  ngOnInit() {
     console.log(`applications form component ngOnInit`);
-    this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
-    console.log(`canDelete: ${this.canDelete}`);
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();

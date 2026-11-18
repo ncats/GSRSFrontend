@@ -1,27 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
 import { ClinicalTrial } from '../clinical-trial/clinical-trial.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
-import * as _ from 'lodash';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import {AuthService} from '@gsrs-core/auth/auth.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-clinical-add',
     templateUrl: './clinical-trial-add.component.html',
     styleUrls: ['./clinical-trial-add.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      FormsModule,
+      ReactiveFormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalTrialAddComponent implements OnInit {
   public clinicalTrials: Array<ClinicalTrial>;
   isTesting: Boolean = false;
   isLoading = true;
   isError = false;
-  canEdit: boolean;
   json: String = '';
 
   constructor(
@@ -33,8 +42,12 @@ export class ClinicalTrialAddComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  async ngOnInit() {
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
+  // Getter, not a field, so it always reflects the current privilege signal.
+  get canEdit(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
   }
 
  addClinicalTrial() {

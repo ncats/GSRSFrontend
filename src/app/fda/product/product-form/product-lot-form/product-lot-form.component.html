@@ -6,7 +6,7 @@
       [ngStyle]="{ color: 'brown' }"
       (click)="copyProductLot()"
       matTooltip="Copy Lot Details {{ prodLotIndex + 1 }} to New Lot"
-    >
+      >
       <mat-icon>file_copy</mat-icon>
     </button>
   </div>
@@ -16,20 +16,20 @@
       [ngStyle]="{ color: 'brown' }"
       (click)="confirmDeleteProductLot(prodComponentIndex, prodLotIndex)"
       matTooltip="Delete Lot Details {{ prodLotIndex + 1 }}"
-    >
+      >
       <mat-icon>delete_forever</mat-icon>
     </button>
   </div>
 
   <!--
-    &nbsp;&nbsp;
-    <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
-      matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
-      <mat-icon>check_circle</mat-icon>
-    </button>
-    <span *ngIf="ingredient.reviewDate" class="colorgray font12px">Reviewed
-      By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-    </span>
+  &nbsp;&nbsp;
+  <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
+    matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <span *ngIf="ingredient.reviewDate" class="colorgray font12px">Reviewed
+    By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+  </span>
   -->
 </div>
 
@@ -37,7 +37,7 @@
 <fieldset class="border">
   <legend class="border">
     Lot Details&nbsp;<b
-      ><span class="colorgreen font17px">{{ prodLotIndex + 1 }}</span></b
+    ><span class="colorgreen font17px">{{ prodLotIndex + 1 }}</span></b
     >
   </legend>
 
@@ -49,7 +49,7 @@
       name="lotType"
       [model]="productLot.lotType"
       (valueChange)="productLot.lotType = $event"
-    >
+      >
     </app-cv-input>
 
     <mat-form-field class="col-5">
@@ -70,7 +70,7 @@
         [(ngModel)]="productLot._expiryDate"
         placeholder="(mm/dd/yyyy)"
         (dateChange)="changeExpiryDate($event)"
-      />
+        />
       <mat-datepicker-toggle
         matSuffix
         [for]="pickerExpiryDate"
@@ -90,7 +90,7 @@
         [(ngModel)]="productLot._manufactureDate"
         placeholder="(mm/dd/yyyy)"
         (dateChange)="changeManufactureDate($event)"
-      />
+        />
       <mat-datepicker-toggle
         matSuffix
         [for]="pickerManufactureDate"
@@ -112,7 +112,7 @@
     <span
       matBadge="{{ productLot.productIngredients.length }}"
       matBadgeOverlap="false"
-    >
+      >
       <span class="titleorange">INGREDIENT </span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -121,27 +121,27 @@
       color="primary"
       (click)="addNewProductIngredient(prodComponentIndex, prodLotIndex)"
       matTooltip="Add New Ingredient"
-    >
+      >
       <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Ingredient
     </button>
     <br /><br />
 
-    <div
-      class="marginbottom10px"
-      *ngFor="
-        let productIngredient of productLot.productIngredients;
-        let prodIngredientIndex = index
-      "
-    >
-      <app-product-ingredient-form
-        [ingredient]="productIngredient"
-        [totalIngredient]="productLot.productIngredients.length"
-        [prodIngredientIndex]="prodIngredientIndex"
-        [prodLotIndex]="prodLotIndex"
-        [prodComponentIndex]="prodComponentIndex"
-      >
-      </app-product-ingredient-form>
-    </div>
+    @for (
+      productIngredient of productLot.productIngredients; track
+      productIngredient; let prodIngredientIndex = $index) {
+      <div
+        class="marginbottom10px"
+        >
+        <app-product-ingredient-form
+          [ingredient]="productIngredient"
+          [totalIngredient]="productLot.productIngredients.length"
+          [prodIngredientIndex]="prodIngredientIndex"
+          [prodLotIndex]="prodLotIndex"
+          [prodComponentIndex]="prodComponentIndex"
+          >
+        </app-product-ingredient-form>
+      </div>
+    }
   </div>
 
   <!-- PRODUCT INGREDIENT LIST END -->

@@ -1,12 +1,15 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-copy-disulfide-dialog',
     templateUrl: './copy-disulfide-dialog.component.html',
     styleUrls: ['./copy-disulfide-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatDialogModule, MatButtonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CopyDisulfideDialogComponent implements OnInit {
   unit: any;
@@ -18,14 +21,18 @@ export class CopyDisulfideDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<CopyDisulfideDialogComponent>,
     private subService: SubstanceFormService,
+    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any = {}
-  ) {dialogRef.disableClose = true; }
+  ) {
+dialogRef.disableClose = true; 
+}
 
   ngOnInit() {
     this.unit = this.data.unit;
     this.sequence = this.data.full.sequence;
     this.subService.substanceSubunits.subscribe(resp => {
       this.units = resp;
+      this.cdr.markForCheck();
     });
   }
 
@@ -40,6 +47,7 @@ export class CopyDisulfideDialogComponent implements OnInit {
     this.message = 'Copying...';
     setTimeout(() => {
       this.message = 'Links successfully copied over.';
+      this.cdr.markForCheck();
     }, 500);
 
   }

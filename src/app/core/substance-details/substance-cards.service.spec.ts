@@ -3,6 +3,7 @@ import { SubstanceCardsService } from './substance-cards.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../config/config.service';
+import { AuthService } from '@gsrs-core/auth';
 
 describe('SubstanceCardsService', () => {
   let httpClient: HttpClient;
@@ -20,8 +21,8 @@ describe('SubstanceCardsService', () => {
     httpClient = TestBed.inject(HttpClient);
     httpTestingController = TestBed.inject(HttpTestingController);
     configService = new ConfigService(httpClient);
-    configService.configData = { apiBaseUrl: '' };
-    substanceCardsService = new SubstanceCardsService(configService);
+    configService.configData = { apiBaseUrl: '', services: [], privacyStatement: '' };
+    substanceCardsService = new SubstanceCardsService(configService, [], httpClient, {} as AuthService);
   });
 
   it('should be created', () => {
