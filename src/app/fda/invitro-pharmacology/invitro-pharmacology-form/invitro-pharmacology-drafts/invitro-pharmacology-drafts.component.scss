@@ -1,0 +1,99 @@
+.form-row {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+}
+
+.head {
+  padding: 24px 24px 0 24px;
+}
+
+.title {
+  font-size: 1.17em;
+  font-weight: bold;
+}
+
+.middle-fill {
+  flex: 1 1 auto;
+}
+
+.help-text {
+  margin: 8px 0 12px 0;
+  padding: 8px 12px;
+  border-left: 4px solid var(--warning-dialog-color, #f9a825);
+  background-color: var(--warning-dialog-bg-color, #fff8e1);
+  font-size: 13px;
+}
+
+.type-filters {
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.drafts-table {
+  width: 100%;
+}
+
+.name-cell {
+  font-weight: 500;
+}
+
+.details-cell {
+  font-size: 13px;
+  max-width: 320px;
+  word-break: break-word;
+}
+
+.from-now {
+  font-size: 12px;
+  color: #777;
+}
+
+.current-label {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #13970a;
+}
+
+.actions-cell {
+  white-space: nowrap;
+}
+
+.no-drafts {
+  padding: 40px 20px;
+  font-size: 15px;
+}
+
+.import-result {
+  margin-top: 12px;
+}
+
+.import-message {
+  color: #13970a;
+  font-weight: 500;
+}
+
+.import-errors {
+  color: var(--error-dialog-color, #c62828);
+  background-color: var(--error-dialog-bg-color, #fce4e4);
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 6px;
+
+  ul {
+    margin: 4px 0 0 0;
+    padding-left: 20px;
+  }
+}
+
+.import-error-title {
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 24px 16px 24px;
+}

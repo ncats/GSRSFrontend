@@ -1,11 +1,24 @@
 <div class="top-fixed">
   <div class="actions-container">
+    <!-- precisionFDA only: local drafts saved in this browser -->
+    <ng-container *ngIf="isPfdaVersion">
+      <button
+        mat-flat-button
+        color="primary"
+        class="drafts-button"
+        (click)="openDrafts()"
+        matTooltip="Drafts saved in this browser: load, delete, export or import them"
+      >
+        Drafts</button
+      >&nbsp;&nbsp;&nbsp;
+    </ng-container>
+
     <button
       mat-flat-button
       class="hide-show-messages"
       (click)="toggleValidation()"
       [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0"
+      *ngIf="(validationMessages && validationMessages.length > 0) || savedDraft"
     >
       {{ showSubmissionMessages ? "Hide" : "Show" }} messages
       <mat-icon
@@ -25,9 +38,32 @@
 
     <!-- Validate and Submit Button -->
     &nbsp;
-    <button mat-flat-button color="warn" (click)="validate()">
+    <button mat-flat-button color="warn" (click)="validate()" *ngIf="!isPfdaVersion">
       Validate and Submit
     </button>
+
+    <!-- precisionFDA only: save as a local draft, or as a file in the user's pFDA My Home -->
+    <ng-container *ngIf="isPfdaVersion">
+      <button
+        mat-flat-button
+        color="warn"
+        class="save-draft-button"
+        (click)="saveDraft()"
+        matTooltip="Validate the Assay Set and save it as a draft in this browser. It is added to the selected draft assays."
+      >
+        Validate and Save Draft
+      </button>
+      &nbsp;&nbsp;&nbsp;
+      <button
+        mat-stroked-button
+        color="primary"
+        class="save-my-home-button"
+        (click)="validate()"
+        matTooltip="Validate the Assay Set and save its draft assays as a private file in your pFDA My Home"
+      >
+        Save to My Home
+      </button>
+    </ng-container>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button
       mat-flat-button
@@ -52,11 +88,32 @@
       {{ submissionMessage }}
     </div>
 
+    <!-- precisionFDA only: local draft saved -->
+    <div class="draft-saved-message" *ngIf="savedDraft">
+      <div class="draft-saved-text">
+        <b>Assay Set draft "{{ savedDraft.name }}" was saved in this browser</b>
+        ({{ savedDraft.date | date: "medium" }}) with {{ getDraftMemberCount() }} draft assay(s).
+        You can now use it in the Assay, Screening and Summary forms.<br />
+        Drafts live only in this browser, clearing your browser data removes them.
+        <b>Export JSON</b> to keep a copy of the Assay Set and its draft assays.
+      </div>
+      <button
+        mat-flat-button
+        color="primary"
+        class="export-draft-button"
+        (click)="exportSavedDraft()"
+        matTooltip="Download this Assay Set and its draft assays as a JSON file that can be imported again in the Drafts dialog"
+      >
+        Export JSON
+      </button>
+    </div>
+
     <!-- Validation Message Display and Submit Button -->
     <div *ngIf="validationMessages">
       <span *ngIf="validationMessages.length > 0">
         <div class="submission-message" *ngIf="!serverError && !approving">
-          Please correct or dismiss the following errors and submit again:
+          {{ draftMode ? 'Please correct the following errors and save the draft again:'
+            : 'Please correct or dismiss the following errors and submit again:' }}
         </div>
         <div
           class="validation-message"
@@ -91,7 +148,7 @@
         </div>
       </span>
 
-      <div class="dismiss-container">
+      <div class="dismiss-container" *ngIf="!draftMode">
         <span class="middle-fill"></span>
         <button
           mat-flat-button
@@ -109,7 +166,130 @@
 </div>
 <!-- div class=top-fixed -->
 
-<div class="form-content-container mat-form-field-style">
+<!-- precisionFDA only: Assay Set draft built from the draft assays of this browser -->
+<div class="form-content-container mat-form-field-style" *ngIf="isPfdaVersion">
+  <div class="scrollable-container">
+    <div class="divcenter headerstyle margintop20px">
+      <div class="width620px font24px">
+        <b>{{ title }}</b>
+        <span class="draft-label" *ngIf="draftUuid">DRAFT</span>
+      </div>
+    </div>
+
+    <div class="details-container">
+      <div class="width100percent">
+        <mat-card class="bordergray">
+          <mat-card-content class="marginright10px">
+            <div class="draft-help">
+              An Assay Set groups draft assays so that they can be used together in the Screening form.
+              Select the draft assays of the Assay Set and click <b>Validate and Save Draft</b>.
+              Drafts live only in this browser: clearing your browser data removes them, so use
+              <b>Export JSON</b> (or the <b>Drafts</b> dialog) to keep a copy.
+            </div>
+
+            <div class="divflex margintop10px draft-assayset-row">
+              <mat-form-field class="width300px">
+                <mat-label>Open Assay Set</mat-label>
+                <mat-select
+                  class="open-assayset-select"
+                  [value]="draftLoadedAssaySet"
+                  (selectionChange)="openDraftAssaySet($event.value)"
+                >
+                  <mat-option *ngFor="let name of draftAssaySetNames" [value]="name">
+                    {{ name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button
+                mat-flat-button
+                color="primary"
+                class="new-assayset-button marginleft15px"
+                (click)="newDraftAssaySet()"
+                matTooltip="Start a new Assay Set"
+              >
+                New Assay Set
+              </button>
+            </div>
+
+            <div class="divflex draft-assayset-row">
+              <mat-form-field class="width300px">
+                <mat-label>Assay Set Name</mat-label>
+                <input
+                  matInput
+                  required
+                  class="assayset-name-input"
+                  [(ngModel)]="draftAssaySet"
+                  name="draftAssaySet"
+                />
+              </mat-form-field>
+              <mat-form-field class="marginleft15px draft-description-field">
+                <mat-label>Description</mat-label>
+                <input
+                  matInput
+                  class="assayset-description-input"
+                  [(ngModel)]="draftDescription"
+                  name="draftDescription"
+                />
+              </mat-form-field>
+            </div>
+
+            <div class="divflex draft-assays-header">
+              <b>Draft Assays</b>&nbsp;({{ getDraftMemberCount() }} of {{ draftAssayRows.length }} selected)
+              <span class="middle-fill"></span>
+              <a
+                mat-stroked-button
+                color="primary"
+                class="new-draft-assay-link"
+                routerLink="/invitro-pharm/assay/register"
+                [queryParams]="draftAssaySet && draftAssaySet.trim() ? { assaySet: draftAssaySet.trim() } : {}"
+                matTooltip="Register a new draft assay in this Assay Set. Save this Assay Set draft first to keep your changes."
+              >
+                New Assay in this Set
+              </a>
+            </div>
+
+            <div class="no-draft-assays" *ngIf="draftAssayRows.length === 0">
+              There are no draft assays in this browser yet. Create them with
+              <a routerLink="/invitro-pharm/assay/register">Register Assay</a> or import them in the
+              <b>Drafts</b> dialog. An empty Assay Set draft can still be saved and selected in the Assay form.
+            </div>
+
+            <table class="draft-assays-table" *ngIf="draftAssayRows.length > 0">
+              <tr>
+                <th class="width50px">In Set</th>
+                <th>External Assay Source / ID</th>
+                <th>Target Name</th>
+                <th>Assay Title</th>
+                <th>Other Assay Sets</th>
+              </tr>
+              <tr *ngFor="let row of draftAssayRows" class="draft-assay-row">
+                <td>
+                  <mat-checkbox
+                    class="draft-assay-checkbox"
+                    [(ngModel)]="row.member"
+                    [disabled]="isOnlyAssaySet(row)"
+                    [matTooltip]="isOnlyAssaySet(row) ? 'This is the only Assay Set of this assay, add it to another Assay Set first' : ''"
+                  ></mat-checkbox>
+                </td>
+                <td>
+                  <a routerLink="/invitro-pharm/assay/register" [queryParams]="{ draft: row.draft.uuid }">
+                    {{ row.draft.data.externalAssaySource }} / {{ row.draft.data.externalAssayId }}
+                  </a>
+                </td>
+                <td>{{ row.draft.data.targetName }}</td>
+                <td>{{ row.draft.data.assayTitle }}</td>
+                <td>{{ getOtherAssaySets(row.draft).join(', ') }}</td>
+              </tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <br /><br /><br />
+  </div>
+</div>
+
+<div class="form-content-container mat-form-field-style" *ngIf="!isPfdaVersion">
   <div class="scrollable-container">
     <div class="divcenter headerstyle margintop20px">
       <div class="width620px font24px">

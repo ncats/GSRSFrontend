@@ -1,5 +1,18 @@
 <div class="top-fixed">
   <div class="actions-container">
+    <!-- precisionFDA only: local drafts saved in this browser -->
+    <ng-container *ngIf="isPfdaVersion">
+      <button
+        mat-flat-button
+        color="primary"
+        class="drafts-button"
+        (click)="openDrafts()"
+        matTooltip="Drafts saved in this browser: load, delete, export or import them"
+      >
+        Drafts</button
+      >&nbsp;&nbsp;&nbsp;
+    </ng-container>
+
     <button mat-flat-button color="primary" (click)="showJSON()">
       Show JSON</button
     >&nbsp;&nbsp;&nbsp;
@@ -26,7 +39,7 @@
       class="hide-show-messages"
       (click)="toggleValidation()"
       [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0"
+      *ngIf="(validationMessages && validationMessages.length > 0) || savedDraft"
     >
       {{ showSubmissionMessages ? "Hide" : "Show" }} messages
       <mat-icon
@@ -54,9 +67,32 @@
 
     <!-- Validate and Submit Button -->
     &nbsp;
-    <button mat-flat-button color="warn" (click)="validate()">
+    <button mat-flat-button color="warn" (click)="validate()" *ngIf="!isPfdaVersion">
       Validate and Submit
     </button>
+
+    <!-- precisionFDA only: save as a local draft, or as a file in the user's pFDA My Home -->
+    <ng-container *ngIf="isPfdaVersion">
+      <button
+        mat-flat-button
+        color="warn"
+        class="save-draft-button"
+        (click)="saveDraft()"
+        matTooltip="Validate the assay and save it as a draft in this browser. Drafts can be used in the Screening and Summary forms."
+      >
+        Validate and Save Draft
+      </button>
+      &nbsp;&nbsp;&nbsp;
+      <button
+        mat-stroked-button
+        color="primary"
+        class="save-my-home-button"
+        (click)="validate()"
+        matTooltip="Validate the assay and save it as a private file in your pFDA My Home"
+      >
+        Save to My Home
+      </button>
+    </ng-container>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button
       mat-flat-button
@@ -81,11 +117,31 @@
       {{ submissionMessage }}
     </div>
 
+    <!-- precisionFDA only: local draft saved -->
+    <div class="draft-saved-message" *ngIf="savedDraft">
+      <div class="draft-saved-text">
+        <b>Assay draft "{{ savedDraft.name }}" was saved in this browser</b>
+        ({{ savedDraft.date | date: "medium" }}). You can now use it in the Screening and Summary forms.<br />
+        Drafts live only in this browser, clearing your browser data removes them.
+        <b>Export JSON</b> to keep a copy of the draft.
+      </div>
+      <button
+        mat-flat-button
+        color="primary"
+        class="export-draft-button"
+        (click)="exportSavedDraft()"
+        matTooltip="Download this draft as a JSON file that can be imported again in the Drafts dialog"
+      >
+        Export JSON
+      </button>
+    </div>
+
     <!-- Validation Message Display and Submit Button -->
     <div *ngIf="validationMessages">
       <span *ngIf="validationMessages.length > 0">
         <div class="submission-message" *ngIf="!serverError && !approving">
-          Please correct or dismiss the following errors and submit again:
+          {{ draftMode ? 'Please correct the following errors and save the draft again:'
+            : 'Please correct or dismiss the following errors and submit again:' }}
         </div>
         <div
           class="validation-message"
@@ -120,7 +176,7 @@
         </div>
       </span>
 
-      <div class="dismiss-container">
+      <div class="dismiss-container" *ngIf="!draftMode">
         <span class="middle-fill"></span>
         <button
           mat-flat-button

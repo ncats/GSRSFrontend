@@ -46,6 +46,7 @@ export interface InvitroAssayInformation {
   _totalSummaryRecords?: number;
   _assaySet?: string;
   _isPfdaInline?: boolean;
+  _draftAssayUuid?: string;
   invitroAssayAnalytes?: Array<InvitroAssayAnalyte>;
   invitroAssaySets?: Array<InvitroAssaySet>;
   invitroAssayScreenings?: Array<InvitroAssayScreening>;

@@ -892,3 +892,28 @@ table.tableStyle tfoot .links a {
   padding-top: 24px !important;
   padding-bottom: 8px !important;
 }
+
+/* precisionFDA only: local draft saved message */
+.draft-saved-message {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 12px;
+  border-left: 4px solid #13970a;
+  background-color: #f3ffe1;
+
+  .draft-saved-text {
+    flex: 1 1 auto;
+  }
+}
+
+.draft-label {
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #13970a;
+  background-color: #f3ffe1;
+  border: 1px solid #13970a;
+}

@@ -6,7 +6,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { DatePipe, formatDate, Location } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { forkJoin, shareReplay, mergeMap, Subscription } from 'rxjs';
 import { take, map, catchError } from 'rxjs/operators';
@@ -37,6 +37,8 @@ import {
   InvitroAssayInformation, InvitroAssayScreening, InvitroLaboratory,
   InvitroReference, InvitroSponsor, InvitroSponsorSubmitter, InvitroTestAgent, InvitroControl, ValidationMessage, InvitroAssayResultInformation
 } from '../model/invitro-pharmacology.model';
+import { InvitroPharmacologyDraftService, IvpDraft } from '../service/invitro-pharmacology-draft.service';
+import { InvitroPharmacologyDraftsComponent } from './invitro-pharmacology-drafts/invitro-pharmacology-drafts.component';
 //import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
@@ -139,11 +141,18 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   firstFormGroup: any;
   isLinear = false;
 
+  // precisionFDA only: local draft loaded in or saved from this form
+  draftUuid: string = null;
+  // precisionFDA only: the messages panel shows the result of 'Validate and Save Draft' (no submit button)
+  draftMode = false;
+  savedDraft: IvpDraft = null;
+
   constructor(
     public http: HttpClient,
     private _formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
     private titleService: Title,
@@ -154,7 +163,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
     private generalService: GeneralService,
-    private invitroPharmacologyService: InvitroPharmacologyService
+    private invitroPharmacologyService: InvitroPharmacologyService,
+    private draftService: InvitroPharmacologyDraftService
   ) { }
 
   ngOnInit() {
@@ -237,6 +247,12 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
               // Get All Assay Sets
               this.getAllAssaySets();
+
+              // precisionFDA only: open the local draft given by the 'draft' query parameter
+              const draft = this.getDraftFromRoute();
+              if (draft) {
+                this.loadDraft(draft);
+              }
 
               this.isLoading = false;
               this.loadingService.setLoading(this.isLoading);
@@ -336,6 +352,19 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssaySets().subscribe(response => {
       if (response) {
         this.existingAssaySetList = response;
+
+        // precisionFDA only: also offer the Assay Sets of the local draft assays
+        if (this.isPfdaVersion) {
+          const assaySets = this.draftService.getDraftAssaySets();
+          if (this.selectedAssaySet) {
+            assaySets.push(this.selectedAssaySet);
+          }
+          assaySets.forEach(assaySet => {
+            if (!this.existingAssaySetList.some(set => set && set.assaySet === assaySet)) {
+              this.existingAssaySetList.push({ assaySet: assaySet });
+            }
+          });
+        }
       }
     }, error => {
       // this.isLoading = false;
@@ -376,6 +405,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           assay.invitroAssayScreenings.push(newInvitroAssayScreening);
 
         }); // LOOP: assay
+
+        // precisionFDA only: add the local draft assays of this Assay Set
+        if (this.isPfdaVersion) {
+          this.existingAssaysByAssaySetList.push(...this.createDraftAssayRows(assaySet));
+        }
 
         this.existingAssaysByAssaySetList.push(...pfdaInlineAssays);
 
@@ -481,6 +515,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   }
 
   validate(): void {
+    this.draftMode = false;
+    this.savedDraft = null;
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -507,7 +543,9 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       this.loadingService.setLoading(this.isLoading);
 
       if (this.validationMessages.length === 0) { //&& results.valid === true) {
-        this.submissionMessage = 'In Vitro Pharmacology Assay Screening is Valid. Would you like to submit?';
+        this.submissionMessage = this.isPfdaVersion
+          ? 'In Vitro Pharmacology Assay Screening is Valid. Would you like to save it as a file in your pFDA My Home?'
+          : 'In Vitro Pharmacology Assay Screening is Valid. Would you like to submit?';
       }
       //   }, error => {
       ////     this.addServerError(error);
@@ -827,8 +865,9 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     // Copy the Result Reference, Lab, Sponsor, Test Agent Info to the new screenings
     this.copyResultInfoForSaving();
 
+    // Inline and draft assays are saved in full, without their UI-only fields
     const assays = this.scrubShowFieldsMultiple(_.cloneDeep(this.existingAssaysByAssaySetList))
-      .map(assay => assay._isPfdaInline ? this.invitroPharmacologyService.toPfdaInlineAssayForSaving(assay) : assay);
+      .map(assay => this.invitroPharmacologyService.toPfdaAssayForSaving(assay));
 
     this.invitroPharmacologyService.saveBulkAssays(assays).pipe(take(1)).subscribe(response => {
       this.isLoading = false;
@@ -884,6 +923,158 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   generatePfdaInlineExternalAssayId(indexAssay: number): void {
     this.existingAssaysByAssaySetList[indexAssay].externalAssayId = this.invitroPharmacologyService.generateExternalAssayId();
+  }
+
+  // precisionFDA only: result rows for the local draft assays of an Assay Set. Each row is a copy of the draft
+  // assay, so the Screening keeps (and saves) the assay as it was when the row was added.
+  createDraftAssayRows(assaySet: string): Array<InvitroAssayInformation> {
+    return this.draftService.getDraftAssaysBySet(assaySet).map(draft => {
+      const assay: InvitroAssayInformation = _.cloneDeep(draft.data);
+      assay._draftAssayUuid = draft.uuid;
+      assay.invitroAssayAnalytes = assay.invitroAssayAnalytes || [];
+      const screening: InvitroAssayScreening = {
+        assaySet: assaySet,
+        invitroAssayResult: {},
+        invitroControls: []
+      };
+      screening._show = true;
+      assay.invitroAssayScreenings = [screening];
+      return assay;
+    });
+  }
+
+  // precisionFDA only: validates the Screening client-side and saves it as a local draft in this browser.
+  saveDraft(): void {
+    this.draftMode = true;
+    this.savedDraft = null;
+    this.serverError = false;
+
+    this.validateClient();
+    if (this.validationMessages.length > 0) {
+      return;
+    }
+
+    try {
+      this.savedDraft = this.draftService.saveDraft('screening', this.createDraftData(), this.getDraftName(), this.draftUuid);
+      this.draftUuid = this.savedDraft.uuid;
+      this.setDraftQueryParam();
+    } catch (e) {
+      this.setValidationMessage(e && e.message ? e.message : String(e));
+    }
+    this.showSubmissionMessages = true;
+  }
+
+  createDraftData(): any {
+    const assays: Array<InvitroAssayInformation> = _.cloneDeep(this.existingAssaysByAssaySetList);
+    // The Result Information of the new screenings is the form's, it is copied into them on save
+    assays.forEach(assay => {
+      (assay.invitroAssayScreenings || []).forEach(screening => {
+        if (screening && screening._show) {
+          delete screening.invitroAssayResultInformation;
+        }
+      });
+    });
+    return {
+      selectedAssaySet: this.selectedAssaySet || '',
+      assayResultInfo: _.cloneDeep(this.assayResultInfo),
+      assays: assays
+    };
+  }
+
+  getDraftName(): string {
+    const testAgent = this.assayResultInfo.invitroTestAgent && this.assayResultInfo.invitroTestAgent.testAgent;
+    const batchNumber = this.assayResultInfo.batchNumber;
+    return [testAgent, batchNumber ? 'Batch ' + batchNumber : null].filter(part => !!part).join(', ')
+      || this.selectedAssaySet;
+  }
+
+  exportSavedDraft(): void {
+    const draft = this.draftService.getDraft('screening', this.draftUuid) || this.savedDraft;
+    if (draft) {
+      this.draftService.exportDrafts([draft], 'gsrs-ivp-screening-draft-' + draft.uuid);
+    }
+  }
+
+  openDrafts(): void {
+    InvitroPharmacologyDraftsComponent.open(this.dialog, this.overlayContainer,
+      { mode: 'manage', currentType: 'screening', currentUuid: this.draftUuid }).subscribe(result => {
+        if (result && result.draft) {
+          if (result.draft.type === 'screening' && !this.id) {
+            this.loadDraft(result.draft);
+          } else {
+            this.router.navigate([this.draftService.getRegisterRoute(result.draft.type)],
+              { queryParams: { draft: result.draft.uuid } });
+          }
+        }
+      });
+  }
+
+  getDraftFromRoute(): IvpDraft {
+    const uuid = this.activatedRoute.snapshot.queryParams['draft'];
+    if (!this.isPfdaVersion || !uuid) {
+      return null;
+    }
+    const draft = this.draftService.getDraft('screening', uuid);
+    if (!draft) {
+      this.mainNotificationService.setNotification({
+        message: 'The Screening draft ' + uuid + ' was not found in this browser.',
+        type: NotificationType.error,
+        milisecondsToShow: 6000
+      });
+    }
+    return draft;
+  }
+
+  loadDraft(draft: IvpDraft): void {
+    const data = _.cloneDeep(draft.data) || {};
+
+    const resultInfo: InvitroAssayResultInformation = data.assayResultInfo || {};
+    if (!resultInfo.invitroReferences || resultInfo.invitroReferences.length === 0) {
+      resultInfo.invitroReferences = [{ primaryReference: true }];
+    }
+    resultInfo.invitroLaboratory = resultInfo.invitroLaboratory || {};
+    resultInfo.invitroSponsor = resultInfo.invitroSponsor || {};
+    resultInfo.invitroSponsorReport = resultInfo.invitroSponsorReport || {};
+    if (!resultInfo.invitroSponsorReport.invitroSponsorSubmitters
+      || resultInfo.invitroSponsorReport.invitroSponsorSubmitters.length === 0) {
+      resultInfo.invitroSponsorReport.invitroSponsorSubmitters = [{}];
+    }
+    resultInfo.invitroTestAgent = resultInfo.invitroTestAgent || {};
+    this.assayResultInfo = resultInfo;
+    this.testAgentSubstanceKey = resultInfo.invitroTestAgent.testAgentSubstanceKey || '';
+
+    const assays: Array<InvitroAssayInformation> = Array.isArray(data.assays) ? data.assays : [];
+    assays.forEach(assay => {
+      assay.invitroAssayScreenings = assay.invitroAssayScreenings || [];
+      assay.invitroAssayScreenings.forEach(screening => {
+        if (screening) {
+          screening.invitroAssayResult = screening.invitroAssayResult || {};
+          screening.invitroControls = screening.invitroControls || [];
+        }
+      });
+    });
+    this.existingAssaysByAssaySetList = assays;
+
+    this.selectedAssaySet = data.selectedAssaySet || '';
+    this.getAllAssaySets();
+    this.existingAssaySetControl.setValue(this.selectedAssaySet || null);
+
+    this.draftUuid = draft.uuid;
+    this.message = '';
+    this.draftMode = false;
+    this.savedDraft = null;
+    this.submissionMessage = null;
+    this.validationMessages = [];
+    this.showSubmissionMessages = false;
+    this.setDraftQueryParam();
+  }
+
+  // Only replaces the url: the app does not reuse routes, so a router navigation would re-create this form
+  private setDraftQueryParam(): void {
+    const url = this.router.createUrlTree([], { relativeTo: this.activatedRoute, queryParams: { draft: this.draftUuid } }).toString();
+    if (this.location.path() !== url) {
+      this.location.replaceState(url);
+    }
   }
 
   generateAssayToSave() {

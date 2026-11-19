@@ -4,7 +4,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { DatePipe, formatDate, Location } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { forkJoin, Subscription } from 'rxjs';
 import { take, map } from 'rxjs/operators';
@@ -29,7 +29,10 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service'
 import { InvitroAssayInformation, InvitroAssaySet, ValidationMessage } from '../../model/invitro-pharmacology.model';
+import { InvitroPharmacologyDraftService, IvpDraft } from '../../service/invitro-pharmacology-draft.service';
+import { InvitroPharmacologyDraftsComponent } from '../invitro-pharmacology-drafts/invitro-pharmacology-drafts.component';
 import jp from 'jsonpath';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-invitro-pharmacology-assay-form',
@@ -76,9 +79,16 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   title = null;
   substanceKeyTypeForInvitroPharmacologyConfig = null;
 
+  // precisionFDA only: local draft loaded in or saved from this form
+  draftUuid: string = null;
+  // precisionFDA only: the messages panel shows the result of 'Validate and Save Draft' (no submit button)
+  draftMode = false;
+  savedDraft: IvpDraft = null;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
     private titleService: Title,
@@ -91,7 +101,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
     private generalService: GeneralService,
-    private invitroPharmacologyService: InvitroPharmacologyService
+    private invitroPharmacologyService: InvitroPharmacologyService,
+    private draftService: InvitroPharmacologyDraftService
   ) { }
 
   ngOnInit() {
@@ -185,12 +196,24 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
             setTimeout(() => {
               this.titleService.setTitle(`Register In Vitro Pharmacology Assay Only`);
 
-              // Assign new Assay Objects to load on the form
-              this.invitroPharmacologyService.loadAssayOnly();
-              this.assay = this.invitroPharmacologyService.assay;
+              // precisionFDA only: open the local draft given by the 'draft' query parameter
+              const draft = this.getDraftFromRoute();
+              if (draft) {
+                this.loadDraft(draft);
+              } else {
+                // Assign new Assay Objects to load on the form
+                this.invitroPharmacologyService.loadAssayOnly();
+                this.assay = this.invitroPharmacologyService.assay;
 
-              // Get All the Assay Sets for checkbox
-              this.getAllAssaySets();
+                // precisionFDA only: preselect the Assay Set given by the Assay Set builder
+                const assaySet = this.isPfdaVersion ? this.activatedRoute.snapshot.queryParams['assaySet'] : null;
+                if (assaySet && assaySet.trim()) {
+                  this.assay.invitroAssaySets = [{ assaySet: assaySet.trim() }];
+                }
+
+                // Get All the Assay Sets for checkbox
+                this.getAllAssaySets();
+              }
 
               this.loadingService.setLoading(false);
               this.isLoading = false;
@@ -245,7 +268,17 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       if (response) {
         this.existingAssaySetList = response;
 
+        // precisionFDA only: also offer the Assay Sets of the local draft assays
+        if (this.isPfdaVersion) {
+          this.draftService.getDraftAssaySets().forEach(assaySet => {
+            if (!this.existingAssaySetList.some(set => set && set.assaySet === assaySet)) {
+              this.existingAssaySetList.push({ assaySet: assaySet });
+            }
+          });
+        }
+
         // Create checboxes
+        this.checkBoxAssaySetList = [];
         this.createAssaySetCheckBoxes();
 
         if (this.id || this.assay.invitroAssaySets.length > 0) {
@@ -319,8 +352,14 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
             if (asySet.assaySet) {
               // Get the index if the value exists in the key 'value'
               const indexSet = this.checkBoxAssaySetList.findIndex(record => record.value === asySet.assaySet);
-              // check the box for the found assay set
-              this.checkBoxAssaySetList[indexSet].checked = true;
+              if (indexSet > -1) {
+                // check the box for the found assay set
+                this.checkBoxAssaySetList[indexSet].checked = true;
+              } else {
+                // Assay Set only known by this assay (e.g. a new Assay Set of a draft or an imported assay)
+                this.existingAssaySetList.push(asySet);
+                this.checkBoxAssaySetList.push({ value: asySet.assaySet, checked: true });
+              }
             }
           });
         }
@@ -392,6 +431,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   }
 
   validate(): void {
+    this.draftMode = false;
+    this.savedDraft = null;
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -413,7 +454,9 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
         this.isLoading = false;
 
         if (this.validationMessages.length === 0 && results.valid === true) {
-          this.submissionMessage = 'In Vitro Pharmacology is Valid. Would you like to submit?';
+          this.submissionMessage = this.isPfdaVersion
+            ? 'In Vitro Pharmacology Assay is Valid. Would you like to save it as a file in your pFDA My Home?'
+            : 'In Vitro Pharmacology is Valid. Would you like to submit?';
         }
       }, error => {
         this.addServerError(error);
@@ -605,6 +648,91 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     this.assay.externalAssayId = this.invitroPharmacologyService.generateExternalAssayId();
   }
 
+  // precisionFDA only: validates the assay client-side and saves it as a local draft in this browser.
+  saveDraft(): void {
+    this.draftMode = true;
+    this.savedDraft = null;
+    this.serverError = false;
+    this.submissionMessage = null;
+
+    this.validateClient();
+    if (this.validationMessages.length > 0) {
+      return;
+    }
+
+    try {
+      const data = this.cleanObject(cloneDeep(this.assay));
+      this.savedDraft = this.draftService.saveDraft('assay', data, this.draftService.getAssayDraftName(data), this.draftUuid);
+      this.draftUuid = this.savedDraft.uuid;
+      this.setDraftQueryParam();
+    } catch (e) {
+      this.setValidationMessage(e && e.message ? e.message : String(e));
+    }
+    this.showSubmissionMessages = true;
+  }
+
+  exportSavedDraft(): void {
+    const draft = this.draftService.getDraft('assay', this.draftUuid) || this.savedDraft;
+    if (draft) {
+      this.draftService.exportDrafts([draft], 'gsrs-ivp-assay-draft-' + draft.uuid);
+    }
+  }
+
+  openDrafts(): void {
+    InvitroPharmacologyDraftsComponent.open(this.dialog, this.overlayContainer,
+      { mode: 'manage', currentType: 'assay', currentUuid: this.draftUuid }).subscribe(result => {
+        if (result && result.draft) {
+          if (result.draft.type === 'assay' && !this.id) {
+            this.loadDraft(result.draft);
+          } else {
+            this.router.navigate([this.draftService.getRegisterRoute(result.draft.type)],
+              { queryParams: { draft: result.draft.uuid } });
+          }
+        }
+      });
+  }
+
+  getDraftFromRoute(): IvpDraft {
+    const uuid = this.activatedRoute.snapshot.queryParams['draft'];
+    if (!this.isPfdaVersion || !uuid) {
+      return null;
+    }
+    const draft = this.draftService.getDraft('assay', uuid);
+    if (!draft) {
+      this.mainNotificationService.setNotification({
+        message: 'The Assay draft ' + uuid + ' was not found in this browser.',
+        type: NotificationType.error,
+        milisecondsToShow: 6000
+      });
+    }
+    return draft;
+  }
+
+  loadDraft(draft: IvpDraft): void {
+    const data: InvitroAssayInformation = cloneDeep(draft.data);
+    data.invitroAssayAnalytes = data.invitroAssayAnalytes || [];
+    data.invitroAssaySets = data.invitroAssaySets || [];
+    this.invitroPharmacologyService.loadAssayOnly(data);
+    this.assay = this.invitroPharmacologyService.assay;
+    this.draftUuid = draft.uuid;
+    this.message = '';
+    this.draftMode = false;
+    this.savedDraft = null;
+    this.submissionMessage = null;
+    this.validationMessages = [];
+    this.showSubmissionMessages = false;
+    this.getAllAssaySets();
+    this.setDraftQueryParam();
+  }
+
+  // Only replaces the url: the app does not reuse routes, so a router navigation would re-create this form
+  private setDraftQueryParam(): void {
+    const url = this.router.createUrlTree([], { relativeTo: this.activatedRoute, queryParams: { draft: this.draftUuid } }).toString();
+    if (this.location.path() !== url) {
+      this.location.replaceState(url);
+    }
+  }
+
   displayMessageAfterDeleteImpurities() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -715,6 +843,10 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   }
 
   searchValueOutChange(event: string, fieldName: string, indexRow?: number) {
+    // precisionFDA only: loading a draft sets the search boxes, keep the substance keys saved in the draft
+    if (this.isPfdaVersion && this.isResolvedSubstance(event, fieldName, indexRow)) {
+      return;
+    }
 
     if (fieldName && fieldName === this.TARGET_NAME) {
       this.assay.targetName = event;
@@ -783,6 +915,23 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       } // if response
     }); // subscribe 
     this.subscriptions.push(substanceSubscribe);
+  }
+
+  isResolvedSubstance(name: string, fieldName: string, indexRow?: number): boolean {
+    if (!name || !this.assay) {
+      return false;
+    }
+    if (fieldName === this.TARGET_NAME) {
+      return name === this.assay.targetName && !!this.assay.targetNameSubstanceKey;
+    } else if (fieldName === this.HUMAN_HOMOLOG_TARGET) {
+      return name === this.assay.humanHomologTarget && !!this.assay.humanHomologTargetSubstanceKey;
+    } else if (fieldName === this.LIGAND_SUBSTRATE) {
+      return name === this.assay.ligandSubstrate && !!this.assay.ligandSubstrateSubstanceKey;
+    } else if (fieldName === this.ANALYTE) {
+      const analyte = this.assay.invitroAssayAnalytes && this.assay.invitroAssayAnalytes[indexRow];
+      return !!analyte && name === analyte.analyte && !!analyte.analyteSubstanceKey;
+    }
+    return false;
   }
 
   isNumber(str: any): boolean {

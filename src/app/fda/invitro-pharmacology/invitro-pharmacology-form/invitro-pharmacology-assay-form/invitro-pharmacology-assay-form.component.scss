@@ -726,3 +726,17 @@ table.tableStyle tfoot .links a {
 }
 
 /* Table Style End */
+
+/* precisionFDA only: local draft saved message */
+.draft-saved-message {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 12px;
+  border-left: 4px solid #13970a;
+  background-color: #f3ffe1;
+
+  .draft-saved-text {
+    flex: 1 1 auto;
+  }
+}

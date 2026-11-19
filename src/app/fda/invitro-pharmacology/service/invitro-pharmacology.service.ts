@@ -19,6 +19,7 @@ import { SubmitSuccessDialogComponent } from '@gsrs-core/substance-form/submit-s
 /* GSRS Invitro Pharmacology Imports */
 import { InvitroAssayInformation, InvitroAssayAnalyte, InvitroAssayResult, InvitroAssayScreening, InvitroSummary, ValidationResults } from '../model/invitro-pharmacology.model';
 import { identity } from 'lodash';
+import { generateUuid } from './invitro-pharmacology-draft.service';
 
 @Injectable(
   {
@@ -120,7 +121,8 @@ export class InvitroPharmacologyService extends BaseHttpService {
     if (this.isPfdaVersion && !this.authService.getUser()) {
       parts.push('Login');
     }
-    parts.push('Submit');
+    // precisionFDA: the forms save local drafts, submitting stores the record as a file in the user's My Home area
+    parts.push(this.isPfdaVersion ? 'Save to My Home' : 'Submit');
     if (parts.length === 1) {
       return parts[0];
     }
@@ -165,13 +167,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   // precisionFDA only: generates a random External Assay ID, for users who have no real one.
   generateExternalAssayId(): string {
-    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-      return crypto.randomUUID();
-    }
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-      const r = Math.floor(Math.random() * 16);
-      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-    });
+    return generateUuid();
   }
 
   // precisionFDA only: pFDA submissions are stored as files and never saved into GSRS, so there may be
@@ -224,11 +220,23 @@ export class InvitroPharmacologyService extends BaseHttpService {
     const saved: InvitroAssayInformation = { ...assay, invitroAssaySets: [{ assaySet: assaySet }] };
     delete saved._isPfdaInline;
     delete saved._assaySet;
+    delete saved._draftAssayUuid;
     (saved.invitroAssayScreenings || []).forEach(screening => {
       if (screening) {
         screening.assaySet = assaySet;
       }
     });
+    return saved;
+  }
+
+  // precisionFDA only: converts an assay of a Screening or Summary (database, inline or draft assay) into the JSON
+  // shape of a GSRS assay, without the UI-only fields.
+  toPfdaAssayForSaving(assay: InvitroAssayInformation): InvitroAssayInformation {
+    if (assay && assay._isPfdaInline) {
+      return this.toPfdaInlineAssayForSaving(assay);
+    }
+    const saved: InvitroAssayInformation = { ...assay };
+    delete saved._draftAssayUuid;
     return saved;
   }
 

@@ -12,7 +12,7 @@ import { FormBuilder } from "@angular/forms";
 import { FormControl, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Title } from "@angular/platform-browser";
-import { DatePipe, formatDate } from "@angular/common";
+import { DatePipe, formatDate, Location } from "@angular/common";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { forkJoin, Subscription } from "rxjs";
 import { take, map, catchError } from "rxjs/operators";
@@ -38,6 +38,11 @@ import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.c
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from "../../service/invitro-pharmacology.service";
+import {
+  InvitroPharmacologyDraftService,
+  IvpDraft,
+} from "../../service/invitro-pharmacology-draft.service";
+import { InvitroPharmacologyDraftsComponent } from "../invitro-pharmacology-drafts/invitro-pharmacology-drafts.component";
 import {
   InvitroAssayInformation,
   InvitroAssaySet,
@@ -95,6 +100,17 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
   validationResult = false;
   validationMessages: Array<ValidationMessage> = [];
 
+  // precisionFDA only: the Assay Set is a local draft, its assays are the draft assays of this browser
+  draftUuid: string = null;
+  draftMode = false;
+  savedDraft: IvpDraft = null;
+  draftAssaySet = "";
+  draftDescription = "";
+  // Name the membership below was read with, the Assay Set is renamed on the draft assays when it changes
+  draftLoadedAssaySet = "";
+  draftAssayRows: Array<{ draft: IvpDraft; member: boolean }> = [];
+  draftAssaySetNames: Array<string> = [];
+
   constructor(
     public http: HttpClient,
     private activatedRoute: ActivatedRoute,
@@ -110,6 +126,8 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     private mainNotificationService: MainNotificationService,
     private generalService: GeneralService,
     private invitroPharmacologyService: InvitroPharmacologyService,
+    private draftService: InvitroPharmacologyDraftService,
+    private location: Location,
   ) {}
 
   async ngOnInit() {
@@ -120,6 +138,12 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     this.titleService.setTitle(`Assay Set Builder`);
     this.title = "Assay Set Builder";
     this.assaySetFromUrl = this.activatedRoute.snapshot.queryParams["assaySet"];
+
+    // precisionFDA only: build the Assay Set from the local draft assays
+    if (this.isPfdaVersion) {
+      this.initDraftAssaySet();
+      return;
+    }
 
     // Get All the Assay Sets for checkbox
     this.getAllAssaySets();
@@ -464,6 +488,10 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
   }
 
   validate(): void {
+    if (this.isPfdaVersion) {
+      this.validateDraftForMyHome();
+      return;
+    }
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -536,6 +564,11 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
   }
 
   submit(): void {
+    if (this.isPfdaVersion) {
+      this.submitDraftToMyHome();
+      return;
+    }
+
     // Validate on client side
     this.validateClient();
 
@@ -770,5 +803,233 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
         }
       }
     });
+  }
+
+  get isPfdaVersion(): boolean {
+    return this.invitroPharmacologyService.isPfdaVersion;
+  }
+
+  // precisionFDA only: opens the Assay Set draft of the 'draft' query parameter, or the Assay Set
+  // of the 'assaySet' query parameter.
+  initDraftAssaySet(): void {
+    const uuid = this.activatedRoute.snapshot.queryParams["draft"];
+    if (uuid) {
+      const draft = this.draftService.getDraft("assayset", uuid);
+      if (draft) {
+        this.loadDraft(draft);
+        return;
+      }
+      this.mainNotificationService.setNotification({
+        message: "The Assay Set draft " + uuid + " was not found in this browser.",
+        type: NotificationType.error,
+        milisecondsToShow: 6000,
+      });
+    }
+    this.openDraftAssaySet(this.assaySetFromUrl || "");
+  }
+
+  // Opens an Assay Set by name: its draft when there is one, otherwise a new draft with the
+  // draft assays that already use this Assay Set name.
+  openDraftAssaySet(assaySet: string): void {
+    const name = (assaySet || "").trim();
+    const draft = this.draftService.getAssaySetDraftByName(name);
+    if (draft) {
+      this.loadDraft(draft);
+      return;
+    }
+    this.resetDraftState();
+    this.draftUuid = null;
+    this.draftAssaySet = name;
+    this.draftDescription = "";
+    this.draftLoadedAssaySet = name;
+    this.refreshDraftAssays();
+    this.setDraftQueryParam();
+  }
+
+  newDraftAssaySet(): void {
+    this.openDraftAssaySet("");
+  }
+
+  loadDraft(draft: IvpDraft): void {
+    this.resetDraftState();
+    this.draftUuid = draft.uuid;
+    this.draftAssaySet = this.draftService.getAssaySetDraftName(draft);
+    this.draftDescription = (draft.data && draft.data.description) || "";
+    this.draftLoadedAssaySet = this.draftAssaySet;
+    this.refreshDraftAssays();
+    this.setDraftQueryParam();
+  }
+
+  private resetDraftState(): void {
+    this.draftMode = false;
+    this.savedDraft = null;
+    this.submissionMessage = null;
+    this.validationMessages = [];
+    this.validationResult = false;
+    this.showSubmissionMessages = false;
+  }
+
+  // Lists all the draft assays, the members keep their checkbox state when the list is refreshed.
+  refreshDraftAssays(keepSelection?: boolean): void {
+    const selected = new Set(
+      this.draftAssayRows.filter((row) => row.member).map((row) => row.draft.uuid),
+    );
+    this.draftAssayRows = this.draftService.getDrafts("assay")
+      .sort((a, b) => (a.name || "").localeCompare(b.name || ""))
+      .map((draft) => ({
+        draft: draft,
+        member: keepSelection
+          ? selected.has(draft.uuid)
+          : !!this.draftLoadedAssaySet &&
+            this.draftService.getAssaySetNames(draft.data).includes(this.draftLoadedAssaySet),
+      }));
+    this.draftAssaySetNames = this.draftService.getDraftAssaySets();
+  }
+
+  // Assay Sets of a draft assay other than the one edited here
+  getOtherAssaySets(draft: IvpDraft): Array<string> {
+    const current = [this.draftLoadedAssaySet, (this.draftAssaySet || "").trim()];
+    return this.draftService.getAssaySetNames(draft.data).filter((name) => !current.includes(name));
+  }
+
+  // An assay needs at least one Assay Set, so it cannot leave its only Assay Set
+  isOnlyAssaySet(row: { draft: IvpDraft; member: boolean }): boolean {
+    return row.member && this.getOtherAssaySets(row.draft).length === 0 &&
+      this.draftService.getAssaySetNames(row.draft.data).length > 0;
+  }
+
+  getDraftMemberCount(): number {
+    return this.draftAssayRows.filter((row) => row.member).length;
+  }
+
+  validateDraftClient(requireAssays: boolean): void {
+    this.submissionMessage = null;
+    this.validationMessages = [];
+    this.validationResult = true;
+    this.serverError = false;
+
+    const name = (this.draftAssaySet || "").trim();
+    if (!name) {
+      this.setValidationMessage("Assay Set name is required");
+    } else {
+      const other = this.draftService.getAssaySetDraftByName(name);
+      if (other && other.uuid !== this.draftUuid) {
+        this.setValidationMessage(
+          "There is already an Assay Set draft named '" + name + "'. Open it from the Assay Set list or choose another name.");
+      } else if (name !== this.draftLoadedAssaySet && this.draftService.getDraftAssaysBySet(name).length > 0) {
+        this.setValidationMessage(
+          "The Assay Set '" + name + "' is already used by draft assays. Open it from the Assay Set list or choose another name.");
+      }
+    }
+    if (requireAssays && this.getDraftMemberCount() === 0) {
+      this.setValidationMessage("At least one draft assay should be selected");
+    }
+  }
+
+  // precisionFDA only: saves the Assay Set as a local draft and assigns it to the selected draft assays.
+  saveDraft(): void {
+    this.draftMode = true;
+    this.savedDraft = null;
+    this.validateDraftClient(false);
+    if (this.validationMessages.length > 0) {
+      this.showSubmissionMessages = true;
+      return;
+    }
+    try {
+      const members = this.draftAssayRows.filter((row) => row.member).map((row) => row.draft.uuid);
+      this.savedDraft = this.draftService.saveAssaySetDraft(
+        this.draftAssaySet, this.draftDescription, members, this.draftUuid, this.draftLoadedAssaySet);
+      this.draftUuid = this.savedDraft.uuid;
+      this.draftAssaySet = this.draftService.getAssaySetDraftName(this.savedDraft);
+      this.draftLoadedAssaySet = this.draftAssaySet;
+      this.refreshDraftAssays();
+      this.setDraftQueryParam();
+    } catch (e) {
+      this.setValidationMessage(e && e.message ? e.message : String(e));
+    }
+    this.showSubmissionMessages = true;
+  }
+
+  exportSavedDraft(): void {
+    const draft = this.draftService.getDraft("assayset", this.draftUuid) || this.savedDraft;
+    if (draft) {
+      // The member draft assays are exported with the Assay Set so that it can be used after an import
+      const assays = this.draftService.getDraftAssaysBySet(this.draftService.getAssaySetDraftName(draft));
+      this.draftService.exportDrafts([draft].concat(assays), "gsrs-ivp-assayset-draft-" + draft.uuid);
+    }
+  }
+
+  openDrafts(): void {
+    InvitroPharmacologyDraftsComponent.open(this.dialog, this.overlayContainerService.getContainerElement(), {
+      mode: "manage",
+      currentType: "assayset",
+      currentUuid: this.draftUuid,
+    }).subscribe((result) => {
+      if (result && result.draft) {
+        if (result.draft.type === "assayset") {
+          this.loadDraft(result.draft);
+        } else {
+          this.router.navigate([this.draftService.getRegisterRoute(result.draft.type)], {
+            queryParams: { draft: result.draft.uuid },
+          });
+        }
+      } else {
+        // Drafts may have been deleted or imported in the dialog
+        if (this.draftUuid && !this.draftService.getDraft("assayset", this.draftUuid)) {
+          this.draftUuid = null;
+          this.savedDraft = null;
+          this.setDraftQueryParam();
+        }
+        this.refreshDraftAssays(true);
+      }
+    });
+  }
+
+  // Validates the Assay Set before it is saved in the user's pFDA My Home
+  validateDraftForMyHome(): void {
+    this.draftMode = false;
+    this.savedDraft = null;
+    this.validateDraftClient(true);
+    if (this.validationMessages.length === 0) {
+      this.validationResult = true;
+      this.submissionMessage =
+        "In Vitro Pharmacology Assay Set is Valid. Would you like to save it to your pFDA My Home?";
+    }
+    this.showSubmissionMessages = true;
+  }
+
+  // The selected draft assays, with this Assay Set, are sent in a single bulk request which the pFDA
+  // platform stores as one file in the user's My Home area. The local drafts are kept.
+  submitDraftToMyHome(): void {
+    this.validateDraftClient(true);
+    if (this.validationMessages.length > 0) {
+      this.showSubmissionMessages = true;
+      return;
+    }
+    const name = this.draftAssaySet.trim();
+    const current = [name, this.draftLoadedAssaySet];
+    this.assaysToSave = this.draftAssayRows
+      .filter((row) => row.member)
+      .map((row) => {
+        const assay: InvitroAssayInformation = _.cloneDeep(row.draft.data);
+        const sets = (assay.invitroAssaySets || []).filter(
+          (set) => set && set.assaySet && !current.includes(set.assaySet.trim()));
+        assay.invitroAssaySets = sets.concat([{ assaySet: name }]);
+        return this.invitroPharmacologyService.toPfdaAssayForSaving(assay);
+      });
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
+    this.savePfdaFile();
+  }
+
+  // Only replaces the url: the app does not reuse routes, so a router navigation would re-create this form
+  private setDraftQueryParam(): void {
+    const queryParams = this.draftUuid ? { draft: this.draftUuid } : {};
+    const url = this.router
+      .createUrlTree([], { relativeTo: this.activatedRoute, queryParams: queryParams })
+      .toString();
+    if (this.location.path() !== url) {
+      this.location.replaceState(url);
+    }
   }
 }

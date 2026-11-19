@@ -57,6 +57,7 @@ import { ActivateInvitroPharmacologyComponent } from './activate-invitro-pharmac
 import { InvitroPharmacologySummaryFormComponent } from './invitro-pharmacology-form/invitro-pharmacology-summary-form/invitro-pharmacology-summary-form.component';
 import { InvitroPharmacologyScreeningDataImportComponent } from './invitro-pharmacology-screening-data-import/invitro-pharmacology-screening-data-import.component';
 import { InvitroPharmacologyAssaysetFormComponent } from './invitro-pharmacology-form/invitro-pharmacology-assayset-form/invitro-pharmacology-assayset-form.component';
+import { InvitroPharmacologyDraftsComponent } from './invitro-pharmacology-form/invitro-pharmacology-drafts/invitro-pharmacology-drafts.component';
 
 const invitroRoutes: Routes = [
   {
@@ -178,7 +179,8 @@ const invitroRoutes: Routes = [
     InvitroPharmacologyAssayFormComponent,
     InvitroPharmacologySummaryFormComponent,
     InvitroPharmacologyScreeningDataImportComponent,
-    InvitroPharmacologyAssaysetFormComponent
+    InvitroPharmacologyAssaysetFormComponent,
+    InvitroPharmacologyDraftsComponent
   ],
   exports: [
   ],

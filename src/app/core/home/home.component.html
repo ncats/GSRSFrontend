@@ -261,6 +261,19 @@
                           In Vitro Pharmacology Assay
                         </a>
                       </span>
+                      <span *ngIf="loadedComponents.invitropharmacology && isPfdaVersion">
+                        <mat-divider></mat-divider>
+                        <a
+                          mat-list-item
+                          routerLink="/invitro-pharm/assaySetBuilder"
+                        >
+                          <mat-icon
+                            matListIcon
+                            svgIcon="outline-description"
+                          ></mat-icon>
+                          In Vitro Pharmacology Assay Set
+                        </a>
+                      </span>
                       <span *ngIf="loadedComponents.invitropharmacology">
                         <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/invitro-pharm/register">

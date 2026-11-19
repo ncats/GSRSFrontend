@@ -6,7 +6,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { DatePipe, formatDate, Location } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription, forkJoin } from 'rxjs';
 import { take, map } from 'rxjs/operators';
@@ -32,6 +32,8 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service';
 import { InvitroAssayInformation, InvitroAssayScreening, InvitroSummary, InvitroReference, InvitroTestAgent, ValidationMessage, InvitroAssayResultInformation } from '../../model/invitro-pharmacology.model';
+import { InvitroPharmacologyDraftService, IvpDraft } from '../../service/invitro-pharmacology-draft.service';
+import { InvitroPharmacologyDraftsComponent } from '../invitro-pharmacology-drafts/invitro-pharmacology-drafts.component';
 import * as _ from 'lodash';
 import jp from 'jsonpath';
 
@@ -119,11 +121,18 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
+  // precisionFDA only: local draft loaded in or saved from this form
+  draftUuid: string = null;
+  // precisionFDA only: the messages panel shows the result of 'Validate and Save Draft' (no submit button)
+  draftMode = false;
+  savedDraft: IvpDraft = null;
+
   constructor(
     public http: HttpClient,
     private _formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
     private titleService: Title,
@@ -134,7 +143,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
     private generalService: GeneralService,
-    private invitroPharmacologyService: InvitroPharmacologyService
+    private invitroPharmacologyService: InvitroPharmacologyService,
+    private draftService: InvitroPharmacologyDraftService
   ) { }
 
   ngOnInit() {
@@ -189,8 +199,14 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
             this.invitroPharmacologyService.loadAssay();
             this.assay = this.invitroPharmacologyService.assay;
 
-            // Add One row of New Summary when page loads
-            this.addNewSummary();
+            // precisionFDA only: open the local draft given by the 'draft' query parameter
+            const draft = this.getDraftFromRoute();
+            if (draft) {
+              this.loadDraft(draft);
+            } else {
+              // Add One row of New Summary when page loads
+              this.addNewSummary();
+            }
 
             this.loadingService.setLoading(false);
             this.isLoading = false;
@@ -370,6 +386,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   }
 
   validate(): void {
+    this.draftMode = false;
+    this.savedDraft = null;
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -391,7 +409,9 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       this.isLoading = false;
 
       if (this.validationMessages.length === 0 && this.validationResult === true) {
-        this.submissionMessage = 'In Vitro Pharmacology Assay Summary is Valid. Would you like to submit?';
+        this.submissionMessage = this.isPfdaVersion
+          ? 'In Vitro Pharmacology Assay Summary is Valid. Would you like to save it as a file in your pFDA My Home?'
+          : 'In Vitro Pharmacology Assay Summary is Valid. Would you like to submit?';
       }
       /* }, error => {
          this.addServerError(error);
@@ -597,7 +617,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       const assays = this.assayToSave
         .filter((assay, indexAssay) => !(skipFirstRecord == true && indexAssay == 0))
         .map(assay => this.cleanData(_.cloneDeep(assay)))
-        .concat(this.getPfdaInlineAssaysToSave());
+        .concat(this.getPfdaAssaysToSave());
       this.savePfdaFile(assays);
       return;
     }
@@ -731,19 +751,172 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     this.screeningList[indexScreening]._selectedAssay.externalAssayId = this.invitroPharmacologyService.generateExternalAssayId();
   }
 
-  // The inline assay targets the substance selected as the summary Target Name.
-  private getPfdaInlineAssaysToSave(): Array<InvitroAssayInformation> {
+  // precisionFDA only: the assays entered inline and the draft assays are saved in full, with the summary.
+  // The inline assay targets the substance selected as the summary Target Name, a draft assay keeps its own target.
+  private getPfdaAssaysToSave(): Array<InvitroAssayInformation> {
     return this.screeningList
-      .filter(screening => screening && screening._selectedAssay && screening._selectedAssay._isPfdaInline)
+      .filter(screening => screening && screening._selectedAssay
+        && (screening._selectedAssay._isPfdaInline || screening._selectedAssay._draftAssayUuid))
       .map(screening => {
         const assay: InvitroAssayInformation = _.cloneDeep(screening._selectedAssay);
         const savedScreening = _.cloneDeep(_.omit(screening, ['_selectedAssay', '_assayResults'])) as InvitroAssayScreening;
-        assay.targetName = screening.invitroSummary.targetName;
-        assay.targetNameSubstanceKey = screening.invitroSummary.targetNameSubstanceKey;
-        assay.targetNameSubstanceKeyType = 'UUID';
+        if (assay._isPfdaInline) {
+          assay.targetName = screening.invitroSummary.targetName;
+          assay.targetNameSubstanceKey = screening.invitroSummary.targetNameSubstanceKey;
+          assay.targetNameSubstanceKeyType = 'UUID';
+        }
         assay.invitroAssayScreenings = [savedScreening];
-        return this.invitroPharmacologyService.toPfdaInlineAssayForSaving(assay);
+        return this.invitroPharmacologyService.toPfdaAssayForSaving(assay);
       });
+  }
+
+  // precisionFDA only: picks a local draft assay for this summary
+  selectDraftAssay(indexScreening: number): void {
+    InvitroPharmacologyDraftsComponent.open(this.dialog, this.overlayContainer,
+      { mode: 'select', types: ['assay'] }).subscribe(result => {
+        if (result && result.draft && this.screeningList[indexScreening]) {
+          this.useDraftAssay(indexScreening, result.draft);
+        }
+      });
+  }
+
+  useDraftAssay(indexScreening: number, draft: IvpDraft): void {
+    const screening = this.screeningList[indexScreening];
+    this.assayToSave = this.assayToSave.filter(assay => !(assay.invitroAssayScreenings || []).includes(screening));
+
+    const assay: InvitroAssayInformation = _.cloneDeep(draft.data);
+    assay._draftAssayUuid = draft.uuid;
+    assay.invitroAssayAnalytes = assay.invitroAssayAnalytes || [];
+    assay.invitroAssayScreenings = [];
+    screening._selectedAssay = assay;
+    screening._assayResults = [];
+
+    // The summary targets the target of the assay
+    if (assay.targetNameSubstanceKey) {
+      screening.invitroSummary = screening.invitroSummary || {};
+      screening.invitroSummary.targetName = assay.targetName;
+      if (!assay.targetNameSubstanceKeyType || assay.targetNameSubstanceKeyType === 'UUID') {
+        screening.invitroSummary.targetNameSubstanceKey = assay.targetNameSubstanceKey;
+      } else {
+        const subSubscribe = this.generalService.getSubstanceByAnyId(assay.targetNameSubstanceKey).pipe(take(1))
+          .subscribe(substance => {
+            if (substance && substance.uuid && screening._selectedAssay === assay) {
+              screening.invitroSummary.targetNameSubstanceKey = substance.uuid;
+            }
+          });
+        this.subscriptions.push(subSubscribe);
+      }
+    }
+  }
+
+  // precisionFDA only: validates the Summary client-side and saves it as a local draft in this browser.
+  saveDraft(): void {
+    this.draftMode = true;
+    this.savedDraft = null;
+    this.serverError = false;
+
+    this.validateClient();
+    if (this.validationMessages.length > 0) {
+      return;
+    }
+
+    try {
+      const data = {
+        testAgent: this.testAgent,
+        testAgentSubstanceUuid: this.testAgentSubstanceUuid,
+        testAgentSubstanceKey: this.testAgentSubstanceKey,
+        screeningList: this.screeningList.map(screening => _.cloneDeep(_.omit(screening, ['_assayResults'])))
+      };
+      const name = (this.testAgent || 'Summary') + ' (' + this.screeningList.length
+        + ' row' + (this.screeningList.length === 1 ? '' : 's') + ')';
+      this.savedDraft = this.draftService.saveDraft('summary', data, name, this.draftUuid);
+      this.draftUuid = this.savedDraft.uuid;
+      this.setDraftQueryParam();
+    } catch (e) {
+      this.setValidationMessage(e && e.message ? e.message : String(e));
+    }
+    this.showSubmissionMessages = true;
+  }
+
+  exportSavedDraft(): void {
+    const draft = this.draftService.getDraft('summary', this.draftUuid) || this.savedDraft;
+    if (draft) {
+      this.draftService.exportDrafts([draft], 'gsrs-ivp-summary-draft-' + draft.uuid);
+    }
+  }
+
+  openDrafts(): void {
+    InvitroPharmacologyDraftsComponent.open(this.dialog, this.overlayContainer,
+      { mode: 'manage', currentType: 'summary', currentUuid: this.draftUuid }).subscribe(result => {
+        if (result && result.draft) {
+          if (result.draft.type === 'summary' && !this.id) {
+            this.loadDraft(result.draft);
+          } else {
+            this.router.navigate([this.draftService.getRegisterRoute(result.draft.type)],
+              { queryParams: { draft: result.draft.uuid } });
+          }
+        }
+      });
+  }
+
+  getDraftFromRoute(): IvpDraft {
+    const uuid = this.activatedRoute.snapshot.queryParams['draft'];
+    if (!this.isPfdaVersion || !uuid) {
+      return null;
+    }
+    const draft = this.draftService.getDraft('summary', uuid);
+    if (!draft) {
+      this.mainNotificationService.setNotification({
+        message: 'The Summary draft ' + uuid + ' was not found in this browser.',
+        type: NotificationType.error,
+        milisecondsToShow: 6000
+      });
+    }
+    return draft;
+  }
+
+  loadDraft(draft: IvpDraft): void {
+    const data = _.cloneDeep(draft.data) || {};
+    this.testAgent = data.testAgent;
+    this.testAgentSubstanceUuid = data.testAgentSubstanceUuid;
+    this.testAgentSubstanceKey = data.testAgentSubstanceKey;
+
+    this.screeningList = Array.isArray(data.screeningList) ? data.screeningList : [];
+    this.assayToSave = [];
+    this.screeningList.forEach(screening => {
+      screening.invitroSummary = screening.invitroSummary || {};
+      screening.invitroAssayResultInformation = screening.invitroAssayResultInformation || {};
+      screening.invitroAssayResultInformation.invitroTestAgent = screening.invitroAssayResultInformation.invitroTestAgent || {};
+      screening._assayResults = [];
+
+      // An existing (database) assay is saved with the summary added to its screenings, as when it is selected
+      const selectedAssay = screening._selectedAssay;
+      if (selectedAssay && !selectedAssay._isPfdaInline && !selectedAssay._draftAssayUuid) {
+        const assay = _.cloneDeep(selectedAssay);
+        assay.invitroAssayScreenings = assay.invitroAssayScreenings || [];
+        assay.invitroAssayScreenings.push(screening);
+        this.assayToSave.push(assay);
+      }
+    });
+    if (this.screeningList.length === 0) {
+      this.addNewSummary();
+    }
+
+    this.draftUuid = draft.uuid;
+    this.draftMode = false;
+    this.savedDraft = null;
+    this.submissionMessage = null;
+    this.validationMessages = [];
+    this.showSubmissionMessages = false;
+    this.setDraftQueryParam();
+  }
+
+  // Only replaces the url: the app does not reuse routes, so a router navigation would re-create this form
+  private setDraftQueryParam(): void {
+    const url = this.router.createUrlTree([], { relativeTo: this.activatedRoute, queryParams: { draft: this.draftUuid } }).toString();
+    if (this.location.path() !== url) {
+      this.location.replaceState(url);
+    }
   }
 
   reloadPageAfterSave() {

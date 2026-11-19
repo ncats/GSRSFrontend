@@ -59,6 +59,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   adverseEventShinyHomepageDisplay = false;
   adverseEventShinyHomepageURL: string;
   canRegister: boolean = false;
+  isPfdaVersion = false;
 
   constructor(
     private gaService: GoogleAnalyticsService,
@@ -137,8 +138,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // On pFDA the backing database is read-only, so the Register quick links are
     // shown to everyone (including anonymous users) rather than only to editors.
+    this.isPfdaVersion = this.configService.configData.isPfdaVersion === true;
     this.canRegister =
-      this.configService.configData.isPfdaVersion === true ||
+      this.isPfdaVersion ||
       (await this.authService.canEditData());
   }
 
