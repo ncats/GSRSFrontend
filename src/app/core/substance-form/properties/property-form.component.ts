@@ -148,7 +148,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
     const dialogRef = this.dialog.open(PropertyParameterReuseDialog, {
       data: this.fullSubstance,
-      height: '300px',
       width: '1200px'
     });
     this.overlayContainer.style.zIndex = '1002';

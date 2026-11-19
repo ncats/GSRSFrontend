@@ -11,7 +11,7 @@
 <tr class="form-row parameters" *ngFor="let parameter of parametersForReuse; index as index">
 <td class="parameter-dataCell">Parameter {{ index+1}}</td>
 <td class="parameter-dataCell">{{ parameter.name }}</td>
-<td class="parameter-dataCell">{{ parameter.value.type }}</td>
+<td class="parameter-dataCell">{{ parameter.type }}</td>
 <td class="parameter-dataCell">
   <span *ngIf="parameter.value != null">
               <span>
@@ -169,8 +169,5 @@
 </tr>
 </table>
 
-<hr>
 
-
-<br/>
 <button mat-button (click)="cancel()">Cancel</button>
