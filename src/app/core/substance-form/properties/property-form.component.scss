@@ -97,27 +97,3 @@
   align-items: center;
   margin-bottom: 0;
 }
-
-.parameter-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-      padding: 12px 10px;
-      text-align: left;
-      vertical-align: middle;
-      border-bottom: 1px solid #ddd;
-  }
-
-  th {
-    font-weight: 500;
-    color: var(--mat-sys-on-surface-variant, #666);
-  }
-
-  th:last-child,
-  td:last-child {
-   text-align: right;
-   white-space: nowrap;
-  }
-}

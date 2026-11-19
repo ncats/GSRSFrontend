@@ -1,13 +1,25 @@
-
 .parameter-table {
-  all: unset;
-  display: table;
-  flex-direction: column;
-  margin-bottom: 0;
-  border: 1px solid #444;  
-}
-.parameter-dataCell {
-  border: none;
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 12px 10px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    font-weight: 500;
+    color: var(--mat-sys-on-surface-variant, #666);
+  }
+
+  th:last-child,
+  td:last-child {
+    text-align: right;
+    white-space: nowrap;
+  }
 }
 
 .selection-text {
