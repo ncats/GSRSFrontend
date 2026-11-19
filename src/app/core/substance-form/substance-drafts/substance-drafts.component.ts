@@ -49,6 +49,7 @@ export class SubstanceDraftsComponent implements OnInit {
   formState: FormState = FormState.DRAFT_LIST;
   isLoading: boolean = false;
   validatedDrafts: Array<any> = [];
+  loadError: string | null = null;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -90,8 +91,27 @@ export class SubstanceDraftsComponent implements OnInit {
     var reader = new FileReader();
     reader.onload = (e) => {
       const file = e.target.result;
-        this.filtered = JSON.parse(<string>file);
-        this.values = JSON.parse(<string>file);
+      try {
+        const parsed = JSON.parse(<string>file);
+        if (!Array.isArray(parsed)) {
+          throw new Error('Backup file must contain an array of drafts.');
+        }
+        const isValidDraft = (entry: any) =>
+          entry && typeof entry === 'object' && entry.substance && entry.date;
+        if (parsed.length > 0 && !parsed.every(isValidDraft)) {
+          throw new Error('Backup file does not contain valid draft entries.');
+        }
+        this.loadError = null;
+        this.filtered = parsed;
+        this.values = parsed;
+      } catch (err) {
+        this.loadError = `${this.filename}: Unable to load the file. Please choose a valid GSRS drafts backup (.json).`;
+        this.file = null;
+      }
+    };
+    reader.onerror = () => {
+      this.loadError = `${this.filename}: Unable to read the file. Please try again.`;
+      this.file = null;
     };
     reader.readAsText(this.file);
 }
@@ -354,6 +374,7 @@ export class SubstanceDraftsComponent implements OnInit {
     if (event.target.files.length > 0) {
       this.file = event.target.files[0];
       this.filename = this.file.name;
+      this.loadError = null;
     //  this.uploadForm.get('file').setValue(this.file);
       this.readFile()
     }

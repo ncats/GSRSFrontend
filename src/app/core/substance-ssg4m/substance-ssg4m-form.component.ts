@@ -18,10 +18,11 @@ import {
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { MatExpansionPanel } from "@angular/material/expansion";
 import { MatDialog } from "@angular/material/dialog";
-import { take, map } from "rxjs/operators";
-import { Subscription, Observable } from "rxjs";
+import { take, map, catchError } from "rxjs/operators";
+import { Subscription, Observable, forkJoin, of } from "rxjs";
 import * as _ from "lodash";
 import * as moment from "moment";
+import JSZip from "jszip";
 import { Title } from "@angular/platform-browser";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 // GSRS Import
@@ -681,9 +682,6 @@ export class SubstanceSsg4ManufactureFormComponent
 
     const timestamp = moment(new Date()).format("MMM-DD-YYYY_H-mm-ss");
 
-    // Download the SSG4M substance file
-    this.downloadFile(JSON.stringify(json), "SSG4m_" + timestamp + ".json");
-
     // Collect all refuuids from materials in the SSG4M hierarchy
     const referencedUuids = new Set<string>();
     if (json.specifiedSubstanceG4m && json.specifiedSubstanceG4m.process) {
@@ -711,29 +709,127 @@ export class SubstanceSsg4ManufactureFormComponent
       }
     }
 
-    // Find matching drafts in localStorage and download each as a separate file
+    // Find matching drafts in localStorage
+    const draftSubstances: any[] = [];
+    const foundUuids = new Set<string>();
     const keys = Object.keys(localStorage);
     for (const key of keys) {
-      if (key.startsWith("gsrs-draft-")) {
+      if (!key.startsWith("gsrs-draft-")) {
+        continue;
+      }
+      try {
         const draft = JSON.parse(localStorage.getItem(key));
         if (
           draft &&
           draft.substance &&
-          referencedUuids.has(draft.substance.uuid)
+          draft.substance.uuid &&
+          referencedUuids.has(draft.substance.uuid) &&
+          !foundUuids.has(draft.substance.uuid)
         ) {
-          const name = draft.substance.uuid || draft.name || "unknown";
-          const safeName = name.replace(/[^a-zA-Z0-9_-]/g, "_");
-          this.downloadFile(
-            JSON.stringify(draft.substance),
-            "Draft_" + safeName + "_" + timestamp + ".json",
-          );
+          this.removeTmpStructureIdFields(draft.substance);
+          draftSubstances.push(draft.substance);
+          foundUuids.add(draft.substance.uuid);
         }
+      } catch (e) {
+        // skip unparsable draft entry
       }
     }
+
+    // Fetch remaining referenced substances from the DB
+    const dbUuids = Array.from(referencedUuids).filter(
+      (uuid) => !foundUuids.has(uuid),
+    );
+    const dbFetches: Observable<SubstanceDetail | null>[] = dbUuids.map(
+      (uuid) =>
+        this.substanceService.getSubstanceDetails(uuid).pipe(
+          take(1),
+          catchError(() => of(null)),
+        ),
+    );
+    const fetch$: Observable<(SubstanceDetail | null)[]> = dbFetches.length
+      ? forkJoin(dbFetches)
+      : of([]);
+
+    this.loadingService.setLoading(true);
+    fetch$.pipe(take(1)).subscribe(
+      (dbResults) => {
+        const dbSubstances = (dbResults || []).filter(
+          (s): s is SubstanceDetail => !!s,
+        );
+        for (const s of dbSubstances) {
+          this.removeTmpStructureIdFields(s);
+        }
+
+        // Build a multi-file zip: one JSON per substance
+        const zip = new JSZip();
+        const usedFileNames = new Set<string>();
+
+        const mainUuidPart = json && json.uuid
+          ? String(json.uuid).replace(/[^a-zA-Z0-9_-]/g, "_") + "_"
+          : "";
+        const mainName = this.uniqueFileName(
+          "SSG4m_" + mainUuidPart + timestamp,
+          usedFileNames,
+        );
+        zip.file(mainName, JSON.stringify(json, null, 2));
+
+        for (const draftSub of draftSubstances) {
+          const fileName = this.uniqueFileName(
+            "Draft_" + (this.getSubstanceFileLabel(draftSub) || "unknown"),
+            usedFileNames,
+          );
+          zip.file(fileName, JSON.stringify(draftSub, null, 2));
+        }
+
+        for (const dbSub of dbSubstances) {
+          const fileName = this.uniqueFileName(
+            (this.getSubstanceFileLabel(dbSub) || "unknown"),
+            usedFileNames,
+          );
+          zip.file(fileName, JSON.stringify(dbSub, null, 2));
+        }
+
+        zip
+          .generateAsync({
+            type: "blob",
+            compression: "DEFLATE",
+            compressionOptions: { level: 6 },
+          })
+          .then(
+            (blob) => {
+              this.downloadBlob(blob, "SSG4m_batch_" + timestamp + ".zip");
+              this.loadingService.setLoading(false);
+            },
+            () => {
+              this.loadingService.setLoading(false);
+            },
+          );
+      },
+      () => {
+        this.loadingService.setLoading(false);
+      },
+    );
   }
 
-  private downloadFile(content: string, fileName: string): void {
-    const blob = new Blob([content], { type: "application/json" });
+  private getSubstanceFileLabel(sub: any): string {
+    const raw =
+      (sub && (sub.uuid || (sub.names && sub.names[0] && sub.names[0].name))) ||
+      "";
+    return String(raw).replace(/[^a-zA-Z0-9_-]/g, "_");
+  }
+
+  private uniqueFileName(baseName: string, used: Set<string>): string {
+    let candidate = baseName + ".json";
+    let counter = 2;
+    while (used.has(candidate)) {
+      candidate = baseName + "_" + counter + ".json";
+      counter++;
+    }
+    used.add(candidate);
+    return candidate;
+  }
+
+  private downloadBlob(blob: Blob, fileName: string): void {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -742,6 +838,15 @@ export class SubstanceSsg4ManufactureFormComponent
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+
+  private downloadFile(
+    content: BlobPart,
+    fileName: string,
+    mimeType: string = "application/json",
+  ): void {
+    const blob = new Blob([content], { type: mimeType });
+    this.downloadBlob(blob, fileName);
   }
 
   checkSsg4mServerStatus(): void {

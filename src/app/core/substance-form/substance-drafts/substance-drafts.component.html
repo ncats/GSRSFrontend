@@ -149,8 +149,11 @@
         >
           Load A Backup
         </button>
-        <div class="file-name" [ngClass]="filename ? 'test' : 'italics'">
-          {{ filename ? filename : "no file chosen" }}
+        <div
+          class="file-name"
+          [ngClass]="loadError ? 'error' : (filename ? 'test' : 'italics')"
+        >
+          {{ loadError ? loadError : (filename ? filename : "no file chosen") }}
         </div>
         <input
           id="fileInput"

@@ -236,7 +236,7 @@
                 }
               ]
             },
-            "fda.local3x": {
+            "fda.local4x": {
               "baseHref": "/ginas/app/ui/",
               "assets": [
                 {
@@ -258,7 +258,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.fda.local3x.ts"
+                  "with": "src/environments/environment.fda.local4x.ts"
                 }
               ]
             }
@@ -276,8 +276,8 @@
             "fda.local": {
               "buildTarget": "gsrs-client:build:fda.local"
             },
-            "fda.local3x": {
-              "buildTarget": "gsrs-client:build:fda.local3x"
+            "fda.local4x": {
+              "buildTarget": "gsrs-client:build:fda.local4x"
             },
             "fda.pre-prod": {
               "buildTarget": "gsrs-client:build:fda.pre-prod"
