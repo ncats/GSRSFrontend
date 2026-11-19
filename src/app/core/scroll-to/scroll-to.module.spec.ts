@@ -1,10 +1,10 @@
-import { ScrollNavModule } from './scroll-to.module';
+import { ScrollToModule } from './scroll-to.module';
 
-describe('ScrollNavModule', () => {
-  let scrollNavModule: ScrollNavModule;
+describe('ScrollToModule', () => {
+  let scrollNavModule: ScrollToModule;
 
   beforeEach(() => {
-    scrollNavModule = new ScrollNavModule();
+    scrollNavModule = new ScrollToModule();
   });
 
   it('should create an instance', () => {

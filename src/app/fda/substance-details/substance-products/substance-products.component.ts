@@ -1,11 +1,11 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras, RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { StringDecoder } from 'string_decoder';
 import { take } from 'rxjs/operators';
 
@@ -21,12 +21,47 @@ import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { productSearchSortValues } from '../../product/products-browse/product-search-sort-values';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SubstanceApplicationComponent } from './substance-application/substance-application.component';
+import { SubstanceClinicalTrialsComponent } from './substance-clinical-trials/substance-clinical-trials.component';
+import { SubstanceClinicalTrialsEuropeComponent } from './substance-clinical-trials-eu/substance-clinical-trials-eu.component';
+import { SubstanceAdverseEventPtComponent } from './substance-adverseevent/adverseeventpt/substance-adverseeventpt.component';
+import { SubstanceAdverseEventDmeComponent } from './substance-adverseevent/adverseeventdme/substance-adverseeventdme.component';
+import { SubstanceImpuritiesComponent } from './substance-impurities/substance-impurities.component';
+import { SubstanceSsg4mComponent } from './substance-ssg4m/substance-ssg4m.component';
+import { SubstanceInvitroPharmacologyComponent } from './substance-invitro-pharmacology/substance-invitro-pharmacology.component';
+import { SubstanceInvitroPharmacologySummaryComponent } from './substance-invitro-pharmacology-summary/substance-invitro-pharmacology-summary.component';
 
 @Component({
     selector: 'app-substance-products',
     templateUrl: './substance-products.component.html',
     styleUrls: ['./substance-products.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      RouterLink,
+      MatTabsModule,
+      MatTooltipModule,
+      MatButtonModule,
+      MatIconModule,
+      MatProgressSpinnerModule,
+      MatTableModule,
+      MatSortModule,
+      MatPaginatorModule,
+      SubstanceApplicationComponent,
+      SubstanceClinicalTrialsComponent,
+      SubstanceClinicalTrialsEuropeComponent,
+      SubstanceAdverseEventPtComponent,
+      SubstanceAdverseEventDmeComponent,
+      SubstanceAdverseEventCvmComponent,
+      SubstanceImpuritiesComponent,
+      SubstanceSsg4mComponent,
+      SubstanceInvitroPharmacologySummaryComponent,
+      SubstanceInvitroPharmacologyComponent
+    ]
 })
 
 export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, AfterViewInit {
@@ -77,8 +112,6 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   disableExport = false;
   etag = '';
   etagAllExport = '';
-  canExport: boolean = false;
-  canUpdate: boolean = false;
 
   public displayedColumns: string[] = [
     'view',
@@ -104,10 +137,17 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     super(gaService, productService);
   }
 
-  async ngOnInit() {
+  // Getters, not fields, so they always reflect the current privilege signal.
+  get canExport(): boolean {
+    return this.authService.hasPrivilege('Export Data');
+  }
+
+  get canUpdate(): boolean {
+    return this.authService.hasPrivilege('Edit');
+  }
+
+  ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     if (this.substance && this.substance.uuid) {
 
       // Get Substance UUID and Approval ID

@@ -1,15 +1,21 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { ConfigService } from '@gsrs-core/config';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
+import { MatDividerModule } from '@angular/material/divider';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-substance-edit-import-dialog',
     templateUrl: './substance-edit-import-dialog.component.html',
     styleUrls: ['./substance-edit-import-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatDialogModule, MatDividerModule, MatTabsModule, FormsModule, MatButtonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceEditImportDialogComponent implements OnInit {
   public json: any;
@@ -29,10 +35,14 @@ export class SubstanceEditImportDialogComponent implements OnInit {
     private router: Router,
     private configService: ConfigService,
     public dialogRef: MatDialogRef<SubstanceEditImportDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
     private substanceService: SubstanceService,
+    private cdr: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.urlImportEnabled = this.configService.configData.isPfdaVersion;
+    const incoming =this.configService.configData.isPfdaVersion;
+    if( typeof incoming === 'boolean') {
+      this.urlImportEnabled = incoming;
+    }
   }
 
   ngOnInit() {
@@ -69,6 +79,7 @@ export class SubstanceEditImportDialogComponent implements OnInit {
           this.message = 'Error: Invalid file format';
           this.loaded = false;
         }
+        this.cdr.markForCheck();
       };
       reader.readAsText(event.target.files[0]);
     }
@@ -104,8 +115,10 @@ export class SubstanceEditImportDialogComponent implements OnInit {
         if (r.status !== 200) {
           r.json().then(data => {
             this.message = data.message ? data.message : 'Error while loading given URL';
+            this.cdr.markForCheck();
           }).catch(_e => {
             this.message = 'Error while loading given URL';
+            this.cdr.markForCheck();
           })
         } else {
           const json = r.text().then(data => {
@@ -119,38 +132,17 @@ export class SubstanceEditImportDialogComponent implements OnInit {
               }
             } catch (_e) {
               this.message = 'Error: The URL does not point to a valid JSON file'
+              this.cdr.markForCheck();
             }
           });
         }
       }).catch(e => {
         this.message = `Error: ${e.message}`;
+        this.cdr.markForCheck();
       })
     }
   }
 
-  // Is this method still used anywhere?
-  // useFile() {
-  //   if (!this.uploaded && this.pastedJSON) {
-  //     const read = JSON.parse(this.pastedJSON);
-  //     // If there is no substanceClass field in Substance JSON data
-  //     if (!read['substanceClass']) {
-  //       // if JSON data is from non-substance entity, read the json from the textbox
-  //       if (read['id']) {
-  //         this.loaded = true;
-  //         this.record = this.pastedJSON;
-  //         this.message = '';
-  //       } else {
-  //         this.message = 'Error: Invalid JSON format';
-  //         this.loaded = false;
-  //       }
-  //     } else {
-  //       this.loaded = true;
-  //       this.record = this.pastedJSON;
-  //       this.message = '';
-  //     }
-  //
-  //   }
-  // }
 
   checkLoaded() {
     this.loaded = true;

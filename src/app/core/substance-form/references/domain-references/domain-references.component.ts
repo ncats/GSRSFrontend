@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, ElementRef, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '../../../substance/substance.model';
 import { SubstanceFormService } from '../../substance-form.service';
 import { ControlledVocabularyService } from '../../../controlled-vocabulary/controlled-vocabulary.service';
@@ -7,17 +7,33 @@ import { MatDialog } from '@angular/material/dialog';
 import { RefernceFormDialogComponent } from '../references-dialogs/refernce-form-dialog.component';
 import { ReuseReferencesDialogComponent } from '../references-dialogs/reuse-references-dialog.component';
 import { ReuseReferencesDialogData } from '../references-dialogs/reuse-references-dialog-data.model';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { UtilsService } from '../../../utils/utils.service';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormReferencesService } from '../substance-form-references.service';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ApplyReferenceComponent } from '@gsrs-core/substance-form/references/apply-reference/apply-reference.component';
 
 @Component({
     selector: 'app-domain-references',
     templateUrl: './domain-references.component.html',
     styleUrls: ['./domain-references.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      MatExpansionModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTableModule,
+      MatBadgeModule,
+      MatTooltipModule,
+      ApplyReferenceComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DomainReferencesComponent implements OnInit, OnDestroy {
   @Input() card?: string;
@@ -40,7 +56,8 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -53,6 +70,7 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
       }
       this.canReuse = this.substanceReferences && this.substanceReferences.length > 0;
       this.loadReferences();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(referencesSubscription);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -77,6 +95,7 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
   getVocabularies(): void {
     const dictionarySubscription = this.cvService.getDomainVocabulary('DOCUMENT_TYPE').subscribe(response => {
       this.documentTypesDictionary = response['DOCUMENT_TYPE'].dictionary;
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dictionarySubscription);
   }
@@ -115,9 +134,11 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
         newReference = this.substanceFormReferencesService.addSubstanceReference(newReference);
         setTimeout(() => {
           this.addDomainReference(newReference.uuid);
+          this.cdr.markForCheck();
         });
         this.canReuse = true;
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }
@@ -169,6 +190,7 @@ export class DomainReferencesComponent implements OnInit, OnDestroy {
       if (domainRefereceUuids != null) {
         this.updateDomainReferences(domainRefereceUuids);
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(dialogSubscription);
   }

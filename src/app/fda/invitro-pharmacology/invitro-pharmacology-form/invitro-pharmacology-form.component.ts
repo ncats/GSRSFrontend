@@ -1,18 +1,32 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormControl, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { DatePipe, formatDate } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { forkJoin, shareReplay, mergeMap, Subscription } from 'rxjs';
-import { take, map, catchError } from 'rxjs/operators';
-import * as moment from 'moment';
-import * as _ from 'lodash';
-import * as XLSX from 'xlsx';
+import { forkJoin, shareReplay, Subscription } from 'rxjs';
+import { take, catchError } from 'rxjs/operators';
+import moment from 'moment';
+import lodashCloneDeep from 'lodash/cloneDeep';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
+import { SubstanceSelectorComponent } from '../../../core/substance-selector/substance-selector.component';
+import { SubstanceTextSearchComponent } from '@gsrs-core/substance-text-search/substance-text-search.component';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -20,16 +34,12 @@ import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { SubstanceRelationship, SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
-import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
-import jp from 'jsonpath';
+import { SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
@@ -37,15 +47,37 @@ import {
   InvitroAssayInformation, InvitroAssayScreening, InvitroLaboratory,
   InvitroReference, InvitroSponsor, InvitroSponsorSubmitter, InvitroTestAgent, InvitroControl, ValidationMessage, InvitroAssayResultInformation
 } from '../model/invitro-pharmacology.model';
+import { isJsonSame, scrubShowFieldsSingle, scrubShowFieldsMultiple, isNumber, scrub } from './invitro-pharmacology-scrub.util';
 //import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
   selector: 'app-invitro-pharmacology-form',
   templateUrl: './invitro-pharmacology-form.component.html',
   styleUrls: ['./invitro-pharmacology-form.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatRadioModule,
+    MatStepperModule,
+    MatExpansionModule,
+    MatCardModule,
+    CvInputComponent,
+    SubstanceSelectorComponent,
+    SubstanceTextSearchComponent
+  ]
 })
-export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
+export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('saveTemplate', { static: false }) private saveTemplate;
 
@@ -250,7 +282,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     }, 600);
   }
 
-  ngAfterViewInit(changes: any) {
+  ngAfterViewInit() {
     //this.openModalSave(this.saveTemplate);
   }
 
@@ -270,7 +302,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           this.existingAssaysByAssaySetList = response;
 
           // Copy original records in the variable
-          this.originalAssaysFromDb = _.cloneDeep(response);
+          this.originalAssaysFromDb = lodashCloneDeep(response);
 
           // Loop through Assays and find result information id where same as url id
           this.existingAssaysByAssaySetList.forEach(assay => {
@@ -289,7 +321,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
                       if (screening.invitroAssayResult) {
 
-                        // assign _.show to true for this screening to show in the form
+                        // assign _show to true for this screening to show in the form
                         screening._show = true;
 
                         //Copy Result Information
@@ -299,7 +331,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
                       this.assayResultInfo = screening.invitroAssayResultInformation;
 
                       // copy the original invitroAssayResultInformation in variable
-                      this.originalAssayResultInfoFromDb = _.cloneDeep(screening.invitroAssayResultInformation);
+                      this.originalAssayResultInfoFromDb = lodashCloneDeep(screening.invitroAssayResultInformation);
 
                       // if references is null, create an object
                       if (this.assayResultInfo.invitroReferences == null || (this.assayResultInfo.invitroReferences && this.assayResultInfo.invitroReferences.length == 0)) {
@@ -598,7 +630,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     }
 
     // Copy the Assays/Screening to new variable
-    let copiedAssays = _.cloneDeep(this.existingAssaysByAssaySetList);
+    let copiedAssays = lodashCloneDeep(this.existingAssaysByAssaySetList);
 
     copiedAssays.forEach((assay, indexAssay) => {
       if (assay) {
@@ -790,7 +822,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.createNewSummary();
 
     // Copy the Assays/Screening to new variable
-    this.assaysToSave = _.cloneDeep(this.existingAssaysByAssaySetList);
+    this.assaysToSave = lodashCloneDeep(this.existingAssaysByAssaySetList);
 
     this.generateAssayToSave();
   }
@@ -919,14 +951,16 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     // Rest Api calls
     apiUrl = this.http.put<InvitroAssayInformation>(url, assay, options)
       .pipe(
-        shareReplay(1), catchError(error => { throw error; }));
+        shareReplay(1), catchError(error => {
+ throw error; 
+}));
 
     return apiUrl;
   }
 
   saveRecordForkJoin(assayApiUrlList: any, isSameAssay: boolean) {
 
-    let copyAssayApiUrlList = _.cloneDeep(assayApiUrlList);
+    let copyAssayApiUrlList = lodashCloneDeep(assayApiUrlList);
 
     // Save Assays into the database
     let savedCount = 0;
@@ -954,7 +988,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
                 if (screening.invitroAssayResultInformation) {
 
                   // copy the Database/Original invitroAssayResultInformation in variable
-                  this.originalAssayResultInfoFromDb = _.cloneDeep(screening.invitroAssayResultInformation);
+                  this.originalAssayResultInfoFromDb = lodashCloneDeep(screening.invitroAssayResultInformation);
                 }
               } // invitroAssayScreenings.length > 0
 
@@ -1036,7 +1070,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       this.copyResultInfoForSaving();
     }
 
-    let copyJson = _.cloneDeep(this.existingAssaysByAssaySetList);
+    let copyJson = lodashCloneDeep(this.existingAssaysByAssaySetList);
     let cleanJson = this.scrubShowFieldsMultiple(copyJson);
 
     let data = { jsonData: cleanJson, jsonFilename: jsonFilename };
@@ -1525,7 +1559,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.existingAssaysByAssaySetList[indexCopyFromAssay].invitroAssayScreenings.forEach(copyFromScreening => {
       if (copyFromScreening) {
         if (copyFromScreening._show) {
-          let screen = _.cloneDeep(copyFromScreening);
+          let screen = lodashCloneDeep(copyFromScreening);
 
           // remove the ids, create date, etc.
           newScreening = this.scrub(screen);
@@ -1545,7 +1579,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     */
 
     // Copy the assay to new variable
-    // let copyAssay = _.cloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
+    // let copyAssay = lodashCloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
 
     copyAssay.invitroAssayScreenings.push(newScreening);
 
@@ -1605,100 +1639,23 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   }
 
   isJsonSame(sourceJson: any, destinationJson: any) {
-    let jsonSame = false;
-
-    if ((sourceJson) && (destinationJson)) {
-      if (JSON.stringify(sourceJson) == JSON.stringify(destinationJson)) {
-        jsonSame = true;
-      }
-    }
-    return jsonSame;
+    return isJsonSame(sourceJson, destinationJson);
   }
 
   scrubShowFieldsSingle(assay) {
-    assay.invitroAssayScreenings.forEach(screening => {
-      if (screening) {
-        if (screening._show) {
-          delete screening._show;
-        }
-      }
-    });
+    scrubShowFieldsSingle(assay);
   }
 
   scrubShowFieldsMultiple(assayArray): any {
-    assayArray.forEach(assay => {
-      if (assay) {
-        assay.invitroAssayScreenings.forEach(screening => {
-          if (screening) {
-            if (screening._show) {
-              delete screening._show;
-            }
-          }
-        });
-      }
-    });
-    return assayArray;
-
+    return scrubShowFieldsMultiple(assayArray);
   }
 
   isNumber(str: any): boolean {
-    if (str) {
-      const num = Number(str);
-      const nan = isNaN(num);
-      return !nan;
-    }
-    return false;
+    return isNumber(str);
   }
 
   scrub(oldraw: any): any {
-    const old = oldraw;
-    const idHolders = jp.query(old, '$..[?(@.id)]');
-    for (let i = 0; i < idHolders.length; i++) {
-      if (idHolders[i].id) {
-        delete idHolders[i].id;
-      }
-    }
-
-    const showHolders = jp.query(old, '$..[?(@._show)]');
-    for (let i = 0; i < showHolders.length; i++) {
-      delete showHolders[i]._show;
-    }
-
-    const createHolders = jp.query(old, '$..[?(@.createdDate)]');
-    for (let i = 0; i < createHolders.length; i++) {
-      delete createHolders[i].creationDate;
-    }
-
-    const createdByHolders = jp.query(old, '$..[?(@.createdBy)]');
-    for (let i = 0; i < createdByHolders.length; i++) {
-      delete createdByHolders[i].createdBy;
-    }
-
-    const modifyHolders = jp.query(old, '$..[?(@.modifiedDate)]');
-    for (let i = 0; i < modifyHolders.length; i++) {
-      delete modifyHolders[i].lastModifiedDate;
-    }
-
-    const modifiedByHolders = jp.query(old, '$..[?(@.modifiedBy)]');
-    for (let i = 0; i < modifiedByHolders.length; i++) {
-      delete modifiedByHolders[i].modifiedBy;
-    }
-
-    const intVersionHolders = jp.query(old, '$..[?(@.internalVersion)]');
-
-    for (let i = 0; i < intVersionHolders.length; i++) {
-      delete intVersionHolders[i].internalVersion;
-    }
-
-    delete old['createdDate'];
-    delete old['createdBy'];
-    delete old['modifiedBy'];
-    delete old['modifiedDate'];
-    delete old['internalVersion'];
-    delete old['$$update'];
-    delete old['_self'];
-
-    return old;
+    return scrub(oldraw);
   }
 
 }

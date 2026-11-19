@@ -12,18 +12,48 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { Environment } from 'src/environments/environment.model';
 import { Location } from '@angular/common';
 import { DisplayFacet } from './display-facet';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { searchSortValues } from '../utils/search-sort-values';
-import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
+import { CodeSystemDisplayPipe } from '@gsrs-core/utils/code-system-display.pipe';
+import { RelationshipDisplayPipe } from '@gsrs-core/utils/relationship-display.pipe.';
+import { FacetDisplayPipe } from '@gsrs-core/facets-manager/facet-display.pipe';
 
 
 @Component({
     selector: 'app-facets-manager',
     templateUrl: './facets-manager.component.html',
     styleUrls: ['./facets-manager.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatCheckboxModule,
+      MatButtonModule,
+      MatExpansionModule,
+      MatFormFieldModule,
+      MatIconModule,
+      MatOptionModule,
+      MatSelectModule,
+      MatProgressBarModule,
+      MatTooltipModule,
+      MatInputModule,
+      CodeSystemDisplayPipe,
+      RelationshipDisplayPipe,
+      FacetDisplayPipe
+    ]
 })
 export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() facetsParamsUpdated = new EventEmitter<FacetUpdateEvent>();
@@ -802,8 +832,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       if (rawFacets) {
         if (this.facetSort[index] === 'count') {
           this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => b.count-a.count);
-        }
-        else if (this.facetSort[index] === 'inverse') {
+        } else if (this.facetSort[index] === 'inverse') {
           this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => a.count-b.count);
         } else if (this.facetSort[index] === 'AZ') {
           this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => a.label.localeCompare(b.label));  
@@ -813,8 +842,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       }
       if (this.facetSort[index] === 'count') {
         this.facets[index].values = this.facets[index].values.sort((a, b) => b.count-a.count);
-      }
-      else if (this.facetSort[index] === 'inverse') {
+      } else if (this.facetSort[index] === 'inverse') {
         this.facets[index].values = this.facets[index].values.sort((a, b) => a.count-b.count);
       } else if (this.facetSort[index] === 'AZ') {
         this.facets[index].values = this.facets[index].values.sort((a, b) => a.label.localeCompare(b.label));

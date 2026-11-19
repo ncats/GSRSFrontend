@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { SubstanceRelated, SubstanceSummary, SpecifiedSubstanceG3, SpecifiedSubstanceG4m } from '@gsrs-core/substance';
@@ -8,12 +8,18 @@ import { ConfigService } from '@gsrs-core/config/config.service';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormSsg4mStartingMaterialsModule } from '@gsrs-core/substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
+import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
+import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substance-selector.component';
 
 @Component({
     selector: 'app-ssg-parent-substance-form',
     templateUrl: './ssg-parent-substance-form.component.html',
     styleUrls: ['./ssg-parent-substance-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatTooltipModule, RouterModule, SubstanceSelectorComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class SsgParentSubstanceFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
@@ -32,7 +38,8 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
     public gaService: GoogleAnalyticsService,
     private substanceFormService: SubstanceFormService,
     public cvService: ControlledVocabularyService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
     this.analyticsEventCategory = 'substance form ssg 3 and 4 parent substance';
@@ -92,6 +99,7 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
       // if (substance.specifiedSubstanceG4m.parentSubstance != null) {
       //   this.relatedSubstanceUuid = substance.specifiedSubstanceG4m.parentSubstance.refuuid;
       // }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(substanceSubscription);
   }

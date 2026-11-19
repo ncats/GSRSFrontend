@@ -1,11 +1,11 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DomSanitizer, SafeUrl, Title } from '@angular/platform-browser';
-import * as moment from 'moment';
-import * as _ from 'lodash';
+import moment from 'moment';
+import lodashCloneDeep from 'lodash/cloneDeep';
 
 /* GSRS Core Import */
 import { LoadingService } from '@gsrs-core/loading';
@@ -29,7 +29,7 @@ import jp from 'jsonpath';
     selector: 'app-product-details-base',
     template: '',
     styleUrls: ['./product-details-base.component.scss'],
-    standalone: false
+    standalone: true
 })
 export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -55,7 +55,6 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   iconSrcPath: string;
   dailyMedUrlConfig = '';
   message = '';
-  canUpdate: boolean = false;
   downloadJsonHref: any;
   jsonFilename: string;
   private overlayContainer: HTMLElement;
@@ -76,9 +75,10 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     public titleService: Title,
     public overlayContainerService: OverlayContainer,
     public dialog: MatDialog,
-    public sanitizer: DomSanitizer) { }
+    public sanitizer: DomSanitizer,
+    protected cdr: ChangeDetectorRef) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.loadingService.setLoading(true);
@@ -132,6 +132,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           });
         }
       });
+      this.cdr.markForCheck();
     });  // getDomainVocabulary
   }
 
@@ -167,9 +168,11 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           this.sortProductCodes();
         }
       }
+      this.cdr.markForCheck();
     }, error => {
       this.message = 'No Product record found';
       // this.handleSubstanceRetrivalError();
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(prodSubscription);
   }
@@ -249,6 +252,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                         }
 
                       } // if reponse
+                      this.cdr.markForCheck();
                     });
                     this.subscriptions.push(subSubscription);
                   }
@@ -276,6 +280,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                           } // if Substance is public
 
                         } // response
+                        this.cdr.markForCheck();
                       });
 
                     this.subscriptions.push(subBasisSubscription);
@@ -313,6 +318,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
             }
           }
         }
+        this.cdr.markForCheck();
       });
     }
   }
@@ -433,7 +439,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   saveJSON(): void {
-    const copyProd = _.cloneDeep(this.product);
+    const copyProd = lodashCloneDeep(this.product);
     let cleanProduct = this.scrub(copyProd);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanProduct)));
@@ -447,7 +453,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     const date = new Date();
     let jsonFilename = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    const copyProd = _.cloneDeep(this.product);
+    const copyProd = lodashCloneDeep(this.product);
     let cleanProduct = this.scrub(copyProd);
 
     let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };

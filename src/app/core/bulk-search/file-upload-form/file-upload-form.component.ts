@@ -1,17 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormGroup, FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
-import * as moment from 'moment';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
 import { LoadingService } from '@gsrs-core/loading';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-file-upload-form',
     templateUrl: './file-upload-form.component.html',
     styleUrls: ['./file-upload-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      ReactiveFormsModule,
+      MatButtonModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatProgressSpinnerModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadFormComponent implements OnInit {
   uploadForm: FormGroup;
@@ -25,8 +38,8 @@ export class FileUploadFormComponent implements OnInit {
     public adminService: AdminService,
     private router: Router,
     private route: ActivatedRoute,
-    private loadingService: LoadingService
-
+    private loadingService: LoadingService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -50,6 +63,7 @@ export class FileUploadFormComponent implements OnInit {
    }, error => {
     this.message = 'File could not be uploaded';
     this.loadingService.setLoading(false);
+    this.cdr.markForCheck();
    });
 }
 

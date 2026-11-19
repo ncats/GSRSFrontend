@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {StructurallyDiverse} from '@gsrs-core/substance';
 import {Subscription} from 'rxjs';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
@@ -6,12 +6,19 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import { SubstanceFormBase } from '../../base-classes/substance-form-base';
 import { SubstanceFormStructurallyDiverseService } from '../substance-form-structurally-diverse.service';
+import { CommonModule } from '@angular/common';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
+import { AuditInfoComponent } from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-substance-form-structurally-diverse-source',
     templateUrl: './substance-form-structurally-diverse-source.component.html',
     styleUrls: ['./substance-form-structurally-diverse-source.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatRadioModule, MatButtonModule, AuditInfoComponent, CvInputComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {
@@ -23,7 +30,8 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
   constructor(
     private substanceFormStructurallyDiverseService: SubstanceFormStructurallyDiverseService,
     public gaService: GoogleAnalyticsService,
-    public cvService: ControlledVocabularyService
+    public cvService: ControlledVocabularyService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
     this.analyticsEventCategory = 'substance form Source Material';
@@ -63,6 +71,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
           }
         }
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(structurallyDiverseSubscription);
   }

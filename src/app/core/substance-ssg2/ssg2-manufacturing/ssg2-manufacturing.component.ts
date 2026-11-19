@@ -7,12 +7,20 @@ import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controll
 import { SubstanceFormBase } from '../../substance-form/base-classes/substance-form-base';
 import { SubstanceDetail, SpecifiedSubstanceG2Manufacturing } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg2ManufacturingService } from './substance-form-ssg2-manufacturing.service';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-ssg2-manufacturing',
     templateUrl: './ssg2-manufacturing.component.html',
     styleUrls: ['./ssg2-manufacturing.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [FormsModule, MatIconModule, MatButtonModule, MatTooltipModule, MatFormFieldModule, MatInputModule, CvInputComponent]
 })
 export class Ssg2ManufacturingComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
 

@@ -3,7 +3,7 @@ import { ConfigService } from '@gsrs-core/config';
 
 @Pipe({
     name: 'statusDisplay',
-    standalone: false
+    standalone: true
 })
 export class SubstanceStatusPipe implements PipeTransform {
     constructor(public configService: ConfigService) {

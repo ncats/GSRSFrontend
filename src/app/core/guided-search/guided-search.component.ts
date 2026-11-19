@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
 import { QueryableSubstanceDictionary } from './queryable-substance-dictionary.model';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
@@ -7,12 +10,15 @@ import { QueryStatement } from './query-statement/query-statement.model';
 import { typeCommandOptions } from './query-statement/type-command-options.constant';
 import { UtilsService } from '@gsrs-core/utils';
 import { Title } from '@angular/platform-browser';
+import { QueryStatementComponent } from './query-statement/query-statement.component';
 
 @Component({
     selector: 'app-guided-search',
     templateUrl: './guided-search.component.html',
     styleUrls: ['./guided-search.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [MatCardModule, MatIconModule, MatButtonModule, QueryStatementComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuidedSearchComponent implements OnInit {
   queryableSubstanceDict: QueryableSubstanceDictionary;
@@ -27,7 +33,8 @@ export class GuidedSearchComponent implements OnInit {
     private configService: ConfigService,
     private utilitiesService: UtilsService,
     private activatedRoute: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -70,6 +77,7 @@ export class GuidedSearchComponent implements OnInit {
         } else {
           this.queryStatements.push({});
         }
+        this.cdr.markForCheck();
     });
   }
 
@@ -80,6 +88,7 @@ export class GuidedSearchComponent implements OnInit {
       });
       this.query = '';
       this.query = this.queryStatements.map(statement => statement.query).join(' ').trim();
+      this.cdr.markForCheck();
     });
   }
 

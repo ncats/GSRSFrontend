@@ -5,7 +5,9 @@ import { AuthService } from '@gsrs-core/auth';
 import { UtilsService } from '@gsrs-core/utils';
 import { ConfigService } from '@gsrs-core/config/config.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SsoRefreshService implements OnDestroy {
   private iframe: HTMLIFrameElement;
   private refreshInterval: any;

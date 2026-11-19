@@ -8,6 +8,22 @@ describe('SubstanceEditImportDialogComponent import', () => {
   let checkbox: HTMLInputElement;
   let resetResponse: Subject<object>;
   const original = { substanceClass: 'chemical', uuid: 'existing-id' };
+  let fixture: ComponentFixture<SubstanceEditImportDialogComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ SubstanceEditImportDialogComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Router, useValue: {} },
+        // constructor reads configService.configData.isPfdaVersion directly.
+        { provide: ConfigService, useValue: { configData: {} } },
+        { provide: MatDialogRef, useValue: { close: vi.fn() } },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
+      ]
+    })
+    .compileComponents();
+  });
 
   beforeEach(() => {
     resetResponse = new Subject<object>();

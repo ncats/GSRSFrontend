@@ -1,20 +1,28 @@
 
 <div class = "flex-row">
-<mat-form-field [ngClass] = "privateMod === 'other'?'risen':''" class = "cv-field">
- 
-  <mat-select [(ngModel)]="privateMod" name="term" (ngModelChange)="select($event)" [disabled] = "disable">
+  <mat-form-field [ngClass] = "privateMod === 'other'?'risen':''" class = "cv-field">
+
+    <mat-select [(ngModel)]="privateMod" name="term" (ngModelChange)="select($event)" [disabled] = "disable">
       <mat-option value = 'other' >Other (New Value)</mat-option>
-    <mat-option [value] = 'null' *ngIf = "privateMod" ><span class = 'deselect' >Clear selection</span></mat-option>
-  <mat-option *ngFor="let term of vocabulary" [value]=" term.value">
-    {{term.display}}
-  </mat-option>
-  <mat-option *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== ''"
-              value = "{{privateMod}}">{{privateMod}} ({{domain ? 'not in CV' : 'not in field list'}})</mat-option>
-</mat-select>
-</mat-form-field>
-</div>
-<div *ngIf = "privateMod === 'other'" class = "custom">
-  <mat-form-field>
-    <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+      @if (privateMod) {
+        <mat-option [value] = 'null' ><span class = 'deselect' >Clear selection</span></mat-option>
+      }
+      @for (term of vocabulary; track term) {
+        <mat-option [value]=" term.value">
+          {{term.display}}
+        </mat-option>
+      }
+      @if (privateMod && !inCV(  vocabulary, privateMod) && privateMod !== '') {
+        <mat-option
+        value = "{{privateMod}}">{{privateMod}} ({{domain ? 'not in CV' : 'not in field list'}})</mat-option>
+      }
+    </mat-select>
   </mat-form-field>
 </div>
+@if (privateMod === 'other') {
+  <div class = "custom">
+    <mat-form-field>
+      <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+    </mat-form-field>
+  </div>
+}

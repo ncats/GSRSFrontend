@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { SubstanceSummaryDynamicContent } from '@gsrs-core/substances-browse';
 import { SubstanceDetail } from '@gsrs-core/substance';
@@ -12,7 +15,8 @@ import { LoadedComponents } from '@gsrs-core/config';
     selector: 'app-substance-counts',
     templateUrl: './substance-counts.component.html',
     styleUrls: ['./substance-counts.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterLink, MatIconModule, MatTooltipModule, MatBadgeModule]
 })
 export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamicContent {
   substanceNames: any;

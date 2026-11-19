@@ -1,18 +1,24 @@
 <form>
   <mat-form-field [floatLabel]="'never'" class="search-form-field space-right-small">
-	<input class="search" title="{{searchControl.value}}" type="text" placeholder="Search" aria-label="Search substances" 
-	matInput [formControl]="searchControl" [matAutocomplete]="auto">
-	<mat-autocomplete #auto="matAutocomplete" (optionSelected)="substanceSearchOptionSelected($event)">
-	  <div *ngFor="let field of suggestionsFields">
-		<mat-option *ngFor="let suggestion of suggestions" [value]="suggestion.key" title="{{suggestion.key}}">
-		  <div>{{suggestion.key}}</div>
-		</mat-option>
-	  </div>
-	</mat-autocomplete>
-  </mat-form-field>
-	<span *ngIf="showIcon">
-	<button class="search-button" mat-icon-button (click)="processSubstanceNameSearch()" [disabled]="searchControl.invalid">
-	<mat-icon svgIcon="search"></mat-icon>
-  </button>
-	</span>
-</form>
+    <input class="search" title="{{searchControl.value}}" type="text" placeholder="Search" aria-label="Search substances"
+      matInput [formControl]="searchControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="substanceSearchOptionSelected($event)">
+        @for (field of suggestionsFields; track field) {
+          <div>
+            @for (suggestion of suggestions; track suggestion) {
+              <mat-option [value]="suggestion.key" title="{{suggestion.key}}">
+                <div>{{suggestion.key}}</div>
+              </mat-option>
+            }
+          </div>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    @if (showIcon) {
+      <span>
+        <button class="search-button" mat-icon-button (click)="processSubstanceNameSearch()" [disabled]="searchControl.invalid">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </span>
+    }
+  </form>

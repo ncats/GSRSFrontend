@@ -157,8 +157,8 @@ describe('formatIsoLines', () => {
     const entries = Array.from({ length: 9 }, (_, i) => ({ atomIndex: i + 1, isotope: i + 100 }));
     const lines = formatIsoLines(entries);
     expect(lines.length).toBe(2);
-    expect(lines[0].startsWith('M  ISO  8')).toBeTrue();
-    expect(lines[1].startsWith('M  ISO  1')).toBeTrue();
+    expect(lines[0].startsWith('M  ISO  8')).toBe(true);
+    expect(lines[1].startsWith('M  ISO  1')).toBe(true);
   });
 
   it('returns empty array for no entries', () => {
@@ -209,19 +209,19 @@ describe('consolidateIsoLines', () => {
 
 describe('hasSameStructureLayout', () => {
   it('returns true when the only difference is M  ISO entries', () => {
-    expect(hasSameStructureLayout(ISOTOPES_MOL, ISOTOPES_MOL_NO_ISO)).toBeTrue();
+    expect(hasSameStructureLayout(ISOTOPES_MOL, ISOTOPES_MOL_NO_ISO)).toBe(true);
   });
 
   it('returns true for identical molfiles', () => {
-    expect(hasSameStructureLayout(ISOTOPES_MOL, ISOTOPES_MOL)).toBeTrue();
+    expect(hasSameStructureLayout(ISOTOPES_MOL, ISOTOPES_MOL)).toBe(true);
   });
 
   it('returns false when atom count differs', () => {
-    expect(hasSameStructureLayout(ISOTOPES_MOL, BENZENE_MOL)).toBeFalse();
+    expect(hasSameStructureLayout(ISOTOPES_MOL, BENZENE_MOL)).toBe(false);
   });
 
   it('returns false for empty string', () => {
-    expect(hasSameStructureLayout(ISOTOPES_MOL, '')).toBeFalse();
+    expect(hasSameStructureLayout(ISOTOPES_MOL, '')).toBe(false);
   });
 });
 
@@ -371,9 +371,11 @@ M  END`;
   it('converts legacy D atom symbols to H atoms with M ISO mass 2', () => {
     const converted = convertLegacyIsotopeSymbols(JSDRAW_DEUTERIUM_MOL);
     expect(getAtomElements(converted)[4]).toBe('H');
-    expect(getIsoEntries(converted)).toEqual([
-      jasmine.objectContaining({ atomIndex: 5, isotope: 2, element: 'H' }),
-    ]);
+    const isoEntries = getIsoEntries(converted);
+    expect(isoEntries.length).toBe(1);
+    expect(isoEntries[0].atomIndex).toBe(5);
+    expect(isoEntries[0].isotope).toBe(2);
+    expect(isoEntries[0].element).toBe('H');
   });
 });
 

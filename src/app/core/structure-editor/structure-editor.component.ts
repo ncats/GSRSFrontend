@@ -10,13 +10,12 @@ import {
   ViewChild,
   ElementRef, AfterViewInit, HostListener
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { EditorImplementation } from './structure-editor-implementation.model';
 import { environment } from '../../../environments/environment';
 import { StructureService } from '@gsrs-core/structure';
 import { LoadingService } from '@gsrs-core/loading';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
 import { ConfigService } from '@gsrs-core/config';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.component';
@@ -24,6 +23,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JSDraw, Ketcher } from './structure.editor.model';
 import { Subscription } from 'rxjs';
+import { DragDropPasteDirective } from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
+import { JsdrawWrapperComponent } from './jsdraw-wrapper/jsdraw-wrapper.component';
+import { KetcherWrapperComponent } from './ketcher-wrapper/ketcher-wrapper.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 
 export type StructureEditorName = 'jsdraw' | 'ketcher';
 
@@ -49,7 +54,16 @@ export function resolveStructureEditorPreference(
     selector: 'app-structure-editor',
     templateUrl: './structure-editor.component.html',
     styleUrls: ['./structure-editor.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      DragDropPasteDirective,
+      JsdrawWrapperComponent,
+      KetcherWrapperComponent,
+      MatButtonModule,
+      MatMenuModule,
+      MatIconModule
+    ]
 })
 export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   editor: EditorImplementation;
@@ -92,8 +106,11 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ];
   private ketcherUrls = [
-    `${environment.baseHref || ''}assets/ketcher/static/js/main.963f80c2.js`,
-    `${environment.baseHref || ''}assets/ketcher/static/js/583.7fb8b79c.chunk.js`,
+    `${environment.baseHref || ''}assets/ketcher/static/js/main.e47c48ad.js`,
+    // Ketcher's lazy chunks resolve page-relative, so preload them all from the assets path
+    `${environment.baseHref || ''}assets/ketcher/static/js/127.aa15387f.chunk.js`,
+    `${environment.baseHref || ''}assets/ketcher/static/js/609.d5254829.chunk.js`,
+    `${environment.baseHref || ''}assets/ketcher/static/js/114.cd66d630.chunk.js`,
   ];
 
   constructor(
@@ -308,7 +325,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       }
 
       const node2 = document.createElement('link');
-      node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.3fc9c0f8.css`;
+      node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.96b87be0.css`;
       node2.rel = "stylesheet";
       document.getElementsByTagName('head')[0].appendChild(node2);
     }
@@ -392,7 +409,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       }
 
       const node2 = document.createElement('link');
-      node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.3fc9c0f8.css`;
+      node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.96b87be0.css`;
       node2.rel = "stylesheet";
       document.getElementsByTagName('head')[0].appendChild(node2);
 
@@ -540,7 +557,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
               if (!isLoadCanvas && this.editor) {
                 this.editor.getMolfile().pipe(take(1)).subscribe((result: string) => {
                   const jsdraw = this.getSketcher();
-                  if (jsdraw) { jsdraw.setFile(result, 'mol'); }
+                  if (jsdraw) {
+ jsdraw.setFile(result, 'mol'); 
+}
                 });
               }
             }
@@ -613,8 +632,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.loadingService.setLoading(false);
         });
 
-      }
-      else {
+      } else {
         this.jsdraw.setMolfile(mol);
         this.loadingService.setLoading(false);
         this.loadedMolfile.emit(mol);
@@ -754,7 +772,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.editor.setMolecule(response.structure.molfile);
         }
         this.loadingService.setLoading(false);
-      }, () => { this.loadingService.setLoading(false); });
+      }, () => {
+ this.loadingService.setLoading(false); 
+});
     });
   }
 

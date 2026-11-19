@@ -1,15 +1,36 @@
-import { Component, OnInit, Input, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { VocabularyTerm, Vocabulary, ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-cv-term-dialog',
     templateUrl: './cv-term-dialog.component.html',
     styleUrls: ['./cv-term-dialog.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatDialogModule,
+      MatCheckboxModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatIconModule,
+      MatButtonModule,
+      MatTooltipModule,
+      FragmentWizardComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CvTermDialogComponent implements OnInit, AfterViewInit{
   isNew: boolean;
@@ -28,7 +49,8 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
     public scrollToService: ScrollToService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private cdr: ChangeDetectorRef
   ) {
     this.vocabulary = data.vocabulary;
     this.terms = data.vocabulary.terms.sort(function(a, b) {
@@ -58,6 +80,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
           term.fragmentSrc = this.cvService.getStructureUrl(term.fragmentStructure);
       }
       });
+      this.cdr.markForCheck();
     }
   }
 
@@ -93,6 +116,7 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
      //   this.getVocab();
       }
+      this.cdr.markForCheck();
     });
   }
 
@@ -123,14 +147,14 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         console.log(`error.error: ${error.error}; error.message: ${error.message}`);
         if (error.error && error.error.message) {
           str += '\n\n' + error.error.message;
-  
-        }
-       else if(error.message) {
+
+        } else if(error.message) {
           str += '\n\n' + error.message;
         }
       alert(str);
         this.loading = false;
-  
+        this.cdr.markForCheck();
+
       });
         } else {
           if(response && response.validationMessages) {
@@ -139,17 +163,18 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
             });
           }
         }
+        this.cdr.markForCheck();
     },error => {
       let str = 'Invalid Vocabulary';
       if (error.error && error.error.message) {
         str += '\n\n' + error.error.message;
 
-      }
-     else if(error.message) {
+      } else if(error.message) {
         str += '\n\n' + error.message;
       }
       alert(str);
       this.loading = false;
+      this.cdr.markForCheck();
 
     });
     this.loading = false;

@@ -1,10 +1,12 @@
 <div class="note-form-container">
-  <div *ngIf="note.$$deletedCode" class="notification-backdrop">
-    Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-      <mat-icon svgIcon="undo"></mat-icon>
-    </button>
-  </div>
+  @if (note.$$deletedCode) {
+    <div class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+  }
   <div class="form-row">
     <div class="delete-container">
       <button mat-icon-button matTooltip="Delete note" (click)="deleteNote()">
@@ -21,10 +23,12 @@
       </app-access-manager>
     </div>
   </div>
-  <div class="form-row" *ngIf="!note.$$deletedCode">
-    <div class="references-container">
-      <app-domain-references [referencesUuids]="note.references" #references></app-domain-references>
+  @if (!note.$$deletedCode) {
+    <div class="form-row">
+      <div class="references-container">
+        <app-domain-references [referencesUuids]="note.references" #references></app-domain-references>
+      </div>
     </div>
-  </div>
+  }
   <app-audit-info [source] = "note"></app-audit-info>
 </div>

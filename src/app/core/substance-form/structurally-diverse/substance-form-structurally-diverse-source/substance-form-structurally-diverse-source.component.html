@@ -1,36 +1,39 @@
 
 
-<div class = 'source-container' *ngIf = "structurallyDiverse">
-  <div class = 'form-row'>
-    <app-cv-input class = 'cv-input' domain = "SOURCE_MATERIAL_CLASS" title = "Source Material Class"
-                  (valueChange) = "update('class',$event)" [model] = "structurallyDiverse.sourceMaterialClass"></app-cv-input>
-    <app-cv-input class = 'cv-input'  domain = "SOURCE_MATERIAL_TYPE" title = "Source Material Type"
-                  (valueChange) = "update('type',$event)" [model] = "structurallyDiverse.sourceMaterialType"></app-cv-input>
-    <app-cv-input class = 'cv-input'  *ngIf = "structurallyDiverse.sourceMaterialClass === 'ORGANISM'" domain = "SOURCE_MATERIAL_STATE" title = "Source Material State"
-                  (valueChange) = "update('state',$event)" [model] = "structurallyDiverse.sourceMaterialState"></app-cv-input>
-    <div class = 'column-radio'>
-    <mat-radio-group class = 'type'(change) = 'updateType($event)'>
-      <mat-radio-button  value = 'whole' [checked] = '(part && part === "whole")'>Whole</mat-radio-button>
-      <mat-radio-button value = 'fraction' [checked] = '(part && part === "fraction")'>Part/ Fraction</mat-radio-button>
-      <mat-radio-button value = 'full_fields' [checked] = '(part && part === "full_fields")
-      '>Full Fields</mat-radio-button>
-
-    </mat-radio-group>
-    </div>
-    <div>
-     <!-- <app-access-manager (accessOut)="updateAccess($event)" [access]="structurallyDiverse.access">
+@if (structurallyDiverse) {
+  <div class = 'source-container'>
+    <div class = 'form-row'>
+      <app-cv-input class = 'cv-input' domain = "SOURCE_MATERIAL_CLASS" title = "Source Material Class"
+      (valueChange) = "update('class',$event)" [model] = "structurallyDiverse.sourceMaterialClass"></app-cv-input>
+      <app-cv-input class = 'cv-input'  domain = "SOURCE_MATERIAL_TYPE" title = "Source Material Type"
+      (valueChange) = "update('type',$event)" [model] = "structurallyDiverse.sourceMaterialType"></app-cv-input>
+      @if (structurallyDiverse.sourceMaterialClass === 'ORGANISM') {
+        <app-cv-input class = 'cv-input'  domain = "SOURCE_MATERIAL_STATE" title = "Source Material State"
+        (valueChange) = "update('state',$event)" [model] = "structurallyDiverse.sourceMaterialState"></app-cv-input>
+      }
+      <div class = 'column-radio'>
+        <mat-radio-group class = 'type'(change) = 'updateType($event)'>
+          <mat-radio-button  value = 'whole' [checked] = '(part && part === "whole")'>Whole</mat-radio-button>
+          <mat-radio-button value = 'fraction' [checked] = '(part && part === "fraction")'>Part/ Fraction</mat-radio-button>
+          <mat-radio-button value = 'full_fields' [checked] = '(part && part === "full_fields")
+          '>Full Fields</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div>
+        <!-- <app-access-manager (accessOut)="updateAccess($event)" [access]="structurallyDiverse.access">
       </app-access-manager>-->
     </div>
   </div>
-  <div class = "form-row-alt" *ngIf = "confirm">
-    <div>Changes made to the now hidden form will still be submitted <button class = "mat-button mat-primary mat-flat-button" (click) = "clean()" >clean hidden fields</button></div>  
+  @if (confirm) {
+    <div class = "form-row-alt">
+      <div>Changes made to the now hidden form will still be submitted <button class = "mat-button mat-primary mat-flat-button" (click) = "clean()" >clean hidden fields</button></div>
     </div>
+  }
   <div class = "form-row">
     <app-audit-info [source] = "structurallyDiverse"></app-audit-info>
   </div>
-
-
 </div>
+}
 
 
 

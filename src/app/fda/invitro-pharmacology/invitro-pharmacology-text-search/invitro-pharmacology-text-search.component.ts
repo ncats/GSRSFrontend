@@ -1,46 +1,31 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ElementRef, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
-import { Sort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
-import { Title } from '@angular/platform-browser';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { Subscription } from 'rxjs';
-import * as moment from 'moment';
-import * as XLSX from 'xlsx';
-import { Location, LocationStrategy } from '@angular/common';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 /* GSRS Core Imports */
-import { AuthService } from '@gsrs-core/auth/auth.service';
-import { UtilsService } from '../../../core/utils/utils.service';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-import { GeneralService } from '../../service/general.service';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { FacetParam } from '@gsrs-core/facets-manager';
-import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-import { environment } from '../../../../environments/environment';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
-import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
-import { invitroPharmacologySearchSortValues } from '../invitro-pharmacology-browse/invitro-pharmacology-search-sort-values';
 
 @Component({
     selector: 'app-invitro-pharmacology-text-search',
     templateUrl: './invitro-pharmacology-text-search.component.html',
     styleUrls: ['./invitro-pharmacology-text-search.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatIconModule, MatButtonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -63,12 +48,15 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
   @Input() source?: string;
   private CasDisplay = 'CAS';
   codeSystemVocab?: any;
+  private deactivateSearchTimer?: ReturnType<typeof setTimeout>;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private element: ElementRef,
     private configService: ConfigService,
     private cvService: ControlledVocabularyService,
-    private invitroPharmacologyService: InvitroPharmacologyService
+    private invitroPharmacologyService: InvitroPharmacologyService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -81,7 +69,8 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
         const eventCategory = this.eventCategory || 'substanceTextSearch';
         const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         return this.invitroPharmacologyService.getInvitroPharmacologySearchSuggestions(searchValue.toUpperCase());
-      })
+      }),
+      takeUntil(this.destroy$)
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
       let showTypes = ['Target_Name', 'Test_Agent', 'Application_Type_Number', 'Laboratory_Name', 'Control_Type'];
@@ -121,9 +110,11 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
         this.matOpen = true;
         this.opened.emit();
       }
+      this.cdr.markForCheck();
 
     }, error => {
       console.log(error);
+      this.cdr.markForCheck();
     });
 
   }
@@ -150,7 +141,11 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
     return this.privateErrorMessage;
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    clearTimeout(this.deactivateSearchTimer);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   autoCompleteClosed(): void {
     this.matOpen = false;
@@ -220,7 +215,11 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
 
   deactivateSearch(): void {
     this.searchContainerElement.classList.add('deactivate-search');
-    setTimeout(() => {
+    clearTimeout(this.deactivateSearchTimer);
+    this.deactivateSearchTimer = setTimeout(() => {
+      if (!this.searchContainerElement) {
+        return;
+      }
       if (this.source) {
 
         this.searchContainerElement.classList.remove('active-' + this.source);
@@ -263,4 +262,3 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
   }
 
 }
-

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApplicationIngredient } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
@@ -9,15 +9,34 @@ import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SubstanceSearchSelectorComponent } from '../../../substance-search-select/substance-search-selector.component';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
-import { GsrsModule } from '@gsrs-core/gsrs.module';
 import { GeneralService } from 'src/app/fda/service/general.service';
 import { A } from '@angular/cdk/keycodes';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 
 @Component({
     selector: 'app-ingredient-form',
     templateUrl: './ingredient-form.component.html',
     styleUrls: ['./ingredient-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTooltipModule,
+      SubstanceSearchSelectorComponent,
+      CvInputComponent
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IngredientFormComponent implements OnInit, OnDestroy {
   @Input() ingredient: ApplicationIngredient;
@@ -50,7 +69,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     public cvService: ControlledVocabularyService,
     private applicationService: ApplicationService,
     private generalService: GeneralService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -75,6 +95,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
       //   this.getSubstanceId(this.ingredient.basisOfStrengthBdnum, 'basisofstrength');
 
       this.getSubstanceBySubstanceKey();
+      this.cdr.markForCheck();
     }, 600);
   }
 
@@ -117,6 +138,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed().subscribe(result => {
         if (result && result === true) {
           this.reviewIngredient();
+          this.cdr.markForCheck();
         }
       });
     } else {
@@ -138,6 +160,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteIngredientName();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -167,6 +190,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
         this.deleteBasisOfStrength();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -230,6 +254,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
           }
         }
       }
+      this.cdr.markForCheck();
     });
     this.subscriptions.push(subCodesSubscription);
   }
@@ -248,6 +273,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
               this.getActiveMoiety(this.substanceUuid, 'ingredientname');
             }
           }
+          this.cdr.markForCheck();
         });
         this.subscriptions.push(subIdSubscription);
       }
@@ -264,6 +290,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
               this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
             }
           }
+          this.cdr.markForCheck();
         });
         this.subscriptions.push(subIdSubscription);
       }
@@ -292,6 +319,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
             }
           }
         }
+        this.cdr.markForCheck();
       });
     }
   }

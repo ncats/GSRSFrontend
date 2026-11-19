@@ -22,7 +22,8 @@ import { Subscription, Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import * as _ from 'lodash';
+import { chain as lodashChain } from 'lodash';
+import lodashRemove from 'lodash/remove';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';
 import { take, map, filter } from 'rxjs/operators';
@@ -38,12 +39,18 @@ import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-dr
 import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
 import jp from 'jsonpath';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
     selector: 'app-substance-ssg2-form',
     templateUrl: './substance-ssg2-form.component.html',
     styleUrls: ['./substance-ssg2-form.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule, MatExpansionModule]
 })
 export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
@@ -391,10 +398,10 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
           const startTime = new Date();
           this.dynamicComponents.forEach((cRef, index) => {
             this.dynamicComponentLoader
-              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-              .subscribe(componentFactory => {
+              .getDynamicComponent<any>(this.formSections[index].dynamicComponentName)
+              .subscribe(componentType => {
                 this.loadingService.setLoading(true);
-                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentType);
                 this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
                 this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
                   this.formSections[index].menuLabel = label;
@@ -656,9 +663,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
             this.forceChange = true;
             this.dynamicComponents.forEach((cRef, index) => {
               this.dynamicComponentLoader
-                .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-                .subscribe(componentFactory => {
-                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                .getDynamicComponent<any>(this.formSections[index].dynamicComponentName)
+                .subscribe(componentType => {
+                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentType);
                   this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
                   this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
                     this.formSections[index].menuLabel = label;
@@ -949,7 +956,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
-        if (typeof or === 'object') { continue; }
+        if (typeof or === 'object') {
+ continue; 
+}
         refs[j] = _map[or];
       }
     }
@@ -958,7 +967,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       remove = this.configService.configData.filteredDuplicationCodes;
     }
     remove.forEach(code => {
-      _.remove(old.codes, {
+      lodashRemove(old.codes, {
         codeSystem: code
       });
     })
@@ -1005,12 +1014,14 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       const refs = refHolders2[i].references;
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
-        if (typeof or === 'object') { continue; }
+        if (typeof or === 'object') {
+ continue; 
+}
         refSet[or] = true;
       }
     }
 
-    const nrefs = _.chain(old.references)
+    const nrefs = lodashChain(old.references)
       .filter(function (ref) {
         if (refSet[ref.uuid]) {
           return true;
@@ -1147,11 +1158,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       } else {
         if (auto1.date < auto2.date && auto1.date < auto3.date) {
           file = 'gsrs-draft-auto1';
-        }
-        else if (auto2.date < auto1.date && auto2.date < auto3.date) {
+        } else if (auto2.date < auto1.date && auto2.date < auto3.date) {
           file = 'gsrs-draft-auto2';
-        }
-        else {
+        } else {
           file = 'gsrs-draft-auto3';
         }
       }

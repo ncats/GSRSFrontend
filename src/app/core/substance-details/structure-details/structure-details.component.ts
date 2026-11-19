@@ -11,12 +11,21 @@ import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ConfigService } from '@gsrs-core/config';
+import { CommonModule } from '@angular/common';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
+import { SubstanceImageDirective } from '@gsrs-core/substance/substance-image.directive';
 
 @Component({
     selector: 'app-structure-details',
     templateUrl: './structure-details.component.html',
     styleUrls: ['./structure-details.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, MatListModule, MatIconModule, MatTooltipModule, MatButtonModule, MatDialogModule, ReferencesManagerModule, SubstanceImageDirective]
 })
 export class StructureDetailsComponent extends SubstanceCardBase implements OnInit, AfterViewInit {
   structure: SubstanceStructure;

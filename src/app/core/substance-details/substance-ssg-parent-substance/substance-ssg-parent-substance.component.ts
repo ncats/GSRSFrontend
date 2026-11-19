@@ -1,4 +1,6 @@
 import { Component, OnInit} from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { SubstanceImageDirective } from '../../substance/substance-image.directive';
 import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceDetail, SubstanceRelated} from '../../substance/substance.model';
 import { MatDialog} from '@angular/material/dialog';
@@ -10,7 +12,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
     selector: 'app-substance-ssg-parent-substance',
     templateUrl: './substance-ssg-parent-substance.component.html',
     styleUrls: ['./substance-ssg-parent-substance.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [RouterModule, SubstanceImageDirective]
 })
 
 export class SubstanceSsgParentSubstanceComponent extends SubstanceCardBase implements OnInit {

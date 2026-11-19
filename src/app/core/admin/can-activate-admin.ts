@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras, UrlTree } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CanActivateAdmin implements CanActivate {
 
     constructor(
@@ -24,8 +26,7 @@ export class CanActivateAdmin implements CanActivate {
             } else {
               return this.router.parseUrl('/home');
             }
-        }
-        else {
+        } else {
           const navigationExtras: NavigationExtras = {
                  queryParams: {
                      path: state.url
