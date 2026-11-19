@@ -5,9 +5,14 @@ import { Observable, throwError, of } from 'rxjs';
 
 import { ConfigService } from '../config/config.service';
 import { catchError, retry } from 'rxjs/operators';
-import { FacetHttpParams } from '@gsrs-core/facets-manager';
+// Sub-path import rather than the '@gsrs-core/facets-manager' barrel: the barrel pulls in
+// facets-manager.module/component, which imports UserQueryListDialogComponent, which imports
+// this service — a cycle that breaks value initialization of AdminService.
+import { FacetHttpParams } from '@gsrs-core/facets-manager/facet-http-params';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
-import { Auth } from '@gsrs-core/auth';
+// Imported from the model directly rather than the '@gsrs-core/auth' barrel: the barrel also
+// re-exports auth.service, which pulls in a circular import chain back to this service.
+import { Auth } from '@gsrs-core/auth/auth.model';
 import { UserEditObject, UploadObject, DirectoryFile } from '@gsrs-core/admin/admin-objects.model';
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {

@@ -25,9 +25,9 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ImpuritiesService } from '../service/impurities.service';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
+import { SubmitSuccessDialogComponent } from '@gsrs-core/substance-form/submit-success-dialog/submit-success-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
 import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
 
 @Component({
@@ -62,6 +62,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   submitDateMessage = '';
   statusDateMessage = '';
   canEdit: boolean = false;
+  isPfdaVersion: boolean = false;
   subRelationship: Array<SubRelationship> = [];
   substanceName: string;
   substanceNameHintMessage = '';
@@ -93,6 +94,8 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer) { }
 
   async ngOnInit() {
+    this.isPfdaVersion = this.configService.configData?.isPfdaVersion ?? false;
+
     // Get form field configuration to show on either simple or advanced form
     this.getConfigSettings();
 
@@ -496,17 +499,46 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     }, 5000);
   }
 
+  getSubmitButtonText(): string {
+    const parts = [];
+    if (this.validationMessages && this.validationMessages.length > 0) {
+      parts.push('Dismiss all');
+    }
+    // precisionFDA only: the submission is stored as a file in the user's pFDA account, which
+    // requires a logged in user. Anonymous users get a login popup first when they submit.
+    if (this.isPfdaVersion && !this.authService.getUser()) {
+      parts.push('Login');
+    }
+    parts.push('Submit');
+
+    if (parts.length === 0) return '';
+    if (parts.length === 1) return parts[0];
+    return parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+  }
+
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
 
-    this.impuritiesService.saveImpurities().subscribe(response => {
+    this.impuritiesService.saveImpurities().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
+      this.validationResult = false;
+
+      // precisionFDA only: nothing was written to the read-only GSRS database, the impurities JSON
+      // was stored as a file in the user's pFDA My Home area instead.
+      const fileUrl = response && (response as any).fileUrl;
+      if (this.isPfdaVersion && fileUrl) {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = '';
+        this.impuritiesService.bypassUpdateCheck();
+        this.openSuccessDialog(fileUrl);
+        return;
+      }
+
       this.submissionMessage = 'Impurities was saved successfully!';
       this.showSubmissionMessages = true;
-      this.validationResult = false;
       setTimeout(() => {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
@@ -519,19 +551,23 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           this.router.navigate(['/impurities', id]);
         }
       }, 4000);
-    }, (error: SubstanceFormResults) => {
+    }, (error: any) => {
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.submissionMessage = null;
-      if (error.validationMessages && error.validationMessages.length) {
+      if (error && error.type === 'AUTH') {
+        this.validationMessages = [];
+        this.setValidationMessage('You need to be logged in to precisionFDA to submit impurities. '
+          + 'You can also use the "Export JSON" button to save the impurities record to your computer.');
+      } else if (error.validationMessages && error.validationMessages.length) {
         this.validationResult = error.isSuccessfull;
         this.validationMessages = error.validationMessages
           .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
         this.showSubmissionMessages = true;
       } else {
         this.submissionMessage = 'There was a problem with your submission';
-        this.addServerError(error.serverError);
+        this.addServerError(error.serverError || error);
         setTimeout(() => {
           this.showSubmissionMessages = false;
           this.submissionMessage = null;
@@ -539,6 +575,35 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       }
     }
     );
+  }
+
+  // precisionFDA only: confirms the impurities record was saved as a file on the pFDA platform and
+  // offers a link to that file.
+  private openSuccessDialog(fileUrl: string): void {
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
+      data: {
+        isCoreSubstance: 'true',
+        type: 'submit',
+        fileUrl: fileUrl,
+        dialogTitle: 'Impurities Saved',
+        dialogMessage: 'The impurities record was saved successfully as a file in your pFDA My Home area.',
+        browseLabel: 'Go to Home',
+        viewLabel: 'View Impurities File'
+      },
+      disableClose: true
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+      if (response === 'viewInPfda') {
+        // View the submitted impurities file in the user's precisionFDA home
+        window.location.assign(fileUrl);
+      } else if (response === 'browse') {
+        this.router.navigate(['/home']);
+      }
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 
   addNewImpuritiesSubstance(event: Event) {

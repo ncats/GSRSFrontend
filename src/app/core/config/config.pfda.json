@@ -544,5 +544,6 @@
     "dialogMessage" : "You will be making an API call outside of the precisionFDA boundary. Do you want to continue?"
   },
   "googleAnalyticsId": "",
+  "dailyMedUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=",
   "isPfdaVersion": true
 }

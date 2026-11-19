@@ -56,6 +56,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   dailyMedUrlConfig = '';
   message = '';
   canUpdate: boolean = false;
+  isPfdaVersion: boolean = false;
   downloadJsonHref: any;
   jsonFilename: string;
   private overlayContainer: HTMLElement;
@@ -80,6 +81,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
   async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.isPfdaVersion = this.configService.configData?.isPfdaVersion === true;
 
     this.loadingService.setLoading(true);
     this.productId = this.activatedRoute.snapshot.params['id'];
@@ -423,6 +425,10 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   getApplicationNumberTypeUrl() {
+    // precisionFDA has no Application module to link to
+    if (this.isPfdaVersion) {
+      return;
+    }
     this.product.productProvenances.forEach((prov, indexProv) => {
       if ((prov.applicationType) && (prov.applicationNumber)) {
         if (prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH FINAL' && prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH NOT FINAL') {

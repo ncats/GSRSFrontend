@@ -1,0 +1,261 @@
+<!-- precisionFDA deployment: self-contained SD File -> GSRS JSON flow. -->
+<div class="sdf-import" *ngIf="isPfdaVersion; else standardDeployment">
+  <div class="import-intro">
+    <p>
+      Upload an SD File to convert each of its records into GSRS substance JSON. Review the
+      converted records, then download them to your own machine, or &mdash; if you are signed
+      in &mdash; save them to your precisionFDA <strong>My Home</strong> area, where you can
+      share them with the GSRS team through a Space.
+    </p>
+    <p class="import-tip">
+      Tip: run your file through the <strong>Validate</strong> tab first to catch formatting
+      issues before you import.
+    </p>
+  </div>
+
+  <div class="import-error" *ngIf="errorMessage">
+    <mat-icon svgIcon="error"></mat-icon>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Step 1: upload -->
+  <div class="import-step" *ngIf="step === 'upload'">
+    <h3>Step 1: Choose your SD File</h3>
+
+    <div class="file-row">
+      <button mat-raised-button color="primary" (click)="sdfFileInput.click()">
+        Select SD File
+      </button>
+      <input
+        #sdfFileInput
+        hidden
+        type="file"
+        [attr.accept]="acceptedExtensions"
+        (change)="onFileSelected($event)"
+      />
+      <span class="file-name" [class.italics]="!filename">
+        {{ filename || "no file chosen" }}
+      </span>
+    </div>
+
+    <div class="step-actions">
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="!selectedFile || isConverting"
+        (click)="convert()"
+      >
+        Convert to GSRS JSON
+      </button>
+      <mat-progress-spinner
+        *ngIf="isConverting"
+        color="primary"
+        mode="indeterminate"
+        diameter="32"
+      ></mat-progress-spinner>
+      <span class="converting-label" *ngIf="isConverting">
+        Converting records&hellip; large files can take a moment.
+      </span>
+    </div>
+  </div>
+
+  <!-- Step 2: review -->
+  <div class="import-step" *ngIf="step === 'review'">
+    <h3>Step 2: Review the converted records</h3>
+    <p class="step-hint">
+      {{ records.length }} record(s) were read from <strong>{{ filename }}</strong>. Nothing
+      has been saved yet. Deselect anything you do not want to submit.
+    </p>
+
+    <div class="select-all-row">
+      <mat-checkbox
+        [checked]="allSelected"
+        [indeterminate]="someSelected"
+        (change)="toggleAll($event.checked)"
+      >
+        Select all
+      </mat-checkbox>
+      <span class="selected-count">{{ selectedRecords.length }} selected</span>
+    </div>
+
+    <div class="record-list">
+      <div class="record-card" *ngFor="let record of records">
+        <mat-checkbox [(ngModel)]="record.selected"></mat-checkbox>
+
+        <div class="record-structure">
+          <img
+            *ngIf="record.data.structureID"
+            appSubstanceImage
+            [entityId]="record.data.structureID"
+          />
+          <div class="no-structure" *ngIf="!record.data.structureID">No structure</div>
+        </div>
+
+        <div class="record-details">
+          <div class="record-name">{{ record.displayName }}</div>
+          <div class="record-codes" *ngIf="record.codes.length">
+            <span class="code" *ngFor="let code of record.codes">
+              <strong>{{ code.codeSystem }}</strong>: {{ code.code }}
+            </span>
+          </div>
+          <div class="record-structure-info" *ngIf="record.formula || record.mwt">
+            <span *ngIf="record.formula"><strong>Formula</strong>: {{ record.formula }}</span>
+            <span *ngIf="record.mwt"><strong>MW</strong>: {{ record.mwt }}</span>
+          </div>
+          <details class="record-json">
+            <summary>View raw JSON</summary>
+            <pre>{{ record.data | json }}</pre>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-actions">
+      <button mat-stroked-button (click)="startOver()">Choose a different file</button>
+      <button
+        mat-stroked-button
+        color="primary"
+        [disabled]="!selectedRecords.length"
+        (click)="downloadJson()"
+      >
+        Download {{ selectedRecords.length }} record(s) as JSON
+      </button>
+      <button
+        *ngIf="isSignedIn"
+        mat-flat-button
+        color="primary"
+        [disabled]="!selectedRecords.length"
+        (click)="submit()"
+      >
+        Submit {{ selectedRecords.length }} record(s) to My Home
+      </button>
+      <button
+        *ngIf="!isSignedIn"
+        mat-flat-button
+        color="primary"
+        [disabled]="!selectedRecords.length"
+        (click)="signInAndSubmit()"
+      >
+        Sign in to save to My Home
+      </button>
+    </div>
+
+    <p class="step-hint" *ngIf="!isSignedIn">
+      You are not signed in. You can download the converted JSON to your own machine without
+      an account &mdash; sign in only if you want the files saved to your precisionFDA
+      <strong>My Home</strong> area so they can be shared with the GSRS team.
+    </p>
+  </div>
+
+  <!-- Step 3: submitting -->
+  <div class="import-step" *ngIf="step === 'submitting'">
+    <h3>Step 3: Saving to your precisionFDA My Home area</h3>
+    <mat-progress-bar
+      mode="determinate"
+      [value]="submissionProgress(selectedRecords.length)"
+    ></mat-progress-bar>
+    <p class="step-hint">
+      {{ submittedCount }} of {{ selectedRecords.length }} record(s) processed.
+    </p>
+  </div>
+
+  <!-- Step 4: done -->
+  <div class="import-step" *ngIf="step === 'done'">
+    <h3>Import complete</h3>
+    <p class="step-hint">
+      {{ successResults.length }} of {{ results.length }} record(s) were saved as JSON files
+      in your precisionFDA My Home area.
+      <span *ngIf="failedResults.length">{{ failedResults.length }} failed.</span>
+    </p>
+
+    <div class="result-group" *ngIf="successResults.length">
+      <h4>Saved</h4>
+      <ul class="result-list">
+        <li *ngFor="let result of successResults">
+          <mat-icon class="success-icon" svgIcon="done"></mat-icon>
+          <span class="result-name">{{ result.displayName }}</span>
+          <a
+            *ngIf="result.fileUrl"
+            [href]="result.fileUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            >View file</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div class="result-group" *ngIf="failedResults.length">
+      <h4>Not saved</h4>
+      <ul class="result-list">
+        <li *ngFor="let result of failedResults">
+          <mat-icon class="error-icon" svgIcon="error"></mat-icon>
+          <span class="result-name">{{ result.displayName }}</span>
+          <span class="result-error">{{ result.errorMessage }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <p class="step-hint">
+      To send these files to the GSRS team for review, share them from your My Home area
+      into the appropriate precisionFDA Space.
+    </p>
+
+    <div class="step-actions">
+      <a mat-flat-button color="primary" [href]="pfdaHomeUrl">Go to My Home</a>
+      <button mat-stroked-button *ngIf="failedResults.length" (click)="backToReview()">
+        Back to review
+      </button>
+      <button mat-stroked-button (click)="startOver()">Import another SD File</button>
+    </div>
+  </div>
+</div>
+
+<!-- Standard GSRS deployment: defer to the existing admin import / staging area. -->
+<ng-template #standardDeployment>
+  <div class="sdf-import">
+    <div *ngIf="!authResolved" class="import-step">
+      <mat-progress-spinner
+        color="primary"
+        mode="indeterminate"
+        diameter="36"
+      ></mat-progress-spinner>
+    </div>
+
+    <div *ngIf="authResolved">
+      <div class="import-step" *ngIf="canImportData">
+        <h3>Import an SD File</h3>
+        <p class="step-hint">
+          Use the data import wizard to load an SD File, then review and create the records
+          from the staging area.
+        </p>
+        <div class="step-actions">
+          <a mat-flat-button color="primary" routerLink="/admin/import">
+            Start a new SD File import
+          </a>
+          <a mat-stroked-button routerLink="/staging">Go to the Staging Area</a>
+        </div>
+      </div>
+
+      <div class="import-step" *ngIf="!canImportData && auth">
+        <h3>You do not have permission to import data</h3>
+        <p class="step-hint">
+          Importing SD Files requires the <strong>Import Data</strong> privilege. Contact
+          your GSRS administrator if you need access. The
+          <strong>Validate</strong> and <strong>Guide</strong> tabs remain available to you.
+        </p>
+      </div>
+
+      <div class="import-step" *ngIf="!auth">
+        <h3>Sign in to import an SD File</h3>
+        <p class="step-hint">
+          You need to be signed in with the <strong>Import Data</strong> privilege to import
+          an SD File. The <strong>Validate</strong> tab works without signing in.
+        </p>
+        <div class="step-actions">
+          <a mat-flat-button color="primary" routerLink="/login">Sign in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
