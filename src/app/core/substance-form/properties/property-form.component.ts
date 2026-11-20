@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SubstanceProperty, SubstanceSummary, SubstanceRelated, SubstanceParameter } from '../../substance/substance.model';
+import { SubstanceProperty, SubstanceSummary, SubstanceRelated, SubstanceParameter, SubstanceDetail } from '../../substance/substance.model';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
 import { PropertyParameterDialogComponent } from '../property-parameter-dialog/property-parameter-dialog.component';
 import { UtilsService } from '../../utils/utils.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { PropertyParameterReuseDialog } from './property-parameter-reuse/property-parameter-reuse-dialog';
+import {Subscription} from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -32,7 +32,7 @@ import { SubstanceSelectorComponent } from '@gsrs-core/substance-selector/substa
     imports: [CommonModule, FormsModule, MatCheckboxModule, MatIconModule, MatButtonModule, MatListModule, MatTooltipModule, AccessManagerComponent, AmountFormComponent, AuditInfoComponent, CvInputComponent, DomainReferencesComponent, SubstanceSelectorComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PropertyFormComponent implements OnInit {
+export class PropertyFormComponent implements OnInit, OnDestroy {
   deleteTimer: any;
   private privateProperty: SubstanceProperty;
   referencedSubstanceUuid: string;
@@ -41,6 +41,9 @@ export class PropertyFormComponent implements OnInit {
   propertyTypeList: Array<VocabularyTerm> = [];
   private overlayContainer: HTMLElement;
   _nonNumeric: string;
+  private fullSubstance: SubstanceDetail;
+  private subscriptions: Array<Subscription> = [];
+  hasParameters: boolean = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -53,7 +56,15 @@ export class PropertyFormComponent implements OnInit {
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-  }
+    const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
+      this.fullSubstance = substance;
+      this.hasParameters = ( substance.properties != null) && substance.properties.some(pr=>{
+        return pr.parameters && pr.parameters.length >0
+      });
+      console.log(`hasParameters is ${this.hasParameters} based on substance ${substance.uuid}`);
+    });
+    this.subscriptions.push(substanceSubscription);
+}
 
   @Input()
   set property(property: SubstanceProperty) {
@@ -66,6 +77,7 @@ export class PropertyFormComponent implements OnInit {
       this._nonNumeric = this.property.value.nonNumericValue;
     }
   }
+
 
   get property(): SubstanceProperty {
     return this.privateProperty;
@@ -140,11 +152,47 @@ export class PropertyFormComponent implements OnInit {
             parameter[key] = newParameter[key];
           });
         }
+        this.hasParameters = this.property.parameters.length > 0;
       }
       this.cdr.markForCheck();
     });
   }
 
+  openPropertyParameterForReuse(parameter?: SubstanceParameter): void {
+
+    const dialogRef = this.dialog.open(PropertyParameterReuseDialog, {
+      data: this.fullSubstance,
+      width: '1200px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    let isNew: boolean = true;
+    dialogRef.afterClosed().subscribe(newParameter => {
+      this.overlayContainer.style.zIndex = null;
+      if (newParameter != null) {
+        if (this.property.parameters == null) {
+          this.property.parameters = [];
+        }
+
+        const serializedParameter = JSON.stringify(newParameter);
+        console.log(`serializedParamter: ${serializedParameter}`);
+
+        const readyParameter = JSON.parse(serializedParameter);
+        readyParameter.uuid = this.utilsService.newUUID();
+        if( readyParameter.value ) {
+          readyParameter.value.uuid = this.utilsService.newUUID();
+          console.log(`reassigned amount UUID as ${readyParameter.value.uuid}`);
+        }
+        if (isNew) {
+          this.property.parameters.unshift(readyParameter);
+        } else {
+          Object.keys(readyParameter).forEach(key => {
+            parameter[key] = readyParameter[key];
+          });
+        }
+      }
+    });
+  }
   openFeatureDialog() {
     const feature = {'name': this.property.name, 'siteRange': this.property.value.nonNumericValue};
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
@@ -180,5 +228,10 @@ export class PropertyFormComponent implements OnInit {
     return vocab;
   }
 
-
+  ngOnDestroy() {
+    console.log('in ngOnDestroy');
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
 }
