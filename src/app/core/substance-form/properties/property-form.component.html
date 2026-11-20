@@ -110,16 +110,8 @@
        </h4> 
         <mat-list *ngIf="property.parameters">
           <div
-            mat-list-item
-            *ngFor="let parameter of property.parameters; index as index"
-          >
-            <button
-              mat-icon-button
-              (click)="openPropertyParameter()"
-              matTooltip="Add parameter"
-              >
-              <mat-icon svgIcon="add_circle_outline"></mat-icon>
-            </button>
+            mat-list-item>
+
           @if (property.parameters) {
             <mat-list>
               @for (parameter of property.parameters; track parameter; let index = $index) {

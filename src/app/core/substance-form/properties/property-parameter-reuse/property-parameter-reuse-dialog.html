@@ -1,13 +1,19 @@
 <div><h3 class="table-title">Please select one parameter to reuse:</h3></div>
+<div *ngIf="true">
+  IF TEST TRUE
+</div>
+
 <table class="parameter-table" >
-   
-  <tr class="form-row parameters">
-    <th>Num</th>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Value</th>
-    <th>Select</th>
-  </tr>
+  <thead>
+    <tr class="form-row parameters">
+      <th>Num</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Value</th>
+      <th>Select</th>
+    </tr>
+  </thead>
+   <tbody>
 <tr class="form-row parameters" *ngFor="let parameter of parametersForReuse; index as index">
 <td class="parameter-dataCell">Parameter {{ index+1}}</td>
 <td class="parameter-dataCell">{{ parameter.name }}</td>
@@ -167,6 +173,7 @@
   </button>
 </td>
 </tr>
+</tbody>
 </table>
 
 
