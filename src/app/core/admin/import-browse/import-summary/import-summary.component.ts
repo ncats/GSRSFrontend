@@ -368,18 +368,18 @@ export class ImportSummaryComponent implements OnInit {
          const dialogSubscription = this.dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
           this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
          });
-
-      } else {
+        } else {
         setTimeout(() => {
           this.processingstatus(result.id, action, result);
         }, 200);
       }
 
     }, error => {
-      this.message = "Error: failed to " + action + " record";
+      console.log("failure detected in doAction");
+      this.message = "Error: failed to " + this.displayAction + " record";
       this.loadingService.setLoading(false);
       this.dialogRef =  this.dialog.open(this.infoDialog,
-        {data: {'message': 'Error: failed to', 'action': action},
+        {data: {'message': 'Error: failed to', 'action': this.displayAction},
       width: '600px'});
        const dialogSubscription = this.dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(response => {
 
@@ -396,6 +396,9 @@ export class ImportSummaryComponent implements OnInit {
               if (result) {
         this.disabled = true;
         this.performedAction = action;
+      } else if(response.jobStatus && response.jobStatus === 'failed' ) {
+        this.loadingService.setLoading((false));
+        this.message = this.displayAction + " failed. Ask the admin to check logs";
       }
 
       this.deleted = false;
@@ -411,7 +414,15 @@ export class ImportSummaryComponent implements OnInit {
         }, 200);
       }
      
+    }, error => {
+      this.message = "Error: failed to " + this.displayAction + " record";
+      this.loadingService.setLoading(false);
+      this.dialogRef =  this.dialog.open(this.infoDialog,
+        {data: {'message': 'Error: failed to', 'action': this.displayAction},
+      width: '600px'});
+       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
 
+       });
     });
   }
 
