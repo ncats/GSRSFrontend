@@ -4,7 +4,6 @@ import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/
 import {DomSanitizer} from '@angular/platform-browser';
 import {SubstanceDetail, SubstanceRelated, SubstanceService} from '@gsrs-core/substance';
 
-// __aw__sb41ang21 not sure
 import {UtilsService} from '@gsrs-core/utils';
 import {take} from 'rxjs/operators';
 import { chain as lodashChain } from 'lodash';
@@ -231,16 +230,8 @@ export class MergeConceptDialogComponent implements OnInit {
 }
 
   scrub(oldraw: any, importType?: string): SubstanceDetail {
-    function guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-    }
-    const old = JSON.parse(JSON.stringify(oldraw)); 
+    const guid = () => this.utilsService.newUUID();
+    const old = JSON.parse(JSON.stringify(oldraw));
     const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
@@ -342,19 +333,8 @@ export class MergeConceptDialogComponent implements OnInit {
     return old;
   }
 
-// __aw__sb41ang21 not sure if use this or the below
-//  guid(): string {
-//    return this.utilsService.newUUID();
-//  }
-
   guid(): string {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
+    return this.utilsService.newUUID();
   }
-  
+
 }
