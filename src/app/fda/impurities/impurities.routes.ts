@@ -8,6 +8,7 @@ import { ImpuritiesDetailsComponent } from "./impurities-details/impurities-deta
 import { ImpuritiesBrowseComponent } from './impurities-browse/impurities-browse.component';
 import { ImpuritiesListsComponent } from './impurities-lists/impurities-lists.component';
 import { ImpuritiesImportComponent } from './impurities-import/impurities-import.component';
+import { ImpuritiesCompareComponent } from './impurities-compare/impurities-compare.component';
 
 export const IMPURITIES_ROUTES: Routes = [
   {
@@ -25,6 +26,11 @@ export const IMPURITIES_ROUTES: Routes = [
   {
     path: 'impurities/import/preview',
     component: ImpuritiesDetailsComponent,
+    canActivate: [ActivateImpuritiesComponent]
+  },
+  {
+    path: 'impurities/compare',
+    component: ImpuritiesCompareComponent,
     canActivate: [ActivateImpuritiesComponent]
   },
   {

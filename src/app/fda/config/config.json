@@ -1376,6 +1376,12 @@
           "order": 221
         },
         {
+          "component": "impurities",
+          "display": "Impurities Compare",
+          "path": "impurities/compare",
+          "order": 222
+        },
+        {
           "component": "invitropharmacology",
           "display": "In Vitro Pharmacology Assay",
           "path": "invitro-pharm/assay/register",

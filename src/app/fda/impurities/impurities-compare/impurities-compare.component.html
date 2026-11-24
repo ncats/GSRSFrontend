@@ -1,0 +1,949 @@
+<div>
+	<div class="margintop50px scrollable-container">
+		<div class="cards-container">
+			<div class="">
+				<div class="title_box">
+					<div class="title">Impurities Compare</div>
+				</div>
+
+				<mat-card class="margintop20px">
+					<mat-card-content>
+						<p class="subtitle">Compare USP and EP monographs side by side</p>
+						<br>
+
+						<!-- File Upload Section - Only show in file mode -->
+						@if (isFileMode) {
+							<div class="file-upload-section">
+								<div class="file-input-container">
+									<mat-form-field appearance="outline" class="file-field">
+										<mat-label>USP JSON File</mat-label>
+										<input matInput 
+											[value]="uspFileName" 
+											readonly 
+											placeholder="Select USP JSON file">
+										<button mat-icon-button matSuffix (click)="uspFileInput.click()">
+											<mat-icon>folder_open</mat-icon>
+										</button>
+									</mat-form-field>
+									<input #uspFileInput 
+										type="file" 
+										accept=".json" 
+										(change)="onFileSelected($event, 'usp')" 
+										style="display: none;">
+								</div>
+
+								<div class="file-input-container">
+									<mat-form-field appearance="outline" class="file-field">
+										<mat-label>EP JSON File</mat-label>
+										<input matInput 
+											[value]="epFileName" 
+											readonly 
+											placeholder="Select EP JSON file">
+										<button mat-icon-button matSuffix (click)="epFileInput.click()">
+											<mat-icon>folder_open</mat-icon>
+										</button>
+									</mat-form-field>
+									<input #epFileInput 
+										type="file" 
+										accept=".json" 
+										(change)="onFileSelected($event, 'ep')" 
+										style="display: none;">
+								</div>
+
+								<div class="button-group">
+									<button mat-raised-button 
+										color="primary" 
+										(click)="compareFiles()" 
+										[disabled]="!uspFile || !epFile"
+										class="compare-button">
+										<mat-icon>compare_arrows</mat-icon>
+										Compare Files
+									</button>
+
+									@if (impuritiesUSP || impuritiesEP) {
+										<button mat-raised-button 
+											color="warn" 
+											(click)="clearComparison()"
+											class="clear-button">
+											<mat-icon>clear</mat-icon>
+											Clear
+										</button>
+									}
+								</div>
+							</div>
+
+							<!-- Error Message -->
+							@if (errorMessage) {
+								<div class="error-message">
+									<mat-icon>error</mat-icon>
+									{{ errorMessage }}
+								</div>
+							}
+						}
+
+						<div class="comparison-container" *ngIf="impuritiesUSP || impuritiesEP">
+
+							<!-- Sticky Header Row - Always visible when scrolling -->
+							<div class="sticky-headers">
+								<div class="sticky-column-header left-header">
+									<div class="standard-badge usp">{{ impuritiesUSP?.source || 'USP' }}</div>
+									<h2>{{ impuritiesUSP?.productSubstanceName || 'Loading...' }}</h2>
+								</div>
+								<div class="sticky-column-header right-header">
+									<div class="standard-badge ep">{{ impuritiesEP?.source || 'EP' }}</div>
+									<h2>{{ impuritiesEP?.productSubstanceName || 'Loading...' }}</h2>
+								</div>
+							</div>
+
+							<!-- Metadata Section -->
+							<div class="section-container">
+								<h3 class="section-header">Metadata</h3>
+								<div class="comparison-row">
+									<div class="comparison-label">ID</div>
+									<div class="comparison-value">
+										{{ impuritiesUSP?.id }}
+										@if (impuritiesUSP?.id) {
+											<a [routerLink]="['/impurities', impuritiesUSP?.id]" target="_blank"
+												matTooltip='GSRS Impurities Record'>
+											</a>
+										}
+									</div>
+									<div class="comparison-value">{{ impuritiesEP?.id || 'N/A' }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Created By</div>
+									<div class="comparison-value">{{ impuritiesUSP?.createdBy || 'N/A' }}</div>
+									<div class="comparison-value">{{ impuritiesEP?.createdBy || 'N/A' }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Modified By</div>
+									<div class="comparison-value">{{ impuritiesUSP?.modifiedBy || 'N/A' }}</div>
+									<div class="comparison-value">{{ impuritiesEP?.modifiedBy || 'N/A' }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Creation Date</div>
+									<div class="comparison-value">{{ formatDate(impuritiesUSP?.creationDate) }}</div>
+									<div class="comparison-value">{{ formatDate(impuritiesEP?.creationDate) }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Last Modified</div>
+									<div class="comparison-value">{{ formatDate(impuritiesUSP?.lastModifiedDate) }}
+									</div>
+									<div class="comparison-value">{{ formatDate(impuritiesEP?.lastModifiedDate) }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Version</div>
+									<div class="comparison-value">{{ impuritiesUSP?.internalVersion || 'N/A' }}</div>
+									<div class="comparison-value">{{ impuritiesEP?.internalVersion || 'N/A' }}</div>
+								</div>
+							</div>
+
+							<!-- Basic Information Section -->
+							<div class="section-container">
+								<h3 class="section-header">Basic Information</h3>
+								<div class="comparison-row source-row">
+									<div class="comparison-label">Source</div>
+									<div class="comparison-value bold-value">{{ impuritiesUSP?.source || 'Not specified'
+										}}</div>
+									<div class="comparison-value bold-value">{{ impuritiesEP?.source || 'Not specified'
+										}}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Product Substance</div>
+									<div class="comparison-value">{{ impuritiesUSP?.productSubstanceName || 'Not
+										specified' }}</div>
+									<div class="comparison-value">{{ impuritiesEP?.productSubstanceName || 'Not
+										specified' }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Product ID</div>
+									<div class="comparison-value">{{ impuritiesUSP?.productId || 'Not specified' }}
+									</div>
+									<div class="comparison-value">{{ impuritiesEP?.productId || 'Not specified' }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Source Type</div>
+									<div class="comparison-value">{{ impuritiesUSP?.sourceType || 'Not specified' }}
+									</div>
+									<div class="comparison-value">{{ impuritiesEP?.sourceType || 'Not specified' }}
+									</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Source ID</div>
+									<div class="comparison-value">{{ impuritiesUSP?.sourceId || 'Not specified' }}</div>
+									<div class="comparison-value">{{ impuritiesEP?.sourceId || 'Not specified' }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Type</div>
+									<div class="comparison-value">{{ impuritiesUSP?.type || 'Not specified' }}</div>
+									<div class="comparison-value">{{ impuritiesEP?.type || 'Not specified' }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Spec Type</div>
+									<div class="comparison-value">{{ impuritiesUSP?.specType || 'Not specified' }}</div>
+									<div class="comparison-value">{{ impuritiesEP?.specType || 'Not specified' }}</div>
+								</div>
+								<div class="comparison-row">
+									<div class="comparison-label">Submitter</div>
+									<div class="comparison-value">{{ impuritiesUSP?.submitterName || 'Not specified' }}
+									</div>
+									<div class="comparison-value">{{ impuritiesEP?.submitterName || 'Not specified' }}
+									</div>
+								</div>
+							</div>
+
+							<!-- Impurities Total -->
+							@if (impuritiesUSP?.impuritiesTotal || impuritiesEP?.impuritiesTotal) {
+								<div class="section-container">
+									<h3 class="section-header">Total Impurities Limits</h3>
+									<div class="comparison-row">
+										<div class="comparison-label">Limit Type</div>
+										<div class="comparison-value">{{ impuritiesUSP?.impuritiesTotal?.limitType || 'Not
+											specified' }}</div>
+										<div class="comparison-value">{{ impuritiesEP?.impuritiesTotal?.limitType || 'Not
+											specified' }}</div>
+									</div>
+									<div class="comparison-row">
+										<div class="comparison-label">Limit Value</div>
+										<div class="comparison-value">{{ impuritiesUSP?.impuritiesTotal?.limitValue || 'Not
+											specified' }}</div>
+										<div class="comparison-value">{{ impuritiesEP?.impuritiesTotal?.limitValue || 'Not
+											specified' }}</div>
+									</div>
+								</div>
+							}
+
+							<!-- Main Substance & Tests Section -->
+							@if (impuritiesUSP?.impuritiesSubstanceList || impuritiesEP?.impuritiesSubstanceList) {
+								<div class="section-container">
+									<h3 class="section-header">Substance Information & Testing Details</h3>
+
+									<div class="comparison-row full-width">
+										<div class="comparison-label">Details</div>
+
+										<!-- USP Column -->
+										<div class="comparison-value">
+											@if (impuritiesUSP?.impuritiesSubstanceList && impuritiesUSP.impuritiesSubstanceList.length > 0) {
+												@for (substance of impuritiesUSP.impuritiesSubstanceList; track substance.id) {
+													<div class="substance-main-item">
+
+														<div class="substance-header">
+															<strong>{{ substance.substanceName || 'Loading...' }}</strong>
+															@if (substance.approvalID) {
+																<span class="approval-id">
+																	<a [routerLink]="['/substances', substance.approvalID]" target="_blank">
+																		<span class="colororange font16px fontbold">
+																			&nbsp;<b>({{ substance.approvalID }})</b>
+																		</span>
+																	</a>
+																</span>
+															}
+														</div>
+
+														<div class="substance-range">
+															<strong>Acceptable Range:</strong> {{ substance.low }}–{{
+															substance.high }} {{ substance.unit }}
+														</div>
+
+														<!-- All Tests -->
+														@for (testInfo of getAllTests(substance); track testInfo.id; let idx = $index) {
+															<div class="test-section">
+																<h4 class="test-section-title">Test {{ idx + 1 }}: {{ testInfo.test
+																	}}</h4>
+
+																<div class="test-info-grid">
+																	@if (testInfo.id) {
+																		<div class="test-field"><strong>Test ID:</strong> {{ testInfo.id }}</div>
+																	}
+																	@if (testInfo.testType) {
+																		<div class="test-field">
+																			<strong>Type:</strong> {{ testInfo.testType }}
+																		</div>
+																	}
+																	@if (testInfo.source) {
+																		<div class="test-field">
+																			<strong>Source:</strong> {{ testInfo.source }}
+																		</div>
+																	}
+																	@if (testInfo.sourceType) {
+																		<div class="test-field">
+																			<strong>Source Type:</strong> {{ testInfo.sourceType }}
+																		</div>
+																	}
+																	@if (testInfo.sourceId) {
+																		<div class="test-field"><strong>Source ID:</strong> {{ testInfo.sourceId }}</div>
+																	}
+																	@if (testInfo.elutionType) {
+																		<div class="test-field">
+																			<strong>Elution:</strong> {{ testInfo.elutionType }}
+																		</div>
+																	}
+																	@if (testInfo.system) {
+																		<div class="test-field">
+																			<strong>System:</strong> {{ testInfo.system }}
+																		</div>
+																	}
+																	@if (testInfo.mode) {
+																		<div class="test-field">
+																			<strong>Mode:</strong> {{ testInfo.mode }}
+																		</div>
+																	}
+																	@if (testInfo.detectionType) {
+																		<div class="test-field">
+																			<strong>Detection:</strong> {{ testInfo.detectionType }}
+																		</div>
+																	}
+																	@if (testInfo.detectorWavelength) {
+																		<div class="test-field">
+																			<strong>Wavelength:</strong> {{ testInfo.detectorWavelength }}
+																		</div>
+																	}
+																	@if (testInfo.columnSize) {
+																		<div class="test-field">
+																			<strong>Column Size:</strong> {{ testInfo.columnSize }}
+																		</div>
+																	}
+																	@if (testInfo.columnPackingSize) {
+																		<div class="test-field">
+																			<strong>Packing Size:</strong> {{ testInfo.columnPackingSize }}
+																		</div>
+																	}
+																	@if (testInfo.columnPackingType) {
+																		<div class="test-field">
+																			<strong>Packing Type:</strong> {{ testInfo.columnPackingType }}
+																		</div>
+																	}
+																	@if (testInfo.flowRate) {
+																		<div class="test-field"><strong>Flow Rate:</strong> {{ testInfo.flowRate }}</div>
+																	}
+																	@if (testInfo.injectionVolumeAmount) {
+																		<div class="test-field">
+																			<strong>Injection Vol:</strong> {{ testInfo.injectionVolumeAmount }}
+																		</div>
+																	}
+																	@if (testInfo.autosamplerTemperature) {
+																		<div class="test-field">
+																			<strong>Autosampler Temp:</strong> {{ testInfo.autosamplerTemperature }}
+																		</div>
+																	}
+																	@if (testInfo.diluent) {
+																		<div class="test-field">
+																			<strong>Diluent:</strong> {{ testInfo.diluent }}
+																		</div>
+																	}
+																	@if (testInfo.buffer) {
+																		<div class="test-field">
+																			<strong>Buffer:</strong> {{ testInfo.buffer }}
+																		</div>
+																	}
+																	@if (testInfo.comments) {
+																		<div class="test-field">
+																			<strong>Comments:</strong> {{ testInfo.comments }}
+																		</div>
+																	}
+																</div>
+
+																<!-- Mobile Phase / Solutions -->
+																@if (testInfo.impuritiesSolutionList?.length > 0) {
+																	<div class="solutions-section">
+																		<h5>Mobile Phase / Solutions</h5>
+																		@for (sol of testInfo.impuritiesSolutionList; track sol.id) {
+																			<div class="solution-item">
+																				<strong>Solution {{ sol.solutionLetter }}:</strong>
+																				<div class="solution-description">{{ sol.solutionDescription }}</div>
+																			</div>
+																		}
+																	</div>
+																}
+
+																<!-- Solution Tables -->
+																@if (getSolutionTables(testInfo).length > 0) {
+																	<div class="solution-tables-section">
+																		<h5>Solution Tables ({{ getSolutionTables(testInfo).length }} entries)</h5>
+																		<div class="solution-table-note">IDs: {{ getSolutionTableIds(testInfo) }}</div>
+																	</div>
+																}
+
+																<!-- Preparation Solutions -->
+																<div class="preparation-section">
+																	@if (testInfo.systemSuitabilitySolution) {
+																		<div class="prep-field">
+																			<strong>System Suitability Solution:</strong> {{ testInfo.systemSuitabilitySolution }}
+																		</div>
+																	}
+																	@if (testInfo.standardSolution) {
+																		<div class="prep-field">
+																			<strong>Standard Solution:</strong> {{ testInfo.standardSolution }}
+																		</div>
+																	}
+																	@if (testInfo.sampleSolution) {
+																		<div class="prep-field">
+																			<strong>Sample Solution:</strong> {{ testInfo.sampleSolution }}
+																		</div>
+																	}
+																	@if (testInfo.sensitivitySolution) {
+																		<div class="prep-field">
+																			<strong>Sensitivity Solution:</strong> {{ testInfo.sensitivitySolution }}
+																		</div>
+																	}
+																	@if (testInfo.systemSuitabilitySample) {
+																		<div class="prep-field">
+																			<strong>System Suitability Sample:</strong> {{ testInfo.systemSuitabilitySample }}
+																		</div>
+																	}
+																</div>
+
+																<!-- Suitability Requirements -->
+																<div class="suitability-section">
+																	@if (testInfo.suitabilityReqResolution) {
+																		<div class="suit-field">
+																			<strong>Resolution:</strong> {{ testInfo.suitabilityReqResolution }}
+																		</div>
+																	}
+																	@if (testInfo.suitabilityReqRelStandardDeviation) {
+																		<div class="suit-field">
+																			<strong>RSD:</strong> {{ testInfo.suitabilityReqRelStandardDeviation }}
+																		</div>
+																	}
+																	@if (testInfo.systemSuitabilityReqTailingFactor) {
+																		<div class="suit-field">
+																			<strong>Tailing Factor:</strong> {{ testInfo.systemSuitabilityReqTailingFactor }}
+																		</div>
+																	}
+																	@if (testInfo.systemSuitabilitySignalToNoiseRatio) {
+																		<div class="suit-field">
+																			<strong>S/N Ratio:</strong> {{ testInfo.systemSuitabilitySignalToNoiseRatio }}
+																		</div>
+																	}
+																</div>
+
+																<!-- Analysis & Calculations -->
+																@if (getAnalysisList(testInfo).length > 0) {
+																	<div class="analysis-section">
+																		<h5>Analysis & Calculations</h5>
+																		@for (analysis of getAnalysisList(testInfo); track analysis.id) {
+																			<div class="analysis-item">
+																				<div class="analysis-field"><strong>Samples:</strong> {{ analysis.samples }}</div>
+																				<div class="analysis-field"><strong>Description:</strong> {{ analysis.description }}</div>
+																				<div class="analysis-field formula">
+																					<strong>Formula:</strong> {{ analysis.resultFormula }}
+																				</div>
+																				@if (analysis.formulaRU) {
+																					<div class="analysis-field">
+																						<strong>rU:</strong> {{ analysis.formulaRU }}
+																					</div>
+																				}
+																				@if (analysis.formulaRS) {
+																					<div class="analysis-field">
+																						<strong>rS:</strong> {{ analysis.formulaRS }}
+																					</div>
+																				}
+																				@if (analysis.formulaCS) {
+																					<div class="analysis-field">
+																						<strong>CS:</strong> {{ analysis.formulaCS }}
+																					</div>
+																				}
+																				@if (analysis.formulaCU) {
+																					<div class="analysis-field">
+																						<strong>CU:</strong> {{ analysis.formulaCU }}
+																					</div>
+																				}
+																				@if (analysis.formulaF) {
+																					<div class="analysis-field">
+																						<strong>F:</strong> {{ analysis.formulaF }}
+																					</div>
+																				}
+																			</div>
+																		}
+																	</div>
+																}
+
+																<!-- Impurity Specifications Table -->
+																@if (testInfo.impuritiesDetailsList?.length > 0) {
+																	<div class="impurities-details-section">
+																		<h5>Impurity Specifications ({{ testInfo.impuritiesDetailsList.length }} impurities)</h5>
+																		<table class="impurities-table">
+																			<thead>
+																				<tr>
+																					<th>ID</th>
+																					<th>Impurity Name</th>
+																					<th>Type</th>
+																					<th>Limit</th>
+																					<th>RRT</th>
+																					<th>RRF</th>
+																					<th>Comments</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				@for (detail of testInfo.impuritiesDetailsList; track detail.id) {
+																					<tr>
+																						<td>{{ detail.id }}</td>
+																						<td>{{ detail.sourceImpurityName || 'N/A' }}</td>
+																						<td>{{ detail.impurityType || 'N/A' }}</td>
+																						<td>
+																							@if (detail.limitType) {
+																								<span>{{ detail.limitType }}</span>
+																							}
+																							@if (detail.limitValue) {
+																								<span> {{ detail.limitValue }}</span>
+																							}
+																							@if (detail.unit) {
+																								<span> {{ detail.unit }}</span>
+																							}
+																							@if (!detail.limitType && !detail.limitValue) {
+																								<span>-</span>
+																							}
+																						</td>
+																						<td>
+																							{{ getIdentityCriteriaValue(detail.identityCriteriaList, 'RELATIVE RETENTION TIME') }}
+																						</td>
+																						<td>
+																							{{ getIdentityCriteriaValue(detail.identityCriteriaList, 'RELATIVE RESPONSE FACTOR') }}
+																						</td>
+																						<td>{{ detail.comments || '-' }}</td>
+																					</tr>
+																				}
+																			</tbody>
+																		</table>
+																	</div>
+																}
+
+																<!-- Unspecified Impurities -->
+																@if (getUnspecifiedImpurities(substance, idx).length > 0) {
+																	<div class="unspecified-section">
+																		<h5>Unspecified Impurities</h5>
+																		@for (unspec of getUnspecifiedImpurities(substance, idx); track unspec.id) {
+																			<div class="unspec-item">
+																				<strong>Type:</strong> {{ unspec.impurityType }}<br>
+																				<strong>Limit:</strong> {{ unspec.limitType }} {{ unspec.limitValue }} {{ unspec.unit }}
+																			</div>
+																		}
+																	</div>
+																}
+
+															</div>
+														}
+													</div>
+												}
+											} @else {
+												<em>No data</em>
+											}
+										</div>
+
+										<!-- EP Column -->
+										<div class="comparison-value">
+											@if (impuritiesEP?.impuritiesSubstanceList && impuritiesEP.impuritiesSubstanceList.length > 0) {
+												@for (substance of impuritiesEP.impuritiesSubstanceList; track substance.id) {
+													<div class="substance-main-item">
+
+														<div class="substance-header">
+															<strong>{{ substance.substanceName || 'Loading...' }}</strong>
+															@if (substance.approvalID) {
+																<span class="approval-id">
+																	<a [routerLink]="['/substances', substance.approvalID]" target="_blank">
+																		<span class="colororange font16px fontbold">
+																			&nbsp;<b>({{ substance.approvalID }})</b>
+																		</span>
+																	</a>
+																</span>
+															}
+														</div>
+														
+														<div class="substance-range">
+															<strong>Acceptable Range:</strong> {{ substance.low }}–{{ substance.high }} {{ substance.unit }}
+														</div>
+
+														<!-- All Tests -->
+														@for (testInfo of getAllTests(substance); track testInfo.id; let idx = $index) {
+															<div class="test-section">
+																<h4 class="test-section-title">Test {{ idx + 1 }}: {{ testInfo.test }}</h4>
+
+																<div class="test-info-grid">
+																	@if (testInfo.id) {
+																		<div class="test-field"><strong>Test ID:</strong> {{ testInfo.id }}</div>
+																	}
+																	@if (testInfo.testType) {
+																		<div class="test-field">
+																			<strong>Type:</strong> {{ testInfo.testType }}
+																		</div>
+																	}
+																	@if (testInfo.source) {
+																		<div class="test-field">
+																			<strong>Source:</strong> {{ testInfo.source }}
+																		</div>
+																	}
+																	@if (testInfo.sourceType) {
+																		<div class="test-field">
+																			<strong>Source Type:</strong> {{ testInfo.sourceType }}
+																		</div>
+																	}
+																	@if (testInfo.sourceId) {
+																		<div class="test-field"><strong>Source ID:</strong> {{ testInfo.sourceId }}</div>
+																	}
+																	@if (testInfo.elutionType) {
+																		<div class="test-field">
+																			<strong>Elution:</strong> {{ testInfo.elutionType }}
+																		</div>
+																	}
+																	@if (testInfo.system) {
+																		<div class="test-field">
+																			<strong>System:</strong> {{ testInfo.system }}
+																		</div>
+																	}
+																	@if (testInfo.mode) {
+																		<div class="test-field">
+																			<strong>Mode:</strong> {{ testInfo.mode }}
+																		</div>
+																	}
+																	@if (testInfo.detectionType) {
+																		<div class="test-field">
+																			<strong>Detection:</strong> {{ testInfo.detectionType }}
+																		</div>
+																	}
+																	@if (testInfo.detectorWavelength) {
+																		<div class="test-field">
+																			<strong>Wavelength:</strong> {{ testInfo.detectorWavelength }}
+																		</div>
+																	}
+																	@if (testInfo.columnSize) {
+																		<div class="test-field">
+																			<strong>Column Size:</strong> {{ testInfo.columnSize }}
+																		</div>
+																	}
+																	@if (testInfo.columnPackingSize) {
+																		<div class="test-field">
+																			<strong>Packing Size:</strong> {{ testInfo.columnPackingSize }}
+																		</div>
+																	}
+																	@if (testInfo.columnPackingType) {
+																		<div class="test-field">
+																			<strong>Packing Type:</strong> {{ testInfo.columnPackingType }}
+																		</div>
+																	}
+																	@if (testInfo.flowRate) {
+																		<div class="test-field"><strong>Flow Rate:</strong> {{ testInfo.flowRate }}</div>
+																	}
+																	@if (testInfo.injectionVolumeAmount) {
+																		<div class="test-field">
+																			<strong>Injection Vol:</strong> {{ testInfo.injectionVolumeAmount }}
+																		</div>
+																	}
+																	@if (testInfo.autosamplerTemperature) {
+																		<div class="test-field">
+																			<strong>Autosampler Temp:</strong> {{ testInfo.autosamplerTemperature }}
+																		</div>
+																	}
+																	@if (testInfo.diluent) {
+																		<div class="test-field">
+																			<strong>Diluent:</strong> {{ testInfo.diluent }}
+																		</div>
+																	}
+																	@if (testInfo.buffer) {
+																		<div class="test-field">
+																			<strong>Buffer:</strong> {{ testInfo.buffer }}
+																		</div>
+																	}
+																	@if (testInfo.comments) {
+																		<div class="test-field">
+																			<strong>Comments:</strong> {{ testInfo.comments }}
+																		</div>
+																	}
+																</div>
+
+																<!-- Mobile Phase / Solutions -->
+																@if (testInfo.impuritiesSolutionList?.length > 0) {
+																	<div class="solutions-section">
+																		<h5>Mobile Phase / Solutions</h5>
+																		@for (sol of testInfo.impuritiesSolutionList; track sol.id) {
+																			<div class="solution-item">
+																				<strong>Solution {{ sol.solutionLetter }}:</strong>
+																				<div class="solution-description">{{ sol.solutionDescription }}</div>
+																			</div>
+																		}
+																	</div>
+																}
+
+																<!-- Solution Tables -->
+																@if (getSolutionTables(testInfo).length > 0) {
+																	<div class="solution-tables-section">
+																		<h5>Solution Tables ({{ getSolutionTables(testInfo).length }} entries)</h5>
+																		<div class="solution-table-note">IDs: {{ getSolutionTableIds(testInfo) }}</div>
+																	</div>
+																}
+
+																<!-- Preparation Solutions -->
+																<div class="preparation-section">
+																	@if (testInfo.systemSuitabilitySolution) {
+																		<div class="prep-field">
+																			<strong>System Suitability Solution:</strong> {{ testInfo.systemSuitabilitySolution }}
+																		</div>
+																	}
+																	@if (testInfo.standardSolution) {
+																		<div class="prep-field">
+																			<strong>Standard Solution:</strong> {{ testInfo.standardSolution }}
+																		</div>
+																	}
+																	@if (testInfo.sampleSolution) {
+																		<div class="prep-field">
+																			<strong>Sample Solution:</strong> {{ testInfo.sampleSolution }}
+																		</div>
+																	}
+																	@if (testInfo.sensitivitySolution) {
+																		<div class="prep-field">
+																			<strong>Sensitivity Solution:</strong> {{ testInfo.sensitivitySolution }}
+																		</div>
+																	}
+																	@if (testInfo.systemSuitabilitySample) {
+																		<div class="prep-field">
+																			<strong>System Suitability Sample:</strong> {{ testInfo.systemSuitabilitySample }}
+																		</div>
+																	}
+																</div>
+
+																<!-- Suitability Requirements -->
+																<div class="suitability-section">
+																	@if (testInfo.suitabilityReqResolution) {
+																		<div class="suit-field">
+																			<strong>Resolution:</strong> {{ testInfo.suitabilityReqResolution }}
+																		</div>
+																	}
+																	@if (testInfo.suitabilityReqRelStandardDeviation) {
+																		<div class="suit-field">
+																			<strong>RSD:</strong> {{ testInfo.suitabilityReqRelStandardDeviation }}
+																		</div>
+																	}
+																	@if (testInfo.systemSuitabilityReqTailingFactor) {
+																		<div class="suit-field">
+																			<strong>Tailing Factor:</strong> {{ testInfo.systemSuitabilityReqTailingFactor }}
+																		</div>
+																	}
+																	@if (testInfo.systemSuitabilitySignalToNoiseRatio) {
+																		<div class="suit-field">
+																			<strong>S/N Ratio:</strong> {{ testInfo.systemSuitabilitySignalToNoiseRatio }}
+																		</div>
+																	}
+																</div>
+
+																<!-- Analysis & Calculations -->
+																@if (getAnalysisList(testInfo).length > 0) {
+																	<div class="analysis-section">
+																		<h5>Analysis & Calculations</h5>
+																		@for (analysis of getAnalysisList(testInfo); track analysis.id) {
+																			<div class="analysis-item">
+																				<div class="analysis-field"><strong>Samples:</strong> {{ analysis.samples }}</div>
+																				<div class="analysis-field"><strong>Description:</strong> {{ analysis.description }}</div>
+																				<div class="analysis-field formula">
+																					<strong>Formula:</strong> {{ analysis.resultFormula }}
+																				</div>
+																				@if (analysis.formulaRU) {
+																					<div class="analysis-field">
+																						<strong>rU:</strong> {{ analysis.formulaRU }}
+																					</div>
+																				}
+																				@if (analysis.formulaRS) {
+																					<div class="analysis-field">
+																						<strong>rS:</strong> {{ analysis.formulaRS }}
+																					</div>
+																				}
+																				@if (analysis.formulaCS) {
+																					<div class="analysis-field">
+																						<strong>CS:</strong> {{ analysis.formulaCS }}
+																					</div>
+																				}
+																				@if (analysis.formulaCU) {
+																					<div class="analysis-field">
+																						<strong>CU:</strong> {{ analysis.formulaCU }}
+																					</div>
+																				}
+																				@if (analysis.formulaF) {
+																					<div class="analysis-field">
+																						<strong>F:</strong> {{ analysis.formulaF }}
+																					</div>
+																				}
+																			</div>
+																		}
+																	</div>
+																}
+
+																<!-- Impurity Specifications Table -->
+																@if (testInfo.impuritiesDetailsList?.length > 0) {
+																	<div class="impurities-details-section">
+																		<h5>Impurity Specifications ({{ testInfo.impuritiesDetailsList.length }} impurities)</h5>
+																		<table class="impurities-table">
+																			<thead>
+																				<tr>
+																					<th>ID</th>
+																					<th>Impurity Name</th>
+																					<th>Type</th>
+																					<th>Limit</th>
+																					<th>RRT</th>
+																					<th>RRF</th>
+																					<th>Comments</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				@for (detail of testInfo.impuritiesDetailsList; track detail.id) {
+																					<tr>
+																						<td>{{ detail.id }}</td>
+																						<td>{{ detail.sourceImpurityName || 'N/A' }}</td>
+																						<td>{{ detail.impurityType || 'N/A' }}</td>
+																						<td>
+																							@if (detail.limitType) {
+																								<span>{{ detail.limitType }}</span>
+																							}
+																							@if (detail.limitValue) {
+																								<span> {{ detail.limitValue }}</span>
+																							}
+																							@if (detail.unit) {
+																								<span> {{ detail.unit }}</span>
+																							}
+																							@if (!detail.limitType && !detail.limitValue) {
+																								<span>-</span>
+																							}
+																						</td>
+																						<td>
+																							{{ getIdentityCriteriaValue(detail.identityCriteriaList, 'RELATIVE RETENTION TIME') }}
+																						</td>
+																						<td>
+																							{{ getIdentityCriteriaValue(detail.identityCriteriaList, 'RELATIVE RESPONSE FACTOR') }}
+																						</td>
+																						<td>{{ detail.comments || '-' }}</td>
+																					</tr>
+																				}
+																			</tbody>
+																		</table>
+																	</div>
+																}
+
+																<!-- Unspecified Impurities -->
+																@if (getUnspecifiedImpurities(substance, idx).length > 0) {
+																	<div class="unspecified-section">
+																		<h5>Unspecified Impurities</h5>
+																		@for (unspec of getUnspecifiedImpurities(substance, idx); track unspec.id) {
+																			<div class="unspec-item">
+																				<strong>Type:</strong> {{ unspec.impurityType }}<br>
+																				<strong>Limit:</strong> {{ unspec.limitType }} {{ unspec.limitValue }} {{ unspec.unit }}
+																			</div>
+																		}
+																	</div>
+																}
+
+															</div>
+														}
+													</div>
+												}
+											} @else {
+												<em>No data</em>
+											}
+										</div>
+									</div>
+								</div>
+							}
+
+							<!-- Residual Solvents -->
+							@if (getResidualSolvents(impuritiesUSP).length > 0 || getResidualSolvents(impuritiesEP).length > 0) {
+								<div class="section-container">
+									<h3 class="section-header">Residual Solvents Testing</h3>
+									<div class="comparison-row full-width">
+										<div class="comparison-label">Residual Solvents</div>
+										<div class="comparison-value">
+											@if (getResidualSolvents(impuritiesUSP).length > 0) {
+												@for (rs of getResidualSolvents(impuritiesUSP); track rs.id) {
+													<div class="residual-item">
+														@for (solvent of rs.impuritiesResidualSolventsList; track solvent.id) {
+															<div class="solvent-detail">
+																<strong>Limit:</strong> {{ solvent.limitType }} {{ solvent.limitValue }} {{ solvent.unit }}
+															</div>
+														}
+													</div>
+												}
+											} @else {
+												<em>No residual solvents testing</em>
+											}
+										</div>
+										<div class="comparison-value">
+											@if (getResidualSolvents(impuritiesEP).length > 0) {
+												@for (rs of getResidualSolvents(impuritiesEP); track rs.id) {
+													<div class="residual-item">
+														@for (solvent of rs.impuritiesResidualSolventsList; track solvent.id) {
+															<div class="solvent-detail">
+																<strong>Limit:</strong> {{ solvent.limitType }} {{ solvent.limitValue }} {{ solvent.unit }}
+															</div>
+														}
+													</div>
+												}
+											} @else {
+												<em>No residual solvents testing</em>
+											}
+										</div>
+									</div>
+								</div>
+							}
+
+							<!-- Specific Tests -->
+							@if (getSpecificTests(impuritiesUSP).length > 0 || getSpecificTests(impuritiesEP).length > 0) {
+								<div class="section-container">
+									<h3 class="section-header">Specific Tests</h3>
+									<div class="comparison-row full-width">
+										<div class="comparison-label">Specific Tests</div>
+										<div class="comparison-value">
+											@if (getSpecificTests(impuritiesUSP).length > 0) {
+												@for (test of getSpecificTests(impuritiesUSP); track test.id) {
+													<div class="specific-test-item">
+														@if (test.sampleSolution) {
+															<div><strong>Sample Solution:</strong> {{ test.sampleSolution }}</div>
+														}
+													</div>
+												}
+											} @else {
+												<em>No specific tests</em>
+											}
+										</div>
+										<div class="comparison-value">
+											@if (getSpecificTests(impuritiesEP).length > 0) {
+												@for (test of getSpecificTests(impuritiesEP); track test.id) {
+													<div class="specific-test-item">
+														@if (test.sampleSolution) {
+															<div><strong>Sample Solution:</strong> {{ test.sampleSolution }}</div>
+														}
+													</div>
+												}
+											} @else {
+												<em>No specific tests</em>
+											}
+										</div>
+									</div>
+								</div>
+							}
+
+							<!-- Additional Requirements -->
+							@if (impuritiesUSP?.impuritiesAdditionalRequirements || impuritiesEP?.impuritiesAdditionalRequirements) {
+								<div class="section-container">
+									<h3 class="section-header">Additional Requirements</h3>
+									<div class="comparison-row">
+										<div class="comparison-label">Additional Req. ID</div>
+										<div class="comparison-value">{{ impuritiesUSP?.impuritiesAdditionalRequirements?.id || 'Not specified' }}</div>
+										<div class="comparison-value">{{ impuritiesEP?.impuritiesAdditionalRequirements?.id || 'Not specified' }}</div>
+									</div>
+								</div>
+							}
+
+						</div>
+
+						<!-- Loading State -->
+						@if (!impuritiesUSP && !impuritiesEP && !errorMessage) {
+							<div class="loading-state">
+								@if (isFileMode) {
+									<p>Select two JSON files to compare...</p>
+								} @else {
+									<p>Loading comparison data...</p>
+								}
+							</div>
+						}
+
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</div>
+	</div>
+</div>
