@@ -119,7 +119,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     private loadingService: LoadingService,
     private configService: ConfigService,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer,
+    private overlayContainerService: OverlayContainer
   ) { }
 
   ngOnDestroy(): void {
@@ -329,6 +329,14 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       node2.rel = "stylesheet";
       document.getElementsByTagName('head')[0].appendChild(node2);
     }
+
+    // get value for paramerter imageUrl
+    /*let imageUrl = this.activatedRoute.snapshot.queryParams['url'] || null;
+    if (imageUrl) {
+      this.createImage(imageUrl);
+    }
+    */  
+   
   }
 
   private getKetcherRootEl(): HTMLElement | null {

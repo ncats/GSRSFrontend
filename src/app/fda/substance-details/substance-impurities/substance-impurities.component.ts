@@ -1,23 +1,24 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { AuthService } from '@gsrs-core/auth';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { ImpuritiesService } from '../../../impurities/service/impurities.service';
-import { GeneralService } from '../../../service/general.service';
+import { ImpuritiesService } from '../../impurities/service/impurities.service';
+import { GeneralService } from '../../service/general.service';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
-import { SubstanceDetailsBaseTableDisplay } from '../substance-details-base-table-display';
-import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../../impurities/model/impurities.model';
+import { SubstanceDetailsBaseTableDisplay } from '../substance-products/substance-details-base-table-display';
+import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../impurities/model/impurities.model';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { impuritiesSearchSortValues } from '../../../impurities/impurities-search-sort-values';
+import { impuritiesSearchSortValues } from '../../impurities/impurities-search-sort-values';
 import { RouterLink } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,13 +27,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
-    selector: 'app-substance-impurities',
-    templateUrl: './substance-impurities.component.html',
-    styleUrls: ['./substance-impurities.component.scss'],
-    standalone: true,
-    imports: [RouterLink, MatTooltipModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
+  selector: 'app-substance-impurities',
+  templateUrl: './substance-impurities.component.html',
+  styleUrls: ['./substance-impurities.component.scss'],
+  standalone: true,
+  imports: [RouterLink, MatTooltipModule, MatCheckboxModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatTableModule, MatSortModule, MatPaginatorModule]
 })
 export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
@@ -57,7 +59,12 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
   public sortValues = impuritiesSearchSortValues;
   order = '$root_productSubstanceName';
   ascDescDir = 'desc';
+
+  selectedUSP: any = null;
+  selectedEP: any = null;
+
   displayedColumns: string[] = [
+    'compare',
     'productSubstanceName',
     'sourceType',
     'source',
@@ -68,7 +75,6 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     'relatedSubstance'
   ];
 
-
   constructor(
     private router: Router,
     public gaService: GoogleAnalyticsService,
@@ -76,7 +82,8 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     private generalService: GeneralService,
     private authService: AuthService,
     private loadingService: LoadingService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {
     super(gaService, impuritiesService);
   }
@@ -91,7 +98,8 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
   }
 
   ngOnInit() {
-    if (this.substanceUuid) {
+    if (this.substance && this.substance.uuid) {
+      this.substanceUuid = this.substance.uuid;
       this.getImpuritiesBySubstanceUuid();
       this.impuritiesListExportUrl();
     }
@@ -105,25 +113,8 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     });
   }
 
-  /*
-  getSubstanceImpuritiesNEW(pageEvent?: PageEvent): void {
-    this.setPageEvent(pageEvent);
-
-    this.showSpinner = true;  // Start progress spinner
-    this.impuritiesService.searchImpurities(this.substanceUuid, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);
-      this.impurities = results;
-      this.getImpuritiesTestTotal();
-      this.impuritiesCount = this.totalRecords;
-      this.countImpuritiesOut.emit(this.impuritiesCount);
-      this.showSpinner = false;  // Stop progress spinner
-    });
-  }
-  */
-
   searchImpurities() {
     this.privateSearchTerm = this.substanceUuid;
-    //  this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     const subscription = this.impuritiesService.searchImpurities(
       skip,
@@ -132,54 +123,23 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       this.privateFacetParams,
     )
       .subscribe(pagingResponse => {
-        // this.isError = false;
-
         this.setResultData(pagingResponse.content);
         this.impurities = pagingResponse.content;
         this.impuritiesCount = pagingResponse.total;
         this.countImpuritiesOut.emit(this.impuritiesCount);
         this.etag = pagingResponse.etag;
-
-        /*
-        if (pagingResponse.total % this.pageSize === 0) {
-          this.lastPage = (pagingResponse.total / this.pageSize);
-        } else {
-          this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
-        }
-        */
-        // Set Facets from paging response
-        /*  if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-            this.rawFacets = pagingResponse.facets;
-          }
-          */
       }, error => {
-        /*
-         console.log('error');
-         const notification: AppNotification = {
-           message: 'There was an error trying to retrieve Products. Please refresh and try again.',
-           type: NotificationType.error,
-           milisecondsToShow: 6000
-         };
-         this.isError = true;
-         this.isLoading = false;
-         this.loadingService.setLoading(this.isLoading);
-         this.notificationService.setNotification(notification);
-         */
       }, () => {
         subscription.unsubscribe();
-        //   this.isLoading = false;
-        //   this.loadingService.setLoading(this.isLoading);
       });
   }
 
-
   getImpuritiesBySubstanceUuid(pageEvent?: PageEvent): void {
-    this.showSpinner = true;  // Start progress spinner
+    this.showSpinner = true;
 
     this.setPageEvent(pageEvent);
     const skip = this.page * this.pageSize;
 
-    // , this.page, this.pageSize
     this.impuritiesService.getImpuritiesBySubstanceUuid(
       this.order,
       skip,
@@ -199,39 +159,14 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
         this.etag = results.etag;
         this.countImpuritiesOut.emit(this.totalImpurities);
       });
-    this.showSpinner = false;  // Stop progress spinner
+    this.showSpinner = false;
   }
-
-  /*
-  getImpuritiesByTestImpuritiesDetails(pageEvent?: PageEvent): void {
-    this.setPageEvent(pageEvent);
-
-    this.showSpinner = true;  // Start progress spinner
-    // , this.page, this.pageSize
-    this.impuritiesService.getImpuritiesBySubstanceUuid(this.substanceUuid).subscribe(results => {
-      this.impuritiesService.totalRecords = results.total;
-      this.impurities = results.content;
-
-      //Load Impurities Test Details by Substance Uuid
-      this.loadImpuritiesTestDetails();
-
-      this.setResultData(this.impurities);
-
-      this.totalImpurities = results.total;
-
-      this.etag = results.etag;
-      this.countImpuritiesOut.emit(this.totalImpurities);
-    });
-    this.showSpinner = false;  // Stop progress spinner
-  }
-  */
 
   loadImpuritiesTestDetails() {
     this.impurities.forEach((element, index) => {
       element.impuritiesSubstanceList.forEach((elementSub, indexSub) => {
 
         if (elementSub.substanceUuid) {
-          // if current Substance is same as Parent Substance of Impurities
           if (elementSub.substanceUuid === this.substanceUuid) {
             elementSub._parentSubstanceName = this.substanceName;
             elementSub._parentSubstanceUuid = elementSub.substanceUuid;
@@ -242,12 +177,10 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
           elementTest.impuritiesDetailsList.forEach((elementDetail, indexDetail) => {
 
             if (elementDetail.relatedSubstanceUuid != null) {
-              // if current Substance is same as Impurities Details of Impurities
               if (elementDetail.relatedSubstanceUuid === this.substanceUuid) {
                 const subSubscription = this.generalService.getSubstanceNamesBySubstanceUuid(elementSub.substanceUuid).subscribe(substanceNames => {
                   let subNames = substanceNames;
 
-                  // Get Preferred Term or DisplayName == true
                   subNames.forEach((names, index) => {
                     if (names.displayName === true) {
                       elementSub._parentSubstanceName = names.name;
@@ -258,10 +191,10 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
                 this.subscriptions.push(subSubscription);
               }
             }
-          }); // Impurities Details forEach
-        }); // Test forEach
-      }); // Substance forEach
-    }); // Impurities forEach
+          });
+        });
+      });
+    });
   }
 
   getSubstanceNames(substanceUuid: string): string {
@@ -270,7 +203,6 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       const subSubscription = this.generalService.getSubstanceNamesBySubstanceUuid(substanceUuid).subscribe(substanceNames => {
         let subNames = substanceNames;
 
-        // Get Preferred Term or DisplayName == true
         subNames.forEach((names, index) => {
           if (names.displayName === true) {
             preferredTerm = names.name;
@@ -282,42 +214,22 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     }
   }
 
-  /*
-  getSubstanceImpurities(pageEvent?: PageEvent): void {
-    this.setPageEvent(pageEvent);
-
-    this.showSpinner = true;  // Start progress spinner
-    this.impuritiesService.getSubstanceImpurities(this.substanceUuid, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);
-      this.impurities = results;
-      this.impuritiesCount = this.totalRecords;
-      this.impuritiesService.totalRecords = this.totalRecords;
-      this.countImpuritiesOut.emit(this.impuritiesCount);
-      this.showSpinner = false;  // Stop progress spinner
-    });
-  }
-  */
-
   export() {
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-          // height: '215x',
           width: '700px',
           data: { 'extension': extension, 'type': 'substanceImpurities', 'entity': 'impurities', 'hideOptionButtons': true }
         });
-        // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(response => {
-          // this.overlayContainer.style.zIndex = null;
           const name = response.name;
           const id = response.id;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -345,7 +257,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
 
   sortData(sort: Sort) {
     if (sort.active) {
-      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
       this.sortValues.forEach(sortValue => {
         if (sortValue.displayedColumns && sortValue.direction) {
@@ -357,5 +269,65 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       this.getImpuritiesBySubstanceUuid();
     }
     return;
+  }
+
+  // Checkbox comparison methods
+  onCompareCheckboxChange(impurities: any, event: MatCheckboxChange): void {
+    console.log('Checkbox clicked:', impurities.source, impurities.id, event.checked);
+
+    if (event.checked) {
+      if (impurities.source === 'USP') {
+        this.selectedUSP = impurities;
+        console.log('Selected USP:', this.selectedUSP);
+      } else if (impurities.source === 'EP') {
+        this.selectedEP = impurities;
+        console.log('Selected EP:', this.selectedEP);
+      }
+    } else {
+      if (impurities.source === 'USP') {
+        this.selectedUSP = null;
+        console.log('Unselected USP');
+      } else if (impurities.source === 'EP') {
+        this.selectedEP = null;
+        console.log('Unselected EP');
+      }
+    }
+
+    this.cdr.markForCheck();
+  }
+
+  isSelected(impurities: any): boolean {
+    if (!impurities) return false;
+
+    if (impurities.source === 'USP') {
+      return this.selectedUSP?.id === impurities.id;
+    } else if (impurities.source === 'EP') {
+      return this.selectedEP?.id === impurities.id;
+    }
+    return false;
+  }
+
+  canCompare(): boolean {
+    return this.selectedUSP !== null && this.selectedEP !== null;
+  }
+
+  navigateToCompare(): void {
+    if (this.canCompare()) {
+      console.log('Navigating to compare:', this.selectedUSP.id, this.selectedEP.id);
+      this.router.navigate(['/impurities/compare'], {
+        queryParams: {
+          usp: this.selectedUSP.id,
+          ep: this.selectedEP.id
+        }
+      });
+    } else {
+      console.warn('Cannot compare - both USP and EP must be selected');
+    }
+  }
+
+  clearSelections(): void {
+    this.selectedUSP = null;
+    this.selectedEP = null;
+    this.cdr.markForCheck();
   }
 }

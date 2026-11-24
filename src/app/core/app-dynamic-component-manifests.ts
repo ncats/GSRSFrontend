@@ -303,5 +303,8 @@ export const dynamicComponentDefinitions: LazyLoadedComponentDefinition[] = [
         componentId: 'substance-form-ssg2-overview',
         loadComponent: () => import('./substance-ssg2/ssg2-overview-form/ssg2-overview-form.component').then(m => m.Ssg2OverviewFormComponent),
     },
+    {
+        componentId: 'substance-impurities', 
+         loadComponent: () => import('../fda/substance-details/substance-impurities/substance-impurities.component').then(m => m.SubstanceImpuritiesComponent),
+    }
 ];
-

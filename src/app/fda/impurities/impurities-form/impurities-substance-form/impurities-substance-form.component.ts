@@ -197,36 +197,23 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     this.impuritiesService.addNewTest(this.impuritiesSubstanceIndex);
   }
 
-  //new 3.1
   addNewResidualSolventsTest(event: Event) {
     event.stopPropagation();
 
     this.impuritiesService.addNewResidualSolventsTest(this.impuritiesSubstanceIndex);
   }
 
-  //new 3.1
   addNewInorganicTest(event: Event) {
     event.stopPropagation();
 
     this.impuritiesService.addNewInorganicTest(this.impuritiesSubstanceIndex);
   }
 
-
-  /* remove in 3.1
-  addNewImpuritiesResidualSolvents(event: Event) {
+  addNewSpecificTest(event: Event) {
     event.stopPropagation();
 
-    this.impuritiesService.addNewImpuritiesResidualSolvents(this.impuritiesSubstanceIndex);
+    this.impuritiesService.addNewSpecificTest(this.impuritiesSubstanceIndex);
   }
-  */
-
-  /*  remove in 3.1
-  addNewImpuritiesInorganic(event: Event) {
-    event.stopPropagation();
-
-    this.impuritiesService.addNewImpuritiesInorganic(this.impuritiesSubstanceIndex);
-  }
-  */
 
   confirmDeleteImpuritiesSubstance() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

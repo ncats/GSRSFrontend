@@ -1,0 +1,31 @@
+<div>
+  <div class="margintop50px scrollable-container">
+    <div class="cards-container">
+
+      <div class="">
+        <div class="title_box">
+          <div class="title">
+            Impurities Extractor
+          </div>
+        </div> <!-- title_box-->
+
+        <mat-card class="margintop20px">
+          <mat-card-content>
+            <br>
+            <b>Select PDF (USP or EP) file to extract monograph data and save into Database:</b>&nbsp;&nbsp;
+
+            <!-- Import EXCEL DATA and convert to JSON -->
+            <input type="file" (change)="onFileChange($event)" />
+
+            <br><br><br><br><br>
+          </mat-card-content>
+        </mat-card>
+        <br />
+        <br />
+      </div>
+
+    </div> <!-- class=cards-container -->
+  </div> <!-- class=scrollable-container -->
+
+</div>
+<br /><br /><br />
