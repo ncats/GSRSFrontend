@@ -74,6 +74,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   private overlayContainer: HTMLElement;
   isLoggedIn = false;
   canUpdate: boolean = false;
+  isPfdaVersion: boolean = false;
   canExport: boolean = false;
   canCreate: boolean = false;
   etag = '';
@@ -173,6 +174,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
+
+    this.isPfdaVersion = this.configService.configData?.isPfdaVersion === true;
 
     // Get Daily Med Url from Configuration
     this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
@@ -598,6 +601,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   getApplicationNumberTypeUrl() {
+    // precisionFDA has no Application module to link to
+    if (this.isPfdaVersion) {
+      return;
+    }
     this.products.forEach((product, indexProd) => {
       product.productProvenances.forEach((prov, indexProv) => {
         if ((prov.applicationType) && (prov.applicationNumber)) {
