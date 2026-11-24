@@ -2,17 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParameterCodec, HttpParams } from '@angular/common/http';
 import { Observable, Observer, } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+
+// GSRS Core Imports
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
-import { PagingResponse } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
+import { PagingResponse } from '@gsrs-core/utils';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
-import { Product, ProductProvenance, ProductName, ProductTermAndPart, ProductCode, ProductDocumentation } from '../model/product.model';
-import { ProductCompany, ProductCompanyCode, ProductIndication, ProductManufactureItem, ProductManufacturer, ProductLot, ProductIngredient } from '../model/product.model';
-import { ValidationResults } from '../model/product.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 import { BulkSearch } from '@gsrs-core/bulk-search/bulk-search.model';
+
+// GSRS Product Imports
+import { Product, ProductProvenance, ProductName, ProductTermAndPart, ProductCode, ProductApplication, ProductDocumentation } from '../model/product.model';
+import { ProductCompany, ProductCompanyCode, ProductIndication, ProductManufactureItem, ProductManufacturer, ProductLot, ProductIngredient } from '../model/product.model';
+import { ValidationResults } from '../model/product.model';
+
 
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
@@ -34,6 +39,7 @@ class CustomEncoder implements HttpParameterCodec {
 @Injectable({
   providedIn: 'root'
 })
+
 export class ProductService extends BaseHttpService {
 
   private entity = 'products';
@@ -78,7 +84,7 @@ export class ProductService extends BaseHttpService {
         url = url.replace('/api/v1/', apiAddUrlPrefixToBackendUrls + '/service/' + searchEntity + '/api/v1/');
       }
     }
-    
+
     return url;
   }
 
@@ -198,8 +204,8 @@ export class ProductService extends BaseHttpService {
       params = params.append('bulkQID', bulkQID.toString());
       let v = "false";
       if (searchOnIdentifiers === true) {
- v = "true"; 
-}
+        v = "true";
+      }
       params = params.append('searchOnIdentifiers', v);
       params = params.append('searchEntity', searchEntity);
 
@@ -545,7 +551,7 @@ export class ProductService extends BaseHttpService {
   saveProduct(): Observable<Product> {
     // Remove the last slash from the url
     const url = this.apiBaseUrlWithProductEntityUrl.replace(/\/$/, '');
-  
+
     const params = new HttpParams();
     const options = {
       params: params,
@@ -590,7 +596,7 @@ export class ProductService extends BaseHttpService {
 
   addNewProductProvenance(): void {
     const newProductProvenance: ProductProvenance =
-      { productNames: [], productCodes: [], productCompanies: [], productDocumentations: [], productIndications: [] };
+      { productNames: [], productCodes: [], productApplications: [], productCompanies: [], productDocumentations: [], productIndications: [] };
     this.product.productProvenances.unshift(newProductProvenance);
   }
 
@@ -619,6 +625,16 @@ export class ProductService extends BaseHttpService {
 
     const newProductCode: ProductCode = {};
     this.product.productProvenances[prodProvenanceIndex].productCodes.push(newProductCode);
+  }
+
+
+  addNewProductApplicationInProv(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productApplications == null) {
+      this.product.productProvenances[prodProvenanceIndex].productApplications = [];
+    }
+
+    const newProductApplication: ProductApplication = {};
+    this.product.productProvenances[prodProvenanceIndex].productApplications.push(newProductApplication);
   }
 
   addNewProductCompanyInProv(prodProvenanceIndex: number): void {

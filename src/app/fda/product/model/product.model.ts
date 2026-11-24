@@ -61,6 +61,7 @@ export interface ProductProvenance {
   modifyDate?: number;
   productNames?: Array<ProductName>;
   productCodes?: Array<ProductCode>;
+  productApplications?: Array<ProductApplication>;
   productCompanies?: Array<ProductCompany>;
   productDocumentations?: Array<ProductDocumentation>;
   productIndications?: Array<ProductIndication>;
@@ -102,6 +103,17 @@ export interface ProductCode {
   _dailyMedUrl?: string;
   _phpIdUrl?: string;
   _rxNormUrl?: string;
+}
+
+
+export interface ProductApplication {
+  id?: number;
+  productApplicationType?: string;
+  productApplicationNumber?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
 }
 
 export interface ProductCompany {
