@@ -110,6 +110,8 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
   draftLoadedAssaySet = "";
   draftAssayRows: Array<{ draft: IvpDraft; member: boolean }> = [];
   draftAssaySetNames: Array<string> = [];
+  // Last loaded or saved draft state, used to warn about unsaved changes when leaving the page
+  private savedDraftState: { name: string; description: string; members: Set<string> } = null;
 
   constructor(
     public http: HttpClient,
@@ -676,6 +678,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
           this.validationResult = false;
           this.showSubmissionMessages = false;
           this.submissionMessage = "";
+          this.markDraftStateSaved();
 
           const fileUrl =
             this.invitroPharmacologyService.getPfdaFileUrl(response);
@@ -776,6 +779,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
   reloadPageAfterSave() {
     this.loadingService.setLoading(false);
     this.isLoading = false;
+    this.assaysToSave = [];
 
     this.validationMessages = null;
     this.submissionMessage =
@@ -807,6 +811,28 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
 
   get isPfdaVersion(): boolean {
     return this.invitroPharmacologyService.isPfdaVersion;
+  }
+
+  hasUnsavedChanges(): boolean {
+    if (!this.isPfdaVersion) {
+      return this.assaysToSave.length > 0;
+    }
+    const saved = this.savedDraftState;
+    if (!saved) {
+      return false;
+    }
+    // Rows are compared one by one so that draft assays deleted or imported in the drafts dialog do not count
+    return (this.draftAssaySet || "").trim() !== saved.name ||
+      (this.draftDescription || "") !== saved.description ||
+      this.draftAssayRows.some((row) => row.member !== saved.members.has(row.draft.uuid));
+  }
+
+  private markDraftStateSaved(): void {
+    this.savedDraftState = {
+      name: (this.draftAssaySet || "").trim(),
+      description: this.draftDescription || "",
+      members: new Set(this.draftAssayRows.filter((row) => row.member).map((row) => row.draft.uuid)),
+    };
   }
 
   // precisionFDA only: opens the Assay Set draft of the 'draft' query parameter, or the Assay Set
@@ -843,6 +869,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     this.draftDescription = "";
     this.draftLoadedAssaySet = name;
     this.refreshDraftAssays();
+    this.markDraftStateSaved();
     this.setDraftQueryParam();
   }
 
@@ -857,6 +884,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     this.draftDescription = (draft.data && draft.data.description) || "";
     this.draftLoadedAssaySet = this.draftAssaySet;
     this.refreshDraftAssays();
+    this.markDraftStateSaved();
     this.setDraftQueryParam();
   }
 
@@ -943,6 +971,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
       this.draftAssaySet = this.draftService.getAssaySetDraftName(this.savedDraft);
       this.draftLoadedAssaySet = this.draftAssaySet;
       this.refreshDraftAssays();
+      this.markDraftStateSaved();
       this.setDraftQueryParam();
     } catch (e) {
       this.setValidationMessage(e && e.message ? e.message : String(e));
